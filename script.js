@@ -126,7 +126,7 @@ async function cargarProductos() {
     const filasProductos = filas
       .slice(1)
       .map((fila) => {
-        return {
+        const producto = {
           codigo:
             indiceCodigo !== -1
               ? limpiarTexto(fila[indiceCodigo])
@@ -155,6 +155,8 @@ async function cargarProductos() {
               ? limpiarTexto(fila[indiceActivo])
               : "Sí"
         };
+
+        return normalizarFilaKanthal(producto);
       })
       .filter((producto) => {
         return (
@@ -194,6 +196,27 @@ async function cargarProductos() {
 /* =========================================
    AGRUPACIÓN DE PRESENTACIONES
 ========================================= */
+
+function normalizarFilaKanthal(producto) {
+  const coincidencia = producto.nombre.match(
+    /^ALAMBRE\s+KANTHAL\s+A1\s+DE\s+(.+?\s*MM)$/i
+  );
+
+  if (!coincidencia) {
+    return producto;
+  }
+
+  const diametro = limpiarTexto(coincidencia[1])
+    .replace(/\s+/g, " ")
+    .toUpperCase();
+
+  return {
+    ...producto,
+    nombre: "ALAMBRE KANTHAL A1",
+    presentacion: `${diametro} × 1 M`
+  };
+}
+
 
 function agruparProductos(filasProductos) {
   const agrupados = new Map();
@@ -588,10 +611,6 @@ function mostrarProductos(lista) {
                     presentacion.nombre
                   )}
                 </span>
-                ${crearEtiquetaPresentacion(
-                  producto,
-                  presentacion
-                )}
               </button>
             `;
           }
@@ -659,12 +678,6 @@ function mostrarProductos(lista) {
           }
         </p>
 
-        <p class="comparacion-precio">
-          ${crearTextoComparacion(
-            producto,
-            presentacionInicial
-          )}
-        </p>
       </div>
 
       <div class="selector-cantidad">
@@ -803,13 +816,6 @@ function seleccionarPresentacion(boton) {
       ? `Código: ${presentacion.codigo}`
       : "";
 
-  tarjeta.querySelector(
-    ".comparacion-precio"
-  ).textContent =
-    crearTextoComparacion(
-      producto,
-      presentacion
-    );
 
   actualizarTotalTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
@@ -866,215 +872,6 @@ function actualizarTotalTarjeta(tarjeta) {
 }
 
 
-function analizarPresentacion(texto) {
-  const valor =
-    normalizarTexto(texto)
-      .replace(",", ".");
-
-  const coincidencia = valor.match(
-    /(\d+(?:\.\d+)?)\s*(kg|kilo|kilos|g|gr|grs|gramo|gramos|l|lt|lts|litro|litros|ml|cc)\b/
-  );
-
-  if (!coincidencia) {
-    return null;
-  }
-
-  let cantidad = Number(coincidencia[1]);
-  const unidad = coincidencia[2];
-
-  if (!Number.isFinite(cantidad) || cantidad <= 0) {
-    return null;
-  }
-
-  let familia;
-  let unidadBase;
-
-  if (
-    ["kg", "kilo", "kilos", "g", "gr", "grs", "gramo", "gramos"]
-      .includes(unidad)
-  ) {
-    familia = "masa";
-    unidadBase = "g";
-
-    if (["kg", "kilo", "kilos"].includes(unidad)) {
-      cantidad *= 1000;
-    }
-  } else {
-    familia = "volumen";
-    unidadBase = "ml";
-
-    if (["l", "lt", "lts", "litro", "litros"].includes(unidad)) {
-      cantidad *= 1000;
-    }
-  }
-
-  return {
-    cantidadBase: cantidad,
-    familia,
-    unidadBase
-  };
-}
-
-
-function obtenerComparacionPresentaciones(
-  producto,
-  presentacionElegida
-) {
-  const analizada =
-    analizarPresentacion(
-      presentacionElegida.nombre
-    );
-
-  if (!analizada) {
-    return null;
-  }
-
-  const comparables =
-    producto.presentaciones
-      .map((presentacion) => {
-        const datos =
-          analizarPresentacion(
-            presentacion.nombre
-          );
-
-        if (
-          !datos ||
-          datos.familia !== analizada.familia
-        ) {
-          return null;
-        }
-
-        return {
-          presentacion,
-          cantidadBase: datos.cantidadBase,
-          precioPorUnidad:
-            presentacion.precio /
-            datos.cantidadBase,
-          unidadBase: datos.unidadBase
-        };
-      })
-      .filter(Boolean);
-
-  if (comparables.length < 2) {
-    return null;
-  }
-
-  const actual =
-    comparables.find(
-      (item) =>
-        item.presentacion ===
-        presentacionElegida
-    );
-
-  if (!actual) {
-    return null;
-  }
-
-  const menorPresentacion =
-    [...comparables].sort(
-      (a, b) =>
-        a.cantidadBase - b.cantidadBase
-    )[0];
-
-  const mejorPrecio =
-    [...comparables].sort(
-      (a, b) =>
-        a.precioPorUnidad -
-        b.precioPorUnidad
-    )[0];
-
-  const ahorroFrenteAMenor =
-    menorPresentacion.precioPorUnidad > 0
-      ? Math.round(
-          (
-            1 -
-            actual.precioPorUnidad /
-              menorPresentacion.precioPorUnidad
-          ) * 100
-        )
-      : 0;
-
-  return {
-    actual,
-    mejorPrecio,
-    ahorroFrenteAMenor
-  };
-}
-
-
-function crearTextoComparacion(
-  producto,
-  presentacion
-) {
-  const comparacion =
-    obtenerComparacionPresentaciones(
-      producto,
-      presentacion
-    );
-
-  if (!comparacion) {
-    return "";
-  }
-
-  const precioPorUnidad =
-    formatearPrecioDecimal(
-      comparacion.actual.precioPorUnidad
-    );
-
-  if (
-    comparacion.actual.presentacion ===
-    comparacion.mejorPrecio.presentacion
-  ) {
-    return `⭐ Mejor precio: ${precioPorUnidad} por ${comparacion.actual.unidadBase}`;
-  }
-
-  if (
-    comparacion.ahorroFrenteAMenor > 0
-  ) {
-    return `✓ ${comparacion.ahorroFrenteAMenor}% más económico por ${comparacion.actual.unidadBase} que la presentación más pequeña`;
-  }
-
-  return `${precioPorUnidad} por ${comparacion.actual.unidadBase}`;
-}
-
-
-function crearEtiquetaPresentacion(
-  producto,
-  presentacion
-) {
-  const comparacion =
-    obtenerComparacionPresentaciones(
-      producto,
-      presentacion
-    );
-
-  if (
-    comparacion &&
-    comparacion.actual.presentacion ===
-      comparacion.mejorPrecio.presentacion
-  ) {
-    return `
-      <small class="etiqueta-conveniente">
-        Mejor precio
-      </small>
-    `;
-  }
-
-  return "";
-}
-
-
-function formatearPrecioDecimal(precio) {
-  return new Intl.NumberFormat(
-    "es-AR",
-    {
-      style: "currency",
-      currency: "ARS",
-      maximumFractionDigits:
-        precio < 10 ? 2 : 0
-    }
-  ).format(precio);
-}
 
 
 async function compartirProducto(idProducto) {
@@ -1561,28 +1358,8 @@ function finalizarPedidoWhatsApp() {
 
   const lineasProductos =
     carritoCompras.map(
-      (producto, indice) => {
-        const subtotal =
-          producto.precio *
-          producto.cantidad;
-
-        const codigo =
-          producto.codigo
-            ? `\nCódigo: ${producto.codigo}`
-            : "";
-
-        return [
-          `${indice + 1}. ${producto.nombre}`,
-          `Presentación: ${producto.presentacion}${codigo}`,
-          `Cantidad: ${producto.cantidad}`,
-          `Precio unitario: ${formatearPrecio(
-            producto.precio
-          )}`,
-          `Subtotal: ${formatearPrecio(
-            subtotal
-          )}`
-        ].join("\n");
-      }
+      (producto) =>
+        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
     );
 
   const precioTotal =
@@ -1598,17 +1375,17 @@ function finalizarPedidoWhatsApp() {
     );
 
   const mensaje = [
-    "Hola Ceraceci, quisiera consultar por el siguiente pedido:",
+    "¡Hola! 😊",
     "",
-    ...lineasProductos.map(
-      (producto) =>
-        `${producto}\n`
-    ),
-    `Total estimado: ${formatearPrecio(
-      precioTotal
-    )}`,
+    "Me gustaría consultar por este pedido:",
     "",
-    "¿Podrían confirmarme disponibilidad y formas de pago?"
+    ...lineasProductos,
+    "",
+    `💰 Total: ${formatearPrecio(precioTotal)}`,
+    "",
+    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
+    "",
+    "¡Muchas gracias!"
   ].join("\n");
 
   const enlace =

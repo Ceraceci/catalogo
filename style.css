@@ -1762,3 +1762,231 @@ a:focus-visible {
     font-size: 0.66rem;
   }
 }
+
+/* =========================================
+   AJUSTE FINAL DEL BOTÓN DEL CARRITO
+   Cápsula más larga y cifras más legibles
+========================================= */
+
+/* Estas reglas se colocan al final para prevalecer sobre
+   las definiciones anteriores del botón del carrito. */
+.abrir-carrito {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: auto;
+  min-width: 270px;
+  min-height: 62px;
+  padding: 0 14px 0 18px;
+
+  border-radius: 999px;
+}
+
+.abrir-carrito .icono-carrito {
+  flex: 0 0 auto;
+  font-size: 1.55rem;
+  line-height: 1;
+}
+
+.abrir-carrito strong {
+  position: static;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 190px;
+  height: 44px;
+  padding: 0 18px;
+
+  color: var(--color-principal);
+  background: white;
+
+  border-radius: 999px;
+
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .acciones-flotantes {
+    grid-template-columns:
+      54px
+      54px
+      minmax(0, 1fr);
+  }
+
+  .abrir-carrito {
+    width: 100%;
+    min-width: 0;
+    height: 60px;
+    min-height: 60px;
+    padding: 0 10px 0 14px;
+    gap: 10px;
+  }
+
+  .abrir-carrito .icono-carrito {
+    font-size: 1.45rem;
+  }
+
+  .abrir-carrito strong {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+    font-size: 1.28rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .acciones-flotantes {
+    grid-template-columns:
+      48px
+      48px
+      minmax(0, 1fr);
+    gap: 7px;
+    padding-right: 7px;
+    padding-left: 7px;
+  }
+
+  .instagram-flotante,
+  .whatsapp-flotante {
+    width: 48px;
+    height: 48px;
+  }
+
+  .abrir-carrito {
+    width: 100%;
+    min-width: 0;
+    height: 54px;
+    min-height: 54px;
+    padding: 0 8px 0 10px;
+    gap: 7px;
+  }
+
+  .abrir-carrito .texto-carrito {
+    display: none;
+  }
+
+  .abrir-carrito .icono-carrito {
+    font-size: 1.3rem;
+  }
+
+  .abrir-carrito strong {
+    position: static;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    height: 40px;
+    padding: 0 8px;
+
+    color: var(--color-principal);
+    background: white;
+
+    font-size: 1.08rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+}
+
+/* =========================================
+   CORRECCIÓN DEFINITIVA DEL CARRITO
+   Escritorio + Android + iPhone
+========================================= */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Escritorio */
+@media (min-width: 651px) {
+  .acciones-flotantes .abrir-carrito {
+    width: auto !important;
+    min-width: 220px !important;
+    height: 56px !important;
+    min-height: 56px !important;
+    padding: 0 14px !important;
+    gap: 10px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito .icono-carrito {
+    flex: 0 0 auto !important;
+    font-size: 1.35rem !important;
+    line-height: 1 !important;
+  }
+
+  .acciones-flotantes .abrir-carrito strong {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 135px !important;
+    height: 38px !important;
+    padding: 0 14px !important;
+    color: #98371e !important;
+    background: #ffffff !important;
+    border-radius: 999px !important;
+    font-size: 1.15rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    transform: none !important;
+  }
+}
+
+/* Celulares Android y iPhone */
+@media (max-width: 650px) {
+  .acciones-flotantes .abrir-carrito {
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 64px !important;
+    min-height: 64px !important;
+    padding: 0 12px 0 16px !important;
+    gap: 10px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito .icono-carrito {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+    font-size: 1.65rem !important;
+    line-height: 1 !important;
+  }
+
+  .acciones-flotantes .abrir-carrito strong {
+    position: static !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 48px !important;
+    padding: 0 12px !important;
+    color: #98371e !important;
+    background: #ffffff !important;
+    border-radius: 999px !important;
+    font-size: 1.8rem !important;
+    font-weight: 900 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    transform: none !important;
+  }
+}
+
+/* Celulares muy angostos */
+@media (max-width: 390px) {
+  .acciones-flotantes .abrir-carrito strong {
+    height: 44px !important;
+    font-size: 1.55rem !important;
+  }
+}
