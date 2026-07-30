@@ -1990,3 +1990,18 @@ html {
     font-size: 1.55rem !important;
   }
 }
+/* =========================================
+   CORRECCIÓN DE CLICS BAJO ACCIONES FLOTANTES
+   El área transparente del contenedor no bloquea
+   los controles de las tarjetas.
+========================================= */
+
+.acciones-flotantes {
+  pointer-events: none;
+}
+
+.acciones-flotantes .instagram-flotante,
+.acciones-flotantes .whatsapp-flotante,
+.acciones-flotantes .abrir-carrito {
+  pointer-events: auto;
+}
