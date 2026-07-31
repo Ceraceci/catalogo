@@ -26,6 +26,15 @@ const filtroCategoria =
 const ordenarProductos =
   document.getElementById("ordenarProductos");
 
+const seccionBusqueda =
+  document.querySelector(".busqueda");
+
+const avisoProductoCompartido =
+  document.getElementById("avisoProductoCompartido");
+
+const verCatalogoCompleto =
+  document.getElementById("verCatalogoCompleto");
+
 const avisoCopiado =
   document.getElementById("avisoCopiado");
 
@@ -426,6 +435,34 @@ function cargarCategorias() {
 
 
 function filtrarProductos() {
+  if (productoCompartidoPendiente) {
+    const productoCompartido =
+      productosAgrupados.find(
+        (producto) =>
+          producto.id ===
+          productoCompartidoPendiente
+      );
+
+    productosMostrados =
+      productoCompartido
+        ? [productoCompartido]
+        : [];
+
+    mostrarProductos(productosMostrados);
+    mostrarModoProductoCompartido(
+      Boolean(productoCompartido)
+    );
+
+    if (!productoCompartido) {
+      estado.textContent =
+        "El producto compartido ya no está disponible.";
+    }
+
+    return;
+  }
+
+  ocultarModoProductoCompartido();
+
   const palabrasBuscadas =
     normalizarTexto(buscador.value)
       .split(/\s+/)
@@ -473,7 +510,6 @@ function filtrarProductos() {
 
   ordenarListaProductos(productosMostrados);
   mostrarProductos(productosMostrados);
-  abrirProductoCompartido();
 }
 
 
@@ -985,38 +1021,69 @@ function mostrarAvisoCopiado() {
 }
 
 
-function abrirProductoCompartido() {
-  if (!productoCompartidoPendiente) {
-    return;
+function mostrarModoProductoCompartido(productoDisponible) {
+  if (seccionBusqueda) {
+    seccionBusqueda.hidden = true;
   }
 
-  const tarjeta =
-    document.querySelector(
-      `[data-id-producto="${CSS.escape(
-        productoCompartidoPendiente
-      )}"]`
+  if (avisoProductoCompartido) {
+    avisoProductoCompartido.hidden = false;
+    avisoProductoCompartido.classList.toggle(
+      "producto-no-disponible",
+      !productoDisponible
     );
-
-  if (!tarjeta) {
-    return;
   }
 
+  if (productoDisponible) {
+    estado.textContent =
+      "Producto compartido";
+
+    const tarjeta =
+      contenedorProductos.querySelector(
+        ".tarjeta-producto"
+      );
+
+    if (tarjeta) {
+      tarjeta.classList.add(
+        "producto-compartido-unico"
+      );
+    }
+  }
+}
+
+
+function ocultarModoProductoCompartido() {
+  if (seccionBusqueda) {
+    seccionBusqueda.hidden = false;
+  }
+
+  if (avisoProductoCompartido) {
+    avisoProductoCompartido.hidden = true;
+    avisoProductoCompartido.classList.remove(
+      "producto-no-disponible"
+    );
+  }
+}
+
+
+function mostrarCatalogoCompleto() {
   productoCompartidoPendiente = null;
 
-  tarjeta.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
+  const url = new URL(window.location.href);
+  url.searchParams.delete("producto");
 
-  tarjeta.classList.add(
-    "producto-destacado"
+  window.history.replaceState(
+    {},
+    "",
+    url.toString()
   );
 
-  window.setTimeout(() => {
-    tarjeta.classList.remove(
-      "producto-destacado"
-    );
-  }, 3500);
+  filtrarProductos();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 
@@ -1855,6 +1922,14 @@ if (ordenarProductos) {
   ordenarProductos.addEventListener(
     "change",
     filtrarProductos
+  );
+}
+
+
+if (verCatalogoCompleto) {
+  verCatalogoCompleto.addEventListener(
+    "click",
+    mostrarCatalogoCompleto
   );
 }
 
