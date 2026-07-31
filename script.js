@@ -584,6 +584,29 @@ function mostrarProductos(lista) {
         );
       });
 
+    const usarSelectorDesplegable =
+      producto.presentaciones.length >= 7;
+
+    const opcionesSelector =
+      producto.presentaciones
+        .map(
+          (
+            presentacion,
+            indicePresentacion
+          ) => {
+            return `
+              <option
+                value="${indicePresentacion}"
+              >
+                ${escaparHTML(
+                  presentacion.nombre
+                )}
+              </option>
+            `;
+          }
+        )
+        .join("");
+
     const botonesPresentaciones =
       producto.presentaciones
         .map(
@@ -617,6 +640,25 @@ function mostrarProductos(lista) {
         )
         .join("");
 
+    const controlPresentaciones =
+      usarSelectorDesplegable
+        ? `
+            <select
+              class="selector-presentacion"
+              data-id-producto="${producto.id}"
+              aria-label="Elegir presentación de ${escaparHTML(
+                producto.nombre
+              )}"
+            >
+              ${opcionesSelector}
+            </select>
+          `
+        : `
+            <div class="opciones-presentacion">
+              ${botonesPresentaciones}
+            </div>
+          `;
+
     tarjeta.innerHTML = `
       <div class="encabezado-producto">
         <span class="categoria">
@@ -647,9 +689,7 @@ function mostrarProductos(lista) {
     Presentación
   </p>
 
-  <div class="opciones-presentacion">
-    ${botonesPresentaciones}
-  </div>
+  ${controlPresentaciones}
 </div>
 
       <div class="informacion-precio">
@@ -746,17 +786,19 @@ function mostrarProductos(lista) {
 }
 
 
-function seleccionarPresentacion(boton) {
+function seleccionarPresentacion(control) {
   const tarjeta =
-    boton.closest(".tarjeta-producto");
+    control.closest(".tarjeta-producto");
 
   const idProducto =
-    boton.dataset.idProducto;
+    control.dataset.idProducto;
 
   const indicePresentacion =
-    Number(
-      boton.dataset.indicePresentacion
-    );
+    control.matches(".selector-presentacion")
+      ? Number(control.value)
+      : Number(
+          control.dataset.indicePresentacion
+        );
 
   const producto =
     productosAgrupados.find(
@@ -777,17 +819,19 @@ function seleccionarPresentacion(boton) {
     return;
   }
 
-  tarjeta
-    .querySelectorAll(
-      ".boton-presentacion"
-    )
-    .forEach((opcion) => {
-      opcion.classList.remove(
-        "seleccionada"
-      );
-    });
+  if (control.matches(".boton-presentacion")) {
+    tarjeta
+      .querySelectorAll(
+        ".boton-presentacion"
+      )
+      .forEach((opcion) => {
+        opcion.classList.remove(
+          "seleccionada"
+        );
+      });
 
-  boton.classList.add("seleccionada");
+    control.classList.add("seleccionada");
+  }
 
   tarjeta.dataset.presentacion =
     presentacion.nombre;
@@ -815,7 +859,6 @@ function seleccionarPresentacion(boton) {
     presentacion.codigo
       ? `Código: ${presentacion.codigo}`
       : "";
-
 
   actualizarTotalTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
@@ -1703,6 +1746,24 @@ contenedorProductos.addEventListener(
 
 
 contenedorProductos.addEventListener(
+  "change",
+  (evento) => {
+    if (
+      !evento.target.classList.contains(
+        "selector-presentacion"
+      )
+    ) {
+      return;
+    }
+
+    seleccionarPresentacion(
+      evento.target
+    );
+  }
+);
+
+
+contenedorProductos.addEventListener(
   "input",
   (evento) => {
     if (
@@ -1856,3 +1917,4 @@ document.addEventListener(
 
 mostrarCarrito();
 cargarProductos();
+

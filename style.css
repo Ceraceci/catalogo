@@ -1991,10 +1991,10 @@ html {
   }
 }
 
-
 /* =========================================
    TARJETAS V2 — ESCRITORIO
 ========================================= */
+
 @media (min-width: 901px) {
   .contenedor { padding-top: 16px; }
   .cabecera { margin-bottom: 18px; }
@@ -2111,11 +2111,68 @@ html {
     font-size: 0.76rem;
     border-radius: 7px;
   }
+}
 
-  .imagen-producto {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: contain;
-    display: none;
+
+/* =========================================
+   SELECTOR PARA PRODUCTOS CON MUCHAS PRESENTACIONES
+========================================= */
+
+.selector-presentacion {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 34px 6px 10px;
+
+  color: var(--color-texto);
+  font-size: 0.78rem;
+  font-weight: 600;
+
+  background-color: #ffffff;
+
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+
+  cursor: pointer;
+  outline: none;
+}
+
+.selector-presentacion:focus {
+  border-color: var(--color-principal);
+  box-shadow:
+    0 0 0 3px
+    rgba(152, 55, 30, 0.12);
+}
+
+@media (min-width: 901px) {
+  .selector-presentacion {
+    min-height: 30px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 0.7rem;
+  }
+}
+
+
+/* =========================================
+   CORRECCIÓN DEFINITIVA DE CLICS
+========================================= */
+
+.acciones-flotantes {
+  pointer-events: none;
+}
+
+.acciones-flotantes .instagram-flotante,
+.acciones-flotantes .whatsapp-flotante,
+.acciones-flotantes .abrir-carrito {
+  pointer-events: auto;
+}
+
+@media (max-width: 650px) {
+  body {
+    padding-bottom: 150px !important;
+  }
+
+  .contenedor {
+    padding-bottom: 80px !important;
   }
 }
