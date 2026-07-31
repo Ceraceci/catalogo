@@ -2176,3 +2176,47 @@ html {
     padding-bottom: 80px !important;
   }
 }
+
+/* =========================================
+   CARRITO V9 — ÍCONO Y TOTAL EN CÁPSULA BLANCA
+========================================= */
+
+.abrir-carrito {
+  justify-content: center !important;
+}
+
+.abrir-carrito strong {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.abrir-carrito strong .icono-carrito {
+  flex: 0 0 auto !important;
+  color: inherit !important;
+  font-size: 1.35rem !important;
+  line-height: 1 !important;
+}
+
+.separador-carrito {
+  color: inherit;
+  opacity: 0.55;
+}
+
+#valorCarrito {
+  color: inherit;
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .abrir-carrito strong .icono-carrito {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .abrir-carrito strong .icono-carrito {
+    font-size: 1.3rem !important;
+  }
+}

@@ -50,6 +50,9 @@ const productosCarrito =
 const cantidadCarrito =
   document.getElementById("cantidadCarrito");
 
+const valorCarrito =
+  document.getElementById("valorCarrito");
+
 const totalCarrito =
   document.getElementById("totalCarrito");
 
@@ -1166,7 +1169,7 @@ function mostrarCarrito() {
       </div>
     `;
 
-    cantidadCarrito.textContent = `0 | ${formatearPrecio(0)}`;
+    valorCarrito.textContent = formatearPrecio(0);
 
     totalCarrito.textContent =
       formatearPrecio(0);
@@ -1293,8 +1296,8 @@ function mostrarCarrito() {
       0
     );
 
-  cantidadCarrito.textContent =
-    `${cantidadTotal} | ${formatearPrecio(precioTotal)}`;
+  valorCarrito.textContent =
+    formatearPrecio(precioTotal);
 
   totalCarrito.textContent =
     formatearPrecio(precioTotal);
@@ -1917,4 +1920,3 @@ document.addEventListener(
 
 mostrarCarrito();
 cargarProductos();
-

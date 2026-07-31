@@ -10,7 +10,7 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=8">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 
 <body>
@@ -111,8 +111,11 @@
       aria-label="Abrir carrito"
       title="Abrir carrito"
     >
-      <span class="icono-carrito">🛒</span>
-      <strong id="cantidadCarrito">0 | $0</strong>
+      <strong id="cantidadCarrito">
+        <span class="icono-carrito" aria-hidden="true">🛒</span>
+        <span class="separador-carrito" aria-hidden="true">|</span>
+        <span id="valorCarrito">$0</span>
+      </strong>
     </button>
 
   </div>
@@ -158,7 +161,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=8"></script>
+  <script src="script.js?v=9"></script>
 </body>
 </html>
-
