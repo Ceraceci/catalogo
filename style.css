@@ -4066,3 +4066,293 @@ body {
     border-color: var(--color-principal) !important;
   }
 }
+
+/* =========================================
+   V27 — RETÍCULA VISUAL UNIFORME
+========================================= */
+
+:root {
+  --espacio-ui: 8px;
+  --espacio-ui-compacto: 6px;
+}
+
+/* Fondo continuo y más descansado */
+body,
+.tarjeta-producto,
+.busqueda,
+.carrito,
+.pie-carrito {
+  background-color: var(--color-fondo) !important;
+}
+
+/* Mantener contraste solo en controles */
+.busqueda input,
+.busqueda select,
+.boton-presentacion,
+.selector-presentacion,
+.control-cantidad,
+.control-cantidad .boton-cantidad,
+.control-cantidad .cantidad {
+  background-color: var(--color-tarjeta) !important;
+}
+
+/* Presentación seleccionada siempre visible */
+.boton-presentacion.seleccionada,
+.boton-presentacion.seleccionada:hover,
+.boton-presentacion.seleccionada:focus {
+  color: #ffffff !important;
+  background: var(--color-principal) !important;
+  background-color: var(--color-principal) !important;
+  border-color: var(--color-principal) !important;
+}
+
+.boton-presentacion.seleccionada span {
+  color: #ffffff !important;
+}
+
+
+/* =========================================
+   ESCRITORIO
+========================================= */
+
+@media (min-width: 901px) {
+
+  .tarjeta-producto {
+    row-gap: 0 !important;
+  }
+
+  .encabezado-producto {
+    display: grid !important;
+    grid-template-rows: auto auto auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 var(--espacio-ui) !important;
+    overflow: visible !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .fila-categoria-producto {
+    margin: 0 0 var(--espacio-ui) !important;
+  }
+
+  .categoria {
+    margin: 0 !important;
+  }
+
+  .fila-titulo-producto {
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 0 var(--espacio-ui) !important;
+  }
+
+  .fila-titulo-producto h2,
+  .tarjeta-producto h2 {
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+  }
+
+  .codigo-producto {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .codigo-producto:empty {
+    display: none !important;
+  }
+
+  .bloque-presentaciones {
+    margin: 0 !important;
+    padding: var(--espacio-ui) 0 !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .titulo-opciones {
+    margin: 0 0 var(--espacio-ui) !important;
+  }
+
+  .opciones-presentacion {
+    margin: 0 !important;
+    gap: 5px !important;
+  }
+
+  .boton-presentacion {
+    margin: 0 !important;
+  }
+
+  .informacion-precio {
+    margin: 0 !important;
+    padding: var(--espacio-ui) 0 !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .etiqueta-precio {
+    margin: 0 0 var(--espacio-ui) !important;
+  }
+
+  .precio {
+    margin: 0 !important;
+  }
+
+  .selector-cantidad {
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: var(--espacio-ui) 0 !important;
+    border-top: 0 !important;
+    align-items: center !important;
+  }
+
+  .selector-cantidad > span {
+    margin: 0 !important;
+  }
+
+  .total-producto {
+    margin: 0 0 var(--espacio-ui) !important;
+    padding: 10px !important;
+  }
+
+  .agregar-carrito {
+    margin-top: 0 !important;
+  }
+
+  .texto-finalizar-carrito {
+    min-width: 74px !important;
+    font-size: 0.9rem !important;
+    line-height: 0.8 !important;
+  }
+}
+
+
+/* =========================================
+   MÓVIL
+========================================= */
+
+@media (max-width: 650px) {
+
+  .contenedor {
+    padding-top: 0 !important;
+  }
+
+  .cabecera {
+    margin: 0 0 6px !important;
+  }
+
+  .logo-contenedor {
+    gap: 3px !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+  }
+
+  .logo {
+    margin: 0 !important;
+  }
+
+  .subtitulo-principal {
+    margin: 0 !important;
+  }
+
+  .tarjeta-producto {
+    row-gap: 0 !important;
+  }
+
+  .encabezado-producto {
+    display: grid !important;
+    grid-template-rows: auto auto auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 0 var(--espacio-ui-compacto) !important;
+    overflow: visible !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .fila-categoria-producto {
+    margin: 0 0 var(--espacio-ui-compacto) !important;
+  }
+
+  .categoria {
+    margin: 0 !important;
+  }
+
+  .fila-titulo-producto {
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 0 var(--espacio-ui-compacto) !important;
+  }
+
+  .fila-titulo-producto h2,
+  .tarjeta-producto h2 {
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+  }
+
+  .codigo-producto {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 !important;
+    line-height: 1.15 !important;
+  }
+
+  .codigo-producto:empty {
+    display: none !important;
+  }
+
+  .bloque-presentaciones {
+    margin: 0 !important;
+    padding: var(--espacio-ui-compacto) 0 !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .titulo-opciones {
+    margin: 0 0 var(--espacio-ui-compacto) !important;
+  }
+
+  .opciones-presentacion {
+    margin: 0 !important;
+  }
+
+  .informacion-precio {
+    margin: 0 !important;
+    padding: var(--espacio-ui-compacto) 0 !important;
+    border-bottom: 1px solid var(--color-borde) !important;
+  }
+
+  .etiqueta-precio {
+    margin: 0 0 var(--espacio-ui-compacto) !important;
+  }
+
+  .precio {
+    margin: 0 !important;
+  }
+
+  .selector-cantidad {
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: var(--espacio-ui-compacto) 0 !important;
+    border-top: 0 !important;
+  }
+
+  .selector-cantidad > span {
+    margin: 0 !important;
+  }
+
+  .total-producto {
+    margin: 0 0 var(--espacio-ui-compacto) !important;
+  }
+
+  .agregar-carrito {
+    margin-top: 0 !important;
+  }
+}
