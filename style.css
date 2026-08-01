@@ -3376,3 +3376,145 @@ html {
     font-size: 0.98rem !important;
   }
 }
+
+/* =========================================
+   V22 — CÓDIGOS VISIBLES Y CONTROLES CORREGIDOS
+========================================= */
+
+/* ESCRITORIO: categoría, nombre y código dentro del mismo alto */
+@media (min-width: 901px) {
+  .encabezado-producto {
+    display: grid !important;
+    grid-template-rows: 20px 38px 14px !important;
+    height: 76px !important;
+    min-height: 76px !important;
+    overflow: visible !important;
+    align-content: start !important;
+  }
+
+  .encabezado-producto .categoria {
+    align-self: start !important;
+    width: max-content !important;
+    max-width: 100% !important;
+    height: 18px !important;
+    min-height: 18px !important;
+    margin: 0 0 2px !important;
+    padding: 3px 7px !important;
+    line-height: 1 !important;
+  }
+
+  .encabezado-producto .fila-titulo-producto {
+    height: 38px !important;
+    min-height: 38px !important;
+    align-items: start !important;
+  }
+
+  .encabezado-producto h2 {
+    min-height: 2.3em !important;
+    max-height: 2.3em !important;
+    margin: 0 !important;
+    line-height: 1.15 !important;
+  }
+
+  .encabezado-producto .codigo-producto {
+    display: block !important;
+    height: 14px !important;
+    min-height: 14px !important;
+    max-height: 14px !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    color: var(--color-texto-suave) !important;
+    font-size: 0.6rem !important;
+    line-height: 14px !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .encabezado-producto .codigo-producto:empty {
+    display: block !important;
+    visibility: hidden !important;
+  }
+}
+
+
+/* MÓVIL: selector Kanthal rojo y control de cantidad simétrico */
+@media (max-width: 650px) {
+  .selector-presentacion {
+    width: 100% !important;
+    min-height: 28px !important;
+    padding: 3px 28px 3px 8px !important;
+
+    color: #ffffff !important;
+    font-weight: 700 !important;
+
+    background-color: var(--color-principal) !important;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #ffffff 50%),
+      linear-gradient(135deg, #ffffff 50%, transparent 50%) !important;
+    background-position:
+      calc(100% - 13px) 50%,
+      calc(100% - 9px) 50% !important;
+    background-size: 4px 4px, 4px 4px !important;
+    background-repeat: no-repeat !important;
+
+    border: 1px solid var(--color-principal) !important;
+    border-radius: 7px !important;
+
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+  }
+
+  .selector-presentacion:hover,
+  .selector-presentacion:focus {
+    color: #ffffff !important;
+    background-color: var(--color-principal-oscuro) !important;
+    border-color: var(--color-principal-oscuro) !important;
+  }
+
+  .selector-presentacion option {
+    color: var(--color-texto) !important;
+    background: #ffffff !important;
+  }
+
+  .control-cantidad {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+
+    background: #ffffff !important;
+    border: 1px solid var(--color-borde) !important;
+    border-radius: 8px !important;
+  }
+
+  .control-cantidad .boton-cantidad,
+  .control-cantidad .cantidad {
+    display: grid !important;
+    place-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #ffffff !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    line-height: 1 !important;
+  }
+
+  .control-cantidad .cantidad {
+    border-right: 1px solid var(--color-borde) !important;
+    border-left: 1px solid var(--color-borde) !important;
+  }
+
+  .control-cantidad .boton-cantidad:first-child,
+  .control-cantidad .boton-cantidad:last-child {
+    border-radius: 0 !important;
+  }
+}
