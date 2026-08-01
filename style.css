@@ -2555,3 +2555,22 @@ html {
     overflow-wrap: anywhere;
   }
 }
+
+
+
+/* ===== UNIFORMAR ETIQUETAS EN MÓVIL ===== */
+@media (max-width:650px){
+  .categoria{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    min-height:24px;
+    margin-bottom:8px;
+    padding:4px 8px;
+    text-align:center;
+    font-size:.62rem;
+    line-height:1.15;
+    border-radius:999px;
+  }
+}
