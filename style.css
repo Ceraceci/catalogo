@@ -2397,3 +2397,87 @@ html {
 .modo-producto-compartido .busqueda {
   display: none !important;
 }
+
+
+/* =========================================
+   AJUSTES ESTÉTICOS — TARJETAS UNIFORMES
+========================================= */
+
+@media (min-width: 901px) {
+
+  /* Logo y subtítulo un poco más arriba */
+  .contenedor {
+    padding-top: 6px;
+  }
+
+  .cabecera {
+    margin-bottom: 14px;
+  }
+
+  .logo-contenedor {
+    gap: 5px;
+  }
+
+  /* Todas las tarjetas conservan la misma estructura */
+  .tarjeta-producto {
+    height: 100%;
+  }
+
+  .encabezado-producto {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 74px;
+  }
+
+  .fila-titulo-producto {
+    min-height: 42px;
+  }
+
+  .tarjeta-producto h2 {
+    min-height: 2.3em;
+    max-height: 2.3em;
+    line-height: 1.15;
+    overflow: hidden;
+  }
+
+  .bloque-presentaciones {
+    min-height: 74px;
+  }
+
+  .informacion-precio {
+    min-height: 82px;
+  }
+
+  .selector-cantidad {
+    min-height: 38px;
+  }
+
+  .total-producto {
+    min-height: 44px;
+  }
+
+  .agregar-carrito {
+    margin-top: auto;
+  }
+
+  /* Desplegable de Kanthal con la misma estética roja */
+  .selector-presentacion {
+    color: #ffffff;
+    font-weight: 700;
+    background-color: var(--color-principal);
+    border-color: var(--color-principal);
+  }
+
+  .selector-presentacion:hover,
+  .selector-presentacion:focus {
+    color: #ffffff;
+    background-color: var(--color-principal-oscuro);
+    border-color: var(--color-principal-oscuro);
+  }
+
+  .selector-presentacion option {
+    color: var(--color-texto);
+    background: #ffffff;
+  }
+}
