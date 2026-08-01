@@ -652,74 +652,212 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 }
 
 /* =========================================
-   V29 — CABECERA Y FILTROS MÓVILES
+   V30 — AJUSTES DE CABECERA, CONTROLES Y PRESENTACIONES
 ========================================= */
 
-@media (max-width: 650px) {
-  /* Ritmo uniforme de 6 px en la cabecera */
+/* Las zonas transparentes del contenedor flotante no bloquean las tarjetas. */
+.acciones-flotantes {
+  pointer-events: none;
+}
+
+.acciones-flotantes > a,
+.acciones-flotantes > button {
+  pointer-events: auto;
+}
+
+/* Presentaciones orientadas hacia la derecha. */
+.opciones-presentacion {
+  justify-content: flex-end;
+}
+
+.selector-presentacion {
+  display: block;
+  margin-left: auto;
+}
+
+/* Margen simétrico entre texto, flecha y bordes. */
+#filtroCategoria,
+.selector-presentacion {
+  padding-left: 13px;
+  padding-right: 13px;
+  background-position: right 13px center;
+}
+
+/* En escritorio, reservar espacio inferior para las acciones flotantes. */
+@media (min-width: 651px) {
   .contenedor {
-    padding-top: 0 !important;
+    padding-bottom: 150px;
   }
 
-  .cabecera {
-    margin: 0 0 6px !important;
+  .productos {
+    padding-bottom: 24px;
+  }
+}
+
+/* Móvil */
+@media (max-width: 650px) {
+  body {
+    padding-bottom: 118px;
   }
 
-  .logo-contenedor {
-    gap: 6px !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
+  .contenedor {
+    padding-top: 0;
+    padding-bottom: 30px;
   }
 
   /*
-   * El PNG del logo contiene espacio transparente interno.
-   * Estos márgenes compensan ese espacio para que la distancia
-   * visual sea de aproximadamente 6 px arriba y abajo.
+   * Compensación moderada del espacio transparente interno del PNG.
+   * El logo queda más abajo que en V29 y el subtítulo ya no se superpone.
    */
+  .cabecera {
+    margin: 0 0 6px;
+  }
+
+  .logo-contenedor {
+    gap: 8px;
+    margin: 0 auto;
+    padding-top: 4px;
+  }
+
   .logo {
-    width: 142px !important;
-    margin: -35px 0 -43px !important;
+    width: 142px;
+    margin: -14px 0 -16px;
   }
 
   .subtitulo-principal {
-    margin: 0 !important;
-    line-height: 1.05 !important;
+    margin: 0;
+    line-height: 1.08;
   }
 
-  /* Buscador + ordenar en la primera fila; categorías debajo */
+  /* Buscador y orden en una fila; categorías debajo. */
   .busqueda {
     grid-template-areas:
       "buscarorden"
-      "categoria" !important;
-    grid-template-columns: minmax(0, 1fr) !important;
-    gap: 6px !important;
-    padding: 8px !important;
+      "categoria";
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    padding: 8px;
   }
 
   .fila-busqueda-orden {
-    grid-area: buscarorden !important;
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) 40px !important;
-    gap: 6px !important;
-    min-width: 0 !important;
+    grid-area: buscarorden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 40px;
+    gap: 7px;
+    min-width: 0;
   }
 
   #buscador {
-    grid-area: auto !important;
-    width: 100% !important;
-    min-width: 0 !important;
+    min-width: 0;
   }
 
   .control-orden {
-    grid-area: auto !important;
-    position: relative !important;
-    width: 40px !important;
-    min-width: 40px !important;
-    height: 40px !important;
+    position: relative;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
   }
 
   #filtroCategoria {
-    grid-area: categoria !important;
-    width: 100% !important;
+    grid-area: categoria;
+    width: 100%;
+    padding-left: 13px;
+    padding-right: 13px;
+    background-position: right 13px center;
+  }
+
+  /* Evitar que la barra inferior tape los últimos controles. */
+  .productos {
+    padding-bottom: 28px;
+  }
+
+  /* Presentaciones a la derecha también en móvil. */
+  .opciones-presentacion {
+    justify-content: flex-end;
+  }
+
+  .selector-presentacion {
+    margin-left: auto;
+    padding-left: 13px;
+    padding-right: 13px;
+    background-position: right 13px center;
+  }
+}
+
+/* =========================================
+   V31 — TARJETAS ALINEADAS EN ESCRITORIO
+========================================= */
+
+@media (min-width: 651px) {
+  /*
+   * Todas las tarjetas de una fila conservan la misma estructura:
+   * categoría + nombre de dos líneas + código de una línea.
+   */
+  .tarjeta-producto {
+    min-height: 438px;
+  }
+
+  .encabezado-producto {
+    display: grid;
+    grid-template-rows: 30px 2.36em 1.15em;
+    row-gap: var(--espacio);
+    min-height: 112px;
+    height: 112px;
+    padding-bottom: var(--espacio);
+  }
+
+  .fila-categoria-producto {
+    min-height: 30px;
+    height: 30px;
+  }
+
+  .fila-titulo-producto {
+    min-height: 2.36em;
+    height: 2.36em;
+    overflow: hidden;
+  }
+
+  .tarjeta-producto h2 {
+    display: -webkit-box;
+    min-height: 2.36em;
+    max-height: 2.36em;
+    line-height: 1.18;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .codigo-producto {
+    min-height: 1.15em;
+    height: 1.15em;
+    line-height: 1.15;
+  }
+
+  .codigo-producto:empty {
+    visibility: hidden;
+  }
+
+  /*
+   * Los bloques siguientes empiezan y terminan en la misma posición
+   * siempre que tengan el mismo tipo de control de presentación.
+   */
+  .bloque-presentaciones {
+    min-height: 65px;
+  }
+
+  .informacion-precio {
+    min-height: 72px;
+  }
+
+  .selector-cantidad {
+    min-height: 50px;
+  }
+
+  .total-producto {
+    min-height: 48px;
+  }
+
+  .agregar-carrito {
+    margin-top: auto;
   }
 }
