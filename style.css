@@ -3152,3 +3152,227 @@ html {
     font-size: 0.95rem !important;
   }
 }
+
+/* =========================================
+   V21 — AJUSTES MÓVILES MINIMALISTAS
+========================================= */
+
+/* Estructura del buscador en escritorio */
+.busqueda {
+  grid-template-areas: "buscar categoria ordenar";
+}
+
+.fila-busqueda-orden {
+  display: contents;
+}
+
+#buscador {
+  grid-area: buscar;
+}
+
+#filtroCategoria {
+  grid-area: categoria;
+}
+
+.control-orden {
+  grid-area: ordenar;
+  position: relative;
+  display: block;
+  min-width: 0;
+}
+
+.control-orden .icono-orden {
+  display: none;
+}
+
+.control-orden #ordenarProductos {
+  width: 100%;
+}
+
+
+/* Si no existe código, no se reserva espacio */
+.codigo-producto:empty {
+  display: none !important;
+}
+
+
+@media (max-width: 650px) {
+
+  /* Buscador + botón rojo ⇅ en una sola línea */
+  .busqueda {
+    grid-template-areas:
+      "buscar-orden"
+      "categoria" !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+    padding: 9px !important;
+  }
+
+  .fila-busqueda-orden {
+    grid-area: buscar-orden;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 42px;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  #buscador {
+    grid-area: auto;
+    min-width: 0;
+    min-height: 42px !important;
+    height: 42px !important;
+    padding: 0 11px !important;
+    font-size: 0.82rem !important;
+  }
+
+  #filtroCategoria {
+    grid-area: categoria;
+    min-height: 40px !important;
+    height: 40px !important;
+    padding: 0 11px !important;
+    font-size: 0.82rem !important;
+  }
+
+  .control-orden {
+    grid-area: auto;
+    position: relative;
+    display: grid !important;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    overflow: hidden;
+    color: #ffffff;
+    background: var(--color-principal);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  .control-orden:hover,
+  .control-orden:focus-within {
+    background: var(--color-principal-oscuro);
+  }
+
+  .control-orden .icono-orden {
+    display: block;
+    color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 800;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .control-orden #ordenarProductos {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 0 !important;
+    padding: 0 !important;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  /* Control - 1 + completamente cerrado */
+  .control-cantidad {
+    overflow: hidden !important;
+    border: 1px solid var(--color-borde) !important;
+    border-radius: 8px !important;
+    background: #ffffff;
+  }
+
+  .control-cantidad .boton-cantidad,
+  .control-cantidad .cantidad {
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .control-cantidad .cantidad {
+    border-right: 1px solid var(--color-borde) !important;
+    border-left: 1px solid var(--color-borde) !important;
+  }
+
+  /* Acciones flotantes más pequeñas */
+  .acciones-flotantes {
+    grid-template-columns:
+      44px
+      44px
+      minmax(120px, 1fr) !important;
+    gap: 7px !important;
+    padding:
+      7px
+      max(9px, env(safe-area-inset-right))
+      calc(7px + env(safe-area-inset-bottom))
+      max(9px, env(safe-area-inset-left)) !important;
+  }
+
+  .instagram-flotante,
+  .whatsapp-flotante {
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  .instagram-flotante svg,
+  .whatsapp-flotante svg {
+    width: 23px !important;
+    height: 23px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito {
+    height: 46px !important;
+    min-height: 46px !important;
+    padding: 0 7px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito strong {
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 9px !important;
+    gap: 6px !important;
+    font-size: 1.08rem !important;
+  }
+
+  .acciones-flotantes .abrir-carrito strong .icono-carrito {
+    font-size: 1.15rem !important;
+  }
+
+  body {
+    padding-bottom: 122px !important;
+  }
+}
+
+
+@media (max-width: 390px) {
+  .fila-busqueda-orden {
+    grid-template-columns: minmax(0, 1fr) 40px;
+  }
+
+  .control-orden {
+    width: 40px;
+    height: 40px;
+  }
+
+  .acciones-flotantes {
+    grid-template-columns:
+      40px
+      40px
+      minmax(108px, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  .instagram-flotante,
+  .whatsapp-flotante {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito {
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .acciones-flotantes .abrir-carrito strong {
+    height: 32px !important;
+    min-height: 32px !important;
+    font-size: 0.98rem !important;
+  }
+}

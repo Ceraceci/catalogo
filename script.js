@@ -728,7 +728,7 @@ function mostrarProductos(lista) {
               ? `Código: ${escaparHTML(
                   presentacionInicial.codigo
                 )}`
-              : "Código: —"
+              : ""
           }
         </p>
       </div>
@@ -900,7 +900,7 @@ function seleccionarPresentacion(control) {
   ).textContent =
     presentacion.codigo
       ? `Código: ${presentacion.codigo}`
-      : "Código: —";
+      : "";
 
   actualizarTotalTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);

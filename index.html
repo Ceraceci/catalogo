@@ -10,7 +10,7 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=20">
+  <link rel="stylesheet" href="style.css?v=21">
 </head>
 
 <body>
@@ -47,34 +47,44 @@
     </section>
 
     <section class="busqueda">
-      <input
-        type="search"
-        id="buscador"
-        placeholder="Buscar por nombre, código, categoría o presentación..."
-        autocomplete="off"
-      >
+      <div class="fila-busqueda-orden">
+        <input
+          type="search"
+          id="buscador"
+          placeholder="Buscar por nombre, código, categoría o presentación..."
+          autocomplete="off"
+        >
+
+        <label
+          class="control-orden"
+          aria-label="Ordenar productos"
+          title="Ordenar productos"
+        >
+          <span class="icono-orden" aria-hidden="true">⇅</span>
+
+          <select id="ordenarProductos" aria-label="Ordenar productos">
+            <option value="nombre-asc">
+              Nombre: A–Z
+            </option>
+
+            <option value="nombre-desc">
+              Nombre: Z–A
+            </option>
+
+            <option value="precio-asc">
+              Precio: menor a mayor
+            </option>
+
+            <option value="precio-desc">
+              Precio: mayor a menor
+            </option>
+          </select>
+        </label>
+      </div>
 
       <select id="filtroCategoria">
         <option value="">
           Todas las categorías
-        </option>
-      </select>
-
-      <select id="ordenarProductos" aria-label="Ordenar productos">
-        <option value="nombre-asc">
-          Nombre: A–Z
-        </option>
-
-        <option value="nombre-desc">
-          Nombre: Z–A
-        </option>
-
-        <option value="precio-asc">
-          Precio: menor a mayor
-        </option>
-
-        <option value="precio-desc">
-          Precio: mayor a menor
         </option>
       </select>
     </section>
@@ -175,6 +185,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=20"></script>
+  <script src="script.js?v=21"></script>
 </body>
 </html>
