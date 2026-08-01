@@ -3977,3 +3977,92 @@ body {
     gap: 5px !important;
   }
 }
+
+/* =========================================
+   V26 — CORRECCIONES DE PRESENTACIÓN Y ESPACIADO
+========================================= */
+
+/* Restaurar correctamente la presentación seleccionada */
+.boton-presentacion.seleccionada,
+.boton-presentacion.seleccionada:hover,
+.boton-presentacion.seleccionada:focus {
+  color: #ffffff !important;
+  background: var(--color-principal) !important;
+  background-color: var(--color-principal) !important;
+  border-color: var(--color-principal) !important;
+}
+
+.boton-presentacion.seleccionada span {
+  color: #ffffff !important;
+}
+
+
+/* Escritorio: compactar espacios sin cambiar el tamaño total de la tarjeta */
+@media (min-width: 901px) {
+
+  .bloque-presentaciones {
+    padding-top: 7px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .titulo-opciones {
+    margin-bottom: 5px !important;
+  }
+
+  .opciones-presentacion {
+    margin-bottom: 0 !important;
+  }
+
+  .informacion-precio {
+    padding-top: 7px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .precio {
+    margin-top: 3px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .selector-cantidad {
+    min-height: 43px !important;
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    align-items: center !important;
+  }
+
+  .selector-cantidad > span {
+    align-self: center !important;
+    margin: 0 !important;
+  }
+
+  .total-producto {
+    margin-top: 4px !important;
+  }
+
+  /* Aumentar Finalizar / pedido sin aumentar la cápsula */
+  .texto-finalizar-carrito {
+    min-width: 72px !important;
+    font-size: 0.86rem !important;
+    font-weight: 700 !important;
+    line-height: 0.82 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .abrir-carrito,
+  .abrir-carrito strong {
+    height: inherit;
+  }
+}
+
+
+/* Móvil: mantener la misma presentación seleccionada visible */
+@media (max-width: 650px) {
+  .boton-presentacion.seleccionada,
+  .boton-presentacion.seleccionada:hover,
+  .boton-presentacion.seleccionada:focus {
+    color: #ffffff !important;
+    background: var(--color-principal) !important;
+    background-color: var(--color-principal) !important;
+    border-color: var(--color-principal) !important;
+  }
+}
