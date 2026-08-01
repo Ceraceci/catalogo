@@ -2398,86 +2398,135 @@ html {
   display: none !important;
 }
 
-
 /* =========================================
-   AJUSTES ESTÉTICOS — TARJETAS UNIFORMES
+   AJUSTE FINAL V12 — TARJETAS ALINEADAS
+   Y SELECTOR KANTHAL ROJO
 ========================================= */
 
 @media (min-width: 901px) {
 
-  /* Logo y subtítulo un poco más arriba */
   .contenedor {
-    padding-top: 6px;
+    padding-top: 4px !important;
   }
 
   .cabecera {
-    margin-bottom: 14px;
+    margin-bottom: 12px !important;
   }
 
   .logo-contenedor {
-    gap: 5px;
+    gap: 4px !important;
   }
 
-  /* Todas las tarjetas conservan la misma estructura */
   .tarjeta-producto {
+    display: grid !important;
+    grid-template-rows:
+      76px
+      74px
+      82px
+      38px
+      44px
+      34px;
+    align-content: start;
     height: 100%;
   }
 
   .encabezado-producto {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    min-height: 74px;
-  }
-
-  .fila-titulo-producto {
-    min-height: 42px;
-  }
-
-  .tarjeta-producto h2 {
-    min-height: 2.3em;
-    max-height: 2.3em;
-    line-height: 1.15;
+    min-height: 0 !important;
+    height: 76px !important;
+    margin-bottom: 0 !important;
     overflow: hidden;
   }
 
+  .categoria {
+    margin-bottom: 6px !important;
+  }
+
+  .fila-titulo-producto {
+    min-height: 42px !important;
+    height: 42px !important;
+    align-items: flex-start !important;
+  }
+
+  .tarjeta-producto h2 {
+    display: -webkit-box;
+    min-height: 2.3em !important;
+    max-height: 2.3em !important;
+    line-height: 1.15 !important;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
   .bloque-presentaciones {
-    min-height: 74px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 74px !important;
+    min-height: 74px !important;
+    padding: 7px 0 !important;
+    overflow: hidden;
   }
 
   .informacion-precio {
-    min-height: 82px;
+    height: 82px !important;
+    min-height: 82px !important;
+    padding: 8px 0 6px !important;
+    overflow: hidden;
   }
 
   .selector-cantidad {
-    min-height: 38px;
+    height: 38px !important;
+    min-height: 38px !important;
+    padding-top: 7px !important;
   }
 
   .total-producto {
-    min-height: 44px;
+    height: 44px !important;
+    min-height: 44px !important;
+    margin-top: 0 !important;
   }
 
   .agregar-carrito {
-    margin-top: auto;
+    align-self: end;
+    height: 34px !important;
+    min-height: 34px !important;
+    margin-top: 0 !important;
   }
 
-  /* Desplegable de Kanthal con la misma estética roja */
   .selector-presentacion {
-    color: #ffffff;
-    font-weight: 700;
-    background-color: var(--color-principal);
-    border-color: var(--color-principal);
+    width: 100% !important;
+    min-height: 30px !important;
+    padding: 4px 34px 4px 10px !important;
+
+    color: #ffffff !important;
+    font-weight: 700 !important;
+
+    background-color: var(--color-principal) !important;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #ffffff 50%),
+      linear-gradient(135deg, #ffffff 50%, transparent 50%) !important;
+    background-position:
+      calc(100% - 15px) 50%,
+      calc(100% - 10px) 50% !important;
+    background-size: 5px 5px, 5px 5px !important;
+    background-repeat: no-repeat !important;
+
+    border-color: var(--color-principal) !important;
+
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
   }
 
   .selector-presentacion:hover,
   .selector-presentacion:focus {
-    color: #ffffff;
-    background-color: var(--color-principal-oscuro);
-    border-color: var(--color-principal-oscuro);
+    color: #ffffff !important;
+    background-color: var(--color-principal-oscuro) !important;
+    border-color: var(--color-principal-oscuro) !important;
   }
 
   .selector-presentacion option {
-    color: var(--color-texto);
-    background: #ffffff;
+    color: var(--color-texto) !important;
+    background: #ffffff !important;
   }
 }
