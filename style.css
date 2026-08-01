@@ -2754,3 +2754,161 @@ html {
     overflow: hidden !important;
   }
 }
+
+/* =========================================
+   V18 — GRILLA MÓVIL COMPACTA
+   Mantiene todas las tarjetas alineadas,
+   reduciendo espacios y alturas innecesarias.
+========================================= */
+
+@media (min-width: 391px) and (max-width: 650px) {
+
+  .tarjeta-producto {
+    grid-template-rows:
+      116px
+      96px
+      88px
+      66px
+      58px
+      46px !important;
+
+    min-height: 470px !important;
+    padding: 10px !important;
+  }
+
+  .encabezado-producto {
+    grid-template-rows: 38px 1fr !important;
+    height: 116px !important;
+    min-height: 116px !important;
+  }
+
+  .categoria {
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
+    margin: 0 0 6px !important;
+    padding: 4px 6px !important;
+    font-size: 0.58rem !important;
+  }
+
+  .fila-titulo-producto {
+    grid-template-columns: minmax(0, 1fr) 38px !important;
+    min-height: 72px !important;
+    height: 72px !important;
+    gap: 6px !important;
+  }
+
+  .tarjeta-producto h2,
+  .fila-titulo-producto h2 {
+    min-height: 4.6em !important;
+    max-height: 4.6em !important;
+    font-size: 0.84rem !important;
+    line-height: 1.15 !important;
+    -webkit-line-clamp: 4;
+  }
+
+  .compartir-producto {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.9rem !important;
+  }
+
+  .bloque-presentaciones {
+    height: 96px !important;
+    min-height: 96px !important;
+    max-height: 96px !important;
+    padding: 8px 0 6px !important;
+  }
+
+  .titulo-opciones {
+    min-height: 16px !important;
+    margin-bottom: 5px !important;
+    font-size: 0.64rem !important;
+  }
+
+  .opciones-presentacion {
+    gap: 4px !important;
+  }
+
+  .boton-presentacion {
+    min-height: 29px !important;
+    padding: 4px 7px !important;
+    font-size: 0.71rem !important;
+  }
+
+  .selector-presentacion {
+    min-height: 30px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .informacion-precio {
+    height: 88px !important;
+    min-height: 88px !important;
+    max-height: 88px !important;
+    padding: 8px 0 5px !important;
+  }
+
+  .etiqueta-precio {
+    min-height: 15px !important;
+    font-size: 0.64rem !important;
+  }
+
+  .precio {
+    min-height: 27px !important;
+    margin: 2px 0 !important;
+    font-size: 1.3rem !important;
+  }
+
+  .codigo-producto {
+    min-height: 28px !important;
+    max-height: 28px !important;
+    font-size: 0.62rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .selector-cantidad {
+    grid-template-rows: 18px 36px !important;
+    height: 66px !important;
+    min-height: 66px !important;
+    max-height: 66px !important;
+    gap: 4px !important;
+    padding-top: 6px !important;
+  }
+
+  .selector-cantidad > span {
+    min-height: 18px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .control-cantidad,
+  .boton-cantidad,
+  .cantidad {
+    height: 36px !important;
+  }
+
+  .total-producto {
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    padding: 8px 10px !important;
+    gap: 2px !important;
+  }
+
+  .total-producto span {
+    font-size: 0.62rem !important;
+  }
+
+  .precio-total {
+    font-size: 0.93rem !important;
+  }
+
+  .agregar-carrito {
+    height: 46px !important;
+    min-height: 46px !important;
+    max-height: 46px !important;
+    padding: 6px 8px !important;
+    font-size: 0.75rem !important;
+  }
+}
