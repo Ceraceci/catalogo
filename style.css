@@ -2912,3 +2912,228 @@ html {
     font-size: 0.75rem !important;
   }
 }
+
+
+/* =========================================
+   V19 — REDISEÑO COMPACTO DE TARJETAS
+========================================= */
+
+/* Código debajo del nombre en todas las pantallas */
+.datos-titulo-producto {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.datos-titulo-producto .codigo-producto {
+  min-height: 0;
+  margin: 4px 0 0;
+  line-height: 1.2;
+}
+
+.informacion-precio .codigo-producto {
+  display: none;
+}
+
+.acciones-compra-tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Escritorio: conserva disposición vertical */
+@media (min-width: 651px) {
+  .acciones-compra-tarjeta .agregar-carrito {
+    margin-top: 0;
+  }
+}
+
+/* Móvil: tarjeta compacta y reorganizada */
+@media (max-width: 650px) {
+  .tarjeta-producto {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 0 !important;
+    height: auto !important;
+    padding: 10px !important;
+  }
+
+  .encabezado-producto {
+    display: block !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin-bottom: 6px !important;
+    overflow: visible !important;
+  }
+
+  .categoria {
+    display: inline-flex !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 20px !important;
+    max-height: none !important;
+    margin: 0 0 6px !important;
+    padding: 2px 7px !important;
+    font-size: 0.56rem !important;
+    line-height: 1.1 !important;
+    border-radius: 999px !important;
+  }
+
+  .fila-titulo-producto {
+    display: flex !important;
+    align-items: flex-start !important;
+    min-height: 0 !important;
+    height: auto !important;
+    gap: 6px !important;
+  }
+
+  .tarjeta-producto h2,
+  .fila-titulo-producto h2 {
+    display: -webkit-box !important;
+    min-height: 3.45em !important;
+    max-height: 3.45em !important;
+    margin: 0 !important;
+    font-size: 0.82rem !important;
+    line-height: 1.15 !important;
+    overflow: hidden !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 3 !important;
+  }
+
+  .datos-titulo-producto .codigo-producto {
+    min-height: 1.2em !important;
+    max-height: 1.2em !important;
+    margin-top: 3px !important;
+    font-size: 0.59rem !important;
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .compartir-producto {
+    width: 34px !important;
+    height: 34px !important;
+    flex: 0 0 34px !important;
+  }
+
+  .bloque-presentaciones {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 6px 0 !important;
+    overflow: visible !important;
+  }
+
+  .titulo-opciones {
+    min-height: 0 !important;
+    margin: 0 0 4px !important;
+    font-size: 0.61rem !important;
+  }
+
+  .opciones-presentacion {
+    gap: 4px !important;
+  }
+
+  .boton-presentacion {
+    min-height: 27px !important;
+    padding: 3px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .selector-presentacion {
+    min-height: 28px !important;
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .informacion-precio {
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 6px 0 5px !important;
+    overflow: visible !important;
+  }
+
+  .etiqueta-precio {
+    min-height: 0 !important;
+    margin: 0 !important;
+    font-size: 0.61rem !important;
+  }
+
+  .precio {
+    min-height: 0 !important;
+    margin: 1px 0 0 !important;
+    font-size: 1.25rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .total-producto {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: auto !important;
+    min-height: 34px !important;
+    max-height: none !important;
+    margin: 5px 0 6px !important;
+    padding: 6px 8px !important;
+    gap: 6px !important;
+  }
+
+  .total-producto span {
+    font-size: 0.59rem !important;
+  }
+
+  .precio-total {
+    font-size: 0.88rem !important;
+  }
+
+  .acciones-compra-tarjeta {
+    display: grid !important;
+    grid-template-columns: minmax(82px, 0.9fr) minmax(0, 1.4fr) !important;
+    align-items: end !important;
+    gap: 6px !important;
+  }
+
+  .selector-cantidad {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    padding: 0 !important;
+    border-top: 0 !important;
+  }
+
+  .selector-cantidad > span {
+    display: block !important;
+    min-height: 0 !important;
+    margin: 0 0 3px !important;
+    font-size: 0.59rem !important;
+  }
+
+  .control-cantidad {
+    grid-template-columns: 28px minmax(28px, 1fr) 28px !important;
+    width: 100% !important;
+    height: 34px !important;
+  }
+
+  .boton-cantidad,
+  .cantidad {
+    height: 34px !important;
+  }
+
+  .agregar-carrito {
+    align-self: end !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+    margin: 0 !important;
+    padding: 4px 6px !important;
+    font-size: 0.69rem !important;
+    line-height: 1.05 !important;
+  }
+}

@@ -707,9 +707,11 @@ function mostrarProductos(lista) {
         </span>
 
         <div class="fila-titulo-producto">
-          <h2>
-            ${escaparHTML(producto.nombre)}
-          </h2>
+          <div class="datos-titulo-producto">
+            <h2>
+              ${escaparHTML(producto.nombre)}
+            </h2>
+          </div>
 
           <button
             type="button"
@@ -759,10 +761,11 @@ function mostrarProductos(lista) {
 
       </div>
 
-      <div class="selector-cantidad">
-        <span>Cantidad</span>
+      <div class="acciones-compra-tarjeta">
+        <div class="selector-cantidad">
+          <span>Cantidad</span>
 
-        <div class="control-cantidad">
+          <div class="control-cantidad">
           <button
             type="button"
             class="boton-cantidad restar"
@@ -786,6 +789,7 @@ function mostrarProductos(lista) {
           >
             +
           </button>
+          </div>
         </div>
       </div>
 
