@@ -2391,3 +2391,9 @@ html {
     column-gap: 6px !important;
   }
 }
+
+/* V12: asegura que la barra oculta no aparezca en productos compartidos */
+.busqueda[hidden],
+.modo-producto-compartido .busqueda {
+  display: none !important;
+}
