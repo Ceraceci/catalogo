@@ -3598,3 +3598,171 @@ html {
   }
 }
 
+/* =========================================
+   V24 — ORDEN ACTIVO, COMPARTIR Y MARCA
+========================================= */
+
+/* Encabezado de tarjeta: logo + categoría + compartir */
+.fila-categoria-producto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+}
+
+.fila-categoria-producto .categoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: auto !important;
+  max-width: calc(100% - 34px) !important;
+  margin-bottom: 0 !important;
+}
+
+.logo-categoria {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  display: block;
+}
+
+.compartir-producto {
+  display: grid !important;
+  place-items: center !important;
+  flex: 0 0 auto !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  color: var(--color-principal) !important;
+  background: #ffffff !important;
+  border: 1px solid var(--color-borde) !important;
+  border-radius: 50% !important;
+}
+
+.compartir-producto svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+  pointer-events: none;
+}
+
+.compartir-producto:hover,
+.compartir-producto:focus-visible {
+  color: #ffffff !important;
+  background: var(--color-principal) !important;
+  border-color: var(--color-principal) !important;
+}
+
+/* Orden: blanco inicialmente, terracota después de utilizarlo */
+@media (max-width: 650px) {
+  .control-orden {
+    color: var(--color-principal) !important;
+    background: #ffffff !important;
+    border: 1px solid var(--color-borde) !important;
+  }
+
+  .control-orden .icono-orden {
+    color: var(--color-principal) !important;
+  }
+
+  .control-orden:hover,
+  .control-orden:focus-within {
+    color: var(--color-principal) !important;
+    background: #ffffff !important;
+    border-color: var(--color-principal) !important;
+  }
+
+  .control-orden.orden-activo,
+  .control-orden.orden-activo:hover,
+  .control-orden.orden-activo:focus-within {
+    color: #ffffff !important;
+    background: var(--color-principal) !important;
+    border-color: var(--color-principal) !important;
+  }
+
+  .control-orden.orden-activo .icono-orden {
+    color: #ffffff !important;
+  }
+
+  /* Flecha propia un poco más hacia la izquierda */
+  #filtroCategoria {
+    padding-right: 38px !important;
+    background-color: #ffffff !important;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-texto-suave) 50%),
+      linear-gradient(135deg, var(--color-texto-suave) 50%, transparent 50%) !important;
+    background-position:
+      calc(100% - 19px) 50%,
+      calc(100% - 14px) 50% !important;
+    background-size: 5px 5px, 5px 5px !important;
+    background-repeat: no-repeat !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+  }
+
+  .encabezado-producto {
+    grid-template-rows: 28px 1fr 14px !important;
+  }
+
+  .fila-categoria-producto {
+    height: 28px;
+    min-height: 28px;
+  }
+
+  .fila-categoria-producto .categoria {
+    height: 22px !important;
+    min-height: 22px !important;
+    max-height: 22px !important;
+    padding: 3px 6px !important;
+  }
+
+  .logo-categoria {
+    width: 13px;
+    height: 13px;
+  }
+
+  .compartir-producto {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  .compartir-producto svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+@media (min-width: 901px) {
+  .encabezado-producto {
+    grid-template-rows: 22px 38px 14px !important;
+  }
+
+  .fila-categoria-producto {
+    height: 22px;
+    min-height: 22px;
+  }
+
+  .fila-categoria-producto .categoria {
+    height: 18px !important;
+    min-height: 18px !important;
+    max-height: 18px !important;
+  }
+
+  .logo-categoria {
+    width: 12px;
+    height: 12px;
+  }
+
+  .compartir-producto {
+    width: 24px !important;
+    height: 24px !important;
+  }
+
+  .compartir-producto svg {
+    width: 13px;
+    height: 13px;
+  }
+}
