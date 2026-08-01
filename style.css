@@ -650,3 +650,76 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   .instagram-flotante, .whatsapp-flotante { width: 40px; height: 40px; }
   .texto-finalizar-carrito { min-width: 52px; font-size: .64rem; }
 }
+
+/* =========================================
+   V29 — CABECERA Y FILTROS MÓVILES
+========================================= */
+
+@media (max-width: 650px) {
+  /* Ritmo uniforme de 6 px en la cabecera */
+  .contenedor {
+    padding-top: 0 !important;
+  }
+
+  .cabecera {
+    margin: 0 0 6px !important;
+  }
+
+  .logo-contenedor {
+    gap: 6px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+
+  /*
+   * El PNG del logo contiene espacio transparente interno.
+   * Estos márgenes compensan ese espacio para que la distancia
+   * visual sea de aproximadamente 6 px arriba y abajo.
+   */
+  .logo {
+    width: 142px !important;
+    margin: -35px 0 -43px !important;
+  }
+
+  .subtitulo-principal {
+    margin: 0 !important;
+    line-height: 1.05 !important;
+  }
+
+  /* Buscador + ordenar en la primera fila; categorías debajo */
+  .busqueda {
+    grid-template-areas:
+      "buscarorden"
+      "categoria" !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 6px !important;
+    padding: 8px !important;
+  }
+
+  .fila-busqueda-orden {
+    grid-area: buscarorden !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 40px !important;
+    gap: 6px !important;
+    min-width: 0 !important;
+  }
+
+  #buscador {
+    grid-area: auto !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .control-orden {
+    grid-area: auto !important;
+    position: relative !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+  }
+
+  #filtroCategoria {
+    grid-area: categoria !important;
+    width: 100% !important;
+  }
+}
