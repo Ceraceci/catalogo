@@ -527,17 +527,13 @@ function ordenarListaProductos(lista) {
   const criterio =
     ordenarProductos
       ? ordenarProductos.value
-      : "nombre-asc";
+      : "inicial";
+
+  if (criterio === "inicial") {
+    return;
+  }
 
   lista.sort((a, b) => {
-    if (criterio === "nombre-desc") {
-      return b.nombre.localeCompare(
-        a.nombre,
-        "es",
-        { sensitivity: "base", numeric: true }
-      );
-    }
-
     if (criterio === "precio-asc") {
       return (
         obtenerPrecioReferencia(a) -
@@ -552,11 +548,7 @@ function ordenarListaProductos(lista) {
       );
     }
 
-    return a.nombre.localeCompare(
-      b.nombre,
-      "es",
-      { sensitivity: "base", numeric: true }
-    );
+    return 0;
   });
 }
 
@@ -1989,7 +1981,10 @@ if (ordenarProductos) {
       const controlOrden = ordenarProductos.closest(".control-orden");
 
       if (controlOrden) {
-        controlOrden.classList.add("orden-activo");
+        controlOrden.classList.toggle(
+          "orden-activo",
+          ordenarProductos.value !== "inicial"
+        );
       }
 
       filtrarProductos();

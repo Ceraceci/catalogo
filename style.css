@@ -2,20 +2,20 @@
   --color-principal: #98371e;
   --color-principal-oscuro: #742814;
 
-  --color-fondo: #f8f4f1;
-  --color-tarjeta: #ffffff;
+  --color-fondo: #f6f2ee;
+  --color-tarjeta: #fcfbfa;
 
   --color-texto: #2d2926;
-  --color-texto-suave: #746c66;
+  --color-texto-suave: #6f6761;
 
-  --color-borde: #e8d8d1;
-  --color-categoria: #f3e3dd;
+  --color-borde: #ddd1c8;
+  --color-categoria: #eee1d8;
 
   --color-whatsapp: #25d366;
   --color-whatsapp-oscuro: #1ebe5d;
 
   --sombra:
-    0 10px 30px rgba(152, 55, 30, 0.1);
+    0 4px 12px rgba(70, 40, 25, 0.05);
 }
 
 
@@ -3764,5 +3764,216 @@ html {
   .compartir-producto svg {
     width: 13px;
     height: 13px;
+  }
+}
+
+/* =========================================
+   V25 — PALETA CÁLIDA Y AJUSTES FINALES
+========================================= */
+
+body {
+  background: var(--color-fondo) !important;
+}
+
+.tarjeta-producto,
+.busqueda,
+.carrito,
+.pie-carrito,
+.boton-presentacion,
+.busqueda input,
+.busqueda select {
+  background-color: var(--color-tarjeta) !important;
+}
+
+/* Flecha de categorías levemente más hacia la izquierda */
+#filtroCategoria {
+  padding-right: 38px !important;
+  background-position: calc(100% - 16px) center !important;
+}
+
+/* Cápsula del carrito: Finalizar / pedido sin aumentar su alto */
+.abrir-carrito strong {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+}
+
+.texto-finalizar-carrito {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 0.92;
+  text-align: center;
+  letter-spacing: 0.01em;
+}
+
+.texto-finalizar-carrito span {
+  display: block;
+}
+
+/* El botón de orden es blanco hasta que se utiliza */
+.control-orden {
+  color: var(--color-principal) !important;
+  background: var(--color-tarjeta) !important;
+  border: 1px solid var(--color-borde) !important;
+}
+
+.control-orden .icono-orden {
+  color: var(--color-principal) !important;
+}
+
+.control-orden.orden-activo,
+.control-orden.orden-activo:hover,
+.control-orden.orden-activo:focus-within {
+  color: #ffffff !important;
+  background: var(--color-principal) !important;
+  border-color: var(--color-principal) !important;
+}
+
+.control-orden.orden-activo .icono-orden {
+  color: #ffffff !important;
+}
+
+
+/* =========================================
+   ESCRITORIO
+========================================= */
+
+@media (min-width: 901px) {
+
+  /* Presentaciones más cerca de la línea inferior */
+  .bloque-presentaciones {
+    padding-top: 7px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .titulo-opciones {
+    margin-bottom: 5px !important;
+  }
+
+  /* Precio centrado entre ambas líneas */
+  .informacion-precio {
+    padding-top: 7px !important;
+    padding-bottom: 7px !important;
+  }
+
+  .precio {
+    margin-top: 3px !important;
+    margin-bottom: 0 !important;
+  }
+
+  /* Cantidad centrada entre la línea y Total */
+  .selector-cantidad {
+    display: flex !important;
+    align-items: center !important;
+    min-height: 48px !important;
+    padding-top: 0 !important;
+  }
+
+  /* Código equilibrado entre nombre y línea */
+  .encabezado-producto {
+    grid-template-rows: 20px 37px 15px !important;
+  }
+
+  .encabezado-producto .codigo-producto {
+    align-self: center !important;
+    line-height: 15px !important;
+  }
+
+  .abrir-carrito {
+    height: 56px !important;
+    min-height: 56px !important;
+    padding-right: 13px !important;
+    padding-left: 13px !important;
+  }
+
+  .abrir-carrito strong {
+    height: 34px !important;
+    min-height: 34px !important;
+    min-width: 146px !important;
+    padding: 0 10px !important;
+  }
+}
+
+
+/* =========================================
+   MÓVIL
+========================================= */
+
+@media (max-width: 650px) {
+
+  /* Encabezado mucho más compacto */
+  .contenedor {
+    padding-top: 2px !important;
+  }
+
+  .cabecera {
+    margin-bottom: 7px !important;
+  }
+
+  .logo-contenedor {
+    gap: 5px !important;
+    padding: 0 !important;
+  }
+
+  .logo {
+    margin: 0 !important;
+  }
+
+  .subtitulo-principal {
+    margin: 0 !important;
+    font-size: 1.08rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .busqueda {
+    margin-top: 0 !important;
+    margin-bottom: 7px !important;
+  }
+
+  .productos {
+    margin-top: 0 !important;
+  }
+
+  /* Mismos ajustes compactos de las tarjetas */
+  .bloque-presentaciones {
+    padding-top: 5px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .titulo-opciones {
+    margin-bottom: 4px !important;
+  }
+
+  .informacion-precio {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .precio {
+    margin-top: 2px !important;
+    margin-bottom: 0 !important;
+  }
+
+  .selector-cantidad {
+    align-content: center !important;
+  }
+
+  .codigo-producto {
+    align-self: center !important;
+  }
+
+  .texto-finalizar-carrito {
+    font-size: 0.57rem;
+    line-height: 0.9;
+  }
+
+  .acciones-flotantes .abrir-carrito strong {
+    padding-right: 7px !important;
+    padding-left: 7px !important;
+    gap: 5px !important;
   }
 }
