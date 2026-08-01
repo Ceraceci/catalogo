@@ -2301,3 +2301,93 @@ html {
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================
+   PRODUCTO COMPARTIDO V11
+========================================= */
+
+/* Evita que reglas previas de .busqueda anulen el atributo hidden. */
+.busqueda[hidden],
+.modo-producto-compartido .busqueda {
+  display: none !important;
+}
+
+.aviso-producto-compartido {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 14px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.aviso-producto-compartido[hidden] {
+  display: none !important;
+}
+
+.ver-catalogo-completo {
+  min-height: 40px;
+  padding: 8px 14px;
+  color: var(--color-principal);
+  font-size: 0.9rem;
+  font-weight: 800;
+  background: #ffffff;
+  border: 1px solid var(--color-borde);
+  border-radius: 9px;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+}
+
+.ver-catalogo-completo:hover {
+  color: #ffffff;
+  background: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+
+/* =========================================
+   ACCIONES FLOTANTES V11 — MÓVIL
+   Instagram y WhatsApp quedan inmediatamente
+   a la izquierda del carrito.
+========================================= */
+
+@media (max-width: 650px) {
+  .acciones-flotantes {
+    grid-template-columns:
+      54px
+      54px
+      minmax(170px, 230px) !important;
+
+    justify-content: end !important;
+    column-gap: 8px !important;
+  }
+
+  .instagram-flotante,
+  .whatsapp-flotante {
+    justify-self: end;
+  }
+
+  .abrir-carrito {
+    justify-self: stretch;
+  }
+
+  .aviso-producto-compartido {
+    justify-content: flex-start;
+  }
+
+  .ver-catalogo-completo {
+    width: auto;
+  }
+}
+
+@media (max-width: 390px) {
+  .acciones-flotantes {
+    grid-template-columns:
+      48px
+      48px
+      minmax(145px, 1fr) !important;
+
+    column-gap: 6px !important;
+  }
+}
