@@ -2556,21 +2556,201 @@ html {
   }
 }
 
+/* =========================================
+   V17 — GRILLA FINAL DE TARJETAS EN MÓVIL
+   Mantiene alineados todos los bloques de
+   las tarjetas aunque los textos varíen.
+========================================= */
 
+@media (min-width: 391px) and (max-width: 650px) {
 
-/* ===== UNIFORMAR ETIQUETAS EN MÓVIL ===== */
-@media (max-width:650px){
-  .categoria{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    width:100%;
-    min-height:24px;
-    margin-bottom:8px;
-    padding:4px 8px;
-    text-align:center;
-    font-size:.62rem;
-    line-height:1.15;
-    border-radius:999px;
+  .productos {
+    align-items: stretch !important;
+  }
+
+  .tarjeta-producto {
+    display: grid !important;
+    grid-template-rows:
+      158px
+      118px
+      132px
+      90px
+      96px
+      68px;
+    height: 100% !important;
+    min-height: 662px !important;
+    align-content: start !important;
+    overflow: hidden;
+  }
+
+  .encabezado-producto {
+    display: grid !important;
+    grid-template-rows: 58px 1fr;
+    height: 158px !important;
+    min-height: 158px !important;
+    margin: 0 !important;
+    overflow: hidden;
+  }
+
+  .categoria {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 58px !important;
+    min-height: 58px !important;
+    max-height: 58px !important;
+    margin: 0 0 10px !important;
+    padding: 7px 8px !important;
+    text-align: center !important;
+    line-height: 1.15 !important;
+    white-space: normal !important;
+    overflow: hidden !important;
+  }
+
+  .fila-titulo-producto {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 44px;
+    align-items: start !important;
+    gap: 8px !important;
+    min-height: 90px !important;
+    height: 90px !important;
+    overflow: hidden;
+  }
+
+  .tarjeta-producto h2,
+  .fila-titulo-producto h2 {
+    display: -webkit-box !important;
+    min-height: 4.8em !important;
+    max-height: 4.8em !important;
+    margin: 0 !important;
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+  }
+
+  .compartir-producto {
+    align-self: start !important;
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .bloque-presentaciones {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    height: 118px !important;
+    min-height: 118px !important;
+    max-height: 118px !important;
+    padding: 14px 0 10px !important;
+    overflow: hidden !important;
+  }
+
+  .titulo-opciones {
+    flex: 0 0 auto;
+    min-height: 20px !important;
+  }
+
+  .opciones-presentacion,
+  .selector-presentacion {
+    flex: 0 0 auto;
+  }
+
+  .informacion-precio {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    height: 132px !important;
+    min-height: 132px !important;
+    max-height: 132px !important;
+    padding: 14px 0 10px !important;
+    overflow: hidden !important;
+  }
+
+  .etiqueta-precio {
+    min-height: 20px !important;
+  }
+
+  .precio {
+    min-height: 34px !important;
+  }
+
+  .codigo-producto {
+    min-height: 38px !important;
+    max-height: 38px !important;
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+  }
+
+  .selector-cantidad {
+    display: grid !important;
+    grid-template-rows: 24px 46px;
+    align-content: start !important;
+    height: 90px !important;
+    min-height: 90px !important;
+    max-height: 90px !important;
+    gap: 8px !important;
+    padding-top: 12px !important;
+    overflow: hidden !important;
+  }
+
+  .selector-cantidad > span {
+    min-height: 24px !important;
+  }
+
+  .control-cantidad {
+    width: 100% !important;
+    height: 46px !important;
+  }
+
+  .boton-cantidad,
+  .cantidad {
+    height: 46px !important;
+  }
+
+  .total-producto {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    height: 96px !important;
+    min-height: 96px !important;
+    max-height: 96px !important;
+    margin: 0 !important;
+    padding: 12px !important;
+    gap: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .agregar-carrito {
+    align-self: end !important;
+    width: 100% !important;
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    margin: 0 !important;
+  }
+}
+
+/* En celulares muy angostos, donde se muestra una tarjeta por fila,
+   se conserva una estructura uniforme pero más flexible. */
+@media (max-width: 390px) {
+  .tarjeta-producto {
+    display: grid !important;
+    grid-template-rows: auto auto auto auto auto auto;
+  }
+
+  .categoria {
+    width: 100% !important;
+    min-height: 46px !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
+
+  .tarjeta-producto h2 {
+    min-height: 3.6em !important;
+    max-height: 3.6em !important;
+    overflow: hidden !important;
   }
 }
