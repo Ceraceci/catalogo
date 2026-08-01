@@ -1052,3 +1052,56 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     line-height: 0.8;
   }
 }
+
+/* =========================================
+   V34 — CORRECCIÓN DEFINITIVA DE LA FILA DE BÚSQUEDA
+========================================= */
+
+@media (max-width: 650px) {
+  .fila-busqueda-orden {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 44px !important;
+    align-items: stretch !important;
+    column-gap: 7px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  #buscador {
+    grid-area: auto !important;
+    grid-column: 1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: 44px !important;
+    margin: 0 !important;
+  }
+
+  .control-orden {
+    grid-area: auto !important;
+    grid-column: 2 !important;
+    position: relative !important;
+    inset: auto !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    height: 44px !important;
+    margin: 0 !important;
+    align-self: stretch !important;
+  }
+
+  .control-orden .icono-orden {
+    position: relative !important;
+    z-index: 1 !important;
+  }
+
+  .control-orden select {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    opacity: 0 !important;
+  }
+}
