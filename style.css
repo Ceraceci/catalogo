@@ -3518,3 +3518,83 @@ html {
     border-radius: 0 !important;
   }
 }
+
+/* =========================================
+   V23 — FLUJO DE AGREGADO Y CABECERA MÓVIL
+========================================= */
+
+/* El contador de resultados sigue disponible para accesibilidad,
+   pero no ocupa espacio visual. */
+#estado {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Símbolos siempre visibles, incluso al tocar o mantener presionado. */
+.boton-cantidad,
+.boton-cantidad:hover,
+.boton-cantidad:focus,
+.boton-cantidad:focus-visible,
+.boton-cantidad:active {
+  color: var(--color-texto) !important;
+  -webkit-text-fill-color: var(--color-texto) !important;
+}
+
+.boton-cantidad:active {
+  background: var(--color-fondo) !important;
+}
+
+.agregar-carrito.agregado {
+  cursor: default;
+}
+
+@media (max-width: 650px) {
+  .contenedor {
+    padding-top: 4px !important;
+  }
+
+  .cabecera {
+    margin-bottom: 8px !important;
+  }
+
+  .logo-contenedor {
+    gap: 4px !important;
+    padding: 0 !important;
+  }
+
+  .logo {
+    width: 145px !important;
+  }
+
+  .subtitulo-principal {
+    margin: 0 !important;
+    font-size: 1.1rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .busqueda {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+
+  .productos {
+    margin-top: 0 !important;
+  }
+
+  .control-cantidad .boton-cantidad,
+  .control-cantidad .boton-cantidad:hover,
+  .control-cantidad .boton-cantidad:focus,
+  .control-cantidad .boton-cantidad:active {
+    color: var(--color-texto) !important;
+    -webkit-text-fill-color: var(--color-texto) !important;
+  }
+}
+

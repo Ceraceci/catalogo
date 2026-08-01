@@ -811,7 +811,7 @@ function mostrarProductos(lista) {
         <span class="texto-agregar">
           ${
             productoInicialEnCarrito
-              ? "Agregado ✓"
+              ? "Agregado"
               : "Agregar"
           }
         </span>
@@ -930,6 +930,7 @@ function cambiarCantidadTarjeta(
     );
 
   actualizarTotalTarjeta(tarjeta);
+  marcarBotonTarjetaComoPendiente(tarjeta);
 }
 
 
@@ -1106,6 +1107,10 @@ function agregarProductoAlCarrito(boton) {
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
+  if (boton.classList.contains("agregado")) {
+    return;
+  }
+
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
 
@@ -1148,8 +1153,7 @@ function agregarProductoAlCarrito(boton) {
     });
 
   if (productoExistente) {
-    productoExistente.cantidad +=
-      cantidad;
+    productoExistente.cantidad = cantidad;
   } else {
     carritoCompras.push(producto);
   }
@@ -1167,6 +1171,29 @@ function crearClaveCarrito(producto) {
     ),
     normalizarTexto(producto.codigo)
   ].join("|");
+}
+
+
+function marcarBotonTarjetaComoPendiente(tarjeta) {
+  if (!tarjeta) {
+    return;
+  }
+
+  const boton =
+    tarjeta.querySelector(".agregar-carrito");
+
+  if (!boton) {
+    return;
+  }
+
+  const textoBoton =
+    boton.querySelector(".texto-agregar");
+
+  if (textoBoton) {
+    textoBoton.textContent = "Agregar";
+  }
+
+  boton.classList.remove("agregado");
 }
 
 
@@ -1210,7 +1237,7 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
   if (textoBoton) {
     textoBoton.textContent =
       estaEnCarrito
-        ? "Agregado ✓"
+        ? "Agregado"
         : "Agregar";
   }
 
@@ -1877,6 +1904,7 @@ contenedorProductos.addEventListener(
       );
 
     actualizarTotalTarjeta(tarjeta);
+    marcarBotonTarjetaComoPendiente(tarjeta);
   }
 );
 
