@@ -2913,112 +2913,114 @@ html {
   }
 }
 
-
 /* =========================================
-   V19 — REDISEÑO COMPACTO DE TARJETAS
+   V20 — TARJETA MÓVIL COMPACTA Y FUNCIONAL
 ========================================= */
 
 /* Código debajo del nombre en todas las pantallas */
-.datos-titulo-producto {
-  min-width: 0;
-  flex: 1 1 auto;
+.encabezado-producto .codigo-producto {
+  margin: 5px 0 0;
+  min-height: 1em;
+  color: var(--color-texto-suave);
+  font-size: 0.66rem;
+  line-height: 1.15;
 }
 
-.datos-titulo-producto .codigo-producto {
-  min-height: 0;
-  margin: 4px 0 0;
-  line-height: 1.2;
+.agregar-carrito {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
 }
 
-.informacion-precio .codigo-producto {
-  display: none;
+.icono-agregar {
+  flex: 0 0 auto;
+  font-size: 1rem;
+  line-height: 1;
 }
 
-.acciones-compra-tarjeta {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Escritorio: conserva disposición vertical */
-@media (min-width: 651px) {
-  .acciones-compra-tarjeta .agregar-carrito {
-    margin-top: 0;
-  }
-}
-
-/* Móvil: tarjeta compacta y reorganizada */
 @media (max-width: 650px) {
+
+  /* Se anulan las alturas rígidas de versiones anteriores. */
   .tarjeta-producto {
-    display: flex !important;
-    flex-direction: column !important;
-    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr) !important;
+    grid-template-areas:
+      "encabezado encabezado"
+      "presentaciones presentaciones"
+      "precio precio"
+      "total total"
+      "cantidad agregar" !important;
+    grid-template-rows: auto auto auto auto 38px !important;
+    column-gap: 7px !important;
+    row-gap: 0 !important;
     height: auto !important;
-    padding: 10px !important;
+    min-height: 0 !important;
+    padding: 9px !important;
   }
 
   .encabezado-producto {
+    grid-area: encabezado;
     display: block !important;
-    min-height: 0 !important;
     height: auto !important;
-    margin-bottom: 6px !important;
+    min-height: 0 !important;
+    margin: 0 0 7px !important;
     overflow: visible !important;
   }
 
+  /* Cápsula fina, ajustada al contenido. */
   .categoria {
     display: inline-flex !important;
     width: auto !important;
     min-width: 0 !important;
     max-width: 100% !important;
-    height: auto !important;
+    height: 20px !important;
     min-height: 20px !important;
-    max-height: none !important;
+    max-height: 20px !important;
     margin: 0 0 6px !important;
     padding: 2px 7px !important;
-    font-size: 0.56rem !important;
-    line-height: 1.1 !important;
-    border-radius: 999px !important;
+    font-size: 0.55rem !important;
+    line-height: 1 !important;
+    white-space: nowrap;
   }
 
   .fila-titulo-producto {
-    display: flex !important;
-    align-items: flex-start !important;
-    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) 30px !important;
+    gap: 5px !important;
     height: auto !important;
-    gap: 6px !important;
+    min-height: 0 !important;
+    align-items: start !important;
   }
 
   .tarjeta-producto h2,
   .fila-titulo-producto h2 {
-    display: -webkit-box !important;
+    display: -webkit-box;
     min-height: 3.45em !important;
     max-height: 3.45em !important;
     margin: 0 !important;
     font-size: 0.82rem !important;
     line-height: 1.15 !important;
-    overflow: hidden !important;
-    -webkit-box-orient: vertical !important;
-    -webkit-line-clamp: 3 !important;
-  }
-
-  .datos-titulo-producto .codigo-producto {
-    min-height: 1.2em !important;
-    max-height: 1.2em !important;
-    margin-top: 3px !important;
-    font-size: 0.59rem !important;
-    line-height: 1.2 !important;
-    overflow: hidden !important;
-    white-space: nowrap !important;
-    text-overflow: ellipsis !important;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 
   .compartir-producto {
-    width: 34px !important;
-    height: 34px !important;
-    flex: 0 0 34px !important;
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .encabezado-producto .codigo-producto {
+    min-height: 13px !important;
+    margin: 3px 0 0 !important;
+    font-size: 0.59rem !important;
+    line-height: 1.1 !important;
   }
 
   .bloque-presentaciones {
+    grid-area: presentaciones;
     display: block !important;
     height: auto !important;
     min-height: 0 !important;
@@ -3030,7 +3032,7 @@ html {
   .titulo-opciones {
     min-height: 0 !important;
     margin: 0 0 4px !important;
-    font-size: 0.61rem !important;
+    font-size: 0.59rem !important;
   }
 
   .opciones-presentacion {
@@ -3050,7 +3052,10 @@ html {
     font-size: 0.68rem !important;
   }
 
+  /* Precio adaptado al contenido, sin hueco inferior. */
   .informacion-precio {
+    grid-area: precio;
+    display: block !important;
     height: auto !important;
     min-height: 0 !important;
     max-height: none !important;
@@ -3061,79 +3066,89 @@ html {
   .etiqueta-precio {
     min-height: 0 !important;
     margin: 0 !important;
-    font-size: 0.61rem !important;
+    font-size: 0.59rem !important;
   }
 
   .precio {
     min-height: 0 !important;
     margin: 1px 0 0 !important;
-    font-size: 1.25rem !important;
-    line-height: 1.05 !important;
+    font-size: 1.23rem !important;
+    line-height: 1.1 !important;
   }
 
   .total-producto {
+    grid-area: total;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
-    height: auto !important;
+    height: 34px !important;
     min-height: 34px !important;
-    max-height: none !important;
-    margin: 5px 0 6px !important;
-    padding: 6px 8px !important;
+    max-height: 34px !important;
+    margin: 2px 0 7px !important;
+    padding: 5px 8px !important;
     gap: 6px !important;
   }
 
   .total-producto span {
-    font-size: 0.59rem !important;
+    font-size: 0.58rem !important;
   }
 
   .precio-total {
-    font-size: 0.88rem !important;
+    font-size: 0.86rem !important;
   }
 
-  .acciones-compra-tarjeta {
-    display: grid !important;
-    grid-template-columns: minmax(82px, 0.9fr) minmax(0, 1.4fr) !important;
-    align-items: end !important;
-    gap: 6px !important;
-  }
-
+  /* Cantidad y botón de compra en la misma línea. */
   .selector-cantidad {
+    grid-area: cantidad;
     display: block !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
     padding: 0 !important;
-    border-top: 0 !important;
+    border: 0 !important;
   }
 
   .selector-cantidad > span {
-    display: block !important;
-    min-height: 0 !important;
-    margin: 0 0 3px !important;
-    font-size: 0.59rem !important;
+    display: none !important;
   }
 
   .control-cantidad {
-    grid-template-columns: 28px minmax(28px, 1fr) 28px !important;
+    display: grid !important;
+    grid-template-columns: 30px minmax(28px, 1fr) 30px !important;
     width: 100% !important;
-    height: 34px !important;
+    height: 38px !important;
   }
 
   .boton-cantidad,
   .cantidad {
-    height: 34px !important;
+    height: 38px !important;
+    min-height: 38px !important;
+  }
+
+  .boton-cantidad.restar {
+    border-radius: 8px 0 0 8px !important;
+  }
+
+  .boton-cantidad.sumar {
+    border-right: 1px solid var(--color-borde) !important;
+    border-radius: 0 8px 8px 0 !important;
   }
 
   .agregar-carrito {
-    align-self: end !important;
-    height: 34px !important;
-    min-height: 34px !important;
-    max-height: 34px !important;
+    grid-area: agregar;
+    width: 100% !important;
+    height: 38px !important;
+    min-height: 38px !important;
+    max-height: 38px !important;
     margin: 0 !important;
-    padding: 4px 6px !important;
-    font-size: 0.69rem !important;
-    line-height: 1.05 !important;
+    padding: 5px 7px !important;
+    gap: 5px !important;
+    font-size: 0.72rem !important;
+    border-radius: 8px !important;
+  }
+
+  .icono-agregar {
+    font-size: 0.95rem !important;
   }
 }

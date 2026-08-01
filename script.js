@@ -707,11 +707,9 @@ function mostrarProductos(lista) {
         </span>
 
         <div class="fila-titulo-producto">
-          <div class="datos-titulo-producto">
-            <h2>
-              ${escaparHTML(producto.nombre)}
-            </h2>
-          </div>
+          <h2>
+            ${escaparHTML(producto.nombre)}
+          </h2>
 
           <button
             type="button"
@@ -723,6 +721,16 @@ function mostrarProductos(lista) {
             🔗
           </button>
         </div>
+
+        <p class="codigo-producto">
+          ${
+            presentacionInicial.codigo
+              ? `Código: ${escaparHTML(
+                  presentacionInicial.codigo
+                )}`
+              : "Código: —"
+          }
+        </p>
       </div>
 
       <div class="bloque-presentaciones">
@@ -749,23 +757,12 @@ function mostrarProductos(lista) {
           )}
         </p>
 
-        <p class="codigo-producto">
-          ${
-            presentacionInicial.codigo
-              ? `Código: ${escaparHTML(
-                  presentacionInicial.codigo
-                )}`
-              : ""
-          }
-        </p>
-
       </div>
 
-      <div class="acciones-compra-tarjeta">
-        <div class="selector-cantidad">
-          <span>Cantidad</span>
+      <div class="selector-cantidad">
+        <span>Cantidad</span>
 
-          <div class="control-cantidad">
+        <div class="control-cantidad">
           <button
             type="button"
             class="boton-cantidad restar"
@@ -789,7 +786,6 @@ function mostrarProductos(lista) {
           >
             +
           </button>
-          </div>
         </div>
       </div>
 
@@ -811,11 +807,14 @@ function mostrarProductos(lista) {
             : ""
         }"
       >
-        ${
-          productoInicialEnCarrito
-            ? "Agregado ✓"
-            : "Agregar al carrito"
-        }
+        <span class="icono-agregar" aria-hidden="true">🛒</span>
+        <span class="texto-agregar">
+          ${
+            productoInicialEnCarrito
+              ? "Agregado ✓"
+              : "Agregar"
+          }
+        </span>
       </button>
     `;
 
@@ -901,7 +900,7 @@ function seleccionarPresentacion(control) {
   ).textContent =
     presentacion.codigo
       ? `Código: ${presentacion.codigo}`
-      : "";
+      : "Código: —";
 
   actualizarTotalTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
@@ -1205,10 +1204,15 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
       );
     });
 
-  boton.textContent =
-    estaEnCarrito
-      ? "Agregado ✓"
-      : "Agregar al carrito";
+  const textoBoton =
+    boton.querySelector(".texto-agregar");
+
+  if (textoBoton) {
+    textoBoton.textContent =
+      estaEnCarrito
+        ? "Agregado ✓"
+        : "Agregar";
+  }
 
   boton.classList.toggle(
     "agregado",
