@@ -10,79 +10,80 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=39">
+  <link rel="stylesheet" href="style.css?v=42">
 
-  <style id="ajustes-v39">
-    /* Presentaciones a la izquierda */
+  <style id="ajustes-v42">
+    /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
       flex-wrap:wrap !important;
       flex-direction:row !important;
       justify-content:flex-start !important;
-      gap:5px !important;
+      gap:4px !important;
     }
 
     .selector-presentacion{
-      display:block !important;
       margin-left:0 !important;
       margin-right:auto !important;
     }
 
-    /* Tarjetas aproximadamente 10% más compactas, sin deformarlas */
+    /* Reducción vertical proporcional y visible */
     .tarjeta-producto{
-      padding-top:12px !important;
-      padding-bottom:12px !important;
+      padding-top:10px !important;
+      padding-bottom:10px !important;
     }
 
     .encabezado-producto{
-      gap:7px !important;
-      padding-bottom:7px !important;
+      gap:6px !important;
+      padding-bottom:6px !important;
     }
 
     .bloque-presentaciones,
     .informacion-precio{
-      padding-top:7px !important;
-      padding-bottom:7px !important;
-    }
-
-    .titulo-opciones,
-    .etiqueta-precio{
-      margin-bottom:7px !important;
-    }
-
-    .selector-cantidad{
-      padding-top:7px !important;
-      padding-bottom:7px !important;
-    }
-
-    .total-producto{
-      margin-bottom:7px !important;
-      padding-top:9px !important;
-      padding-bottom:9px !important;
-    }
-
-    .boton-presentacion,
-    .selector-presentacion{
-      min-height:29px !important;
-    }
-
-    .control-cantidad{
-      height:31px !important;
-    }
-
-    .boton-cantidad,
-    .cantidad{
-      height:29px !important;
-    }
-
-    .agregar-carrito{
-      min-height:36px !important;
       padding-top:6px !important;
       padding-bottom:6px !important;
     }
 
+    .titulo-opciones,
+    .etiqueta-precio{
+      margin-bottom:6px !important;
+    }
+
+    .selector-cantidad{
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    .total-producto{
+      margin-bottom:6px !important;
+      padding-top:8px !important;
+      padding-bottom:8px !important;
+    }
+
+    .boton-presentacion,
+    .selector-presentacion{
+      min-height:28px !important;
+      padding-top:4px !important;
+      padding-bottom:4px !important;
+    }
+
+    .control-cantidad{
+      height:30px !important;
+    }
+
+    .boton-cantidad,
+    .cantidad{
+      height:28px !important;
+    }
+
+    .agregar-carrito{
+      min-height:33px !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
     @media (min-width:651px){
-      /* Escritorio: Instagram, WhatsApp y carrito debajo */
+      /* Instagram, WhatsApp y carrito debajo */
       .acciones-flotantes{
         display:flex !important;
         flex-direction:column !important;
@@ -93,47 +94,121 @@
       .whatsapp-flotante{order:2 !important;}
       .abrir-carrito{order:3 !important;}
 
+      /*
+       * Escritorio bastante más compacto:
+       * reducción visible cercana al 22%, manteniendo proporciones.
+       */
       .tarjeta-producto{
-        min-height:394px !important;
+        min-height:320px !important;
+        padding:9px !important;
       }
 
       .encabezado-producto{
-        grid-template-rows:27px 2.22em 1.08em !important;
-        row-gap:7px !important;
-        min-height:101px !important;
-        height:101px !important;
+        grid-template-rows:23px 1.9em .95em !important;
+        row-gap:5px !important;
+        min-height:78px !important;
+        height:78px !important;
+        padding-bottom:5px !important;
       }
 
       .fila-categoria-producto{
-        min-height:27px !important;
+        min-height:23px !important;
+        height:23px !important;
+      }
+
+      .categoria{
+        padding:3px 7px !important;
+        font-size:.63rem !important;
+      }
+
+      .compartir-producto{
+        width:27px !important;
         height:27px !important;
       }
 
       .fila-titulo-producto{
-        min-height:2.22em !important;
-        height:2.22em !important;
+        min-height:1.9em !important;
+        height:1.9em !important;
       }
 
       .tarjeta-producto h2{
-        min-height:2.22em !important;
-        max-height:2.22em !important;
-        font-size:.94rem !important;
+        min-height:1.9em !important;
+        max-height:1.9em !important;
+        font-size:.86rem !important;
+        line-height:1.1 !important;
       }
 
       .codigo-producto{
-        min-height:1.08em !important;
-        height:1.08em !important;
+        min-height:.95em !important;
+        height:.95em !important;
+        font-size:.59rem !important;
       }
 
-      .bloque-presentaciones{min-height:58px !important;}
-      .informacion-precio{min-height:65px !important;}
-      .selector-cantidad{min-height:45px !important;}
-      .total-producto{min-height:43px !important;}
-      .precio{font-size:1.45rem !important;}
+      .bloque-presentaciones{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .titulo-opciones,
+      .etiqueta-precio{
+        margin-bottom:5px !important;
+        font-size:.62rem !important;
+      }
+
+      .boton-presentacion,
+      .selector-presentacion{
+        min-height:25px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+        font-size:.69rem !important;
+      }
+
+      .informacion-precio{
+        min-height:50px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        font-size:1.22rem !important;
+      }
+
+      .selector-cantidad{
+        min-height:36px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .selector-cantidad > span{
+        font-size:.72rem !important;
+      }
+
+      .control-cantidad{
+        height:28px !important;
+        grid-template-columns:28px 38px 28px !important;
+      }
+
+      .boton-cantidad,
+      .cantidad{
+        height:26px !important;
+      }
+
+      .total-producto{
+        min-height:34px !important;
+        margin-bottom:5px !important;
+        padding:6px 8px !important;
+      }
+
+      .agregar-carrito{
+        min-height:30px !important;
+        padding:4px 8px !important;
+        font-size:.78rem !important;
+      }
     }
 
     @media (max-width:650px){
-      /* Móvil: carrito, Instagram y WhatsApp */
+      /* Carrito, Instagram y WhatsApp */
       .acciones-flotantes{
         display:grid !important;
         grid-template-columns:minmax(132px,1fr) 42px 42px !important;
@@ -156,53 +231,60 @@
       }
 
       .tarjeta-producto{
-        padding-top:9px !important;
-        padding-bottom:9px !important;
+        padding-top:8px !important;
+        padding-bottom:8px !important;
       }
 
       .encabezado-producto{
-        min-height:81px !important;
-        gap:5px !important;
-        padding-bottom:5px !important;
+        min-height:74px !important;
+        gap:4px !important;
+        padding-bottom:4px !important;
       }
 
       .bloque-presentaciones,
       .informacion-precio{
-        padding-top:5px !important;
-        padding-bottom:5px !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
       }
 
       .titulo-opciones,
       .etiqueta-precio{
-        margin-bottom:5px !important;
+        margin-bottom:4px !important;
       }
 
       .boton-presentacion,
       .selector-presentacion{
-        min-height:27px !important;
+        min-height:25px !important;
       }
 
-      .precio{font-size:1.16rem !important;}
+      .precio{
+        font-size:1.1rem !important;
+      }
 
       .selector-cantidad{
-        padding-top:5px !important;
-        padding-bottom:5px !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
       }
 
-      .control-cantidad{height:32px !important;}
+      .control-cantidad{
+        height:30px !important;
+      }
+
       .boton-cantidad,
-      .cantidad{height:30px !important;}
+      .cantidad{
+        height:28px !important;
+      }
 
       .total-producto{
-        margin-bottom:5px !important;
-        padding-top:7px !important;
-        padding-bottom:7px !important;
+        margin-bottom:4px !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
       }
 
       .agregar-carrito{
-        min-height:34px !important;
-        padding-top:5px !important;
-        padding-bottom:5px !important;
+        min-height:31px !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
       }
     }
 
@@ -211,6 +293,58 @@
         grid-template-columns:minmax(116px,1fr) 40px 40px !important;
       }
     }
+  
+
+    /* Logo dentro de la cápsula del carrito */
+    .logo-carrito{
+      flex:0 0 auto;
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+    }
+
+    /* El botón de presentación se adapta al contenido */
+    .selector-presentacion{
+      width:auto !important;
+      max-width:100% !important;
+      min-width:max-content !important;
+    }
+
+    @media (min-width:651px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:4px !important;
+      }
+
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
+
+      .logo-carrito{
+        width:26px;
+        height:26px;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:3px !important;
+      }
+
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
+
+      .logo-carrito{
+        width:22px;
+        height:22px;
+      }
+    }
+
   </style>
 
 </head>
@@ -334,6 +468,12 @@
       title="Abrir carrito"
     >
       <strong id="cantidadCarrito">
+        <img
+          src="img/logo.png"
+          alt=""
+          class="logo-carrito"
+          aria-hidden="true"
+        >
         <span class="texto-finalizar-carrito">
           <span>Click aquí</span>
           <span>para finalizar</span>
@@ -389,6 +529,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=39"></script>
+  <script src="script.js?v=42"></script>
 </body>
 </html>
