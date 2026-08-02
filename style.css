@@ -1020,3 +1020,219 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     grid-template-columns: minmax(116px, 1fr) 40px 40px !important;
   }
 }
+
+/* =========================================
+   V38 — CARRITO DE ESCRITORIO Y TARJETAS 10% MÁS COMPACTAS
+========================================= */
+
+/* ESCRITORIO:
+   Instagram arriba, WhatsApp en el medio y carrito debajo. */
+@media (min-width: 651px) {
+  .acciones-flotantes {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+  }
+
+  .instagram-flotante {
+    order: 1 !important;
+  }
+
+  .whatsapp-flotante {
+    order: 2 !important;
+  }
+
+  .abrir-carrito {
+    order: 3 !important;
+  }
+}
+
+/* Reducción proporcional general:
+   menos altura sin deformar controles ni tipografía. */
+.tarjeta-producto {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.encabezado-producto {
+  gap: 7px;
+  padding-bottom: 7px;
+}
+
+.bloque-presentaciones,
+.informacion-precio {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.titulo-opciones,
+.etiqueta-precio {
+  margin-bottom: 7px;
+}
+
+.selector-cantidad {
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+
+.total-producto {
+  margin-bottom: 7px;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+
+.boton-presentacion,
+.selector-presentacion {
+  min-height: 29px;
+}
+
+.control-cantidad {
+  height: 31px;
+}
+
+.boton-cantidad,
+.cantidad {
+  height: 29px;
+}
+
+.agregar-carrito {
+  min-height: 36px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+/* ESCRITORIO:
+   reducir en torno al 10% las alturas reservadas de la tarjeta. */
+@media (min-width: 651px) {
+  .tarjeta-producto {
+    min-height: 394px !important;
+  }
+
+  .encabezado-producto {
+    grid-template-rows: 27px 2.22em 1.08em !important;
+    row-gap: 7px !important;
+    min-height: 101px !important;
+    height: 101px !important;
+  }
+
+  .fila-categoria-producto {
+    min-height: 27px !important;
+    height: 27px !important;
+  }
+
+  .fila-titulo-producto {
+    min-height: 2.22em !important;
+    height: 2.22em !important;
+  }
+
+  .tarjeta-producto h2 {
+    min-height: 2.22em !important;
+    max-height: 2.22em !important;
+    font-size: .94rem;
+  }
+
+  .codigo-producto {
+    min-height: 1.08em !important;
+    height: 1.08em !important;
+  }
+
+  .bloque-presentaciones {
+    min-height: 58px !important;
+  }
+
+  .informacion-precio {
+    min-height: 65px !important;
+  }
+
+  .selector-cantidad {
+    min-height: 45px !important;
+  }
+
+  .total-producto {
+    min-height: 43px !important;
+  }
+
+  .precio {
+    font-size: 1.45rem;
+  }
+}
+
+/* MÓVIL:
+   mantener el orden pedido y reducir la altura en proporción. */
+@media (max-width: 650px) {
+  .acciones-flotantes {
+    grid-template-columns: minmax(132px, 1fr) 42px 42px !important;
+  }
+
+  .abrir-carrito {
+    grid-column: 1 !important;
+    order: 1 !important;
+  }
+
+  .instagram-flotante {
+    grid-column: 2 !important;
+    order: 2 !important;
+  }
+
+  .whatsapp-flotante {
+    grid-column: 3 !important;
+    order: 3 !important;
+  }
+
+  .tarjeta-producto {
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
+  .encabezado-producto {
+    min-height: 81px;
+    gap: 5px;
+    padding-bottom: 5px;
+  }
+
+  .bloque-presentaciones,
+  .informacion-precio {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .titulo-opciones,
+  .etiqueta-precio {
+    margin-bottom: 5px;
+  }
+
+  .boton-presentacion,
+  .selector-presentacion {
+    min-height: 27px;
+  }
+
+  .precio {
+    font-size: 1.16rem;
+  }
+
+  .selector-cantidad {
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .control-cantidad {
+    height: 32px;
+  }
+
+  .boton-cantidad,
+  .cantidad {
+    height: 30px;
+  }
+
+  .total-producto {
+    margin-bottom: 5px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .agregar-carrito {
+    min-height: 34px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
