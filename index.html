@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=43">
+  <link rel="stylesheet" href="style.css?v=44">
 
-  <style id="ajustes-v43">
+  <style id="ajustes-v44">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -452,6 +452,189 @@
       }
     }
 
+  
+
+    /* =========================================
+       V44 — RETÍCULA FINAL DE TARJETAS
+    ========================================= */
+
+    /* La cantidad solo cambia con − y + */
+    .cantidad{
+      pointer-events:none !important;
+      user-select:none !important;
+      cursor:default !important;
+      caret-color:transparent !important;
+    }
+
+    /* Precio con proporción vertical normal */
+    .precio{
+      line-height:1.14 !important;
+      font-stretch:normal !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Mismo margen inferior que superior */
+    .tarjeta-producto{
+      padding-bottom:10px !important;
+    }
+
+    .agregar-carrito{
+      margin-bottom:0 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+
+      /* Encabezado: nombre y código en filas separadas sin solaparse */
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:25px 2.4em 1.15em !important;
+        row-gap:6px !important;
+        min-height:92px !important;
+        height:92px !important;
+        padding-bottom:6px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:25px !important;
+        height:25px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.4em !important;
+        height:2.4em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.4em !important;
+        max-height:2.4em !important;
+        line-height:1.18 !important;
+        font-size:.88rem !important;
+        overflow:hidden !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+        margin:0 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      /* Mantener todas las tarjetas alineadas */
+      .bloque-presentaciones{
+        min-height:50px !important;
+      }
+
+      .informacion-precio{
+        min-height:54px !important;
+      }
+
+      .selector-cantidad{
+        min-height:38px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+        margin-bottom:3px !important;
+      }
+
+      /* Acercar Agregar a Total */
+      .agregar-carrito{
+        margin-top:0 !important;
+      }
+
+      /* El precio unitario deja de verse aplastado */
+      .precio{
+        line-height:1.16 !important;
+        font-weight:800 !important;
+      }
+
+      /* Reducir el espacio inferior real */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:9px !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /* Retícula uniforme sin espacio vacío debajo */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:8px !important;
+      }
+
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:28px 2.3em 1.15em !important;
+        row-gap:5px !important;
+        min-height:98px !important;
+        height:98px !important;
+        padding-bottom:5px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:28px !important;
+        height:28px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.3em !important;
+        height:2.3em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.3em !important;
+        max-height:2.3em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      .bloque-presentaciones{
+        min-height:62px !important;
+      }
+
+      .informacion-precio{
+        min-height:55px !important;
+      }
+
+      .selector-cantidad{
+        min-height:39px !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+        margin-bottom:5px !important;
+      }
+
+      .agregar-carrito{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      .precio{
+        line-height:1.14 !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -636,6 +819,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=43"></script>
+  <script src="script.js?v=44"></script>
 </body>
 </html>
