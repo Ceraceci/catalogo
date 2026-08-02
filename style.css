@@ -970,3 +970,23 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     grid-template-columns: minmax(116px, 1fr) 40px 40px;
   }
 }
+
+/* V50 carrito */
+.texto-finalizar-carrito{
+ display:flex!important;
+ flex-direction:column!important;
+ justify-content:center!important;
+ align-items:center!important;
+ min-width:104px!important;
+ line-height:.85!important;
+ text-align:center!important;
+ white-space:normal!important;
+}
+.texto-finalizar-carrito span:first-child{
+ font-size:.68rem!important;
+ font-weight:600!important;
+}
+.texto-finalizar-carrito span:last-child{
+ font-size:.82rem!important;
+ font-weight:700!important;
+}

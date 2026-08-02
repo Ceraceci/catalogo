@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=48">
+  <link rel="stylesheet" href="style.css?v=50">
 
-  <style id="ajustes-v48">
+  <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -992,6 +992,74 @@
       }
     }
 
+  
+
+    /* =========================================
+       V49 — PRESENTACIÓN, TOTAL Y CANTIDAD
+    ========================================= */
+
+    /* El precio unitario vuelve a estar en negrita */
+    .precio{
+      font-weight:700 !important;
+    }
+
+    /* Total más grande y en negrita, pero menor que el nombre */
+    .etiqueta-total,
+    .total-producto > span{
+      font-size:.84rem !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /* Presentación y botones en la misma línea */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr) !important;
+        align-items:center !important;
+        column-gap:10px !important;
+        min-height:0 !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+        grid-column:1 !important;
+        white-space:nowrap !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        grid-column:2 !important;
+        justify-self:end !important;
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* El número central de − 1 + un poco más chico */
+      .cantidad{
+        font-size:.82rem !important;
+      }
+
+      /* Mantener − y + con su tamaño actual */
+      .boton-cantidad{
+        font-size:1rem !important;
+      }
+
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.84rem !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.82rem !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1176,6 +1244,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=48"></script>
+  <script src="script.js?v=50"></script>
 </body>
 </html>
