@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=46">
+  <link rel="stylesheet" href="style.css?v=47">
 
-  <style id="ajustes-v46">
+  <style id="ajustes-v47">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -818,6 +818,70 @@
       }
     }
 
+  
+
+    /* =========================================
+       V47 — TIPOGRAFÍA UNIFICADA SIN CAMBIAR ALTURAS
+    ========================================= */
+
+    /*
+     * Código, Presentación, Precio unitario, Cantidad y Total
+     * usan exactamente el mismo tamaño y un tono más oscuro.
+     */
+    .codigo-producto,
+    .titulo-opciones,
+    .etiqueta-precio,
+    .selector-cantidad > span,
+    .etiqueta-total,
+    .total-producto > span{
+      color:#4a433e !important;
+      font-size:.78rem !important;
+      font-weight:500 !important;
+      line-height:1 !important;
+      letter-spacing:0 !important;
+      text-transform:none !important;
+    }
+
+    /*
+     * El valor de Precio unitario nunca supera el tamaño
+     * del nombre del producto.
+     */
+    .precio{
+      font-size:1rem !important;
+      line-height:1.12 !important;
+    }
+
+    /* No modificar dimensiones de bloques, cápsulas ni tarjetas. */
+    @media (min-width:651px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.88rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.86rem !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1002,6 +1066,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=46"></script>
+  <script src="script.js?v=47"></script>
 </body>
 </html>
