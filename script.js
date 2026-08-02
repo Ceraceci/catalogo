@@ -744,7 +744,8 @@ function mostrarProductos(lista) {
 
       <div class="informacion-precio">
         <p class="etiqueta-precio">
-          Precio unitario
+          <span class="precio-palabra">Precio</span>
+          <span class="unitario-palabra">unitario</span>
         </p>
 
         <p
@@ -795,7 +796,7 @@ function mostrarProductos(lista) {
       </div>
 
       <div class="total-producto">
-        <span>Total</span>
+        <span class="etiqueta-total">Total</span>
 
         <strong class="precio-total">
           ${formatearPrecio(

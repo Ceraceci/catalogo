@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=44">
+  <link rel="stylesheet" href="style.css?v=45">
 
-  <style id="ajustes-v44">
+  <style id="ajustes-v45">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -635,6 +635,102 @@
       }
     }
 
+  
+
+    /* =========================================
+       V45 — PRECIO UNITARIO Y TOTAL EN UNA FILA
+    ========================================= */
+
+    .informacion-precio,
+    .total-producto{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:10px !important;
+    }
+
+    .etiqueta-precio,
+    .etiqueta-total{
+      margin:0 !important;
+      min-width:0 !important;
+      color:var(--color-texto-suave) !important;
+      font-size:.67rem !important;
+      line-height:1 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.07em !important;
+    }
+
+    .precio,
+    .precio-total{
+      margin:0 !important;
+      margin-left:auto !important;
+      text-align:right !important;
+      white-space:nowrap !important;
+    }
+
+    @media (min-width:651px){
+      .etiqueta-precio{
+        display:flex !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        gap:.28em !important;
+        white-space:nowrap !important;
+      }
+
+      .informacion-precio{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .etiqueta-precio{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        align-content:center !important;
+        justify-items:start !important;
+        gap:0 !important;
+        width:max-content !important;
+        max-width:4.6em !important;
+        line-height:.88 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        display:block !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        align-self:center !important;
+        font-size:1.14rem !important;
+        line-height:1.08 !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+      }
+
+      .etiqueta-total{
+        display:block !important;
+        width:max-content !important;
+      }
+
+      .precio-total{
+        align-self:center !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -819,6 +915,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=44"></script>
+  <script src="script.js?v=45"></script>
 </body>
 </html>
