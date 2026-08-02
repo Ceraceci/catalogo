@@ -1,5 +1,5 @@
 /* =========================================
-   CERACECI — STYLE.CSS LIMPIO V28
+   CERACECI — STYLE.CSS COMPLETO V35
    Una sola definición por componente
 ========================================= */
 
@@ -207,6 +207,7 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   overflow-wrap: anywhere;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
 }
 .codigo-producto {
   margin: 0;
@@ -235,6 +236,8 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 .opciones-presentacion {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-end;
   gap: 5px;
 }
 .boton-presentacion {
@@ -621,7 +624,7 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     bottom: 0;
     left: 0;
     display: grid;
-    grid-template-columns: 42px 42px minmax(132px,1fr);
+    grid-template-columns: minmax(132px,1fr) 42px 42px;
     align-items: center;
     gap: 7px;
     padding: 7px max(9px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left));
@@ -630,6 +633,21 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     box-shadow: 0 -7px 20px rgba(0,0,0,.1);
     backdrop-filter: blur(8px);
   }
+  .abrir-carrito {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .instagram-flotante {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .whatsapp-flotante {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
   .instagram-flotante, .whatsapp-flotante { width: 42px; height: 42px; }
   .instagram-flotante svg, .whatsapp-flotante svg { width: 22px; height: 22px; }
   .abrir-carrito { width: 100%; min-height: 44px; height: 44px; padding: 0 6px; }
@@ -646,7 +664,19 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   .contenedor { width: calc(100% - 14px); }
   .productos { gap: 6px; }
   .tarjeta-producto { padding: 8px; }
-  .acciones-flotantes { grid-template-columns: 40px 40px minmax(116px,1fr); gap: 6px; padding-right: 7px; padding-left: 7px; }
+  .acciones-flotantes { grid-template-columns: minmax(116px,1fr) 40px 40px; gap: 6px; padding-right: 7px; padding-left: 7px; }
+  .abrir-carrito {
+    grid-column: 1;
+  }
+
+  .instagram-flotante {
+    grid-column: 2;
+  }
+
+  .whatsapp-flotante {
+    grid-column: 3;
+  }
+
   .instagram-flotante, .whatsapp-flotante { width: 40px; height: 40px; }
   .texto-finalizar-carrito { min-width: 52px; font-size: .64rem; }
 }
@@ -825,6 +855,7 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     overflow: hidden;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
   }
 
   .codigo-producto {
@@ -870,8 +901,8 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 .opciones-presentacion {
   display: flex;
   flex-wrap: wrap;
-  flex-direction: row-reverse;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
   gap: 5px;
 }
 
@@ -1104,4 +1135,5 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     padding: 0 !important;
     opacity: 0 !important;
   }
-}
+
+  
