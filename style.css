@@ -1,5 +1,5 @@
 /* =========================================
-   CERACECI — STYLE.CSS COMPLETO V35
+   CERACECI — STYLE.CSS LIMPIO V36
    Una sola definición por componente
 ========================================= */
 
@@ -237,7 +237,7 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 5px;
 }
 .boton-presentacion {
@@ -264,8 +264,11 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 }
 .boton-presentacion.seleccionada span { color: #fff; }
 .selector-presentacion {
+  display: block;
   width: 100%;
   min-height: 32px;
+  margin-left: 0;
+  margin-right: auto;
   padding: 5px 30px 5px 8px;
   color: #fff;
   font-size: .75rem;
@@ -682,10 +685,10 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 }
 
 /* =========================================
-   V30 — AJUSTES DE CABECERA, CONTROLES Y PRESENTACIONES
+   V36 — AJUSTES CONSOLIDADOS
 ========================================= */
 
-/* Las zonas transparentes del contenedor flotante no bloquean las tarjetas. */
+/* Las zonas vacías de la barra flotante no bloquean controles. */
 .acciones-flotantes {
   pointer-events: none;
 }
@@ -695,25 +698,58 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   pointer-events: auto;
 }
 
-/* Presentaciones orientadas hacia la derecha. */
+/* Presentaciones alineadas a la izquierda, en orden natural. */
 .opciones-presentacion {
-  justify-content: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 5px;
 }
 
 .selector-presentacion {
   display: block;
-  margin-left: auto;
+  margin-left: 0;
+  margin-right: auto;
 }
 
-/* Margen simétrico entre texto, flecha y bordes. */
+/* Flechas personalizadas con margen simétrico. */
 #filtroCategoria,
-.selector-presentacion {
+.selector-presentacion,
+.control-orden select {
+  -webkit-appearance: none;
+  appearance: none;
   padding-left: 13px;
-  padding-right: 13px;
+  padding-right: 38px;
+  background-repeat: no-repeat;
   background-position: right 13px center;
+  background-size: 14px 14px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%232d2926' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
 }
 
-/* En escritorio, reservar espacio inferior para las acciones flotantes. */
+.control-orden.orden-activo select {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* Texto del carrito. */
+.texto-finalizar-carrito {
+  display: grid;
+  place-items: center;
+  min-width: 86px;
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: .82;
+  text-align: center;
+  white-space: normal;
+}
+
+.texto-finalizar-carrito span {
+  display: block;
+}
+
+/* Escritorio: tarjetas alineadas internamente. */
 @media (min-width: 651px) {
   .contenedor {
     padding-bottom: 150px;
@@ -722,107 +758,7 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   .productos {
     padding-bottom: 24px;
   }
-}
 
-/* Móvil */
-@media (max-width: 650px) {
-  body {
-    padding-bottom: 118px;
-  }
-
-  .contenedor {
-    padding-top: 0;
-    padding-bottom: 30px;
-  }
-
-  /*
-   * Compensación moderada del espacio transparente interno del PNG.
-   * El logo queda más abajo que en V29 y el subtítulo ya no se superpone.
-   */
-  .cabecera {
-    margin: 0 0 6px;
-  }
-
-  .logo-contenedor {
-    gap: 8px;
-    margin: 0 auto;
-    padding-top: 4px;
-  }
-
-  .logo {
-    width: 142px;
-    margin: -14px 0 -16px;
-  }
-
-  .subtitulo-principal {
-    margin: 0;
-    line-height: 1.08;
-  }
-
-  /* Buscador y orden en una fila; categorías debajo. */
-  .busqueda {
-    grid-template-areas:
-      "buscarorden"
-      "categoria";
-    grid-template-columns: minmax(0, 1fr);
-    gap: 7px;
-    padding: 8px;
-  }
-
-  .fila-busqueda-orden {
-    grid-area: buscarorden;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 40px;
-    gap: 7px;
-    min-width: 0;
-  }
-
-  #buscador {
-    min-width: 0;
-  }
-
-  .control-orden {
-    position: relative;
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-  }
-
-  #filtroCategoria {
-    grid-area: categoria;
-    width: 100%;
-    padding-left: 13px;
-    padding-right: 13px;
-    background-position: right 13px center;
-  }
-
-  /* Evitar que la barra inferior tape los últimos controles. */
-  .productos {
-    padding-bottom: 28px;
-  }
-
-  /* Presentaciones a la derecha también en móvil. */
-  .opciones-presentacion {
-    justify-content: flex-end;
-  }
-
-  .selector-presentacion {
-    margin-left: auto;
-    padding-left: 13px;
-    padding-right: 13px;
-    background-position: right 13px center;
-  }
-}
-
-/* =========================================
-   V31 — TARJETAS ALINEADAS EN ESCRITORIO
-========================================= */
-
-@media (min-width: 651px) {
-  /*
-   * Todas las tarjetas de una fila conservan la misma estructura:
-   * categoría + nombre de dos líneas + código de una línea.
-   */
   .tarjeta-producto {
     min-height: 438px;
   }
@@ -848,14 +784,8 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   }
 
   .tarjeta-producto h2 {
-    display: -webkit-box;
     min-height: 2.36em;
     max-height: 2.36em;
-    line-height: 1.18;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
   }
 
   .codigo-producto {
@@ -868,10 +798,6 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     visibility: hidden;
   }
 
-  /*
-   * Los bloques siguientes empiezan y terminan en la misma posición
-   * siempre que tengan el mismo tipo de control de presentación.
-   */
   .bloque-presentaciones {
     min-height: 65px;
   }
@@ -888,88 +814,9 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     min-height: 48px;
   }
 
-  .agregar-carrito {
-    margin-top: auto;
-  }
-}
-
-/* =========================================
-   V33 — BARRA, LOGO, FLECHAS Y PRESENTACIONES
-========================================= */
-
-/* Presentaciones desde la derecha hacia la izquierda. */
-.opciones-presentacion {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: flex-end;
-  gap: 5px;
-}
-
-.selector-presentacion {
-  display: block;
-  margin-left: auto;
-}
-
-/* Flechas personalizadas con margen simétrico respecto del texto. */
-#filtroCategoria,
-.selector-presentacion,
-.control-orden select {
-  -webkit-appearance: none;
-  appearance: none;
-  padding-left: 13px;
-  padding-right: 38px;
-  background-repeat: no-repeat;
-  background-position: right 13px center;
-  background-size: 14px 14px;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%232d2926' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-.control-orden.orden-activo select {
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-}
-
-/* La barra flotante no bloquea botones que queden detrás de sus zonas vacías. */
-.acciones-flotantes {
-  pointer-events: none;
-}
-
-.acciones-flotantes > a,
-.acciones-flotantes > button {
-  pointer-events: auto;
-}
-
-/* Texto del carrito en tres líneas, centrado y sin aumentar la altura. */
-.texto-finalizar-carrito {
-  display: grid;
-  place-items: center;
-  min-width: 86px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  line-height: 0.82;
-  text-align: center;
-  white-space: normal;
-}
-
-.texto-finalizar-carrito span {
-  display: block;
-}
-
-/* Escritorio */
-@media (min-width: 651px) {
-  .contenedor {
-    padding-bottom: 150px;
-  }
-
-  .productos {
-    padding-bottom: 24px;
-  }
-
   .texto-finalizar-carrito {
     min-width: 92px;
-    font-size: 0.78rem;
+    font-size: .78rem;
   }
 }
 
@@ -984,7 +831,6 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     padding-bottom: 30px;
   }
 
-  /* Logo compacto, sin superposición con el subtítulo. */
   .cabecera {
     margin: 0 0 7px;
   }
@@ -1005,7 +851,6 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     line-height: 1.08;
   }
 
-  /* Buscador y botón de orden en una sola fila, sin superposición. */
   .busqueda {
     display: grid;
     grid-template-areas:
@@ -1018,78 +863,6 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 
   .fila-busqueda-orden {
     grid-area: buscarorden;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 44px;
-    align-items: stretch;
-    gap: 7px;
-    min-width: 0;
-  }
-
-  #buscador {
-    width: 100%;
-    min-width: 0;
-    height: 44px;
-  }
-
-  .control-orden {
-    position: relative;
-    display: grid;
-    place-items: center;
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    overflow: hidden;
-  }
-
-  .control-orden select {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 0;
-    padding: 0;
-    opacity: 0;
-    cursor: pointer;
-  }
-
-  #filtroCategoria {
-    grid-area: categoria;
-    width: 100%;
-    height: 44px;
-    min-height: 44px;
-    padding-left: 13px;
-    padding-right: 38px;
-    background-position: right 13px center;
-  }
-
-  .productos {
-    padding-bottom: 30px;
-  }
-
-  .selector-presentacion {
-    width: 100%;
-    padding-left: 13px;
-    padding-right: 38px;
-    background-position: right 13px center;
-  }
-
-  .abrir-carrito strong {
-    gap: 5px;
-  }
-
-  .texto-finalizar-carrito {
-    min-width: 82px;
-    font-size: 0.66rem;
-    line-height: 0.8;
-  }
-}
-
-/* =========================================
-   V34 — CORRECCIÓN DEFINITIVA DE LA FILA DE BÚSQUEDA
-========================================= */
-
-@media (max-width: 650px) {
-  .fila-busqueda-orden {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) 44px !important;
     align-items: stretch !important;
@@ -1121,8 +894,8 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   }
 
   .control-orden .icono-orden {
-    position: relative !important;
-    z-index: 1 !important;
+    position: relative;
+    z-index: 1;
   }
 
   .control-orden select {
@@ -1134,6 +907,66 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     margin: 0 !important;
     padding: 0 !important;
     opacity: 0 !important;
+    cursor: pointer;
   }
 
-  
+  #filtroCategoria {
+    grid-area: categoria;
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+  }
+
+  .productos {
+    padding-bottom: 30px;
+  }
+
+  .selector-presentacion {
+    width: 100%;
+    margin-left: 0;
+    margin-right: auto;
+  }
+
+  /* Carrito - Instagram - WhatsApp */
+  .acciones-flotantes {
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: minmax(132px, 1fr) 42px 42px;
+    align-items: center;
+    gap: 7px;
+    padding:
+      7px max(9px, env(safe-area-inset-right))
+      calc(7px + env(safe-area-inset-bottom))
+      max(9px, env(safe-area-inset-left));
+  }
+
+  .abrir-carrito {
+    grid-column: 1;
+    grid-row: 1;
+    width: 100%;
+  }
+
+  .instagram-flotante {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .whatsapp-flotante {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  .texto-finalizar-carrito {
+    min-width: 82px;
+    font-size: .66rem;
+    line-height: .8;
+  }
+}
+
+@media (max-width: 390px) {
+  .acciones-flotantes {
+    grid-template-columns: minmax(116px, 1fr) 40px 40px;
+  }
+}
