@@ -10,7 +10,7 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=53">
+  <link rel="stylesheet" href="style.css?v=54">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -1113,6 +1113,78 @@
       }
     }
 
+  
+
+    /* =========================================
+       V54 — CARRITO EN DOS LÍNEAS
+    ========================================= */
+
+    .texto-finalizar-carrito{
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:center !important;
+      justify-content:center !important;
+      min-width:112px !important;
+      height:100% !important;
+      gap:1px !important;
+      line-height:1 !important;
+      text-align:center !important;
+      white-space:nowrap !important;
+    }
+
+    .texto-finalizar-carrito span{
+      display:block !important;
+    }
+
+    .texto-carrito-superior{
+      font-size:.72rem !important;
+      font-weight:600 !important;
+      line-height:.9 !important;
+    }
+
+    .texto-carrito-inferior{
+      font-size:.84rem !important;
+      font-weight:700 !important;
+      line-height:.9 !important;
+    }
+
+    .abrir-carrito strong{
+      height:36px !important;
+    }
+
+    @media (max-width:650px){
+      .texto-finalizar-carrito{
+        min-width:104px !important;
+        gap:0 !important;
+      }
+
+      .texto-carrito-superior{
+        font-size:.66rem !important;
+      }
+
+      .texto-carrito-inferior{
+        font-size:.76rem !important;
+      }
+
+      .abrir-carrito strong{
+        height:32px !important;
+      }
+    }
+
+    @media (max-width:390px){
+      .texto-finalizar-carrito{
+        min-width:94px !important;
+      }
+
+      .texto-carrito-superior{
+        font-size:.61rem !important;
+      }
+
+      .texto-carrito-inferior{
+        font-size:.7rem !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1243,9 +1315,8 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Click aquí</span>
-          <span>para finalizar</span>
-          <span>tu pedido</span>
+          <span class="texto-carrito-superior">Click aquí para</span>
+          <span class="texto-carrito-inferior">finalizar tu pedido</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
@@ -1297,6 +1368,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=53"></script>
+  <script src="script.js?v=54"></script>
 </body>
 </html>
