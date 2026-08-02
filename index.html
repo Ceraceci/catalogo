@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=45">
+  <link rel="stylesheet" href="style.css?v=46">
 
-  <style id="ajustes-v45">
+  <style id="ajustes-v46">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -731,6 +731,93 @@
       }
     }
 
+  
+
+    /* =========================================
+       V46 — AJUSTES DE PRECIO, TOTAL Y PRESENTACIÓN
+    ========================================= */
+
+    /* Mayúscula inicial, resto en minúsculas */
+    .titulo-opciones,
+    .etiqueta-precio,
+    .etiqueta-total{
+      text-transform:none !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Cápsula Total más baja */
+    .total-producto{
+      min-height:0 !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /*
+       * Duplicar la separación entre Precio y Unitario
+       * sin aumentar la altura total del bloque:
+       * se aprovecha el espacio libre superior e inferior.
+       */
+      .etiqueta-precio{
+        grid-template-rows:auto auto !important;
+        align-content:space-between !important;
+        height:2.35em !important;
+        line-height:1 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        line-height:1 !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        height:42px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+      }
+
+      /* Presentación: 6 px iguales arriba, entre elementos y abajo */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        row-gap:6px !important;
+        min-height:0 !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* Total apenas contiene texto y precio */
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -915,6 +1002,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=45"></script>
+  <script src="script.js?v=46"></script>
 </body>
 </html>
