@@ -778,6 +778,10 @@ function mostrarProductos(lista) {
             value="1"
             min="1"
             step="1"
+            readonly
+            inputmode="none"
+            tabindex="-1"
+            aria-readonly="true"
           >
 
           <button
