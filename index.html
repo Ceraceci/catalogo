@@ -10,9 +10,9 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=47">
+  <link rel="stylesheet" href="style.css?v=48">
 
-  <style id="ajustes-v47">
+  <style id="ajustes-v48">
     /* Presentaciones alineadas a la izquierda */
     .opciones-presentacion{
       display:flex !important;
@@ -882,6 +882,116 @@
       }
     }
 
+  
+
+    /* =========================================
+       V48 — ALINEACIÓN Y JERARQUÍA DE PRECIOS
+    ========================================= */
+
+    /* Precio unitario sin negrita; Total en negrita */
+    .precio{
+      font-weight:400 !important;
+      font-family:Arial, Helvetica, sans-serif !important;
+      font-stretch:normal !important;
+      transform:none !important;
+    }
+
+    .precio-total{
+      font-weight:800 !important;
+    }
+
+    /* Código: etiqueta normal y valor más pequeño */
+    .codigo-etiqueta{
+      font-size:1em !important;
+      font-weight:500 !important;
+    }
+
+    .codigo-valor{
+      font-size:.82em !important;
+      font-weight:400 !important;
+    }
+
+    /* Flecha blanca en el selector Kanthal */
+    .selector-presentacion{
+      color:#fff !important;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:right 13px center !important;
+      background-size:14px 14px !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /*
+       * Precio unitario, selector de cantidad y Total
+       * comparten el mismo eje central horizontal.
+       */
+      .informacion-precio,
+      .selector-cantidad,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) 106px !important;
+        align-items:center !important;
+        column-gap:10px !important;
+      }
+
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .control-cantidad,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:center !important;
+        text-align:center !important;
+        margin-left:0 !important;
+      }
+
+      /* Precio unitario menos achatado, como el Total */
+      .precio{
+        line-height:1.2 !important;
+        letter-spacing:0 !important;
+        white-space:nowrap !important;
+      }
+
+      .precio-total{
+        line-height:1.2 !important;
+        white-space:nowrap !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      /* Ambos precios comparten exactamente el mismo borde derecho */
+      .informacion-precio,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto !important;
+        align-items:center !important;
+        column-gap:8px !important;
+      }
+
+      .etiqueta-precio,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:end !important;
+        text-align:right !important;
+        margin-left:0 !important;
+        min-width:0 !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1066,6 +1176,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=47"></script>
+  <script src="script.js?v=48"></script>
 </body>
 </html>

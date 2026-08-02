@@ -726,9 +726,9 @@ function mostrarProductos(lista) {
         <p class="codigo-producto">
           ${
             presentacionInicial.codigo
-              ? `Código: ${escaparHTML(
+              ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
                   presentacionInicial.codigo
-                )}`
+                )}</span>`
               : ""
           }
         </p>
@@ -901,11 +901,16 @@ function seleccionarPresentacion(control) {
       presentacion.precio
     );
 
-  tarjeta.querySelector(
-    ".codigo-producto"
-  ).textContent =
+  const codigoProducto =
+    tarjeta.querySelector(
+      ".codigo-producto"
+    );
+
+  codigoProducto.innerHTML =
     presentacion.codigo
-      ? `Código: ${presentacion.codigo}`
+      ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
+          presentacion.codigo
+        )}</span>`
       : "";
 
   actualizarTotalTarjeta(tarjeta);
