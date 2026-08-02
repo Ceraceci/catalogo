@@ -10,7 +10,7 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=52">
+  <link rel="stylesheet" href="style.css?v=53">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -1060,6 +1060,59 @@
       }
     }
 
+  
+
+    /* =========================================
+       V53 — TOTAL, PRECIOS Y SELECTOR KANTHAL
+    ========================================= */
+
+    /* Total con el mismo tamaño que su número */
+    .etiqueta-total,
+    .total-producto > span{
+      font-size:.95rem !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+    }
+
+    @media (min-width:651px){
+      /* Selector desplegable de Kanthal alineado a la derecha */
+      .selector-presentacion{
+        justify-self:end !important;
+        margin-left:auto !important;
+        margin-right:0 !important;
+      }
+
+      /* Precio unitario y total alineados por el mismo borde derecho */
+      .informacion-precio,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto !important;
+        align-items:center !important;
+        column-gap:10px !important;
+      }
+
+      .etiqueta-precio,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:end !important;
+        text-align:right !important;
+        margin-left:0 !important;
+        white-space:nowrap !important;
+      }
+
+      /* Misma distancia interna izquierda y derecha */
+      .total-producto{
+        padding-left:8px !important;
+        padding-right:8px !important;
+      }
+    }
+
   </style>
 
 </head>
@@ -1190,8 +1243,9 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span class="texto-carrito-superior">Click aquí para</span>
-          <span class="texto-carrito-inferior">finalizar tu pedido</span>
+          <span>Click aquí</span>
+          <span>para finalizar</span>
+          <span>tu pedido</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
@@ -1243,6 +1297,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=52"></script>
+  <script src="script.js?v=53"></script>
 </body>
 </html>
