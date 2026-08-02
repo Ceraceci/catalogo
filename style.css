@@ -1061,3 +1061,55 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     font-size: .7rem !important;
   }
 }
+
+/* =========================================
+   V52 — TOTAL, PRECIOS Y SELECTOR KANTHAL
+========================================= */
+
+/* "Total" con el mismo tamaño que el número del total. */
+.etiqueta-total,
+.total-producto > span {
+  font-size: .95rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+
+/* Escritorio */
+@media (min-width: 651px) {
+  /* Selector desplegable de Kanthal alineado a la derecha. */
+  .selector-presentacion {
+    justify-self: end !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+  }
+
+  /* Precio unitario y total alineados por el mismo borde derecho. */
+  .informacion-precio,
+  .total-producto {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: center !important;
+    column-gap: 10px !important;
+  }
+
+  .etiqueta-precio,
+  .etiqueta-total {
+    grid-column: 1 !important;
+    justify-self: start !important;
+  }
+
+  .precio,
+  .precio-total {
+    grid-column: 2 !important;
+    justify-self: end !important;
+    text-align: right !important;
+    margin-left: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  /* Padding simétrico dentro de la cápsula Total. */
+  .total-producto {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+}
