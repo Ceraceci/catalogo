@@ -970,3 +970,53 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     grid-template-columns: minmax(116px, 1fr) 40px 40px;
   }
 }
+
+/* =========================================
+   V37 — ORDEN REAL DE ACCIONES Y PRESENTACIONES
+========================================= */
+
+.opciones-presentacion {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  gap: 5px !important;
+}
+
+.selector-presentacion {
+  display: block !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 650px) {
+  .acciones-flotantes {
+    display: grid !important;
+    grid-template-columns: minmax(132px, 1fr) 42px 42px !important;
+    align-items: center !important;
+  }
+
+  .abrir-carrito {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    order: 1 !important;
+  }
+
+  .instagram-flotante {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    order: 2 !important;
+  }
+
+  .whatsapp-flotante {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    order: 3 !important;
+  }
+}
+
+@media (max-width: 390px) {
+  .acciones-flotantes {
+    grid-template-columns: minmax(116px, 1fr) 40px 40px !important;
+  }
+}
