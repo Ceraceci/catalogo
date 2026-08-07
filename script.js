@@ -1,2155 +1,1250 @@
-const URL_CSV =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNAyxed_DNsPeWRmmObCIUFKVwrEIDN4f-lwLc6ms0fYYeFT1NVyz_ets4UJeYzVrzDbXnXKzXxXVt/pub?gid=314385761&single=true&output=csv";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
 
-/*
- * Reemplazá este número por el WhatsApp real de Ceraceci.
- *
- * Debe incluir:
- * 54 = Argentina
- * 9 = celulares argentinos
- * código de área
- * número
- *
- * No debe tener +, espacios, guiones ni paréntesis.
- */
-const NUMERO_WHATSAPP = "5492477314865";
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
-const contenedorProductos =
-  document.getElementById("productos");
+  <title>Ceraceci - Catálogo</title>
 
-const buscador =
-  document.getElementById("buscador");
+  <link rel="stylesheet" href="style.css?v=56">
 
-const filtroCategoria =
-  document.getElementById("filtroCategoria");
-
-const ordenarProductos =
-  document.getElementById("ordenarProductos");
-
-const seccionBusqueda =
-  document.querySelector(".busqueda");
-
-const avisoProductoCompartido =
-  document.getElementById("avisoProductoCompartido");
-
-const verCatalogoCompleto =
-  document.getElementById("verCatalogoCompleto");
-
-const avisoCopiado =
-  document.getElementById("avisoCopiado");
-
-const estado =
-  document.getElementById("estado");
-
-const abrirCarrito =
-  document.getElementById("abrirCarrito");
-
-const cerrarCarrito =
-  document.getElementById("cerrarCarrito");
-
-const fondoCarrito =
-  document.getElementById("fondoCarrito");
-
-const carritoElemento =
-  document.getElementById("carrito");
-
-const productosCarrito =
-  document.getElementById("productosCarrito");
-
-const cantidadCarrito =
-  document.getElementById("cantidadCarrito");
-
-const valorCarrito =
-  document.getElementById("valorCarrito");
-
-const totalCarrito =
-  document.getElementById("totalCarrito");
-
-const vaciarCarrito =
-  document.getElementById("vaciarCarrito");
-
-const finalizarPedido =
-  document.getElementById("finalizarPedido");
-
-let productosAgrupados = [];
-let productosMostrados = [];
-let carritoCompras = cargarCarritoGuardado();
-let productoCompartidoPendiente =
-  new URLSearchParams(window.location.search).get("producto");
-
-
-/* =========================================
-   CARGA DE PRODUCTOS
-========================================= */
-
-async function cargarProductos() {
-  try {
-    estado.textContent = "Cargando productos...";
-
-    const respuesta = await fetch(URL_CSV);
-
-    if (!respuesta.ok) {
-      throw new Error(
-        `No se pudo descargar la lista. Error ${respuesta.status}`
-      );
+  <style id="ajustes-v49">
+    /* Presentaciones alineadas a la izquierda */
+    .opciones-presentacion{
+      display:flex !important;
+      flex-wrap:wrap !important;
+      flex-direction:row !important;
+      justify-content:flex-start !important;
+      gap:4px !important;
     }
 
-    const textoCSV = await respuesta.text();
-    const filas = convertirCSV(textoCSV);
-
-    if (filas.length < 2) {
-      throw new Error(
-        "La hoja WEB no contiene productos."
-      );
+    .selector-presentacion{
+      margin-left:0 !important;
+      margin-right:auto !important;
     }
 
-    const encabezados =
-      filas[0].map(limpiarTexto);
-
-    const indiceCodigo =
-      encabezados.indexOf("Código");
-
-    const indiceProducto =
-      encabezados.indexOf("Producto");
-
-    const indicePresentacion =
-      encabezados.indexOf("Presentación");
-
-    const indicePrecio =
-      encabezados.indexOf("Precio");
-
-    const indiceCategoria =
-      encabezados.indexOf("Categoría final");
-
-    const indiceActivo =
-      encabezados.indexOf("Activo");
-
-    if (
-      indiceProducto === -1 ||
-      indicePresentacion === -1 ||
-      indicePrecio === -1 ||
-      indiceCategoria === -1
-    ) {
-      throw new Error(
-        "No se encontraron las columnas necesarias en la hoja WEB."
-      );
+    /* Reducción vertical proporcional y visible */
+    .tarjeta-producto{
+      padding-top:10px !important;
+      padding-bottom:10px !important;
     }
 
-    const filasProductos = filas
-      .slice(1)
-      .map((fila) => {
-        const producto = {
-          codigo:
-            indiceCodigo !== -1
-              ? limpiarTexto(fila[indiceCodigo])
-              : "",
-
-          nombre:
-            limpiarTexto(fila[indiceProducto]),
-
-          presentacion:
-            limpiarTexto(
-              fila[indicePresentacion]
-            ),
-
-          precio:
-            convertirPrecio(
-              fila[indicePrecio]
-            ),
-
-          categoria:
-            limpiarTexto(
-              fila[indiceCategoria]
-            ),
-
-          activo:
-            indiceActivo !== -1
-              ? limpiarTexto(fila[indiceActivo])
-              : "Sí"
-        };
-
-        return normalizarFilaKanthal(producto);
-      })
-      .filter((producto) => {
-        return (
-          producto.nombre !== "" &&
-          producto.presentacion !== "" &&
-          producto.precio > 0 &&
-          normalizarTexto(producto.activo) !== "no"
-        );
-      });
-
-    productosAgrupados =
-      agruparProductos(filasProductos);
-
-    cargarCategorias();
-    filtrarProductos();
-  } catch (error) {
-    console.error(error);
-
-    estado.textContent =
-      "No se pudo cargar la lista de productos.";
-
-    contenedorProductos.innerHTML = `
-      <div class="mensaje-error">
-        <strong>
-          Error al cargar el catálogo.
-        </strong>
-
-        <p>
-          ${escaparHTML(error.message)}
-        </p>
-      </div>
-    `;
-  }
-}
-
-
-/* =========================================
-   AGRUPACIÓN DE PRESENTACIONES
-========================================= */
-
-function normalizarFilaKanthal(producto) {
-  const coincidencia = producto.nombre.match(
-    /^ALAMBRE\s+KANTHAL\s+A1\s+DE\s+(.+?\s*MM)$/i
-  );
-
-  if (!coincidencia) {
-    return producto;
-  }
-
-  const diametro = limpiarTexto(coincidencia[1])
-    .replace(/\s+/g, " ")
-    .toUpperCase();
-
-  return {
-    ...producto,
-    nombre: "ALAMBRE KANTHAL A1",
-    presentacion: `${diametro} × 1 M`
-  };
-}
-
-
-function agruparProductos(filasProductos) {
-  const agrupados = new Map();
-
-  filasProductos.forEach((fila) => {
-    const clave = [
-      normalizarTexto(fila.nombre),
-      normalizarTexto(fila.categoria)
-    ].join("|");
-
-    if (!agrupados.has(clave)) {
-      agrupados.set(clave, {
-        id: crearIdProducto(clave),
-        nombre: fila.nombre,
-        categoria: fila.categoria,
-        presentaciones: []
-      });
+    .encabezado-producto{
+      gap:6px !important;
+      padding-bottom:6px !important;
     }
 
-    const producto = agrupados.get(clave);
-
-    const presentacionExistente =
-      producto.presentaciones.some(
-        (presentacion) => {
-          return (
-            normalizarTexto(
-              presentacion.nombre
-            ) ===
-            normalizarTexto(
-              fila.presentacion
-            )
-          );
-        }
-      );
-
-    if (!presentacionExistente) {
-      producto.presentaciones.push({
-        nombre: fila.presentacion,
-        precio: fila.precio,
-        codigo: fila.codigo
-      });
+    .bloque-presentaciones,
+    .informacion-precio{
+      padding-top:6px !important;
+      padding-bottom:6px !important;
     }
-  });
 
-  const lista =
-    Array.from(agrupados.values());
+    .titulo-opciones,
+    .etiqueta-precio{
+      margin-bottom:6px !important;
+    }
 
-  lista.forEach((producto) => {
-    producto.presentaciones.sort(
-      (a, b) => {
-        return compararPresentaciones(
-          a.nombre,
-          b.nombre
-        );
+    .selector-cantidad{
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    .total-producto{
+      margin-bottom:6px !important;
+      padding-top:8px !important;
+      padding-bottom:8px !important;
+    }
+
+    .boton-presentacion,
+    .selector-presentacion{
+      min-height:28px !important;
+      padding-top:4px !important;
+      padding-bottom:4px !important;
+    }
+
+    .control-cantidad{
+      height:30px !important;
+    }
+
+    .boton-cantidad,
+    .cantidad{
+      height:28px !important;
+    }
+
+    .agregar-carrito{
+      min-height:33px !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
+    @media (min-width:651px){
+      /* Instagram, WhatsApp y carrito debajo */
+      .acciones-flotantes{
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:flex-end !important;
       }
-    );
-  });
 
-  lista.sort((a, b) => {
-    return a.nombre.localeCompare(
-      b.nombre,
-      "es",
-      {
-        sensitivity: "base",
-        numeric: true
+      .instagram-flotante{order:1 !important;}
+      .whatsapp-flotante{order:2 !important;}
+      .abrir-carrito{order:3 !important;}
+
+      /*
+       * Escritorio bastante más compacto:
+       * reducción visible cercana al 22%, manteniendo proporciones.
+       */
+      .tarjeta-producto{
+        min-height:320px !important;
+        padding:9px !important;
       }
-    );
-  });
 
-  return lista;
-}
-
-
-function crearIdProducto(texto) {
-  let hash = 0;
-
-  for (
-    let posicion = 0;
-    posicion < texto.length;
-    posicion++
-  ) {
-    hash =
-      (hash << 5) -
-      hash +
-      texto.charCodeAt(posicion);
-
-    hash |= 0;
-  }
-
-  return `producto-${Math.abs(hash)}`;
-}
-
-
-function compararPresentaciones(a, b) {
-  const cantidadA =
-    extraerCantidadPresentacion(a);
-
-  const cantidadB =
-    extraerCantidadPresentacion(b);
-
-  if (
-    cantidadA !== null &&
-    cantidadB !== null &&
-    cantidadA !== cantidadB
-  ) {
-    return cantidadA - cantidadB;
-  }
-
-  return a.localeCompare(
-    b,
-    "es",
-    {
-      sensitivity: "base",
-      numeric: true
-    }
-  );
-}
-
-
-function extraerCantidadPresentacion(texto) {
-  const valor = normalizarTexto(texto)
-    .replace(",", ".");
-
-  const coincidencia = valor.match(
-    /(\d+(?:\.\d+)?)\s*(kg|kilo|kilos|g|gr|grs|gramos|l|lt|lts|litro|litros|ml|cc)?/
-  );
-
-  if (!coincidencia) {
-    return null;
-  }
-
-  let cantidad =
-    Number(coincidencia[1]);
-
-  const unidad =
-    coincidencia[2] || "";
-
-  if (!Number.isFinite(cantidad)) {
-    return null;
-  }
-
-  if (
-    unidad === "kg" ||
-    unidad === "kilo" ||
-    unidad === "kilos"
-  ) {
-    cantidad *= 1000;
-  }
-
-  if (
-    unidad === "l" ||
-    unidad === "lt" ||
-    unidad === "lts" ||
-    unidad === "litro" ||
-    unidad === "litros"
-  ) {
-    cantidad *= 1000;
-  }
-
-  return cantidad;
-}
-
-
-/* =========================================
-   CATEGORÍAS Y FILTROS
-========================================= */
-
-function cargarCategorias() {
-  const categorias = [
-    ...new Set(
-      productosAgrupados
-        .map(
-          (producto) =>
-            producto.categoria
-        )
-        .filter(Boolean)
-    )
-  ].sort((a, b) => {
-    return a.localeCompare(
-      b,
-      "es",
-      {
-        sensitivity: "base"
+      .encabezado-producto{
+        grid-template-rows:23px 1.9em .95em !important;
+        row-gap:5px !important;
+        min-height:78px !important;
+        height:78px !important;
+        padding-bottom:5px !important;
       }
-    );
-  });
 
-  filtroCategoria.innerHTML = `
-    <option value="">
-      Todas las categorías
-    </option>
-  `;
-
-  categorias.forEach((categoria) => {
-    const opcion =
-      document.createElement("option");
-
-    opcion.value = categoria;
-    opcion.textContent = categoria;
-
-    filtroCategoria.appendChild(opcion);
-  });
-}
-
-
-function filtrarProductos() {
-  if (productoCompartidoPendiente) {
-    const productoCompartido =
-      productosAgrupados.find(
-        (producto) =>
-          producto.id ===
-          productoCompartidoPendiente
-      );
-
-    productosMostrados =
-      productoCompartido
-        ? [productoCompartido]
-        : [];
-
-    mostrarProductos(productosMostrados);
-    mostrarModoProductoCompartido(
-      Boolean(productoCompartido)
-    );
-
-    if (!productoCompartido) {
-      estado.textContent =
-        "El producto compartido ya no está disponible.";
-    }
-
-    return;
-  }
-
-  ocultarModoProductoCompartido();
-
-  const palabrasBuscadas =
-    normalizarTexto(buscador.value)
-      .split(/\s+/)
-      .filter(Boolean);
-
-  const categoriaElegida =
-    filtroCategoria.value;
-
-  productosMostrados =
-    productosAgrupados.filter(
-      (producto) => {
-        const contenido =
-          normalizarTexto(
-            [
-              producto.nombre,
-              producto.categoria,
-              ...producto.presentaciones.map(
-                (presentacion) => {
-                  return [
-                    presentacion.nombre,
-                    presentacion.codigo
-                  ].join(" ");
-                }
-              )
-            ].join(" ")
-          );
-
-        const coincideBusqueda =
-          palabrasBuscadas.every(
-            (palabra) =>
-              contenido.includes(palabra)
-          );
-
-        const coincideCategoria =
-          categoriaElegida === "" ||
-          producto.categoria ===
-            categoriaElegida;
-
-        return (
-          coincideBusqueda &&
-          coincideCategoria
-        );
+      .fila-categoria-producto{
+        min-height:23px !important;
+        height:23px !important;
       }
-    );
 
-  ordenarListaProductos(productosMostrados);
-  mostrarProductos(productosMostrados);
-}
+      .categoria{
+        padding:3px 7px !important;
+        font-size:.63rem !important;
+      }
 
+      .compartir-producto{
+        width:27px !important;
+        height:27px !important;
+      }
 
-function obtenerPrecioReferencia(producto) {
-  return Math.min(
-    ...producto.presentaciones.map(
-      (presentacion) =>
-        Number(presentacion.precio) || Infinity
-    )
-  );
-}
+      .fila-titulo-producto{
+        min-height:1.9em !important;
+        height:1.9em !important;
+      }
 
+      .tarjeta-producto h2{
+        min-height:1.9em !important;
+        max-height:1.9em !important;
+        font-size:.86rem !important;
+        line-height:1.1 !important;
+      }
 
-function ordenarListaProductos(lista) {
-  const criterio =
-    ordenarProductos
-      ? ordenarProductos.value
-      : "inicial";
+      .codigo-producto{
+        min-height:.95em !important;
+        height:.95em !important;
+        font-size:.59rem !important;
+      }
 
-  if (criterio === "inicial") {
-    return;
-  }
+      .bloque-presentaciones{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
 
-  lista.sort((a, b) => {
-    if (criterio === "precio-asc") {
-      return (
-        obtenerPrecioReferencia(a) -
-        obtenerPrecioReferencia(b)
-      );
+      .titulo-opciones,
+      .etiqueta-precio{
+        margin-bottom:5px !important;
+        font-size:.62rem !important;
+      }
+
+      .boton-presentacion,
+      .selector-presentacion{
+        min-height:25px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+        font-size:.69rem !important;
+      }
+
+      .informacion-precio{
+        min-height:50px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        font-size:1.22rem !important;
+      }
+
+      .selector-cantidad{
+        min-height:36px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .selector-cantidad > span{
+        font-size:.72rem !important;
+      }
+
+      .control-cantidad{
+        height:28px !important;
+        grid-template-columns:28px 38px 28px !important;
+      }
+
+      .boton-cantidad,
+      .cantidad{
+        height:26px !important;
+      }
+
+      .total-producto{
+        min-height:34px !important;
+        margin-bottom:5px !important;
+        padding:6px 8px !important;
+      }
+
+      .agregar-carrito{
+        min-height:30px !important;
+        padding:4px 8px !important;
+        font-size:.78rem !important;
+      }
     }
 
-    if (criterio === "precio-desc") {
-      return (
-        obtenerPrecioReferencia(b) -
-        obtenerPrecioReferencia(a)
-      );
+    @media (max-width:650px){
+      /* Carrito, Instagram y WhatsApp */
+      .acciones-flotantes{
+        display:grid !important;
+        grid-template-columns:minmax(132px,1fr) 42px 42px !important;
+        align-items:center !important;
+      }
+
+      .abrir-carrito{
+        grid-column:1 !important;
+        grid-row:1 !important;
+      }
+
+      .instagram-flotante{
+        grid-column:2 !important;
+        grid-row:1 !important;
+      }
+
+      .whatsapp-flotante{
+        grid-column:3 !important;
+        grid-row:1 !important;
+      }
+
+      .tarjeta-producto{
+        padding-top:8px !important;
+        padding-bottom:8px !important;
+      }
+
+      .encabezado-producto{
+        min-height:74px !important;
+        gap:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .bloque-presentaciones,
+      .informacion-precio{
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .titulo-opciones,
+      .etiqueta-precio{
+        margin-bottom:4px !important;
+      }
+
+      .boton-presentacion,
+      .selector-presentacion{
+        min-height:25px !important;
+      }
+
+      .precio{
+        font-size:1.1rem !important;
+      }
+
+      .selector-cantidad{
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .control-cantidad{
+        height:30px !important;
+      }
+
+      .boton-cantidad,
+      .cantidad{
+        height:28px !important;
+      }
+
+      .total-producto{
+        margin-bottom:4px !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      .agregar-carrito{
+        min-height:31px !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
     }
 
-    return 0;
-  });
-}
+    @media (max-width:390px){
+      .acciones-flotantes{
+        grid-template-columns:minmax(116px,1fr) 40px 40px !important;
+      }
+    }
+  
 
+    /* Logo dentro de la cápsula del carrito */
+    .logo-carrito{
+      flex:0 0 auto;
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+    }
 
-/* =========================================
-   TARJETAS DE PRODUCTOS
-========================================= */
+    /* El botón de presentación se adapta al contenido */
+    .selector-presentacion{
+      width:auto !important;
+      max-width:100% !important;
+      min-width:max-content !important;
+    }
 
-function mostrarProductos(lista) {
-  contenedorProductos.innerHTML = "";
+    @media (min-width:651px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:4px !important;
+      }
 
-  if (lista.length === 0) {
-    contenedorProductos.innerHTML = `
-      <div class="sin-resultados">
-        No se encontraron productos.
-      </div>
-    `;
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
 
-    estado.textContent =
-      "0 productos encontrados";
+      .logo-carrito{
+        width:26px;
+        height:26px;
+      }
+    }
 
-    return;
-  }
+    @media (max-width:650px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:3px !important;
+      }
 
-  lista.forEach((producto) => {
-    const presentacionInicial =
-      producto.presentaciones[0];
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
 
-    const tarjeta =
-      document.createElement("article");
+      .logo-carrito{
+        width:22px;
+        height:22px;
+      }
+    }
 
-    tarjeta.className =
-      "tarjeta-producto";
+  
 
-    tarjeta.dataset.idProducto =
-      producto.id;
+    /* =========================================
+       V43 — ALINEACIÓN Y CONTROLES DE TARJETAS
+    ========================================= */
 
-    tarjeta.dataset.nombre =
-      producto.nombre;
+    /* La cantidad solo cambia mediante − y + */
+    .cantidad{
+      pointer-events:none !important;
+      user-select:none !important;
+      cursor:default !important;
+      caret-color:transparent !important;
+    }
 
-    tarjeta.dataset.categoria =
-      producto.categoria;
+    /* El precio recupera proporción vertical */
+    .precio{
+      line-height:1.14 !important;
+      letter-spacing:0 !important;
+      font-stretch:normal !important;
+    }
 
-    tarjeta.dataset.presentacion =
-      presentacionInicial.nombre;
+    /* Escritorio */
+    @media (min-width:651px){
+      /* Acercar Agregar a Total */
+      .total-producto{
+        margin-bottom:3px !important;
+      }
 
-    tarjeta.dataset.precio =
-      String(presentacionInicial.precio);
+      .agregar-carrito{
+        margin-top:0 !important;
+      }
 
-    tarjeta.dataset.codigo =
-      presentacionInicial.codigo || "";
+      /* Precio menos aplastado */
+      .precio{
+        line-height:1.15 !important;
+        font-weight:800 !important;
+      }
+    }
 
-    const productoInicialEnCarrito =
-      carritoCompras.some((item) => {
-        return (
-          crearClaveCarrito(item) ===
-          crearClaveCarrito({
-            nombre: producto.nombre,
-            presentacion:
-              presentacionInicial.nombre,
-            codigo:
-              presentacionInicial.codigo || ""
-          })
-        );
-      });
+    /* Móvil: retícula fija para alinear todas las tarjetas */
+    @media (max-width:650px){
+      .tarjeta-producto{
+        min-height:405px !important;
+      }
 
-    const usarSelectorDesplegable =
-      producto.presentaciones.length >= 7;
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:28px 2.3em 1.15em !important;
+        row-gap:5px !important;
+        min-height:98px !important;
+        height:98px !important;
+        padding-bottom:5px !important;
+      }
 
-    const opcionesSelector =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <option
-                value="${indicePresentacion}"
-              >
-                ${escaparHTML(
-                  presentacion.nombre
-                )}
-              </option>
-            `;
-          }
-        )
-        .join("");
+      .fila-categoria-producto{
+        min-height:28px !important;
+        height:28px !important;
+      }
 
-    const botonesPresentaciones =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <button
-                type="button"
-                class="boton-presentacion ${
-                  indicePresentacion === 0
-                    ? "seleccionada"
-                    : ""
-                }"
-                data-id-producto="${
-                  producto.id
-                }"
-                data-indice-presentacion="${
-                  indicePresentacion
-                }"
-              >
-                <span>
-                  ${escaparHTML(
-                    presentacion.nombre
-                  )}
-                </span>
-              </button>
-            `;
-          }
-        )
-        .join("");
+      .fila-titulo-producto{
+        min-height:2.3em !important;
+        height:2.3em !important;
+        overflow:hidden !important;
+      }
 
-    const controlPresentaciones =
-      usarSelectorDesplegable
-        ? `
-            <select
-              class="selector-presentacion"
-              data-id-producto="${producto.id}"
-              aria-label="Elegir presentación de ${escaparHTML(
-                producto.nombre
-              )}"
-            >
-              ${opcionesSelector}
-            </select>
-          `
-        : `
-            <div class="opciones-presentacion">
-              ${botonesPresentaciones}
-            </div>
-          `;
+      .tarjeta-producto h2{
+        min-height:2.3em !important;
+        max-height:2.3em !important;
+        line-height:1.15 !important;
+      }
 
-    tarjeta.innerHTML = `
-      <div class="encabezado-producto">
-        <div class="fila-categoria-producto">
-          <span class="categoria">
-            <img
-              src="img/logo.png"
-              alt=""
-              class="logo-categoria"
-              aria-hidden="true"
-            >
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+      }
 
-            <span>${escaparHTML(producto.categoria)}</span>
-          </span>
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
 
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-          </button>
-        </div>
+      .bloque-presentaciones{
+        min-height:62px !important;
+      }
 
-        <div class="fila-titulo-producto">
-          <h2>
-            ${escaparHTML(producto.nombre)}
-          </h2>
-        </div>
+      .informacion-precio{
+        min-height:55px !important;
+      }
 
-        <p class="codigo-producto">
-          ${
-            presentacionInicial.codigo
-              ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
-                  presentacionInicial.codigo
-                )}</span>`
-              : ""
-          }
-        </p>
-      </div>
+      .selector-cantidad{
+        min-height:39px !important;
+      }
 
-      <div class="bloque-presentaciones">
-  <p class="titulo-opciones">
-    Presentación
-  </p>
+      .total-producto{
+        min-height:42px !important;
+      }
 
-  ${controlPresentaciones}
-</div>
+      .agregar-carrito{
+        min-height:34px !important;
+        margin-top:0 !important;
+      }
 
-      <div class="informacion-precio">
-        <p class="etiqueta-precio">
-          <span class="precio-palabra">Precio</span>
-          <span class="unitario-palabra">unitario</span>
-        </p>
+      .precio{
+        line-height:1.14 !important;
+      }
+    }
 
-        <p
-          class="precio"
-          data-precio="${
-            presentacionInicial.precio
-          }"
+  
+
+    /* =========================================
+       V44 — RETÍCULA FINAL DE TARJETAS
+    ========================================= */
+
+    /* La cantidad solo cambia con − y + */
+    .cantidad{
+      pointer-events:none !important;
+      user-select:none !important;
+      cursor:default !important;
+      caret-color:transparent !important;
+    }
+
+    /* Precio con proporción vertical normal */
+    .precio{
+      line-height:1.14 !important;
+      font-stretch:normal !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Mismo margen inferior que superior */
+    .tarjeta-producto{
+      padding-bottom:10px !important;
+    }
+
+    .agregar-carrito{
+      margin-bottom:0 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+
+      /* Encabezado: nombre y código en filas separadas sin solaparse */
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:25px 2.4em 1.15em !important;
+        row-gap:6px !important;
+        min-height:92px !important;
+        height:92px !important;
+        padding-bottom:6px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:25px !important;
+        height:25px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.4em !important;
+        height:2.4em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.4em !important;
+        max-height:2.4em !important;
+        line-height:1.18 !important;
+        font-size:.88rem !important;
+        overflow:hidden !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+        margin:0 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      /* Mantener todas las tarjetas alineadas */
+      .bloque-presentaciones{
+        min-height:50px !important;
+      }
+
+      .informacion-precio{
+        min-height:54px !important;
+      }
+
+      .selector-cantidad{
+        min-height:38px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+        margin-bottom:3px !important;
+      }
+
+      /* Acercar Agregar a Total */
+      .agregar-carrito{
+        margin-top:0 !important;
+      }
+
+      /* El precio unitario deja de verse aplastado */
+      .precio{
+        line-height:1.16 !important;
+        font-weight:800 !important;
+      }
+
+      /* Reducir el espacio inferior real */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:9px !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /* Retícula uniforme sin espacio vacío debajo */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:8px !important;
+      }
+
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:28px 2.3em 1.15em !important;
+        row-gap:5px !important;
+        min-height:98px !important;
+        height:98px !important;
+        padding-bottom:5px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:28px !important;
+        height:28px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.3em !important;
+        height:2.3em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.3em !important;
+        max-height:2.3em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      .bloque-presentaciones{
+        min-height:62px !important;
+      }
+
+      .informacion-precio{
+        min-height:55px !important;
+      }
+
+      .selector-cantidad{
+        min-height:39px !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+        margin-bottom:5px !important;
+      }
+
+      .agregar-carrito{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      .precio{
+        line-height:1.14 !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V45 — PRECIO UNITARIO Y TOTAL EN UNA FILA
+    ========================================= */
+
+    .informacion-precio,
+    .total-producto{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:10px !important;
+    }
+
+    .etiqueta-precio,
+    .etiqueta-total{
+      margin:0 !important;
+      min-width:0 !important;
+      color:var(--color-texto-suave) !important;
+      font-size:.67rem !important;
+      line-height:1 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.07em !important;
+    }
+
+    .precio,
+    .precio-total{
+      margin:0 !important;
+      margin-left:auto !important;
+      text-align:right !important;
+      white-space:nowrap !important;
+    }
+
+    @media (min-width:651px){
+      .etiqueta-precio{
+        display:flex !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        gap:.28em !important;
+        white-space:nowrap !important;
+      }
+
+      .informacion-precio{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .etiqueta-precio{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        align-content:center !important;
+        justify-items:start !important;
+        gap:0 !important;
+        width:max-content !important;
+        max-width:4.6em !important;
+        line-height:.88 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        display:block !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        align-self:center !important;
+        font-size:1.14rem !important;
+        line-height:1.08 !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+      }
+
+      .etiqueta-total{
+        display:block !important;
+        width:max-content !important;
+      }
+
+      .precio-total{
+        align-self:center !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V46 — AJUSTES DE PRECIO, TOTAL Y PRESENTACIÓN
+    ========================================= */
+
+    /* Mayúscula inicial, resto en minúsculas */
+    .titulo-opciones,
+    .etiqueta-precio,
+    .etiqueta-total{
+      text-transform:none !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Cápsula Total más baja */
+    .total-producto{
+      min-height:0 !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /*
+       * Duplicar la separación entre Precio y Unitario
+       * sin aumentar la altura total del bloque:
+       * se aprovecha el espacio libre superior e inferior.
+       */
+      .etiqueta-precio{
+        grid-template-rows:auto auto !important;
+        align-content:space-between !important;
+        height:2.35em !important;
+        line-height:1 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        line-height:1 !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        height:42px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+      }
+
+      /* Presentación: 6 px iguales arriba, entre elementos y abajo */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        row-gap:6px !important;
+        min-height:0 !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* Total apenas contiene texto y precio */
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V47 — TIPOGRAFÍA UNIFICADA SIN CAMBIAR ALTURAS
+    ========================================= */
+
+    /*
+     * Código, Presentación, Precio unitario, Cantidad y Total
+     * usan exactamente el mismo tamaño y un tono más oscuro.
+     */
+    .codigo-producto,
+    .titulo-opciones,
+    .etiqueta-precio,
+    .selector-cantidad > span,
+    .etiqueta-total,
+    .total-producto > span{
+      color:#4a433e !important;
+      font-size:.78rem !important;
+      font-weight:500 !important;
+      line-height:1 !important;
+      letter-spacing:0 !important;
+      text-transform:none !important;
+    }
+
+    /*
+     * El valor de Precio unitario nunca supera el tamaño
+     * del nombre del producto.
+     */
+    .precio{
+      font-size:1rem !important;
+      line-height:1.12 !important;
+    }
+
+    /* No modificar dimensiones de bloques, cápsulas ni tarjetas. */
+    @media (min-width:651px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.88rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.86rem !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V48 — ALINEACIÓN Y JERARQUÍA DE PRECIOS
+    ========================================= */
+
+    /* Precio unitario sin negrita; Total en negrita */
+    .precio{
+      font-weight:400 !important;
+      font-family:Arial, Helvetica, sans-serif !important;
+      font-stretch:normal !important;
+      transform:none !important;
+    }
+
+    .precio-total{
+      font-weight:800 !important;
+    }
+
+    /* Código: etiqueta normal y valor más pequeño */
+    .codigo-etiqueta{
+      font-size:1em !important;
+      font-weight:500 !important;
+    }
+
+    .codigo-valor{
+      font-size:.82em !important;
+      font-weight:400 !important;
+    }
+
+    /* Flecha blanca en el selector Kanthal */
+    .selector-presentacion{
+      color:#fff !important;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:right 13px center !important;
+      background-size:14px 14px !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /*
+       * Precio unitario, selector de cantidad y Total
+       * comparten el mismo eje central horizontal.
+       */
+      .informacion-precio,
+      .selector-cantidad,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) 106px !important;
+        align-items:center !important;
+        column-gap:10px !important;
+      }
+
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .control-cantidad,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:center !important;
+        text-align:center !important;
+        margin-left:0 !important;
+      }
+
+      /* Precio unitario menos achatado, como el Total */
+      .precio{
+        line-height:1.2 !important;
+        letter-spacing:0 !important;
+        white-space:nowrap !important;
+      }
+
+      .precio-total{
+        line-height:1.2 !important;
+        white-space:nowrap !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      /* Ambos precios comparten exactamente el mismo borde derecho */
+      .informacion-precio,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto !important;
+        align-items:center !important;
+        column-gap:8px !important;
+      }
+
+      .etiqueta-precio,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:end !important;
+        text-align:right !important;
+        margin-left:0 !important;
+        min-width:0 !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V49 — PRESENTACIÓN, TOTAL Y CANTIDAD
+    ========================================= */
+
+    /* El precio unitario vuelve a estar en negrita */
+    .precio{
+      font-weight:700 !important;
+    }
+
+    /* Total más grande y en negrita, pero menor que el nombre */
+    .etiqueta-total,
+    .total-producto > span{
+      font-size:.84rem !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /* Presentación y botones en la misma línea */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr) !important;
+        align-items:center !important;
+        column-gap:10px !important;
+        min-height:0 !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+        grid-column:1 !important;
+        white-space:nowrap !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        grid-column:2 !important;
+        justify-self:end !important;
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* El número central de − 1 + un poco más chico */
+      .cantidad{
+        font-size:.82rem !important;
+      }
+
+      /* Mantener − y + con su tamaño actual */
+      .boton-cantidad{
+        font-size:1rem !important;
+      }
+
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.84rem !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.82rem !important;
+      }
+    }
+
+  </style>
+
+</head>
+
+<body>
+  <main class="contenedor">
+
+    <header class="cabecera">
+      <div class="logo-contenedor">
+
+        <img
+          src="img/logo.png"
+          alt="Ceraceci"
+          class="logo"
         >
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
+
+        <p class="subtitulo-principal">
+          Insumos para cerámica
         </p>
 
       </div>
+    </header>
 
-      <div class="selector-cantidad">
-        <span>Cantidad</span>
+    <section
+      id="avisoProductoCompartido"
+      class="aviso-producto-compartido"
+      hidden
+    >
+      <button
+        type="button"
+        id="verCatalogoCompleto"
+        class="ver-catalogo-completo"
+      >
+        ← Ver catálogo completo
+      </button>
+    </section>
 
-        <div class="control-cantidad">
-          <button
-            type="button"
-            class="boton-cantidad restar"
-            aria-label="Disminuir cantidad"
-          >
-            −
-          </button>
+    <section class="busqueda">
+      <form class="fila-busqueda-orden" id="formBusqueda" role="search">
+        <input
+          type="search"
+          id="buscador"
+          placeholder="Buscar por nombre, código, categoría o presentación..."
+          autocomplete="off"
+          enterkeyhint="search"
+        >
 
-          <input
-            type="number"
-            class="cantidad"
-            value="1"
-            min="1"
-            step="1"
-            readonly
-            inputmode="none"
-            tabindex="-1"
-            aria-readonly="true"
-          >
+        <label
+          class="control-orden"
+          aria-label="Ordenar productos"
+          title="Ordenar productos"
+        >
+          <span class="icono-orden" aria-hidden="true">⇅</span>
 
-          <button
-            type="button"
-            class="boton-cantidad sumar"
-            aria-label="Aumentar cantidad"
-          >
-            +
-          </button>
-        </div>
-      </div>
+          <select id="ordenarProductos" aria-label="Ordenar productos">
+            <option value="inicial">
+              Orden inicial
+            </option>
 
-      <div class="total-producto">
-        <span class="etiqueta-total">Total</span>
+            <option value="precio-asc">
+              Precio: menor a mayor
+            </option>
 
-        <strong class="precio-total">
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
-        </strong>
+            <option value="precio-desc">
+              Precio: mayor a menor
+            </option>
+          </select>
+        </label>
+      </form>
+
+      <select id="filtroCategoria">
+        <option value="">
+          Todas las categorías
+        </option>
+      </select>
+    </section>
+
+    <p id="estado">
+      Cargando productos...
+    </p>
+
+    <section
+      id="productos"
+      class="productos"
+    ></section>
+
+  </main>
+
+  <div class="acciones-flotantes">
+
+    <a
+      href="https://www.instagram.com/ceraceci/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-flotante"
+      aria-label="Visitar Instagram"
+      title="Seguinos en Instagram"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm10.5 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+      </svg>
+    </a>
+
+    <a
+      href="https://wa.me/5492477314865?text=Hola%20Ceraceci%2C%20estoy%20viendo%20el%20cat%C3%A1logo%20y%20quisiera%20hacer%20una%20consulta."
+      target="_blank"
+      rel="noopener noreferrer"
+      class="whatsapp-flotante"
+      aria-label="Consultar por WhatsApp"
+      title="Consultanos por WhatsApp"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16.03 3C8.84 3 3 8.73 3 15.8c0 2.51.74 4.95 2.15 7.03L3 29l6.38-2.08a13.2 13.2 0 006.65 1.8c7.2 0 13.03-5.73 13.03-12.8C29.06 8.73 23.23 3 16.03 3zm7.6 18.07c-.32.89-1.88 1.67-2.58 1.72-.66.05-1.49.08-2.41-.2-.56-.17-1.28-.42-2.2-.81-3.88-1.66-6.4-5.53-6.6-5.8-.2-.27-1.58-2.07-1.58-3.95 0-1.88.99-2.8 1.34-3.18.35-.38.77-.47 1.03-.47.26 0 .52 0 .75.01.24.01.55-.09.86.65.32.77 1.08 2.66 1.18 2.86.1.2.16.43.03.69-.13.27-.2.43-.4.66-.2.23-.41.51-.59.69-.2.2-.4.42-.17.82.23.39 1.02 1.67 2.2 2.71 1.51 1.33 2.78 1.75 3.18 1.95.4.2.64.17.87-.1.23-.27.99-1.14 1.25-1.53.26-.39.52-.32.87-.2.35.12 2.24 1.05 2.62 1.24.39.2.64.3.74.47.1.16.1.94-.22 1.83z"/>
+      </svg>
+    </a>
+
+    <button
+      type="button"
+      id="abrirCarrito"
+      class="abrir-carrito"
+      aria-label="Abrir carrito"
+      title="Abrir carrito"
+    >
+      <strong id="cantidadCarrito">
+        <img
+          src="img/logo.png"
+          alt=""
+          class="logo-carrito"
+          aria-hidden="true"
+        >
+        <span class="texto-finalizar-carrito">
+          <span>Click aquí</span>
+          <span>para finalizar</span>
+          <span>tu pedido</span>
+        </span>
+
+        <span class="icono-carrito" aria-hidden="true">🛒</span>
+        <span class="separador-carrito" aria-hidden="true">|</span>
+        <span id="valorCarrito">$0</span>
+      </strong>
+    </button>
+
+  </div>
+
+  <div id="fondoCarrito" class="fondo-carrito"></div>
+
+  <aside id="carrito" class="carrito" aria-label="Carrito de compras">
+    <div class="encabezado-carrito">
+      <div>
+        <p>Tu pedido</p>
+        <h2>Carrito de compras</h2>
       </div>
 
       <button
         type="button"
-        class="agregar-carrito ${
-          productoInicialEnCarrito
-            ? "agregado"
-            : ""
-        }"
+        id="cerrarCarrito"
+        class="cerrar-carrito"
+        aria-label="Cerrar carrito"
       >
-        <span class="icono-agregar" aria-hidden="true">🛒</span>
-        <span class="texto-agregar">
-          ${
-            productoInicialEnCarrito
-              ? "Agregado"
-              : "Agregar"
-          }
-        </span>
+        ×
       </button>
-    `;
+    </div>
 
-    contenedorProductos.appendChild(
-      tarjeta
-    );
-  });
+    <div id="productosCarrito" class="productos-carrito"></div>
 
-  estado.textContent =
-    `${lista.length} productos encontrados`;
-}
-
-
-function seleccionarPresentacion(control) {
-  const tarjeta =
-    control.closest(".tarjeta-producto");
-
-  const idProducto =
-    control.dataset.idProducto;
-
-  const indicePresentacion =
-    control.matches(".selector-presentacion")
-      ? Number(control.value)
-      : Number(
-          control.dataset.indicePresentacion
-        );
-
-  const producto =
-    productosAgrupados.find(
-      (item) =>
-        item.id === idProducto
-    );
-
-  if (!producto) {
-    return;
-  }
-
-  const presentacion =
-    producto.presentaciones[
-      indicePresentacion
-    ];
-
-  if (!presentacion) {
-    return;
-  }
-
-  if (control.matches(".boton-presentacion")) {
-    tarjeta
-      .querySelectorAll(
-        ".boton-presentacion"
-      )
-      .forEach((opcion) => {
-        opcion.classList.remove(
-          "seleccionada"
-        );
-      });
-
-    control.classList.add("seleccionada");
-  }
-
-  tarjeta.dataset.presentacion =
-    presentacion.nombre;
-
-  tarjeta.dataset.precio =
-    String(presentacion.precio);
-
-  tarjeta.dataset.codigo =
-    presentacion.codigo || "";
-
-  const elementoPrecio =
-    tarjeta.querySelector(".precio");
-
-  elementoPrecio.dataset.precio =
-    String(presentacion.precio);
-
-  elementoPrecio.textContent =
-    formatearPrecio(
-      presentacion.precio
-    );
-
-  const codigoProducto =
-    tarjeta.querySelector(
-      ".codigo-producto"
-    );
-
-  codigoProducto.innerHTML =
-    presentacion.codigo
-      ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
-          presentacion.codigo
-        )}</span>`
-      : "";
-
-  actualizarTotalTarjeta(tarjeta);
-  actualizarEstadoBotonTarjeta(tarjeta);
-}
-
-
-function cambiarCantidadTarjeta(
-  boton,
-  variacion
-) {
-  const tarjeta =
-    boton.closest(".tarjeta-producto");
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  const cantidadActual =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
-    );
-
-  campoCantidad.value =
-    Math.max(
-      1,
-      cantidadActual + variacion
-    );
-
-  actualizarTotalTarjeta(tarjeta);
-  marcarBotonTarjetaComoPendiente(tarjeta);
-}
-
-
-function actualizarTotalTarjeta(tarjeta) {
-  const precio =
-    Number(tarjeta.dataset.precio) || 0;
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  const cantidad =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
-    );
-
-  campoCantidad.value = cantidad;
-
-  tarjeta.querySelector(
-    ".precio-total"
-  ).textContent =
-    formatearPrecio(
-      precio * cantidad
-    );
-}
-
-
-
-
-async function compartirProducto(idProducto) {
-  const url = new URL(window.location.href);
-
-  url.search = "";
-  url.searchParams.set(
-    "producto",
-    idProducto
-  );
-
-  try {
-    if (
-      navigator.share &&
-      window.matchMedia(
-        "(max-width: 800px)"
-      ).matches
-    ) {
-      await navigator.share({
-        title: "Producto Ceraceci",
-        url: url.toString()
-      });
-
-      return;
-    }
-
-    await navigator.clipboard.writeText(
-      url.toString()
-    );
-
-    mostrarAvisoCopiado();
-  } catch (error) {
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-      return;
-    }
-
-    window.prompt(
-      "Copiá este enlace:",
-      url.toString()
-    );
-  }
-}
-
-
-function mostrarAvisoCopiado() {
-  if (!avisoCopiado) {
-    return;
-  }
-
-  avisoCopiado.classList.add("visible");
-
-  window.clearTimeout(
-    mostrarAvisoCopiado.temporizador
-  );
-
-  mostrarAvisoCopiado.temporizador =
-    window.setTimeout(() => {
-      avisoCopiado.classList.remove(
-        "visible"
-      );
-    }, 2200);
-}
-
-
-function mostrarModoProductoCompartido(productoDisponible) {
-  document.body.classList.add(
-    "modo-producto-compartido"
-  );
-
-  if (seccionBusqueda) {
-    seccionBusqueda.hidden = true;
-  }
-
-  if (avisoProductoCompartido) {
-    avisoProductoCompartido.hidden = false;
-    avisoProductoCompartido.classList.toggle(
-      "producto-no-disponible",
-      !productoDisponible
-    );
-  }
-
-  if (productoDisponible) {
-    estado.textContent =
-      "Producto compartido";
-
-    const tarjeta =
-      contenedorProductos.querySelector(
-        ".tarjeta-producto"
-      );
-
-    if (tarjeta) {
-      tarjeta.classList.add(
-        "producto-compartido-unico"
-      );
-    }
-  }
-}
-
-
-function ocultarModoProductoCompartido() {
-  document.body.classList.remove(
-    "modo-producto-compartido"
-  );
-
-  if (seccionBusqueda) {
-    seccionBusqueda.hidden = false;
-  }
-
-  if (avisoProductoCompartido) {
-    avisoProductoCompartido.hidden = true;
-    avisoProductoCompartido.classList.remove(
-      "producto-no-disponible"
-    );
-  }
-}
-
-
-function mostrarCatalogoCompleto() {
-  productoCompartidoPendiente = null;
-
-  const url = new URL(window.location.href);
-  url.searchParams.delete("producto");
-
-  window.history.replaceState(
-    {},
-    "",
-    url.toString()
-  );
-
-  filtrarProductos();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-/* =========================================
-   CARRITO
-========================================= */
-
-function agregarProductoAlCarrito(boton) {
-  const tarjeta =
-    boton.closest(".tarjeta-producto");
-
-  if (boton.classList.contains("agregado")) {
-    return;
-  }
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  const cantidad =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
-    );
-
-  const producto = {
-    nombre:
-      tarjeta.dataset.nombre,
-
-    categoria:
-      tarjeta.dataset.categoria,
-
-    presentacion:
-      tarjeta.dataset.presentacion,
-
-    precio:
-      Number(
-        tarjeta.dataset.precio
-      ) || 0,
-
-    codigo:
-      tarjeta.dataset.codigo || "",
-
-    cantidad
-  };
-
-  const clave =
-    crearClaveCarrito(producto);
-
-  const productoExistente =
-    carritoCompras.find((item) => {
-      return (
-        crearClaveCarrito(item) ===
-        clave
-      );
-    });
-
-  if (productoExistente) {
-    productoExistente.cantidad = cantidad;
-  } else {
-    carritoCompras.push(producto);
-  }
-
-  guardarYActualizarCarrito();
-  actualizarEstadoBotonTarjeta(tarjeta);
-}
-
-
-function crearClaveCarrito(producto) {
-  return [
-    normalizarTexto(producto.nombre),
-    normalizarTexto(
-      producto.presentacion
-    ),
-    normalizarTexto(producto.codigo)
-  ].join("|");
-}
-
-
-function marcarBotonTarjetaComoPendiente(tarjeta) {
-  if (!tarjeta) {
-    return;
-  }
-
-  const boton =
-    tarjeta.querySelector(".agregar-carrito");
-
-  if (!boton) {
-    return;
-  }
-
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent = "Agregar";
-  }
-
-  boton.classList.remove("agregado");
-}
-
-
-function actualizarEstadoBotonTarjeta(tarjeta) {
-  if (!tarjeta) {
-    return;
-  }
-
-  const boton =
-    tarjeta.querySelector(
-      ".agregar-carrito"
-    );
-
-  if (!boton) {
-    return;
-  }
-
-  const claveTarjeta =
-    crearClaveCarrito({
-      nombre:
-        tarjeta.dataset.nombre || "",
-
-      presentacion:
-        tarjeta.dataset.presentacion || "",
-
-      codigo:
-        tarjeta.dataset.codigo || ""
-    });
-
-  const estaEnCarrito =
-    carritoCompras.some((producto) => {
-      return (
-        crearClaveCarrito(producto) ===
-        claveTarjeta
-      );
-    });
-
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent =
-      estaEnCarrito
-        ? "Agregado"
-        : "Agregar";
-  }
-
-  boton.classList.toggle(
-    "agregado",
-    estaEnCarrito
-  );
-}
-
-
-function actualizarEstadoBotonesCarrito() {
-  if (!contenedorProductos) {
-    return;
-  }
-
-  contenedorProductos
-    .querySelectorAll(
-      ".tarjeta-producto"
-    )
-    .forEach((tarjeta) => {
-      actualizarEstadoBotonTarjeta(
-        tarjeta
-      );
-    });
-}
-
-
-function mostrarCarrito() {
-  productosCarrito.innerHTML = "";
-
-  if (carritoCompras.length === 0) {
-    productosCarrito.innerHTML = `
-      <div class="carrito-vacio">
-        <span>🛒</span>
-
-        <p>
-          El carrito está vacío.
-        </p>
+    <div class="pie-carrito">
+      <div class="total-carrito">
+        <span>Total estimado</span>
+        <strong id="totalCarrito">$0</strong>
       </div>
-    `;
 
-    if (valorCarrito) {
-      valorCarrito.textContent =
-        formatearPrecio(0);
-    } else if (cantidadCarrito) {
-      cantidadCarrito.textContent =
-        `🛒 | ${formatearPrecio(0)}`;
-    }
-
-    totalCarrito.textContent =
-      formatearPrecio(0);
-
-    finalizarPedido.disabled = true;
-    vaciarCarrito.disabled = true;
-
-    return;
-  }
-
-  carritoCompras.forEach(
-    (producto, indice) => {
-      const subtotal =
-        producto.precio *
-        producto.cantidad;
-
-      const elemento =
-        document.createElement(
-          "article"
-        );
-
-      elemento.className =
-        "producto-carrito";
-
-      elemento.innerHTML = `
-        <div class="datos-producto-carrito">
-          <h3>
-            ${escaparHTML(
-              producto.nombre
-            )}
-          </h3>
-
-          <p>
-            ${escaparHTML(
-              producto.presentacion
-            )}
-          </p>
-
-          ${
-            producto.codigo
-              ? `
-                <small>
-                  Código:
-                  ${escaparHTML(
-                    producto.codigo
-                  )}
-                </small>
-              `
-              : ""
-          }
-
-          <strong>
-            ${formatearPrecio(
-              producto.precio
-            )} c/u
-          </strong>
-        </div>
-
-        <div class="acciones-producto-carrito">
-          <div class="control-cantidad-carrito">
-            <button
-              type="button"
-              data-accion="restar"
-              data-indice="${indice}"
-              aria-label="Restar una unidad"
-            >
-              −
-            </button>
-
-            <span>
-              ${producto.cantidad}
-            </span>
-
-            <button
-              type="button"
-              data-accion="sumar"
-              data-indice="${indice}"
-              aria-label="Sumar una unidad"
-            >
-              +
-            </button>
-          </div>
-
-          <strong class="subtotal-carrito">
-            ${formatearPrecio(subtotal)}
-          </strong>
-
-          <button
-            type="button"
-            class="eliminar-producto"
-            data-accion="eliminar"
-            data-indice="${indice}"
-          >
-            Eliminar
-          </button>
-        </div>
-      `;
-
-      productosCarrito.appendChild(
-        elemento
-      );
-    }
-  );
-
-  const cantidadTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total + producto.cantidad
-        );
-      },
-      0
-    );
-
-  const precioTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total +
-          producto.precio *
-            producto.cantidad
-        );
-      },
-      0
-    );
-
-  if (valorCarrito) {
-    valorCarrito.textContent =
-      formatearPrecio(precioTotal);
-  } else if (cantidadCarrito) {
-    cantidadCarrito.textContent =
-      `🛒 | ${formatearPrecio(precioTotal)}`;
-  }
-
-  totalCarrito.textContent =
-    formatearPrecio(precioTotal);
-
-  finalizarPedido.disabled = false;
-  vaciarCarrito.disabled = false;
-}
-
-
-function guardarYActualizarCarrito() {
-  localStorage.setItem(
-    "carritoCeraceci",
-    JSON.stringify(carritoCompras)
-  );
-
-  mostrarCarrito();
-  actualizarEstadoBotonesCarrito();
-}
-
-
-function cargarCarritoGuardado() {
-  try {
-    const carritoGuardado =
-      localStorage.getItem(
-        "carritoCeraceci"
-      );
-
-    if (!carritoGuardado) {
-      return [];
-    }
-
-    const datos =
-      JSON.parse(carritoGuardado);
-
-    if (!Array.isArray(datos)) {
-      return [];
-    }
-
-    return datos.filter((producto) => {
-      return (
-        producto &&
-        producto.nombre &&
-        producto.presentacion &&
-        Number(producto.precio) > 0 &&
-        Number(producto.cantidad) > 0
-      );
-    });
-  } catch (error) {
-    console.error(
-      "No se pudo recuperar el carrito.",
-      error
-    );
-
-    return [];
-  }
-}
-
-
-function abrirPanelCarrito() {
-  carritoElemento.classList.add(
-    "visible"
-  );
-
-  fondoCarrito.classList.add(
-    "visible"
-  );
-
-  document.body.classList.add(
-    "carrito-abierto"
-  );
-}
-
-
-function cerrarPanelCarrito() {
-  carritoElemento.classList.remove(
-    "visible"
-  );
-
-  fondoCarrito.classList.remove(
-    "visible"
-  );
-
-  document.body.classList.remove(
-    "carrito-abierto"
-  );
-}
-
-
-function finalizarPedidoWhatsApp() {
-  if (carritoCompras.length === 0) {
-    return;
-  }
-
-  if (
-    NUMERO_WHATSAPP ===
-    "5492210000000"
-  ) {
-    alert(
-      "Primero reemplazá el número de WhatsApp de ejemplo por el número real de Ceraceci en script.js."
-    );
-
-    return;
-  }
-
-  const lineasProductos =
-    carritoCompras.map(
-      (producto) =>
-        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
-    );
-
-  const precioTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total +
-          producto.precio *
-            producto.cantidad
-        );
-      },
-      0
-    );
-
-  const mensaje = [
-    "¡Hola! 😊",
-    "",
-    "Me gustaría consultar por este pedido:",
-    "",
-    ...lineasProductos,
-    "",
-    `💰 Total: ${formatearPrecio(precioTotal)}`,
-    "",
-    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
-    "",
-    "¡Muchas gracias!"
-  ].join("\n");
-
-  const enlace =
-    `https://wa.me/${NUMERO_WHATSAPP}` +
-    `?text=${encodeURIComponent(
-      mensaje
-    )}`;
-
-  window.open(
-    enlace,
-    "_blank",
-    "noopener,noreferrer"
-  );
-}
-
-
-/* =========================================
-   LECTURA DEL CSV
-========================================= */
-
-function convertirCSV(texto) {
-  const filas = [];
-
-  let fila = [];
-  let campo = "";
-  let dentroDeComillas = false;
-
-  for (
-    let posicion = 0;
-    posicion < texto.length;
-    posicion++
-  ) {
-    const caracter =
-      texto[posicion];
-
-    const siguiente =
-      texto[posicion + 1];
-
-    if (caracter === '"') {
-      if (
-        dentroDeComillas &&
-        siguiente === '"'
-      ) {
-        campo += '"';
-        posicion++;
-      } else {
-        dentroDeComillas =
-          !dentroDeComillas;
-      }
-
-      continue;
-    }
-
-    if (
-      caracter === "," &&
-      !dentroDeComillas
-    ) {
-      fila.push(campo);
-      campo = "";
-      continue;
-    }
-
-    if (
-      (
-        caracter === "\n" ||
-        caracter === "\r"
-      ) &&
-      !dentroDeComillas
-    ) {
-      if (
-        caracter === "\r" &&
-        siguiente === "\n"
-      ) {
-        posicion++;
-      }
-
-      fila.push(campo);
-
-      if (
-        fila.some(
-          (valor) =>
-            limpiarTexto(valor) !== ""
-        )
-      ) {
-        filas.push(fila);
-      }
-
-      fila = [];
-      campo = "";
-
-      continue;
-    }
-
-    campo += caracter;
-  }
-
-  fila.push(campo);
-
-  if (
-    fila.some(
-      (valor) =>
-        limpiarTexto(valor) !== ""
-    )
-  ) {
-    filas.push(fila);
-  }
-
-  return filas;
-}
-
-
-/* =========================================
-   FUNCIONES AUXILIARES
-========================================= */
-
-function convertirPrecio(valor) {
-  const texto =
-    limpiarTexto(valor)
-      .replace(/\$/g, "")
-      .replace(/\s/g, "");
-
-  if (texto === "") {
-    return 0;
-  }
-
-  let numeroNormalizado = texto;
-
-  const tieneComa =
-    numeroNormalizado.includes(",");
-
-  const tienePunto =
-    numeroNormalizado.includes(".");
-
-  if (tieneComa && tienePunto) {
-    const ultimaComa =
-      numeroNormalizado.lastIndexOf(",");
-
-    const ultimoPunto =
-      numeroNormalizado.lastIndexOf(".");
-
-    if (ultimaComa > ultimoPunto) {
-      numeroNormalizado =
-        numeroNormalizado
-          .replace(/\./g, "")
-          .replace(",", ".");
-    } else {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /,/g,
-          ""
-        );
-    }
-  } else if (tieneComa) {
-    const partes =
-      numeroNormalizado.split(",");
-
-    if (
-      partes.length === 2 &&
-      partes[1].length <= 2
-    ) {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          ",",
-          "."
-        );
-    } else {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /,/g,
-          ""
-        );
-    }
-  } else if (tienePunto) {
-    const partes =
-      numeroNormalizado.split(".");
-
-    if (
-      partes.length > 2 ||
-      (
-        partes.length === 2 &&
-        partes[1].length === 3
-      )
-    ) {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /\./g,
-          ""
-        );
-    }
-  }
-
-  const numero =
-    Number(numeroNormalizado);
-
-  return Number.isFinite(numero)
-    ? numero
-    : 0;
-}
-
-
-function formatearPrecio(precio) {
-  return new Intl.NumberFormat(
-    "es-AR",
-    {
-      style: "currency",
-      currency: "ARS",
-      maximumFractionDigits: 0
-    }
-  ).format(precio);
-}
-
-
-function limpiarTexto(valor) {
-  if (
-    valor === null ||
-    valor === undefined
-  ) {
-    return "";
-  }
-
-  return String(valor).trim();
-}
-
-
-function normalizarTexto(valor) {
-  return limpiarTexto(valor)
-    .normalize("NFD")
-    .replace(
-      /[\u0300-\u036f]/g,
-      ""
-    )
-    .toLowerCase();
-}
-
-
-function escaparHTML(valor) {
-  return limpiarTexto(valor)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-/* =========================================
-   EVENTOS
-========================================= */
-
-contenedorProductos.addEventListener(
-  "click",
-  (evento) => {
-    const botonCompartir =
-      evento.target.closest(
-        ".compartir-producto"
-      );
-
-    if (botonCompartir) {
-      compartirProducto(
-        botonCompartir.dataset.idProducto
-      );
-
-      return;
-    }
-
-    const botonAgregar =
-      evento.target.closest(
-        ".agregar-carrito"
-      );
-
-    if (botonAgregar) {
-      agregarProductoAlCarrito(
-        botonAgregar
-      );
-
-      return;
-    }
-
-    const botonPresentacion =
-      evento.target.closest(
-        ".boton-presentacion"
-      );
-
-    if (botonPresentacion) {
-      seleccionarPresentacion(
-        botonPresentacion
-      );
-
-      return;
-    }
-
-    const botonSumar =
-      evento.target.closest(".sumar");
-
-    if (botonSumar) {
-      cambiarCantidadTarjeta(
-        botonSumar,
-        1
-      );
-
-      return;
-    }
-
-    const botonRestar =
-      evento.target.closest(".restar");
-
-    if (botonRestar) {
-      cambiarCantidadTarjeta(
-        botonRestar,
-        -1
-      );
-    }
-  }
-);
-
-
-contenedorProductos.addEventListener(
-  "change",
-  (evento) => {
-    if (
-      !evento.target.classList.contains(
-        "selector-presentacion"
-      )
-    ) {
-      return;
-    }
-
-    seleccionarPresentacion(
-      evento.target
-    );
-  }
-);
-
-
-contenedorProductos.addEventListener(
-  "input",
-  (evento) => {
-    if (
-      !evento.target.classList.contains(
-        "cantidad"
-      )
-    ) {
-      return;
-    }
-
-    const tarjeta =
-      evento.target.closest(
-        ".tarjeta-producto"
-      );
-
-    actualizarTotalTarjeta(tarjeta);
-    marcarBotonTarjetaComoPendiente(tarjeta);
-  }
-);
-
-
-productosCarrito.addEventListener(
-  "click",
-  (evento) => {
-    const boton =
-      evento.target.closest(
-        "[data-accion]"
-      );
-
-    if (!boton) {
-      return;
-    }
-
-    const indice =
-      Number(boton.dataset.indice);
-
-    const accion =
-      boton.dataset.accion;
-
-    const producto =
-      carritoCompras[indice];
-
-    if (!producto) {
-      return;
-    }
-
-    if (accion === "sumar") {
-      producto.cantidad++;
-    }
-
-    if (accion === "restar") {
-      producto.cantidad--;
-
-      if (producto.cantidad < 1) {
-        carritoCompras.splice(
-          indice,
-          1
-        );
-      }
-    }
-
-    if (accion === "eliminar") {
-      carritoCompras.splice(
-        indice,
-        1
-      );
-    }
-
-    guardarYActualizarCarrito();
-  }
-);
-
-
-buscador.addEventListener(
-  "input",
-  filtrarProductos
-);
-
-
-/* =========================================
-   TECLADO MÓVIL EN EL BUSCADOR
-========================================= */
-
-function cerrarTecladoBuscadorMovil() {
-  if (
-    window.matchMedia(
-      "(max-width: 650px)"
-    ).matches
-  ) {
-    buscador.blur();
-  }
-}
-
-
-/*
- * Algunos teclados móviles disparan "search"
- * al tocar la lupa / Buscar.
- */
-buscador.addEventListener(
-  "search",
-  () => {
-    cerrarTecladoBuscadorMovil();
-  }
-);
-
-
-/*
- * Otros teclados envían Enter.
- * Se mantiene la búsqueda y luego se cierra el teclado.
- */
-buscador.addEventListener(
-  "keydown",
-  (evento) => {
-    if (evento.key !== "Enter") {
-      return;
-    }
-
-    filtrarProductos();
-    cerrarTecladoBuscadorMovil();
-  }
-);
-
-
-/*
- * Si el usuario toca los resultados mientras el teclado
- * está abierto, también se libera el foco del buscador.
- * Al volver a tocar el buscador, el teclado aparece normalmente.
- */
-contenedorProductos.addEventListener(
-  "touchstart",
-  () => {
-    if (document.activeElement === buscador) {
-      cerrarTecladoBuscadorMovil();
-    }
-  },
-  { passive: true }
-);
-
-
-filtroCategoria.addEventListener(
-  "change",
-  filtrarProductos
-);
-
-
-if (ordenarProductos) {
-  ordenarProductos.addEventListener(
-    "change",
-    () => {
-      const controlOrden = ordenarProductos.closest(".control-orden");
-
-      if (controlOrden) {
-        controlOrden.classList.toggle(
-          "orden-activo",
-          ordenarProductos.value !== "inicial"
-        );
-      }
-
-      filtrarProductos();
-    }
-  );
-}
-
-
-if (verCatalogoCompleto) {
-  verCatalogoCompleto.addEventListener(
-    "click",
-    mostrarCatalogoCompleto
-  );
-}
-
-
-if (abrirCarrito) {
-  abrirCarrito.addEventListener(
-    "click",
-    abrirPanelCarrito
-  );
-}
-
-
-if (cerrarCarrito) {
-  cerrarCarrito.addEventListener(
-    "click",
-    cerrarPanelCarrito
-  );
-}
-
-
-if (fondoCarrito) {
-  fondoCarrito.addEventListener(
-    "click",
-    cerrarPanelCarrito
-  );
-}
-
-
-if (vaciarCarrito) {
-vaciarCarrito.addEventListener(
-  "click",
-  () => {
-    if (carritoCompras.length === 0) {
-      return;
-    }
-
-    const confirmar = window.confirm(
-      "¿Querés vaciar todo el carrito?"
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    carritoCompras = [];
-    guardarYActualizarCarrito();
-  }
-);
-}
-
-if (finalizarPedido) {
-  finalizarPedido.addEventListener(
-    "click",
-    finalizarPedidoWhatsApp
-  );
-}
-
-
-document.addEventListener(
-  "keydown",
-  (evento) => {
-    if (evento.key === "Escape") {
-      cerrarPanelCarrito();
-    }
-  }
-);
-
-
-/* =========================================
-   INICIO
-========================================= */
-
-try {
-  mostrarCarrito();
-  cargarProductos();
-} catch (error) {
-  console.error(
-    "Error al iniciar el catálogo:",
-    error
-  );
-
-  if (estado) {
-    estado.textContent =
-      "No se pudo iniciar el catálogo. Recargá la página.";
-  }
-}
+      <button type="button" id="finalizarPedido" class="finalizar-pedido">
+        Finalizar pedido por WhatsApp
+      </button>
+
+      <button type="button" id="vaciarCarrito" class="vaciar-carrito">
+        Vaciar carrito
+      </button>
+    </div>
+  </aside>
+
+  <div id="avisoCopiado" class="aviso-copiado" role="status" aria-live="polite">
+    Enlace copiado
+  </div>
+
+  <script src="script.js?v=56"></script>
+</body>
+</html>
