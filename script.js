@@ -1,5 +1,5 @@
 const URL_CSV =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vQNAyxed_DNsPeWRmmObCIUFKVwrEIDN4f-lwLc6ms0fYYeFT1NVyz_ets4UJeYzVrzDbXnXKzXxXVt/pub?gid=314385761&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQPKeN-QUl2j11Q7hikKBUY4bYFFB5gO1Dsirsu87O4m9BSBqRmwtLNyIdLW8ASJiOCj0fKYy-py1-/pub?gid=2018371798&single=true&output=csv";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
