@@ -1978,6 +1978,66 @@ buscador.addEventListener(
 );
 
 
+/* =========================================
+   TECLADO MÓVIL EN EL BUSCADOR
+========================================= */
+
+function cerrarTecladoBuscadorMovil() {
+  if (
+    window.matchMedia(
+      "(max-width: 650px)"
+    ).matches
+  ) {
+    buscador.blur();
+  }
+}
+
+
+/*
+ * Algunos teclados móviles disparan "search"
+ * al tocar la lupa / Buscar.
+ */
+buscador.addEventListener(
+  "search",
+  () => {
+    cerrarTecladoBuscadorMovil();
+  }
+);
+
+
+/*
+ * Otros teclados envían Enter.
+ * Se mantiene la búsqueda y luego se cierra el teclado.
+ */
+buscador.addEventListener(
+  "keydown",
+  (evento) => {
+    if (evento.key !== "Enter") {
+      return;
+    }
+
+    filtrarProductos();
+    cerrarTecladoBuscadorMovil();
+  }
+);
+
+
+/*
+ * Si el usuario toca los resultados mientras el teclado
+ * está abierto, también se libera el foco del buscador.
+ * Al volver a tocar el buscador, el teclado aparece normalmente.
+ */
+contenedorProductos.addEventListener(
+  "touchstart",
+  () => {
+    if (document.activeElement === buscador) {
+      cerrarTecladoBuscadorMovil();
+    }
+  },
+  { passive: true }
+);
+
+
 filtroCategoria.addEventListener(
   "change",
   filtrarProductos
