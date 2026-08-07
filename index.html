@@ -10,7 +10,7 @@
 
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=56">
+  <link rel="stylesheet" href="style.css?v=57">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -1098,7 +1098,12 @@
     </section>
 
     <section class="busqueda">
-      <form class="fila-busqueda-orden" id="formBusqueda" role="search">
+      <form
+        class="fila-busqueda-orden"
+        id="formBusqueda"
+        role="search"
+        onsubmit="event.preventDefault(); document.getElementById('buscador').blur(); return false;"
+      >
         <input
           type="search"
           id="buscador"
@@ -1245,6 +1250,6 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=56"></script>
+  <script src="script.js?v=57"></script>
 </body>
 </html>
