@@ -1,5 +1,5 @@
 const URL_CSV =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTHMCeotPKaeWKiuxfS-3Z71qUdf2opBABAMPAKs_xjeuwkIXGSHDEoNaQgWyac6A/pub?gid=806904099&single=true&output=csv";
+  "https://script.google.com/macros/s/AKfycbw41VkFr-ElTG1gXqh-CZzEv0VTFP3qjVwWX0MSmwyXDbDBp79wdQJx_10yf6vj5FYW9w/exec";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -86,8 +86,11 @@ async function cargarProductos() {
   try {
     estado.textContent = "Cargando productos...";
 
+    const separador =
+      URL_CSV.includes("?") ? "&" : "?";
+
     const urlSinCache =
-      `${URL_CSV}&_=${Date.now()}`;
+      `${URL_CSV}${separador}_=${Date.now()}`;
 
     const respuesta = await fetch(
       urlSinCache,
