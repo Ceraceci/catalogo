@@ -1,5 +1,5 @@
 const URL_CSV =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vRQPKeN-QUl2j11Q7hikKBUY4bYFFB5gO1Dsirsu87O4m9BSBqRmwtLNyIdLW8ASJiOCj0fKYy-py1-/pub?gid=2018371798&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vTHMCeotPKaeWKiuxfS-3Z71qUdf2opBABAMPAKs_xjeuwkIXGSHDEoNaQgWyac6A/pub?gid=806904099&single=true&output=csv";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -19,9 +19,6 @@ const contenedorProductos =
 
 const buscador =
   document.getElementById("buscador");
-
-const formBusqueda =
-  document.getElementById("formBusqueda");
 
 const filtroCategoria =
   document.getElementById("filtroCategoria");
@@ -89,7 +86,15 @@ async function cargarProductos() {
   try {
     estado.textContent = "Cargando productos...";
 
-    const respuesta = await fetch(URL_CSV);
+    const urlSinCache =
+      `${URL_CSV}&_=${Date.now()}`;
+
+    const respuesta = await fetch(
+      urlSinCache,
+      {
+        cache: "no-store"
+      }
+    );
 
     if (!respuesta.ok) {
       throw new Error(
@@ -729,9 +734,9 @@ function mostrarProductos(lista) {
         <p class="codigo-producto">
           ${
             presentacionInicial.codigo
-              ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
+              ? `Código: ${escaparHTML(
                   presentacionInicial.codigo
-                )}</span>`
+                )}`
               : ""
           }
         </p>
@@ -747,8 +752,7 @@ function mostrarProductos(lista) {
 
       <div class="informacion-precio">
         <p class="etiqueta-precio">
-          <span class="precio-palabra">Precio</span>
-          <span class="unitario-palabra">unitario</span>
+          Precio unitario
         </p>
 
         <p
@@ -782,10 +786,6 @@ function mostrarProductos(lista) {
             value="1"
             min="1"
             step="1"
-            readonly
-            inputmode="none"
-            tabindex="-1"
-            aria-readonly="true"
           >
 
           <button
@@ -799,7 +799,7 @@ function mostrarProductos(lista) {
       </div>
 
       <div class="total-producto">
-        <span class="etiqueta-total">Total</span>
+        <span>Total</span>
 
         <strong class="precio-total">
           ${formatearPrecio(
@@ -904,16 +904,11 @@ function seleccionarPresentacion(control) {
       presentacion.precio
     );
 
-  const codigoProducto =
-    tarjeta.querySelector(
-      ".codigo-producto"
-    );
-
-  codigoProducto.innerHTML =
+  tarjeta.querySelector(
+    ".codigo-producto"
+  ).textContent =
     presentacion.codigo
-      ? `<span class="codigo-etiqueta">Código:</span> <span class="codigo-valor">${escaparHTML(
-          presentacion.codigo
-        )}</span>`
+      ? `Código: ${presentacion.codigo}`
       : "";
 
   actualizarTotalTarjeta(tarjeta);
@@ -1979,33 +1974,6 @@ buscador.addEventListener(
   "input",
   filtrarProductos
 );
-
-
-/* =========================================
-   CERRAR TECLADO MÓVIL AL CONFIRMAR BÚSQUEDA
-========================================= */
-
-if (formBusqueda) {
-  formBusqueda.addEventListener(
-    "submit",
-    (evento) => {
-      evento.preventDefault();
-
-      /*
-       * La búsqueda ya se actualiza mientras se escribe.
-       * Al confirmar, únicamente quitamos el foco para
-       * cerrar el teclado sin borrar el texto.
-       */
-      if (
-        window.matchMedia(
-          "(max-width: 650px)"
-        ).matches
-      ) {
-        buscador.blur();
-      }
-    }
-  );
-}
 
 
 filtroCategoria.addEventListener(
