@@ -1,2096 +1,1378 @@
-const URL_CSV =
-  "https://script.google.com/macros/s/AKfycbw41VkFr-ElTG1gXqh-CZzEv0VTFP3qjVwWX0MSmwyXDbDBp79wdQJx_10yf6vj5FYW9w/exec";
+/*
+  CERACECI - v9 LISTA PDF + FUENTE WEB DIRECTA
+
+  IMPORTANTE:
+  Esta versión NO actualiza automáticamente LISTA PDF.
+  Tampoco tiene onEdit.
+  El PDF NO se genera automáticamente.
+
+  Menú CERACECI:
+  1) "Previsualizar sincronización"
+     NO modifica LISTA PDF.
+  2) "Aplicar precios de WEB"
+     Solo puede escribir en las 370 celdas de precio
+     previamente validadas.
+
+  La antigua función de reparación permanece en el archivo
+  únicamente como respaldo, pero ya no aparece en el menú.
+*/
+
+const CERACECI_CONFIG = {
+  HOJA_WEB: "WEB",
+  HOJA_LISTA: "LISTA PDF",
+  HOJA_PREVIEW: "PREVISUALIZACION PDF"
+};
+
+
+/* =========================================================
+   FUENTE DIRECTA PARA LA PÁGINA WEB
+
+   Objetivo:
+   dejar de depender del CSV de "Publicar en la Web",
+   que puede entregar temporalmente una copia vieja.
+
+   La aplicación web devuelve SOLAMENTE la hoja WEB.
+   COSTOS y LISTA PDF no se exponen.
+========================================================= */
+
+const CERACECI_WEB = {
+  PROPIEDAD_ID: "CERACECI_SPREADSHEET_ID"
+};
+
 
 /*
- * Reemplazá este número por el WhatsApp real de Ceraceci.
- *
- * Debe incluir:
- * 54 = Argentina
- * 9 = celulares argentinos
- * código de área
- * número
- *
- * No debe tener +, espacios, guiones ni paréntesis.
- */
-const NUMERO_WHATSAPP = "5492477314865";
+  Ejecutar una sola vez desde el menú:
+  CERACECI -> 3. Configurar fuente para la página web
 
-const contenedorProductos =
-  document.getElementById("productos");
+  Guarda el ID de ESTA planilla en las propiedades privadas
+  del proyecto de Apps Script para que doGet pueda abrirla
+  cuando la página web haga una solicitud.
+*/
+function configurarFuenteWeb() {
 
-const buscador =
-  document.getElementById("buscador");
+  const libro =
+    SpreadsheetApp.getActiveSpreadsheet();
 
-const filtroCategoria =
-  document.getElementById("filtroCategoria");
+  if (!libro) {
+    throw new Error(
+      "No pude identificar la planilla activa."
+    );
+  }
 
-const ordenarProductos =
-  document.getElementById("ordenarProductos");
-
-const seccionBusqueda =
-  document.querySelector(".busqueda");
-
-const avisoProductoCompartido =
-  document.getElementById("avisoProductoCompartido");
-
-const verCatalogoCompleto =
-  document.getElementById("verCatalogoCompleto");
-
-const avisoCopiado =
-  document.getElementById("avisoCopiado");
-
-const estado =
-  document.getElementById("estado");
-
-const abrirCarrito =
-  document.getElementById("abrirCarrito");
-
-const cerrarCarrito =
-  document.getElementById("cerrarCarrito");
-
-const fondoCarrito =
-  document.getElementById("fondoCarrito");
-
-const carritoElemento =
-  document.getElementById("carrito");
-
-const productosCarrito =
-  document.getElementById("productosCarrito");
-
-const cantidadCarrito =
-  document.getElementById("cantidadCarrito");
-
-const valorCarrito =
-  document.getElementById("valorCarrito");
-
-const totalCarrito =
-  document.getElementById("totalCarrito");
-
-const vaciarCarrito =
-  document.getElementById("vaciarCarrito");
-
-const finalizarPedido =
-  document.getElementById("finalizarPedido");
-
-let productosAgrupados = [];
-let productosMostrados = [];
-let carritoCompras = cargarCarritoGuardado();
-let productoCompartidoPendiente =
-  new URLSearchParams(window.location.search).get("producto");
-
-
-/* =========================================
-   CARGA DE PRODUCTOS
-========================================= */
-
-async function cargarProductos() {
-  try {
-    estado.textContent = "Cargando productos...";
-
-    const separador =
-      URL_CSV.includes("?") ? "&" : "?";
-
-    const urlSinCache =
-      `${URL_CSV}${separador}_=${Date.now()}`;
-
-    const respuesta = await fetch(
-      urlSinCache,
-      {
-        cache: "no-store"
-      }
+  const web =
+    libro.getSheetByName(
+      CERACECI_CONFIG.HOJA_WEB
     );
 
-    if (!respuesta.ok) {
-      throw new Error(
-        `No se pudo descargar la lista. Error ${respuesta.status}`
+  if (!web) {
+    throw new Error(
+      "No encuentro la hoja WEB."
+    );
+  }
+
+  PropertiesService
+    .getScriptProperties()
+    .setProperty(
+      CERACECI_WEB.PROPIEDAD_ID,
+      libro.getId()
+    );
+
+  SpreadsheetApp.getUi().alert(
+    "CERACECI",
+    "Fuente web configurada correctamente.\\n\\n" +
+    "El siguiente paso es implementar este Apps Script como Aplicación web.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+
+/*
+  Esta función se ejecuta cada vez que la página web consulta
+  la URL /exec de la aplicación web.
+
+  Devuelve CSV generado directamente desde los valores actuales
+  de la hoja WEB.
+*/
+function doGet(e) {
+
+  const id =
+    PropertiesService
+      .getScriptProperties()
+      .getProperty(
+        CERACECI_WEB.PROPIEDAD_ID
       );
+
+  if (!id) {
+    return ContentService
+      .createTextOutput(
+        "ERROR: primero ejecutá configurarFuenteWeb()."
+      )
+      .setMimeType(
+        ContentService.MimeType.TEXT
+      );
+  }
+
+  const libro =
+    SpreadsheetApp.openById(id);
+
+  const web =
+    libro.getSheetByName(
+      CERACECI_CONFIG.HOJA_WEB
+    );
+
+  if (!web) {
+    return ContentService
+      .createTextOutput(
+        "ERROR: no encuentro la hoja WEB."
+      )
+      .setMimeType(
+        ContentService.MimeType.TEXT
+      );
+  }
+
+  /*
+    getDisplayValues() obtiene lo que actualmente muestra WEB.
+    El sitio ya sabe interpretar precios con $ y separadores.
+  */
+  const datos =
+    web.getDataRange()
+      .getDisplayValues();
+
+  const csv =
+    datos
+      .map(
+        fila =>
+          fila
+            .map(escaparCSV_)
+            .join(",")
+      )
+      .join("\r\n");
+
+  return ContentService
+    .createTextOutput(csv)
+    .setMimeType(
+      ContentService.MimeType.CSV
+    );
+}
+
+
+/*
+  Escapado CSV estándar:
+  - duplica comillas;
+  - encierra entre comillas cuando hay coma,
+    comillas o salto de línea.
+*/
+function escaparCSV_(valor) {
+
+  const texto =
+    String(
+      valor === null ||
+      valor === undefined
+        ? ""
+        : valor
+    );
+
+  if (
+    texto.includes(",") ||
+    texto.includes('"') ||
+    texto.includes("\n") ||
+    texto.includes("\r")
+  ) {
+    return (
+      '"' +
+      texto.replace(/"/g, '""') +
+      '"'
+    );
+  }
+
+  return texto;
+}
+
+
+
+/* =========================================================
+   MENÚ
+========================================================= */
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("CERACECI")
+    .addItem("1. Previsualizar sincronización", "previsualizarListaPDF")
+    .addItem("2. Aplicar precios de WEB", "aplicarPreciosWEB")
+    .addSeparator()
+    .addItem("3. Configurar fuente para la página web", "configurarFuenteWeb")
+    .addToUi();
+}
+
+
+/* =========================================================
+   1. REPARAR LOS ERRORES QUE YA QUEDARON EN LISTA PDF
+
+   Esta reparación fue construida comparando:
+   - la copia limpia anterior;
+   - la copia actual que subiste después del error.
+
+   Se detectaron:
+   - 27 precios agregados en celdas que originalmente estaban vacías;
+   - 5 encabezados de presentación reemplazados por precios.
+
+   NO se revierten los 7 cambios de precios correctos que sí coinciden
+   con WEB.
+========================================================= */
+
+function repararErroresListaPDF() {
+
+  const libro = SpreadsheetApp.getActiveSpreadsheet();
+  const lista = libro.getSheetByName(CERACECI_CONFIG.HOJA_LISTA);
+
+  if (!lista) {
+    throw new Error("No encuentro la hoja LISTA PDF.");
+  }
+
+  validarEstructura_(lista);
+
+  /*
+    Celdas que en la versión limpia estaban VACÍAS y luego
+    recibieron precios incorrectamente.
+  */
+  const celdasQueDebenQuedarVacias = [
+    "D25",
+    "D41",
+    "D45", "F45",
+    "D55", "F55",
+    "D59", "F59",
+    "D64", "F64",
+    "E85", "F85", "G85",
+    "D95",
+    "E124", "F124", "G124",
+    "E133", "F133", "G133",
+    "E150",
+    "E190", "F190", "G190",
+    "G192",
+    "D232",
+    "D241"
+  ];
+
+  celdasQueDebenQuedarVacias.forEach(celda => {
+    lista.getRange(celda).clearContent();
+  });
+
+  /*
+    Encabezados que fueron reemplazados por precios.
+    Restauramos solamente su TEXTO.
+  */
+  lista.getRange("D43").setValue("1 KG.");
+  lista.getRange("F43").setValue("25 KG.");
+
+  lista.getRange("E90").setValue("10 G.");
+  lista.getRange("F90").setValue("25 G.");
+  lista.getRange("G90").setValue("50 G.");
+
+  SpreadsheetApp.flush();
+
+  SpreadsheetApp.getUi().alert(
+    "CERACECI",
+    "Se repararon exactamente las 32 celdas dañadas. " +
+    "Los precios correctos que ya coincidían con WEB no fueron revertidos.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+
+/* =========================================================
+   2. PREVISUALIZACIÓN
+
+   ESTA FUNCIÓN NO MODIFICA LISTA PDF.
+========================================================= */
+
+
+/* =========================================================
+   2. APLICAR PRECIOS DE WEB
+
+   Esta función usa EXACTAMENTE el mismo mapa de 370 celdas
+   que ya fue validado en la previsualización.
+
+   Seguridad:
+   - si no hay exactamente 370 objetivos, se detiene;
+   - si falta un precio en WEB, se detiene antes de escribir;
+   - si una celda objetivo contiene una fórmula, se detiene;
+   - si una celda objetivo contiene texto no numérico, se detiene;
+   - nunca busca posiciones nuevas ni "adivina" celdas;
+   - nunca toca imágenes, títulos, ¡NUEVO!, ¡PROMO! ni HERRAMIENTAS.
+========================================================= */
+
+function aplicarPreciosWEB() {
+
+  const libro = SpreadsheetApp.getActiveSpreadsheet();
+
+  const web = libro.getSheetByName(CERACECI_CONFIG.HOJA_WEB);
+  const lista = libro.getSheetByName(CERACECI_CONFIG.HOJA_LISTA);
+
+  if (!web || !lista) {
+    throw new Error("No encuentro las hojas WEB o LISTA PDF.");
+  }
+
+  validarEstructura_(lista);
+
+  const indices = construirIndicesWEB_(web);
+  const objetivos = construirObjetivos_(lista);
+
+  if (objetivos.length !== 370) {
+    throw new Error(
+      "Por seguridad se detuvo la actualización. " +
+      "El mapa debería contener exactamente 370 celdas de precio, " +
+      "pero contiene " + objetivos.length + "."
+    );
+  }
+
+  const cambios = [];
+  const problemas = [];
+
+  objetivos.forEach(obj => {
+
+    const resultado = resolverPrecio_(obj, indices);
+
+    if (resultado.precio === null) {
+      problemas.push(
+        obj.celda + " - " + obj.nombreMostrar +
+        ": no encontré precio en WEB."
+      );
+      return;
     }
 
-    const textoCSV = await respuesta.text();
-    const filas = convertirCSV(textoCSV);
+    const rango = lista.getRange(obj.celda);
 
-    if (filas.length < 2) {
-      throw new Error(
-        "La hoja WEB no contiene productos."
+    const formula = rango.getFormula();
+
+    if (formula) {
+      problemas.push(
+        obj.celda + " - " + obj.nombreMostrar +
+        ": contiene una fórmula y no será reemplazada."
       );
+      return;
     }
 
-    const encabezados =
-      filas[0].map(limpiarTexto);
+    const valorActual = rango.getValue();
+    const actual = leerPrecio_(valorActual);
 
-    const indiceCodigo =
-      encabezados.indexOf("Código");
-
-    const indiceProducto =
-      encabezados.indexOf("Producto");
-
-    const indicePresentacion =
-      encabezados.indexOf("Presentación");
-
-    const indicePrecio =
-      encabezados.indexOf("Precio");
-
-    const indiceCategoria =
-      encabezados.indexOf("Categoría final");
-
-    const indiceActivo =
-      encabezados.indexOf("Activo");
+    /*
+      Permitimos una celda vacía solamente porque ya está dentro
+      del mapa exacto de 370 celdas aprobado.
+      Si tiene texto que no es precio, se detiene.
+    */
+    if (
+      valorActual !== "" &&
+      valorActual !== null &&
+      actual === null
+    ) {
+      problemas.push(
+        obj.celda + " - " + obj.nombreMostrar +
+        ": contiene texto inesperado \"" +
+        rango.getDisplayValue() + "\"."
+      );
+      return;
+    }
 
     if (
-      indiceProducto === -1 ||
-      indicePresentacion === -1 ||
-      indicePrecio === -1 ||
-      indiceCategoria === -1
+      actual === null ||
+      Math.abs(actual - resultado.precio) >= 0.001
     ) {
-      throw new Error(
-        "No se encontraron las columnas necesarias en la hoja WEB."
-      );
-    }
-
-    const filasProductos = filas
-      .slice(1)
-      .map((fila) => {
-        const producto = {
-          codigo:
-            indiceCodigo !== -1
-              ? limpiarTexto(fila[indiceCodigo])
-              : "",
-
-          nombre:
-            limpiarTexto(fila[indiceProducto]),
-
-          presentacion:
-            limpiarTexto(
-              fila[indicePresentacion]
-            ),
-
-          precio:
-            convertirPrecio(
-              fila[indicePrecio]
-            ),
-
-          categoria:
-            limpiarTexto(
-              fila[indiceCategoria]
-            ),
-
-          activo:
-            indiceActivo !== -1
-              ? limpiarTexto(fila[indiceActivo])
-              : "Sí"
-        };
-
-        return normalizarFilaKanthal(producto);
-      })
-      .filter((producto) => {
-        return (
-          producto.nombre !== "" &&
-          producto.presentacion !== "" &&
-          producto.precio > 0 &&
-          normalizarTexto(producto.activo) !== "no"
-        );
-      });
-
-    productosAgrupados =
-      agruparProductos(filasProductos);
-
-    cargarCategorias();
-    filtrarProductos();
-  } catch (error) {
-    console.error(error);
-
-    estado.textContent =
-      "No se pudo cargar la lista de productos.";
-
-    contenedorProductos.innerHTML = `
-      <div class="mensaje-error">
-        <strong>
-          Error al cargar el catálogo.
-        </strong>
-
-        <p>
-          ${escaparHTML(error.message)}
-        </p>
-      </div>
-    `;
-  }
-}
-
-
-/* =========================================
-   AGRUPACIÓN DE PRESENTACIONES
-========================================= */
-
-function normalizarFilaKanthal(producto) {
-  const coincidencia = producto.nombre.match(
-    /^ALAMBRE\s+KANTHAL\s+A1\s+DE\s+(.+?\s*MM)$/i
-  );
-
-  if (!coincidencia) {
-    return producto;
-  }
-
-  const diametro = limpiarTexto(coincidencia[1])
-    .replace(/\s+/g, " ")
-    .toUpperCase();
-
-  return {
-    ...producto,
-    nombre: "ALAMBRE KANTHAL A1",
-    presentacion: `${diametro} × 1 M`
-  };
-}
-
-
-function agruparProductos(filasProductos) {
-  const agrupados = new Map();
-
-  filasProductos.forEach((fila) => {
-    const clave = [
-      normalizarTexto(fila.nombre),
-      normalizarTexto(fila.categoria)
-    ].join("|");
-
-    if (!agrupados.has(clave)) {
-      agrupados.set(clave, {
-        id: crearIdProducto(clave),
-        nombre: fila.nombre,
-        categoria: fila.categoria,
-        presentaciones: []
-      });
-    }
-
-    const producto = agrupados.get(clave);
-
-    const presentacionExistente =
-      producto.presentaciones.some(
-        (presentacion) => {
-          return (
-            normalizarTexto(
-              presentacion.nombre
-            ) ===
-            normalizarTexto(
-              fila.presentacion
-            )
-          );
-        }
-      );
-
-    if (!presentacionExistente) {
-      producto.presentaciones.push({
-        nombre: fila.presentacion,
-        precio: fila.precio,
-        codigo: fila.codigo
+      cambios.push({
+        celda: obj.celda,
+        producto: obj.nombreMostrar,
+        presentacion: obj.presentacion,
+        actual: actual,
+        nuevo: resultado.precio
       });
     }
   });
 
-  const lista =
-    Array.from(agrupados.values());
 
-  lista.forEach((producto) => {
-    producto.presentaciones.sort(
-      (a, b) => {
-        return compararPresentaciones(
-          a.nombre,
-          b.nombre
-        );
-      }
+  /*
+    Regla transaccional:
+    si existe UN SOLO problema, no se escribe NADA.
+  */
+  if (problemas.length > 0) {
+    throw new Error(
+      "No se modificó LISTA PDF porque encontré " +
+      problemas.length +
+      " problema(s):\n\n" +
+      problemas.slice(0, 15).join("\n")
     );
-  });
+  }
 
-  lista.sort((a, b) => {
-    return a.nombre.localeCompare(
-      b.nombre,
-      "es",
-      {
-        sensitivity: "base",
-        numeric: true
-      }
+
+  if (cambios.length === 0) {
+    SpreadsheetApp.getUi().alert(
+      "CERACECI",
+      "No hay precios para cambiar. Las 370 celdas ya coinciden con WEB.",
+      SpreadsheetApp.getUi().ButtonSet.OK
     );
-  });
-
-  return lista;
-}
-
-
-function crearIdProducto(texto) {
-  let hash = 0;
-
-  for (
-    let posicion = 0;
-    posicion < texto.length;
-    posicion++
-  ) {
-    hash =
-      (hash << 5) -
-      hash +
-      texto.charCodeAt(posicion);
-
-    hash |= 0;
+    return;
   }
 
-  return `producto-${Math.abs(hash)}`;
-}
 
-
-function compararPresentaciones(a, b) {
-  const cantidadA =
-    extraerCantidadPresentacion(a);
-
-  const cantidadB =
-    extraerCantidadPresentacion(b);
-
-  if (
-    cantidadA !== null &&
-    cantidadB !== null &&
-    cantidadA !== cantidadB
-  ) {
-    return cantidadA - cantidadB;
-  }
-
-  return a.localeCompare(
-    b,
-    "es",
-    {
-      sensitivity: "base",
-      numeric: true
-    }
-  );
-}
-
-
-function extraerCantidadPresentacion(texto) {
-  const valor = normalizarTexto(texto)
-    .replace(",", ".");
-
-  const coincidencia = valor.match(
-    /(\d+(?:\.\d+)?)\s*(kg|kilo|kilos|g|gr|grs|gramos|l|lt|lts|litro|litros|ml|cc)?/
-  );
-
-  if (!coincidencia) {
-    return null;
-  }
-
-  let cantidad =
-    Number(coincidencia[1]);
-
-  const unidad =
-    coincidencia[2] || "";
-
-  if (!Number.isFinite(cantidad)) {
-    return null;
-  }
-
-  if (
-    unidad === "kg" ||
-    unidad === "kilo" ||
-    unidad === "kilos"
-  ) {
-    cantidad *= 1000;
-  }
-
-  if (
-    unidad === "l" ||
-    unidad === "lt" ||
-    unidad === "lts" ||
-    unidad === "litro" ||
-    unidad === "litros"
-  ) {
-    cantidad *= 1000;
-  }
-
-  return cantidad;
-}
-
-
-/* =========================================
-   CATEGORÍAS Y FILTROS
-========================================= */
-
-function cargarCategorias() {
-  const categorias = [
-    ...new Set(
-      productosAgrupados
-        .map(
-          (producto) =>
-            producto.categoria
-        )
-        .filter(Boolean)
+  const muestra = cambios
+    .slice(0, 10)
+    .map(c =>
+      c.celda + " - " +
+      c.producto + " (" +
+      c.presentacion + "): " +
+      (c.actual === null ? "vacío" : "$" + c.actual) +
+      " → $" + c.nuevo
     )
-  ].sort((a, b) => {
-    return a.localeCompare(
-      b,
-      "es",
-      {
-        sensitivity: "base"
-      }
-    );
-  });
-
-  filtroCategoria.innerHTML = `
-    <option value="">
-      Todas las categorías
-    </option>
-  `;
-
-  categorias.forEach((categoria) => {
-    const opcion =
-      document.createElement("option");
-
-    opcion.value = categoria;
-    opcion.textContent = categoria;
-
-    filtroCategoria.appendChild(opcion);
-  });
-}
-
-
-function filtrarProductos() {
-  if (productoCompartidoPendiente) {
-    const productoCompartido =
-      productosAgrupados.find(
-        (producto) =>
-          producto.id ===
-          productoCompartidoPendiente
-      );
-
-    productosMostrados =
-      productoCompartido
-        ? [productoCompartido]
-        : [];
-
-    mostrarProductos(productosMostrados);
-    mostrarModoProductoCompartido(
-      Boolean(productoCompartido)
-    );
-
-    if (!productoCompartido) {
-      estado.textContent =
-        "El producto compartido ya no está disponible.";
-    }
-
-    return;
-  }
-
-  ocultarModoProductoCompartido();
-
-  const palabrasBuscadas =
-    normalizarTexto(buscador.value)
-      .split(/\s+/)
-      .filter(Boolean);
-
-  const categoriaElegida =
-    filtroCategoria.value;
-
-  productosMostrados =
-    productosAgrupados.filter(
-      (producto) => {
-        const contenido =
-          normalizarTexto(
-            [
-              producto.nombre,
-              producto.categoria,
-              ...producto.presentaciones.map(
-                (presentacion) => {
-                  return [
-                    presentacion.nombre,
-                    presentacion.codigo
-                  ].join(" ");
-                }
-              )
-            ].join(" ")
-          );
-
-        const coincideBusqueda =
-          palabrasBuscadas.every(
-            (palabra) =>
-              contenido.includes(palabra)
-          );
-
-        const coincideCategoria =
-          categoriaElegida === "" ||
-          producto.categoria ===
-            categoriaElegida;
-
-        return (
-          coincideBusqueda &&
-          coincideCategoria
-        );
-      }
-    );
-
-  ordenarListaProductos(productosMostrados);
-  mostrarProductos(productosMostrados);
-}
-
-
-function obtenerPrecioReferencia(producto) {
-  return Math.min(
-    ...producto.presentaciones.map(
-      (presentacion) =>
-        Number(presentacion.precio) || Infinity
-    )
-  );
-}
-
-
-function ordenarListaProductos(lista) {
-  const criterio =
-    ordenarProductos
-      ? ordenarProductos.value
-      : "inicial";
-
-  if (criterio === "inicial") {
-    return;
-  }
-
-  lista.sort((a, b) => {
-    if (criterio === "precio-asc") {
-      return (
-        obtenerPrecioReferencia(a) -
-        obtenerPrecioReferencia(b)
-      );
-    }
-
-    if (criterio === "precio-desc") {
-      return (
-        obtenerPrecioReferencia(b) -
-        obtenerPrecioReferencia(a)
-      );
-    }
-
-    return 0;
-  });
-}
-
-
-/* =========================================
-   TARJETAS DE PRODUCTOS
-========================================= */
-
-function mostrarProductos(lista) {
-  contenedorProductos.innerHTML = "";
-
-  if (lista.length === 0) {
-    contenedorProductos.innerHTML = `
-      <div class="sin-resultados">
-        No se encontraron productos.
-      </div>
-    `;
-
-    estado.textContent =
-      "0 productos encontrados";
-
-    return;
-  }
-
-  lista.forEach((producto) => {
-    const presentacionInicial =
-      producto.presentaciones[0];
-
-    const tarjeta =
-      document.createElement("article");
-
-    tarjeta.className =
-      "tarjeta-producto";
-
-    tarjeta.dataset.idProducto =
-      producto.id;
-
-    tarjeta.dataset.nombre =
-      producto.nombre;
-
-    tarjeta.dataset.categoria =
-      producto.categoria;
-
-    tarjeta.dataset.presentacion =
-      presentacionInicial.nombre;
-
-    tarjeta.dataset.precio =
-      String(presentacionInicial.precio);
-
-    tarjeta.dataset.codigo =
-      presentacionInicial.codigo || "";
-
-    const productoInicialEnCarrito =
-      carritoCompras.some((item) => {
-        return (
-          crearClaveCarrito(item) ===
-          crearClaveCarrito({
-            nombre: producto.nombre,
-            presentacion:
-              presentacionInicial.nombre,
-            codigo:
-              presentacionInicial.codigo || ""
-          })
-        );
-      });
-
-    const usarSelectorDesplegable =
-      producto.presentaciones.length >= 7;
-
-    const opcionesSelector =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <option
-                value="${indicePresentacion}"
-              >
-                ${escaparHTML(
-                  presentacion.nombre
-                )}
-              </option>
-            `;
-          }
-        )
-        .join("");
-
-    const botonesPresentaciones =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <button
-                type="button"
-                class="boton-presentacion ${
-                  indicePresentacion === 0
-                    ? "seleccionada"
-                    : ""
-                }"
-                data-id-producto="${
-                  producto.id
-                }"
-                data-indice-presentacion="${
-                  indicePresentacion
-                }"
-              >
-                <span>
-                  ${escaparHTML(
-                    presentacion.nombre
-                  )}
-                </span>
-              </button>
-            `;
-          }
-        )
-        .join("");
-
-    const controlPresentaciones =
-      usarSelectorDesplegable
-        ? `
-            <select
-              class="selector-presentacion"
-              data-id-producto="${producto.id}"
-              aria-label="Elegir presentación de ${escaparHTML(
-                producto.nombre
-              )}"
-            >
-              ${opcionesSelector}
-            </select>
-          `
-        : `
-            <div class="opciones-presentacion">
-              ${botonesPresentaciones}
-            </div>
-          `;
-
-    tarjeta.innerHTML = `
-      <div class="encabezado-producto">
-        <div class="fila-categoria-producto">
-          <span class="categoria">
-            <img
-              src="img/logo.png"
-              alt=""
-              class="logo-categoria"
-              aria-hidden="true"
-            >
-
-            <span>${escaparHTML(producto.categoria)}</span>
-          </span>
-
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-          </button>
-        </div>
-
-        <div class="fila-titulo-producto">
-          <h2>
-            ${escaparHTML(producto.nombre)}
-          </h2>
-        </div>
-
-        <p class="codigo-producto">
-          ${
-            presentacionInicial.codigo
-              ? `Código: ${escaparHTML(
-                  presentacionInicial.codigo
-                )}`
-              : ""
-          }
-        </p>
-      </div>
-
-      <div class="bloque-presentaciones">
-  <p class="titulo-opciones">
-    Presentación
-  </p>
-
-  ${controlPresentaciones}
-</div>
-
-      <div class="informacion-precio">
-        <p class="etiqueta-precio">
-          Precio unitario
-        </p>
-
-        <p
-          class="precio"
-          data-precio="${
-            presentacionInicial.precio
-          }"
-        >
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
-        </p>
-
-      </div>
-
-      <div class="selector-cantidad">
-        <span>Cantidad</span>
-
-        <div class="control-cantidad">
-          <button
-            type="button"
-            class="boton-cantidad restar"
-            aria-label="Disminuir cantidad"
-          >
-            −
-          </button>
-
-          <input
-            type="number"
-            class="cantidad"
-            value="1"
-            min="1"
-            step="1"
-          >
-
-          <button
-            type="button"
-            class="boton-cantidad sumar"
-            aria-label="Aumentar cantidad"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div class="total-producto">
-        <span>Total</span>
-
-        <strong class="precio-total">
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
-        </strong>
-      </div>
-
-      <button
-        type="button"
-        class="agregar-carrito ${
-          productoInicialEnCarrito
-            ? "agregado"
-            : ""
-        }"
-      >
-        <span class="icono-agregar" aria-hidden="true">🛒</span>
-        <span class="texto-agregar">
-          ${
-            productoInicialEnCarrito
-              ? "Agregado"
-              : "Agregar"
-          }
-        </span>
-      </button>
-    `;
-
-    contenedorProductos.appendChild(
-      tarjeta
-    );
-  });
-
-  estado.textContent =
-    `${lista.length} productos encontrados`;
-}
-
-
-function seleccionarPresentacion(control) {
-  const tarjeta =
-    control.closest(".tarjeta-producto");
-
-  const idProducto =
-    control.dataset.idProducto;
-
-  const indicePresentacion =
-    control.matches(".selector-presentacion")
-      ? Number(control.value)
-      : Number(
-          control.dataset.indicePresentacion
-        );
-
-  const producto =
-    productosAgrupados.find(
-      (item) =>
-        item.id === idProducto
-    );
-
-  if (!producto) {
-    return;
-  }
-
-  const presentacion =
-    producto.presentaciones[
-      indicePresentacion
-    ];
-
-  if (!presentacion) {
-    return;
-  }
-
-  if (control.matches(".boton-presentacion")) {
-    tarjeta
-      .querySelectorAll(
-        ".boton-presentacion"
-      )
-      .forEach((opcion) => {
-        opcion.classList.remove(
-          "seleccionada"
-        );
-      });
-
-    control.classList.add("seleccionada");
-  }
-
-  tarjeta.dataset.presentacion =
-    presentacion.nombre;
-
-  tarjeta.dataset.precio =
-    String(presentacion.precio);
-
-  tarjeta.dataset.codigo =
-    presentacion.codigo || "";
-
-  const elementoPrecio =
-    tarjeta.querySelector(".precio");
-
-  elementoPrecio.dataset.precio =
-    String(presentacion.precio);
-
-  elementoPrecio.textContent =
-    formatearPrecio(
-      presentacion.precio
-    );
-
-  tarjeta.querySelector(
-    ".codigo-producto"
-  ).textContent =
-    presentacion.codigo
-      ? `Código: ${presentacion.codigo}`
+    .join("\n");
+
+  const extra =
+    cambios.length > 10
+      ? "\n\n...y " + (cambios.length - 10) + " cambio(s) más."
       : "";
 
-  actualizarTotalTarjeta(tarjeta);
-  actualizarEstadoBotonTarjeta(tarjeta);
-}
-
-
-function cambiarCantidadTarjeta(
-  boton,
-  variacion
-) {
-  const tarjeta =
-    boton.closest(".tarjeta-producto");
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  const cantidadActual =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
+  const respuesta =
+    SpreadsheetApp.getUi().alert(
+      "Confirmar actualización",
+      "Se modificarán únicamente " +
+      cambios.length +
+      " de las 370 celdas de precio validadas.\n\n" +
+      muestra +
+      extra +
+      "\n\n¿Querés aplicar estos cambios?",
+      SpreadsheetApp.getUi().ButtonSet.YES_NO
     );
 
-  campoCantidad.value =
-    Math.max(
-      1,
-      cantidadActual + variacion
-    );
-
-  actualizarTotalTarjeta(tarjeta);
-  marcarBotonTarjetaComoPendiente(tarjeta);
-}
-
-
-function actualizarTotalTarjeta(tarjeta) {
-  const precio =
-    Number(tarjeta.dataset.precio) || 0;
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  const cantidad =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
-    );
-
-  campoCantidad.value = cantidad;
-
-  tarjeta.querySelector(
-    ".precio-total"
-  ).textContent =
-    formatearPrecio(
-      precio * cantidad
-    );
-}
-
-
-
-
-async function compartirProducto(idProducto) {
-  const url = new URL(window.location.href);
-
-  url.search = "";
-  url.searchParams.set(
-    "producto",
-    idProducto
-  );
-
-  try {
-    if (
-      navigator.share &&
-      window.matchMedia(
-        "(max-width: 800px)"
-      ).matches
-    ) {
-      await navigator.share({
-        title: "Producto Ceraceci",
-        url: url.toString()
-      });
-
-      return;
-    }
-
-    await navigator.clipboard.writeText(
-      url.toString()
-    );
-
-    mostrarAvisoCopiado();
-  } catch (error) {
-    if (
-      error &&
-      error.name === "AbortError"
-    ) {
-      return;
-    }
-
-    window.prompt(
-      "Copiá este enlace:",
-      url.toString()
-    );
-  }
-}
-
-
-function mostrarAvisoCopiado() {
-  if (!avisoCopiado) {
+  if (respuesta !== SpreadsheetApp.getUi().Button.YES) {
     return;
   }
 
-  avisoCopiado.classList.add("visible");
 
-  window.clearTimeout(
-    mostrarAvisoCopiado.temporizador
-  );
-
-  mostrarAvisoCopiado.temporizador =
-    window.setTimeout(() => {
-      avisoCopiado.classList.remove(
-        "visible"
-      );
-    }, 2200);
-}
-
-
-function mostrarModoProductoCompartido(productoDisponible) {
-  document.body.classList.add(
-    "modo-producto-compartido"
-  );
-
-  if (seccionBusqueda) {
-    seccionBusqueda.hidden = true;
-  }
-
-  if (avisoProductoCompartido) {
-    avisoProductoCompartido.hidden = false;
-    avisoProductoCompartido.classList.toggle(
-      "producto-no-disponible",
-      !productoDisponible
-    );
-  }
-
-  if (productoDisponible) {
-    estado.textContent =
-      "Producto compartido";
-
-    const tarjeta =
-      contenedorProductos.querySelector(
-        ".tarjeta-producto"
-      );
-
-    if (tarjeta) {
-      tarjeta.classList.add(
-        "producto-compartido-unico"
-      );
-    }
-  }
-}
-
-
-function ocultarModoProductoCompartido() {
-  document.body.classList.remove(
-    "modo-producto-compartido"
-  );
-
-  if (seccionBusqueda) {
-    seccionBusqueda.hidden = false;
-  }
-
-  if (avisoProductoCompartido) {
-    avisoProductoCompartido.hidden = true;
-    avisoProductoCompartido.classList.remove(
-      "producto-no-disponible"
-    );
-  }
-}
-
-
-function mostrarCatalogoCompleto() {
-  productoCompartidoPendiente = null;
-
-  const url = new URL(window.location.href);
-  url.searchParams.delete("producto");
-
-  window.history.replaceState(
-    {},
-    "",
-    url.toString()
-  );
-
-  filtrarProductos();
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
+  /*
+    Recién después de todas las validaciones y de tu confirmación
+    se escriben los precios.
+  */
+  cambios.forEach(cambio => {
+    lista.getRange(cambio.celda).setValue(cambio.nuevo);
   });
+
+  actualizarMesListaPDF_();
+
+  SpreadsheetApp.flush();
+
+  SpreadsheetApp.getUi().alert(
+    "CERACECI",
+    "Actualización terminada.\n\n" +
+    cambios.length +
+    " precio(s) fueron modificados.\n" +
+    "No se tocó ninguna otra celda de LISTA PDF.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
 }
 
 
-/* =========================================
-   CARRITO
-========================================= */
+/* =========================================================
+   MES DEL ENCABEZADO
 
-function agregarProductoAlCarrito(boton) {
-  const tarjeta =
-    boton.closest(".tarjeta-producto");
+   Se actualiza solamente cuando aplicás precios.
+   El PDF sigue sin generarse automáticamente.
+========================================================= */
 
-  if (boton.classList.contains("agregado")) {
-    return;
+function actualizarMesListaPDF_() {
+
+  const libro = SpreadsheetApp.getActiveSpreadsheet();
+
+  const lista = libro.getSheetByName(
+    CERACECI_CONFIG.HOJA_LISTA
+  );
+
+  if (!lista) return;
+
+  const meses = [
+    "ENERO", "FEBRERO", "MARZO", "ABRIL",
+    "MAYO", "JUNIO", "JULIO", "AGOSTO",
+    "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
+  ];
+
+  const hoy = new Date();
+
+  lista.getRange("B1").setValue(
+    meses[hoy.getMonth()] +
+    " - PERGAMINO, BS. AS."
+  );
+}
+
+
+function previsualizarListaPDF() {
+
+  const libro = SpreadsheetApp.getActiveSpreadsheet();
+
+  const web = libro.getSheetByName(CERACECI_CONFIG.HOJA_WEB);
+  const lista = libro.getSheetByName(CERACECI_CONFIG.HOJA_LISTA);
+
+  if (!web || !lista) {
+    throw new Error("No encuentro las hojas WEB o LISTA PDF.");
   }
 
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
+  validarEstructura_(lista);
 
-  const cantidad =
-    Math.max(
-      1,
-      Number(campoCantidad.value) || 1
+  const indices = construirIndicesWEB_(web);
+  const objetivos = construirObjetivos_(lista);
+
+  const salida = [
+    [
+      "Estado",
+      "Celda",
+      "Producto en LISTA PDF",
+      "Código",
+      "Presentación",
+      "Precio actual",
+      "Precio WEB",
+      "Origen"
+    ]
+  ];
+
+  let cambiar = 0;
+  let iguales = 0;
+  let faltantes = 0;
+
+  objetivos.forEach(obj => {
+
+    const actual = leerPrecio_(lista.getRange(obj.celda).getValue());
+
+    const resultado = resolverPrecio_(obj, indices);
+
+    let estado = "";
+    let precioWEB = "";
+
+    if (resultado.precio === null) {
+      estado = "SIN COINCIDENCIA";
+      faltantes++;
+
+    } else {
+
+      precioWEB = resultado.precio;
+
+      if (
+        actual !== null &&
+        Math.abs(actual - resultado.precio) < 0.001
+      ) {
+        estado = "IGUAL";
+        iguales++;
+      } else {
+        estado = "CAMBIAR";
+        cambiar++;
+      }
+    }
+
+    salida.push([
+      estado,
+      obj.celda,
+      obj.nombreMostrar,
+      obj.codigoMostrar,
+      obj.presentacion,
+      actual === null ? "" : actual,
+      precioWEB,
+      resultado.origen
+    ]);
+  });
+
+
+  let preview =
+    libro.getSheetByName(CERACECI_CONFIG.HOJA_PREVIEW);
+
+  if (!preview) {
+    preview = libro.insertSheet(CERACECI_CONFIG.HOJA_PREVIEW);
+  } else {
+    preview.clear();
+  }
+
+  preview
+    .getRange(1, 1, salida.length, salida[0].length)
+    .setValues(salida);
+
+  preview.setFrozenRows(1);
+
+  preview.getRange("A1:H1")
+    .setFontWeight("bold");
+
+  preview.autoResizeColumns(1, 8);
+
+  /*
+    Formato monetario únicamente para las dos columnas de precios.
+  */
+  if (salida.length > 1) {
+    preview
+      .getRange(2, 6, salida.length - 1, 2)
+      .setNumberFormat('$#,##0');
+  }
+
+  SpreadsheetApp.flush();
+
+  SpreadsheetApp.getUi().alert(
+    "Previsualización terminada",
+    "Se revisaron " + objetivos.length + " celdas de precio.\n\n" +
+    "IGUAL: " + iguales + "\n" +
+    "CAMBIAR: " + cambiar + "\n" +
+    "SIN COINCIDENCIA: " + faltantes + "\n\n" +
+    "LISTA PDF NO fue modificada. Revisá la hoja PREVISUALIZACION PDF.",
+    SpreadsheetApp.getUi().ButtonSet.OK
+  );
+}
+
+
+/* =========================================================
+   VALIDACIÓN DE LA PLANTILLA
+
+   Si alguna de estas referencias no coincide, el script se detiene.
+   Así no intenta trabajar sobre una estructura distinta.
+========================================================= */
+
+function validarEstructura_(lista) {
+
+  const controles = [
+    ["C5",   "PASTAS CHILAVERT"],
+    ["C15",  "BARBOTINAS CHILAVERT"],
+    ["C26",  "MATERIALES SECOS"],
+    ["C42",  "YESO PESCIO"],
+    ["C46",  "ESMALTES DP"],
+    ["C96",  "ENGOBES DP (PREPARADOS Y LISTOS PARA USAR)"],
+    ["C151", "PIGMENTOS PUROS DP"],
+    ["C195", "ACUARELAS DP"],
+    ["C233", "ALAMBRES"],
+    ["C242", "HERRAMIENTAS"]
+  ];
+
+  const errores = [];
+
+  controles.forEach(([celda, esperado]) => {
+
+    const real =
+      normalizarTexto_(lista.getRange(celda).getDisplayValue());
+
+    if (real !== normalizarTexto_(esperado)) {
+      errores.push(
+        celda + ": esperaba \"" + esperado +
+        "\" y encontré \"" +
+        lista.getRange(celda).getDisplayValue() + "\""
+      );
+    }
+  });
+
+  if (errores.length > 0) {
+    throw new Error(
+      "La estructura de LISTA PDF cambió. " +
+      "Por seguridad no se hará nada.\n\n" +
+      errores.join("\n")
+    );
+  }
+}
+
+
+/* =========================================================
+   ÍNDICES DE WEB
+========================================================= */
+
+function construirIndicesWEB_(web) {
+
+  const datos = web.getDataRange().getValues();
+
+  if (datos.length < 2) {
+    throw new Error("WEB no contiene datos.");
+  }
+
+  const headers = datos[0].map(normalizarTexto_);
+
+  const iCodigo = headers.indexOf("CODIGO");
+  const iProducto = headers.indexOf("PRODUCTO");
+  const iPresentacion = headers.indexOf("PRESENTACION");
+  const iPrecio = headers.indexOf("PRECIO");
+  const iActivo = headers.indexOf("ACTIVO");
+
+  if (
+    iProducto === -1 ||
+    iPresentacion === -1 ||
+    iPrecio === -1
+  ) {
+    throw new Error(
+      "WEB debe tener las columnas Producto, Presentación y Precio."
+    );
+  }
+
+  const porCodigo = new Map();
+  const porNombre = new Map();
+
+  for (let i = 1; i < datos.length; i++) {
+
+    const fila = datos[i];
+
+    const activo =
+      iActivo === -1
+        ? "SI"
+        : normalizarTexto_(fila[iActivo]);
+
+    if (activo === "NO") {
+      continue;
+    }
+
+    const codigo =
+      iCodigo === -1
+        ? ""
+        : normalizarCodigo_(fila[iCodigo]);
+
+    const nombre =
+      normalizarTexto_(fila[iProducto]);
+
+    const presentacion =
+      normalizarPresentacion_(fila[iPresentacion]);
+
+    const precio =
+      leerPrecio_(fila[iPrecio]);
+
+    if (!nombre || !presentacion || precio === null) {
+      continue;
+    }
+
+    porNombre.set(
+      nombre + "|||" + presentacion,
+      precio
     );
 
-  const producto = {
-    nombre:
-      tarjeta.dataset.nombre,
+    if (codigo) {
+      porCodigo.set(
+        codigo + "|||" + presentacion,
+        precio
+      );
+    }
+  }
 
-    categoria:
-      tarjeta.dataset.categoria,
+  return {
+    porCodigo,
+    porNombre
+  };
+}
 
-    presentacion:
-      tarjeta.dataset.presentacion,
 
-    precio:
-      Number(
-        tarjeta.dataset.precio
-      ) || 0,
+/* =========================================================
+   MAPA EXACTO DE CELDAS DE PRECIO DE LA PLANTILLA ACTUAL
 
-    codigo:
-      tarjeta.dataset.codigo || "",
+   No se buscan "lugares posibles".
+   Solo se revisan las celdas que, en la plantilla que analizamos,
+   son verdaderas celdas de precio.
+========================================================= */
 
-    cantidad
+function construirObjetivos_(lista) {
+
+  const o = [];
+
+  function agregar(celda, presentacion, opciones) {
+
+    opciones = opciones || {};
+
+    const fila =
+      Number(celda.match(/\d+/)[0]);
+
+    const codigoLista =
+      lista.getRange("B" + fila).getDisplayValue();
+
+    const nombreLista =
+      lista.getRange("C" + fila).getDisplayValue();
+
+    o.push({
+      celda: celda,
+      fila: fila,
+      presentacion: normalizarPresentacion_(presentacion),
+
+      codigoMostrar:
+        opciones.codigoMostrar !== undefined
+          ? opciones.codigoMostrar
+          : codigoLista,
+
+      nombreMostrar:
+        opciones.nombreMostrar !== undefined
+          ? opciones.nombreMostrar
+          : nombreLista,
+
+      codigoFuente:
+        opciones.codigoFuente || "",
+
+      nombreFuente:
+        opciones.nombreFuente || "",
+
+      tipoEspecial:
+        opciones.tipoEspecial || ""
+    });
+  }
+
+
+  /* ---------------- PASTAS ---------------- */
+
+  agregar("F6",  "10 KG", { nombreFuente: "PASTA LISA BLANCA PARA BAJA" });
+
+  agregar("D7",  "5 KG", { nombreFuente: "PASTA BLANCA CON CHAMOTE" });
+  agregar("D8",  "5 KG", { nombreFuente: "PASTA GRES CLARO" });
+  agregar("D9",  "5 KG", { nombreFuente: "PASTA GRES OSCURO" });
+  agregar("D10", "5 KG", { nombreFuente: "PASTA ROJA" });
+  agregar("D11", "5 KG", { nombreFuente: "PASTA ROJA CON CHAMOTE" });
+  agregar("D12", "5 KG", { nombreFuente: "PASTA ROJA FUEGO DIRECTO" });
+  agregar("D13", "5 KG", { nombreFuente: "PASTA RAKU" });
+
+
+  /* ---------------- BARBOTINAS / ENVASE ---------------- */
+
+  agregar("D17", "9 KG", {
+    nombreFuente: "BARBOTINA BAJA TEMPERATURA"
+  });
+
+  agregar("D18", "9 KG", {
+    tipoEspecial: "BARBOTINA_BAJA_MAS_BIDON"
+  });
+
+  agregar("D20", "9 KG", {
+    nombreFuente: "BARBOTINA GRES"
+  });
+
+  agregar("D21", "9 KG", {
+    tipoEspecial: "BARBOTINA_GRES_MAS_BIDON"
+  });
+
+  agregar("D23", "1 U", {
+    nombreFuente: "BIDON BOCA ANCHA"
+  });
+
+
+  /* ---------------- MATERIALES SECOS ---------------- */
+
+  const materiales = {
+    27: "APM 112",
+    28: "BENTONITA",
+    29: "CAOLIN SUR DEL RIO",
+    30: "CARBONATO DE CALCIO",
+    31: "CHAMOTE MOLIDO M18",
+    32: "CHAMOTE FINO M200",
+    33: "CHAMOTE IMPALPABLE M325",
+    34: "CUARZO M200",
+    35: "FELDESPATO POTASICO M200",
+    36: "FELDESPATO SODICO M200",
+    37: "NEFELINA SIENITA",
+    38: "TINCAR MOLIDA Z",
+    39: "TALCO CHINO",
+    40: "TALCO INDUSTRIAL"
   };
 
-  const clave =
-    crearClaveCarrito(producto);
+  Object.keys(materiales).forEach(fila => {
+    agregar("D" + fila, "1 KG", {
+      nombreFuente: materiales[fila]
+    });
+  });
 
-  const productoExistente =
-    carritoCompras.find((item) => {
-      return (
-        crearClaveCarrito(item) ===
-        clave
-      );
+
+  /* ---------------- YESO ---------------- */
+
+  agregar("D44", "1 KG", {
+    nombreFuente: "YESO BETALFA"
+  });
+
+  agregar("F44", "25 KG", {
+    nombreFuente: "YESO BETALFA"
+  });
+
+
+  /* ---------------- ESMALTES ---------------- */
+
+  [48, 49, 51, 53, 54].forEach(fila => {
+
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
+
+    agregar("D" + fila, "500 G", {
+      codigoFuente: codigo
     });
 
-  if (productoExistente) {
-    productoExistente.cantidad = cantidad;
-  } else {
-    carritoCompras.push(producto);
-  }
+    agregar("F" + fila, "1 KG", {
+      codigoFuente: codigo
+    });
+  });
 
-  guardarYActualizarCarrito();
-  actualizarEstadoBotonTarjeta(tarjeta);
-}
+  /*
+    DP-BL-46 se mantiene visible en la lista,
+    pero toma el precio de DP-BL-48.
+  */
+  agregar("D50", "500 G", {
+    codigoFuente: "DP-BL-48"
+  });
 
-
-function crearClaveCarrito(producto) {
-  return [
-    normalizarTexto(producto.nombre),
-    normalizarTexto(
-      producto.presentacion
-    ),
-    normalizarTexto(producto.codigo)
-  ].join("|");
-}
+  agregar("F50", "1 KG", {
+    codigoFuente: "DP-BL-48"
+  });
 
 
-function marcarBotonTarjetaComoPendiente(tarjeta) {
-  if (!tarjeta) {
-    return;
-  }
+  /* ---------------- ESMALTE DE COLOR ---------------- */
 
-  const boton =
-    tarjeta.querySelector(".agregar-carrito");
+  agregar("D58", "250 G", {
+    codigoFuente: lista.getRange("B58").getDisplayValue()
+  });
 
-  if (!boton) {
-    return;
-  }
-
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent = "Agregar";
-  }
-
-  boton.classList.remove("agregado");
-}
+  agregar("F58", "500 G", {
+    codigoFuente: lista.getRange("B58").getDisplayValue()
+  });
 
 
-function actualizarEstadoBotonTarjeta(tarjeta) {
-  if (!tarjeta) {
-    return;
-  }
+  /* ---------------- FUNDENTES ---------------- */
 
-  const boton =
-    tarjeta.querySelector(
-      ".agregar-carrito"
-    );
+  [62, 63].forEach(fila => {
 
-  if (!boton) {
-    return;
-  }
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
 
-  const claveTarjeta =
-    crearClaveCarrito({
-      nombre:
-        tarjeta.dataset.nombre || "",
-
-      presentacion:
-        tarjeta.dataset.presentacion || "",
-
-      codigo:
-        tarjeta.dataset.codigo || ""
+    agregar("D" + fila, "500 G", {
+      codigoFuente: codigo
     });
 
-  const estaEnCarrito =
-    carritoCompras.some((producto) => {
-      return (
-        crearClaveCarrito(producto) ===
-        claveTarjeta
-      );
+    agregar("F" + fila, "1 KG", {
+      codigoFuente: codigo
+    });
+  });
+
+
+  /* ---------------- ÓXIDOS Y CARBONATOS ---------------- */
+
+  const oxidos = {
+    67: { F: "25 G", G: "50 G" },
+    68: { E: "10 G", F: "25 G", G: "50 G" },
+    69: { D: "5 G", E: "10 G", F: "25 G" },
+    70: { D: "5 G", E: "10 G", F: "25 G", G: "50 G" },
+    71: { E: "10 G", F: "25 G", G: "50 G" },
+    72: { D: "5 G", E: "10 G", F: "25 G" },
+    73: { E: "10 G", F: "25 G", G: "50 G" },
+    74: { E: "10 G", F: "25 G", G: "50 G" },
+    75: { E: "10 G", F: "25 G", G: "50 G" },
+    76: { E: "10 G", F: "25 G", G: "50 G" },
+    77: { D: "5 G", E: "10 G", F: "25 G" },
+    78: { E: "10 G", F: "25 G", G: "50 G" },
+    79: { E: "10 G", F: "25 G", G: "50 G" },
+    80: { F: "25 G", G: "50 G" }
+  };
+
+  const nombresOxidos = {
+    67: "ALUMINA CALCINADA / ÓXIDO DE ALUMINIO",
+    68: "OXIDO DE CIRCONIO",
+    69: "OXIDO DE COBALTO",
+    70: "OXIDO DE COBRE NEGRO",
+    71: "OXIDO DE CROMO VERDE",
+    72: "OXIDO DE ESTAÑO",
+    73: "OXIDO DE HIERRO ROJO",
+    74: "OXIDO DE HIERRO AMARILLO",
+    75: "OXIDO DE MANGANESO",
+    76: "OXIDO DE MINIO",
+    77: "OXIDO DE NIQUEL",
+    78: "OXIDO DE TITANIO (CALIDAD RUTILO)",
+    79: "OXIDO DE ZINC",
+    80: "CARBONATO DE BARIO"
+  };
+
+  Object.keys(oxidos).forEach(fila => {
+
+    Object.keys(oxidos[fila]).forEach(col => {
+
+      agregar(col + fila, oxidos[fila][col], {
+        nombreFuente: nombresOxidos[fila]
+      });
+    });
+  });
+
+
+  /* ---------------- JASPEADORES / OPACIFICANTES ---------------- */
+
+  const jaspeadores = {
+    82: "ARENA DE RUTILO",
+    83: "HARINA DE RUTILO",
+    84: "SILICATO DE CIRCONIO"
+  };
+
+  Object.keys(jaspeadores).forEach(fila => {
+
+    agregar("E" + fila, "10 G", {
+      nombreFuente: jaspeadores[fila]
     });
 
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent =
-      estaEnCarrito
-        ? "Agregado"
-        : "Agregar";
-  }
-
-  boton.classList.toggle(
-    "agregado",
-    estaEnCarrito
-  );
-}
-
-
-function actualizarEstadoBotonesCarrito() {
-  if (!contenedorProductos) {
-    return;
-  }
-
-  contenedorProductos
-    .querySelectorAll(
-      ".tarjeta-producto"
-    )
-    .forEach((tarjeta) => {
-      actualizarEstadoBotonTarjeta(
-        tarjeta
-      );
+    agregar("F" + fila, "25 G", {
+      nombreFuente: jaspeadores[fila]
     });
-}
 
-
-function mostrarCarrito() {
-  productosCarrito.innerHTML = "";
-
-  if (carritoCompras.length === 0) {
-    productosCarrito.innerHTML = `
-      <div class="carrito-vacio">
-        <span>🛒</span>
-
-        <p>
-          El carrito está vacío.
-        </p>
-      </div>
-    `;
-
-    if (valorCarrito) {
-      valorCarrito.textContent =
-        formatearPrecio(0);
-    } else if (cantidadCarrito) {
-      cantidadCarrito.textContent =
-        `🛒 | ${formatearPrecio(0)}`;
-    }
-
-    totalCarrito.textContent =
-      formatearPrecio(0);
-
-    finalizarPedido.disabled = true;
-    vaciarCarrito.disabled = true;
-
-    return;
-  }
-
-  carritoCompras.forEach(
-    (producto, indice) => {
-      const subtotal =
-        producto.precio *
-        producto.cantidad;
-
-      const elemento =
-        document.createElement(
-          "article"
-        );
-
-      elemento.className =
-        "producto-carrito";
-
-      elemento.innerHTML = `
-        <div class="datos-producto-carrito">
-          <h3>
-            ${escaparHTML(
-              producto.nombre
-            )}
-          </h3>
-
-          <p>
-            ${escaparHTML(
-              producto.presentacion
-            )}
-          </p>
-
-          ${
-            producto.codigo
-              ? `
-                <small>
-                  Código:
-                  ${escaparHTML(
-                    producto.codigo
-                  )}
-                </small>
-              `
-              : ""
-          }
-
-          <strong>
-            ${formatearPrecio(
-              producto.precio
-            )} c/u
-          </strong>
-        </div>
-
-        <div class="acciones-producto-carrito">
-          <div class="control-cantidad-carrito">
-            <button
-              type="button"
-              data-accion="restar"
-              data-indice="${indice}"
-              aria-label="Restar una unidad"
-            >
-              −
-            </button>
-
-            <span>
-              ${producto.cantidad}
-            </span>
-
-            <button
-              type="button"
-              data-accion="sumar"
-              data-indice="${indice}"
-              aria-label="Sumar una unidad"
-            >
-              +
-            </button>
-          </div>
-
-          <strong class="subtotal-carrito">
-            ${formatearPrecio(subtotal)}
-          </strong>
-
-          <button
-            type="button"
-            class="eliminar-producto"
-            data-accion="eliminar"
-            data-indice="${indice}"
-          >
-            Eliminar
-          </button>
-        </div>
-      `;
-
-      productosCarrito.appendChild(
-        elemento
-      );
-    }
-  );
-
-  const cantidadTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total + producto.cantidad
-        );
-      },
-      0
-    );
-
-  const precioTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total +
-          producto.precio *
-            producto.cantidad
-        );
-      },
-      0
-    );
-
-  if (valorCarrito) {
-    valorCarrito.textContent =
-      formatearPrecio(precioTotal);
-  } else if (cantidadCarrito) {
-    cantidadCarrito.textContent =
-      `🛒 | ${formatearPrecio(precioTotal)}`;
-  }
-
-  totalCarrito.textContent =
-    formatearPrecio(precioTotal);
-
-  finalizarPedido.disabled = false;
-  vaciarCarrito.disabled = false;
-}
-
-
-function guardarYActualizarCarrito() {
-  localStorage.setItem(
-    "carritoCeraceci",
-    JSON.stringify(carritoCompras)
-  );
-
-  mostrarCarrito();
-  actualizarEstadoBotonesCarrito();
-}
-
-
-function cargarCarritoGuardado() {
-  try {
-    const carritoGuardado =
-      localStorage.getItem(
-        "carritoCeraceci"
-      );
-
-    if (!carritoGuardado) {
-      return [];
-    }
-
-    const datos =
-      JSON.parse(carritoGuardado);
-
-    if (!Array.isArray(datos)) {
-      return [];
-    }
-
-    return datos.filter((producto) => {
-      return (
-        producto &&
-        producto.nombre &&
-        producto.presentacion &&
-        Number(producto.precio) > 0 &&
-        Number(producto.cantidad) > 0
-      );
+    agregar("G" + fila, "50 G", {
+      nombreFuente: jaspeadores[fila]
     });
-  } catch (error) {
-    console.error(
-      "No se pudo recuperar el carrito.",
-      error
-    );
-
-    return [];
-  }
-}
+  });
 
 
-function abrirPanelCarrito() {
-  carritoElemento.classList.add(
-    "visible"
-  );
+  /* ---------------- AUXILIARES ---------------- */
 
-  fondoCarrito.classList.add(
-    "visible"
-  );
+  agregar("D87", "50 CC", {
+    nombreFuente: "ACEITE DE LINO"
+  });
 
-  document.body.classList.add(
-    "carrito-abierto"
-  );
-}
+  ["E", "F", "G"].forEach((col, i) => {
+    agregar(col + "91", ["10 G", "25 G", "50 G"][i], {
+      nombreFuente: "CMC (CARBOXIMETIL CELULOSA)"
+    });
+  });
 
-
-function cerrarPanelCarrito() {
-  carritoElemento.classList.remove(
-    "visible"
-  );
-
-  fondoCarrito.classList.remove(
-    "visible"
-  );
-
-  document.body.classList.remove(
-    "carrito-abierto"
-  );
-}
+  agregar("D94", "370 G", {
+    nombreFuente: "SILICATO DE SODIO"
+  });
 
 
-function finalizarPedidoWhatsApp() {
-  if (carritoCompras.length === 0) {
-    return;
+  /* ---------------- ENGOBES ---------------- */
+
+  for (let fila = 98; fila <= 123; fila++) {
+
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
+
+    agregar("E" + fila, "60 CC",  { codigoFuente: codigo });
+    agregar("F" + fila, "100 CC", { codigoFuente: codigo });
+    agregar("G" + fila, "200 CC", { codigoFuente: codigo });
   }
 
-  if (
-    NUMERO_WHATSAPP ===
-    "5492210000000"
-  ) {
-    alert(
-      "Primero reemplazá el número de WhatsApp de ejemplo por el número real de Ceraceci en script.js."
-    );
+  for (let fila = 126; fila <= 132; fila++) {
 
-    return;
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
+
+    agregar("E" + fila, "60 CC",  { codigoFuente: codigo });
+    agregar("F" + fila, "100 CC", { codigoFuente: codigo });
+    agregar("G" + fila, "200 CC", { codigoFuente: codigo });
   }
 
-  const lineasProductos =
-    carritoCompras.map(
-      (producto) =>
-        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
-    );
+  for (let fila = 135; fila <= 149; fila++) {
 
-  const precioTotal =
-    carritoCompras.reduce(
-      (total, producto) => {
-        return (
-          total +
-          producto.precio *
-            producto.cantidad
-        );
-      },
-      0
-    );
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
 
-  const mensaje = [
-    "¡Hola! 😊",
-    "",
-    "Me gustaría consultar por este pedido:",
-    "",
-    ...lineasProductos,
-    "",
-    `💰 Total: ${formatearPrecio(precioTotal)}`,
-    "",
-    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
-    "",
-    "¡Muchas gracias!"
-  ].join("\n");
+    agregar("E" + fila, "100 CC", {
+      codigoFuente: codigo
+    });
+  }
 
-  const enlace =
-    `https://wa.me/${NUMERO_WHATSAPP}` +
-    `?text=${encodeURIComponent(
-      mensaje
-    )}`;
 
-  window.open(
-    enlace,
-    "_blank",
-    "noopener,noreferrer"
-  );
+  /* ---------------- PIGMENTOS ---------------- */
+
+  for (let fila = 153; fila <= 189; fila++) {
+
+    const codigo =
+      lista.getRange("B" + fila).getDisplayValue();
+
+    agregar("E" + fila, "10 G", {
+      codigoFuente: codigo
+    });
+
+    agregar("F" + fila, "25 G", {
+      codigoFuente: codigo
+    });
+
+    agregar("G" + fila, "50 G", {
+      codigoFuente: codigo
+    });
+  }
+
+
+  /* ---------------- KITS DE ACUARELAS ---------------- */
+
+  agregar("D191", "18 U", {
+    codigoFuente: "DP-AC-COMPLETO",
+    nombreMostrar:
+      lista.getRange("B191").getDisplayValue()
+  });
+
+  agregar("D193", "12 U", {
+    codigoFuente: "DP-AC-PASTEL-12",
+    nombreMostrar:
+      lista.getRange("B193").getDisplayValue()
+  });
+
+
+  /* ---------------- ACUARELAS INDIVIDUALES ----------------
+
+     NUEVA ESTRUCTURA:
+     - D queda libre/reservada para imagen.
+     - El precio está en E:G combinado.
+     - En Google Sheets, una celda combinada E:G se escribe
+       siempre desde su celda superior izquierda: E.
+  ------------------------------------------------------------ */
+
+  for (let fila = 197; fila <= 216; fila++) {
+
+    agregar("E" + fila, "10 G", {
+      codigoFuente: "DP-AC-CO-18-SUELTAS"
+    });
+  }
+
+  for (let fila = 218; fila <= 231; fila++) {
+
+    agregar("E" + fila, "10 G", {
+      codigoFuente: "DP-AC-PA-12-SUELTAS"
+    });
+  }
+
+
+  /* ---------------- ALAMBRES ---------------- */
+
+  for (let fila = 234; fila <= 240; fila++) {
+
+    agregar("D" + fila, "1 M", {
+      nombreFuente:
+        lista.getRange("C" + fila).getDisplayValue()
+    });
+  }
+
+
+  return o;
 }
 
 
-/* =========================================
-   LECTURA DEL CSV
-========================================= */
+/* =========================================================
+   RESOLVER PRECIO DE UN OBJETIVO
+========================================================= */
 
-function convertirCSV(texto) {
-  const filas = [];
+function resolverPrecio_(obj, indices) {
 
-  let fila = [];
-  let campo = "";
-  let dentroDeComillas = false;
+  if (obj.tipoEspecial === "BARBOTINA_BAJA_MAS_BIDON") {
 
-  for (
-    let posicion = 0;
-    posicion < texto.length;
-    posicion++
-  ) {
-    const caracter =
-      texto[posicion];
+    const a =
+      indices.porNombre.get(
+        normalizarTexto_("BARBOTINA BAJA TEMPERATURA") +
+        "|||9 KG"
+      );
 
-    const siguiente =
-      texto[posicion + 1];
+    const b =
+      indices.porNombre.get(
+        normalizarTexto_("BIDON BOCA ANCHA") +
+        "|||1 U"
+      );
 
-    if (caracter === '"') {
-      if (
-        dentroDeComillas &&
-        siguiente === '"'
-      ) {
-        campo += '"';
-        posicion++;
-      } else {
-        dentroDeComillas =
-          !dentroDeComillas;
-      }
-
-      continue;
+    if (a === undefined || b === undefined) {
+      return {
+        precio: null,
+        origen: "BARBOTINA BAJA + BIDÓN"
+      };
     }
 
-    if (
-      caracter === "," &&
-      !dentroDeComillas
-    ) {
-      fila.push(campo);
-      campo = "";
-      continue;
-    }
-
-    if (
-      (
-        caracter === "\n" ||
-        caracter === "\r"
-      ) &&
-      !dentroDeComillas
-    ) {
-      if (
-        caracter === "\r" &&
-        siguiente === "\n"
-      ) {
-        posicion++;
-      }
-
-      fila.push(campo);
-
-      if (
-        fila.some(
-          (valor) =>
-            limpiarTexto(valor) !== ""
-        )
-      ) {
-        filas.push(fila);
-      }
-
-      fila = [];
-      campo = "";
-
-      continue;
-    }
-
-    campo += caracter;
+    return {
+      precio: a + b,
+      origen: "BARBOTINA BAJA + BIDÓN"
+    };
   }
 
-  fila.push(campo);
 
-  if (
-    fila.some(
-      (valor) =>
-        limpiarTexto(valor) !== ""
-    )
-  ) {
-    filas.push(fila);
+  if (obj.tipoEspecial === "BARBOTINA_GRES_MAS_BIDON") {
+
+    const a =
+      indices.porNombre.get(
+        normalizarTexto_("BARBOTINA GRES") +
+        "|||9 KG"
+      );
+
+    const b =
+      indices.porNombre.get(
+        normalizarTexto_("BIDON BOCA ANCHA") +
+        "|||1 U"
+      );
+
+    if (a === undefined || b === undefined) {
+      return {
+        precio: null,
+        origen: "BARBOTINA GRES + BIDÓN"
+      };
+    }
+
+    return {
+      precio: a + b,
+      origen: "BARBOTINA GRES + BIDÓN"
+    };
   }
 
-  return filas;
+
+  if (obj.codigoFuente) {
+
+    const codigo =
+      normalizarCodigo_(obj.codigoFuente);
+
+    const clave =
+      codigo + "|||" + obj.presentacion;
+
+    const precio =
+      indices.porCodigo.get(clave);
+
+    return {
+      precio:
+        precio === undefined
+          ? null
+          : precio,
+      origen:
+        "Código " +
+        obj.codigoFuente
+    };
+  }
+
+
+  if (obj.nombreFuente) {
+
+    const nombre =
+      normalizarTexto_(obj.nombreFuente);
+
+    const clave =
+      nombre + "|||" + obj.presentacion;
+
+    const precio =
+      indices.porNombre.get(clave);
+
+    return {
+      precio:
+        precio === undefined
+          ? null
+          : precio,
+      origen:
+        "Nombre exacto: " +
+        obj.nombreFuente
+    };
+  }
+
+
+  return {
+    precio: null,
+    origen: ""
+  };
 }
 
 
-/* =========================================
-   FUNCIONES AUXILIARES
-========================================= */
+/* =========================================================
+   UTILIDADES
+========================================================= */
 
-function convertirPrecio(valor) {
+function normalizarTexto_(valor) {
+
+  return String(
+    valor === null || valor === undefined
+      ? ""
+      : valor
+  )
+    .trim()
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+
+function normalizarCodigo_(valor) {
+
+  return normalizarTexto_(valor)
+    .replace(/[^A-Z0-9]/g, "");
+}
+
+
+function normalizarPresentacion_(valor) {
+
   const texto =
-    limpiarTexto(valor)
-      .replace(/\$/g, "")
-      .replace(/\s/g, "");
+    normalizarTexto_(valor);
 
-  if (texto === "") {
-    return 0;
-  }
+  const m =
+    texto.match(
+      /(\d+(?:[.,]\d+)?)\s*(KG|G|CC|ML|L|M|U|UNIDAD|UNIDADES)\b/
+    );
 
-  let numeroNormalizado = texto;
-
-  const tieneComa =
-    numeroNormalizado.includes(",");
-
-  const tienePunto =
-    numeroNormalizado.includes(".");
-
-  if (tieneComa && tienePunto) {
-    const ultimaComa =
-      numeroNormalizado.lastIndexOf(",");
-
-    const ultimoPunto =
-      numeroNormalizado.lastIndexOf(".");
-
-    if (ultimaComa > ultimoPunto) {
-      numeroNormalizado =
-        numeroNormalizado
-          .replace(/\./g, "")
-          .replace(",", ".");
-    } else {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /,/g,
-          ""
-        );
-    }
-  } else if (tieneComa) {
-    const partes =
-      numeroNormalizado.split(",");
-
-    if (
-      partes.length === 2 &&
-      partes[1].length <= 2
-    ) {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          ",",
-          "."
-        );
-    } else {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /,/g,
-          ""
-        );
-    }
-  } else if (tienePunto) {
-    const partes =
-      numeroNormalizado.split(".");
-
-    if (
-      partes.length > 2 ||
-      (
-        partes.length === 2 &&
-        partes[1].length === 3
-      )
-    ) {
-      numeroNormalizado =
-        numeroNormalizado.replace(
-          /\./g,
-          ""
-        );
-    }
-  }
-
-  const numero =
-    Number(numeroNormalizado);
-
-  return Number.isFinite(numero)
-    ? numero
-    : 0;
-}
-
-
-function formatearPrecio(precio) {
-  return new Intl.NumberFormat(
-    "es-AR",
-    {
-      style: "currency",
-      currency: "ARS",
-      maximumFractionDigits: 0
-    }
-  ).format(precio);
-}
-
-
-function limpiarTexto(valor) {
-  if (
-    valor === null ||
-    valor === undefined
-  ) {
+  if (!m) {
     return "";
   }
 
-  return String(valor).trim();
-}
+  let numero =
+    m[1].replace(",", ".");
 
-
-function normalizarTexto(valor) {
-  return limpiarTexto(valor)
-    .normalize("NFD")
-    .replace(
-      /[\u0300-\u036f]/g,
-      ""
-    )
-    .toLowerCase();
-}
-
-
-function escaparHTML(valor) {
-  return limpiarTexto(valor)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-
-/* =========================================
-   EVENTOS
-========================================= */
-
-contenedorProductos.addEventListener(
-  "click",
-  (evento) => {
-    const botonCompartir =
-      evento.target.closest(
-        ".compartir-producto"
-      );
-
-    if (botonCompartir) {
-      compartirProducto(
-        botonCompartir.dataset.idProducto
-      );
-
-      return;
-    }
-
-    const botonAgregar =
-      evento.target.closest(
-        ".agregar-carrito"
-      );
-
-    if (botonAgregar) {
-      agregarProductoAlCarrito(
-        botonAgregar
-      );
-
-      return;
-    }
-
-    const botonPresentacion =
-      evento.target.closest(
-        ".boton-presentacion"
-      );
-
-    if (botonPresentacion) {
-      seleccionarPresentacion(
-        botonPresentacion
-      );
-
-      return;
-    }
-
-    const botonSumar =
-      evento.target.closest(".sumar");
-
-    if (botonSumar) {
-      cambiarCantidadTarjeta(
-        botonSumar,
-        1
-      );
-
-      return;
-    }
-
-    const botonRestar =
-      evento.target.closest(".restar");
-
-    if (botonRestar) {
-      cambiarCantidadTarjeta(
-        botonRestar,
-        -1
-      );
-    }
+  if (numero.endsWith(".0")) {
+    numero =
+      numero.slice(0, -2);
   }
-);
+
+  let unidad = m[2];
+
+  if (
+    unidad === "UNIDAD" ||
+    unidad === "UNIDADES"
+  ) {
+    unidad = "U";
+  }
+
+  return numero + " " + unidad;
+}
 
 
-contenedorProductos.addEventListener(
-  "change",
-  (evento) => {
+function leerPrecio_(valor) {
+
+  if (
+    typeof valor === "number" &&
+    Number.isFinite(valor)
+  ) {
+    return valor;
+  }
+
+  if (
+    valor === null ||
+    valor === undefined ||
+    valor === ""
+  ) {
+    return null;
+  }
+
+  let texto =
+    String(valor)
+      .trim()
+      .replace(/\$/g, "")
+      .replace(/\s/g, "");
+
+  if (!texto) {
+    return null;
+  }
+
+  if (
+    /[A-Za-z]/.test(texto) ||
+    texto.includes("/") ||
+    texto.toLowerCase().includes("x")
+  ) {
+    return null;
+  }
+
+  /*
+    En Google Sheets los precios normalmente llegan como números.
+    Esto cubre además textos del tipo $3.400 o $3.400,50.
+  */
+  if (
+    texto.includes(".") &&
+    !texto.includes(",")
+  ) {
+
+    const partes =
+      texto.split(".");
+
     if (
-      !evento.target.classList.contains(
-        "selector-presentacion"
+      partes.length > 1 &&
+      partes.slice(1).every(
+        parte => parte.length === 3
       )
     ) {
-      return;
-    }
-
-    seleccionarPresentacion(
-      evento.target
-    );
-  }
-);
-
-
-contenedorProductos.addEventListener(
-  "input",
-  (evento) => {
-    if (
-      !evento.target.classList.contains(
-        "cantidad"
-      )
-    ) {
-      return;
-    }
-
-    const tarjeta =
-      evento.target.closest(
-        ".tarjeta-producto"
-      );
-
-    actualizarTotalTarjeta(tarjeta);
-    marcarBotonTarjetaComoPendiente(tarjeta);
-  }
-);
-
-
-productosCarrito.addEventListener(
-  "click",
-  (evento) => {
-    const boton =
-      evento.target.closest(
-        "[data-accion]"
-      );
-
-    if (!boton) {
-      return;
-    }
-
-    const indice =
-      Number(boton.dataset.indice);
-
-    const accion =
-      boton.dataset.accion;
-
-    const producto =
-      carritoCompras[indice];
-
-    if (!producto) {
-      return;
-    }
-
-    if (accion === "sumar") {
-      producto.cantidad++;
-    }
-
-    if (accion === "restar") {
-      producto.cantidad--;
-
-      if (producto.cantidad < 1) {
-        carritoCompras.splice(
-          indice,
-          1
-        );
-      }
-    }
-
-    if (accion === "eliminar") {
-      carritoCompras.splice(
-        indice,
-        1
-      );
-    }
-
-    guardarYActualizarCarrito();
-  }
-);
-
-
-buscador.addEventListener(
-  "input",
-  filtrarProductos
-);
-
-
-filtroCategoria.addEventListener(
-  "change",
-  filtrarProductos
-);
-
-
-if (ordenarProductos) {
-  ordenarProductos.addEventListener(
-    "change",
-    () => {
-      const controlOrden = ordenarProductos.closest(".control-orden");
-
-      if (controlOrden) {
-        controlOrden.classList.toggle(
-          "orden-activo",
-          ordenarProductos.value !== "inicial"
-        );
-      }
-
-      filtrarProductos();
-    }
-  );
-}
-
-
-if (verCatalogoCompleto) {
-  verCatalogoCompleto.addEventListener(
-    "click",
-    mostrarCatalogoCompleto
-  );
-}
-
-
-if (abrirCarrito) {
-  abrirCarrito.addEventListener(
-    "click",
-    abrirPanelCarrito
-  );
-}
-
-
-if (cerrarCarrito) {
-  cerrarCarrito.addEventListener(
-    "click",
-    cerrarPanelCarrito
-  );
-}
-
-
-if (fondoCarrito) {
-  fondoCarrito.addEventListener(
-    "click",
-    cerrarPanelCarrito
-  );
-}
-
-
-if (vaciarCarrito) {
-vaciarCarrito.addEventListener(
-  "click",
-  () => {
-    if (carritoCompras.length === 0) {
-      return;
-    }
-
-    const confirmar = window.confirm(
-      "¿Querés vaciar todo el carrito?"
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
-    carritoCompras = [];
-    guardarYActualizarCarrito();
-  }
-);
-}
-
-if (finalizarPedido) {
-  finalizarPedido.addEventListener(
-    "click",
-    finalizarPedidoWhatsApp
-  );
-}
-
-
-document.addEventListener(
-  "keydown",
-  (evento) => {
-    if (evento.key === "Escape") {
-      cerrarPanelCarrito();
+      texto =
+        partes.join("");
     }
   }
-);
 
+  texto =
+    texto
+      .replace(/\./g, "")
+      .replace(",", ".");
 
-/* =========================================
-   INICIO
-========================================= */
+  const numero =
+    Number(texto);
 
-try {
-  mostrarCarrito();
-  cargarProductos();
-} catch (error) {
-  console.error(
-    "Error al iniciar el catálogo:",
-    error
-  );
-
-  if (estado) {
-    estado.textContent =
-      "No se pudo iniciar el catálogo. Recargá la página.";
-  }
+  return Number.isFinite(numero)
+    ? numero
+    : null;
 }
