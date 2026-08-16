@@ -1,5 +1,11 @@
-const URL_CSV =
-  "https://script.google.com/macros/s/AKfycbw41VkFr-ElTG1gXqh-CZzEv0VTFP3qjVwWX0MSmwyXDbDBp79wdQJx_10yf6vj5FYW9w/exec";
+/*
+ * CERACECI - script.js para Cloudflare Pages
+ *
+ * El navegador obtiene el catálogo desde /api/catalogo.
+ * Cloudflare consulta Google Apps Script desde el servidor.
+ */
+
+const URL_CSV = "/api/catalogo";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -82,85 +88,46 @@ let productoCompartidoPendiente =
    CARGA DE PRODUCTOS
 ========================================= */
 
-function descargarCSVAppsScript() {
-  return new Promise((resolve, reject) => {
+async function descargarCSVAppsScript() {
+  const separador =
+    URL_CSV.includes("?")
+      ? "&"
+      : "?";
 
-    const nombreCallback =
-      "ceraceciCSV_" +
-      Date.now() +
-      "_" +
-      Math.random()
-        .toString(36)
-        .slice(2);
+  const respuesta = await fetch(
+    URL_CSV +
+      separador +
+      "_=" +
+      Date.now(),
+    {
+      method: "GET",
+      cache: "no-store"
+    }
+  );
 
-    const script =
-      document.createElement("script");
+  if (!respuesta.ok) {
+    throw new Error(
+      "No se pudo descargar la lista desde el servidor. Error " +
+      respuesta.status
+    );
+  }
 
-    let finalizado = false;
+  const texto =
+    await respuesta.text();
 
-    const limpiar = () => {
-      if (finalizado) {
-        return;
-      }
+  if (!texto.trim()) {
+    throw new Error(
+      "El servidor devolvió una lista vacía."
+    );
+  }
 
-      finalizado = true;
+  if (/^\s*ERROR:/i.test(texto)) {
+    throw new Error(
+      texto.trim()
+    );
+  }
 
-      clearTimeout(temporizador);
-
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
-      }
-
-      try {
-        delete window[nombreCallback];
-      } catch (_) {
-        window[nombreCallback] = undefined;
-      }
-    };
-
-    window[nombreCallback] = (textoCSV) => {
-      const texto =
-        String(textoCSV || "");
-
-      limpiar();
-      resolve(texto);
-    };
-
-    script.onerror = () => {
-      limpiar();
-
-      reject(
-        new Error(
-          "No se pudo descargar la lista desde Google Sheets."
-        )
-      );
-    };
-
-    const temporizador =
-      setTimeout(() => {
-        limpiar();
-
-        reject(
-          new Error(
-            "La lista tardó demasiado en responder."
-          )
-        );
-      }, 15000);
-
-    const separador =
-      URL_CSV.includes("?")
-        ? "&"
-        : "?";
-
-    script.src =
-      `${URL_CSV}${separador}` +
-      `callback=${encodeURIComponent(nombreCallback)}` +
-      `&_=${Date.now()}`;
-
-    script.async = true;
-
-    document.head.appendChild(script);
-  });
+  return texto;
 }
 
 
