@@ -8,9 +8,31 @@
     content="width=device-width, initial-scale=1.0"
   >
 
+  <!--
+    CERACECI: evita que navegadores móviles reutilicen una
+    versión vieja del HTML durante demasiado tiempo.
+  -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
   <title>Ceraceci - Catálogo</title>
 
-  <link rel="stylesheet" href="style.css?v=57">
+  <!--
+    CACHE-BUSTER PERMANENTE:
+    cada apertura genera una URL nueva para style.css y script.js.
+    Así el navegador no puede quedarse usando archivos viejos.
+  -->
+  <script>
+    window.CERACECI_ASSET_VERSION = Date.now().toString();
+
+    const estilosCeraceci = document.createElement("link");
+    estilosCeraceci.rel = "stylesheet";
+    estilosCeraceci.href =
+      "style.css?v=" + window.CERACECI_ASSET_VERSION;
+
+    document.head.appendChild(estilosCeraceci);
+  </script>
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -1250,6 +1272,25 @@
     Enlace copiado
   </div>
 
-  <script src="script.js?v=57"></script>
+  <!--
+    Carga siempre la versión actual de script.js.
+    No hace falta volver a cambiar ?v=57, ?v=58, etc.
+  -->
+  <script>
+    const scriptCeraceci = document.createElement("script");
+
+    scriptCeraceci.src =
+      "script.js?v=" +
+      (
+        window.CERACECI_ASSET_VERSION ||
+        Date.now().toString()
+      );
+
+    scriptCeraceci.async = false;
+
+    document.body.appendChild(
+      scriptCeraceci
+    );
+  </script>
 </body>
 </html>
