@@ -8,6 +8,15 @@
 const URL_CSV = "/api/catalogo";
 
 /*
+ * Caché local del catálogo.
+ *
+ * La última versión válida se guarda en el navegador para que,
+ * al volver a abrir o recargar la página, los productos aparezcan
+ * inmediatamente. Después se consulta Cloudflare en segundo plano.
+ */
+const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v2";
+
+/*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
  *
  * Debe incluir:
@@ -86,22 +95,67 @@ let productoCompartidoPendiente =
 
 /* =========================================
    CARGA DE PRODUCTOS
+
+   Estrategia "stale while revalidate":
+   1) si existe una copia local, se muestra de inmediato;
+   2) luego se consulta /api/catalogo en segundo plano;
+   3) si cambió el CSV, se actualiza la pantalla y el caché local.
 ========================================= */
 
-async function descargarCSVAppsScript() {
-  const separador =
-    URL_CSV.includes("?")
-      ? "&"
-      : "?";
+function leerCatalogoLocal() {
+  try {
+    const guardado =
+      localStorage.getItem(CACHE_CATALOGO_LOCAL);
 
+    if (!guardado) {
+      return null;
+    }
+
+    const datos = JSON.parse(guardado);
+
+    if (
+      !datos ||
+      typeof datos.texto !== "string" ||
+      !datos.texto.trim()
+    ) {
+      return null;
+    }
+
+    return datos;
+  } catch (error) {
+    console.warn(
+      "No se pudo leer el caché local del catálogo.",
+      error
+    );
+
+    return null;
+  }
+}
+
+
+function guardarCatalogoLocal(texto) {
+  try {
+    localStorage.setItem(
+      CACHE_CATALOGO_LOCAL,
+      JSON.stringify({
+        texto: texto,
+        guardadoEn: Date.now()
+      })
+    );
+  } catch (error) {
+    console.warn(
+      "No se pudo guardar el catálogo en caché local.",
+      error
+    );
+  }
+}
+
+
+async function descargarCSVAppsScript() {
   const respuesta = await fetch(
-    URL_CSV +
-      separador +
-      "_=" +
-      Date.now(),
+    URL_CSV,
     {
-      method: "GET",
-      cache: "no-store"
+      method: "GET"
     }
   );
 
@@ -131,120 +185,185 @@ async function descargarCSVAppsScript() {
 }
 
 
-async function cargarProductos() {
-  try {
-    estado.textContent = "Cargando productos...";
+function procesarCSVProductos(textoCSV) {
+  const filas =
+    convertirCSV(textoCSV);
 
+  if (filas.length < 2) {
+    throw new Error(
+      "La hoja WEB no contiene productos."
+    );
+  }
+
+  const encabezados =
+    filas[0].map(limpiarTexto);
+
+  const indiceCodigo =
+    encabezados.indexOf("Código");
+
+  const indiceProducto =
+    encabezados.indexOf("Producto");
+
+  const indicePresentacion =
+    encabezados.indexOf("Presentación");
+
+  const indicePrecio =
+    encabezados.indexOf("Precio");
+
+  const indiceCategoria =
+    encabezados.indexOf("Categoría final");
+
+  const indiceActivo =
+    encabezados.indexOf("Activo");
+
+  if (
+    indiceProducto === -1 ||
+    indicePresentacion === -1 ||
+    indicePrecio === -1 ||
+    indiceCategoria === -1
+  ) {
+    throw new Error(
+      "No se encontraron las columnas necesarias en la hoja WEB."
+    );
+  }
+
+  const filasProductos = filas
+    .slice(1)
+    .map((fila) => {
+      const producto = {
+        codigo:
+          indiceCodigo !== -1
+            ? limpiarTexto(fila[indiceCodigo])
+            : "",
+
+        nombre:
+          limpiarTexto(fila[indiceProducto]),
+
+        presentacion:
+          limpiarTexto(
+            fila[indicePresentacion]
+          ),
+
+        precio:
+          convertirPrecio(
+            fila[indicePrecio]
+          ),
+
+        categoria:
+          limpiarTexto(
+            fila[indiceCategoria]
+          ),
+
+        activo:
+          indiceActivo !== -1
+            ? limpiarTexto(fila[indiceActivo])
+            : "Sí"
+      };
+
+      return normalizarFilaKanthal(producto);
+    })
+    .filter((producto) => {
+      return (
+        producto.nombre !== "" &&
+        producto.presentacion !== "" &&
+        producto.precio > 0 &&
+        normalizarTexto(producto.activo) !== "no"
+      );
+    });
+
+  productosAgrupados =
+    agruparProductos(filasProductos);
+
+  cargarCategorias();
+  filtrarProductos();
+}
+
+
+function mostrarErrorCatalogo(error) {
+  console.error(error);
+
+  estado.textContent =
+    "No se pudo cargar la lista de productos.";
+
+  contenedorProductos.innerHTML = `
+    <div class="mensaje-error">
+      <strong>
+        Error al cargar el catálogo.
+      </strong>
+
+      <p>
+        ${escaparHTML(error.message)}
+      </p>
+    </div>
+  `;
+}
+
+
+async function cargarProductos() {
+  const guardado =
+    leerCatalogoLocal();
+
+  let mostradoDesdeCache = false;
+
+  /*
+   * Primero mostramos la última versión conocida.
+   * Esto elimina el salto de página vacía -> productos
+   * en las recargas y visitas posteriores.
+   */
+  if (guardado) {
+    try {
+      procesarCSVProductos(guardado.texto);
+      mostradoDesdeCache = true;
+    } catch (error) {
+      console.warn(
+        "La copia local del catálogo no era válida.",
+        error
+      );
+    }
+  }
+
+  if (!mostradoDesdeCache) {
+    estado.textContent =
+      "Cargando productos...";
+  }
+
+  try {
+    /*
+     * Cloudflare devuelve normalmente una copia ya cacheada.
+     * Si necesita actualizar Google Sheets, lo hará sin bloquear
+     * al usuario cuando exista una versión anterior en el edge.
+     */
     const textoCSV =
       await descargarCSVAppsScript();
 
-    const filas =
-      convertirCSV(textoCSV);
+    const cambio =
+      !guardado ||
+      guardado.texto !== textoCSV;
 
-    if (filas.length < 2) {
-      throw new Error(
-        "La hoja WEB no contiene productos."
-      );
+    guardarCatalogoLocal(textoCSV);
+
+    /*
+     * Si no cambió nada, no reconstruimos las tarjetas.
+     * Así evitamos cualquier parpadeo o transición innecesaria.
+     */
+    if (!mostradoDesdeCache || cambio) {
+      procesarCSVProductos(textoCSV);
     }
-
-    const encabezados =
-      filas[0].map(limpiarTexto);
-
-    const indiceCodigo =
-      encabezados.indexOf("Código");
-
-    const indiceProducto =
-      encabezados.indexOf("Producto");
-
-    const indicePresentacion =
-      encabezados.indexOf("Presentación");
-
-    const indicePrecio =
-      encabezados.indexOf("Precio");
-
-    const indiceCategoria =
-      encabezados.indexOf("Categoría final");
-
-    const indiceActivo =
-      encabezados.indexOf("Activo");
-
-    if (
-      indiceProducto === -1 ||
-      indicePresentacion === -1 ||
-      indicePrecio === -1 ||
-      indiceCategoria === -1
-    ) {
-      throw new Error(
-        "No se encontraron las columnas necesarias en la hoja WEB."
-      );
-    }
-
-    const filasProductos = filas
-      .slice(1)
-      .map((fila) => {
-        const producto = {
-          codigo:
-            indiceCodigo !== -1
-              ? limpiarTexto(fila[indiceCodigo])
-              : "",
-
-          nombre:
-            limpiarTexto(fila[indiceProducto]),
-
-          presentacion:
-            limpiarTexto(
-              fila[indicePresentacion]
-            ),
-
-          precio:
-            convertirPrecio(
-              fila[indicePrecio]
-            ),
-
-          categoria:
-            limpiarTexto(
-              fila[indiceCategoria]
-            ),
-
-          activo:
-            indiceActivo !== -1
-              ? limpiarTexto(fila[indiceActivo])
-              : "Sí"
-        };
-
-        return normalizarFilaKanthal(producto);
-      })
-      .filter((producto) => {
-        return (
-          producto.nombre !== "" &&
-          producto.presentacion !== "" &&
-          producto.precio > 0 &&
-          normalizarTexto(producto.activo) !== "no"
-        );
-      });
-
-    productosAgrupados =
-      agruparProductos(filasProductos);
-
-    cargarCategorias();
-    filtrarProductos();
   } catch (error) {
-    console.error(error);
+    /*
+     * Si ya mostramos una copia válida, una caída temporal de Google
+     * no deja el catálogo vacío: mantenemos lo último conocido.
+     */
+    if (mostradoDesdeCache) {
+      console.warn(
+        "No se pudo actualizar el catálogo en segundo plano.",
+        error
+      );
 
-    estado.textContent =
-      "No se pudo cargar la lista de productos.";
+      return;
+    }
 
-    contenedorProductos.innerHTML = `
-      <div class="mensaje-error">
-        <strong>
-          Error al cargar el catálogo.
-        </strong>
-
-        <p>
-          ${escaparHTML(error.message)}
-        </p>
-      </div>
-    `;
+    mostrarErrorCatalogo(error);
   }
 }
 
@@ -441,6 +560,9 @@ function extraerCantidadPresentacion(texto) {
 ========================================= */
 
 function cargarCategorias() {
+  const categoriaSeleccionada =
+    filtroCategoria.value;
+
   const categorias = [
     ...new Set(
       productosAgrupados
@@ -475,6 +597,14 @@ function cargarCategorias() {
 
     filtroCategoria.appendChild(opcion);
   });
+
+  if (
+    categoriaSeleccionada &&
+    categorias.includes(categoriaSeleccionada)
+  ) {
+    filtroCategoria.value =
+      categoriaSeleccionada;
+  }
 }
 
 
