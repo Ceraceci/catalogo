@@ -14,7 +14,7 @@ const URL_CSV = "/api/catalogo";
  * al volver a abrir o recargar la página, los productos aparezcan
  * inmediatamente. Después se consulta Cloudflare en segundo plano.
  */
-const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v2";
+const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v3";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -86,9 +86,38 @@ const vaciarCarrito =
 const finalizarPedido =
   document.getElementById("finalizarPedido");
 
+const barraComparacion =
+  document.getElementById("barraComparacion");
+
+const resumenComparacion =
+  document.getElementById("resumenComparacion");
+
+const abrirComparacion =
+  document.getElementById("abrirComparacion");
+
+const limpiarComparacion =
+  document.getElementById("limpiarComparacion");
+
+const seccionComparacion =
+  document.getElementById("seccionComparacion");
+
+const productosComparados =
+  document.getElementById("productosComparados");
+
+const contadorComparacion =
+  document.getElementById("contadorComparacion");
+
+const volverCatalogo =
+  document.getElementById("volverCatalogo");
+
+const limpiarComparacionVista =
+  document.getElementById("limpiarComparacionVista");
+
 let productosAgrupados = [];
 let productosMostrados = [];
 let carritoCompras = cargarCarritoGuardado();
+let productosSeleccionadosComparacion = [];
+let comparacionAbierta = false;
 let productoCompartidoPendiente =
   new URLSearchParams(window.location.search).get("producto");
 
@@ -216,6 +245,41 @@ function procesarCSVProductos(textoCSV) {
   const indiceActivo =
     encabezados.indexOf("Activo");
 
+  const buscarIndiceOpcional = (...nombres) => {
+    const nombresNormalizados =
+      nombres.map(normalizarTexto);
+
+    return encabezados.findIndex((encabezado) =>
+      nombresNormalizados.includes(
+        normalizarTexto(encabezado)
+      )
+    );
+  };
+
+  const indiceFoto =
+    buscarIndiceOpcional(
+      "Foto",
+      "Imagen",
+      "URL foto",
+      "URL imagen"
+    );
+
+  const indiceDescripcion =
+    buscarIndiceOpcional(
+      "Descripción breve",
+      "Descripcion breve",
+      "Descripción",
+      "Descripcion"
+    );
+
+  const indiceIndicaciones =
+    buscarIndiceOpcional(
+      "Indicaciones de uso",
+      "Indicaciones",
+      "Modo de uso",
+      "Uso"
+    );
+
   if (
     indiceProducto === -1 ||
     indicePresentacion === -1 ||
@@ -257,7 +321,22 @@ function procesarCSVProductos(textoCSV) {
         activo:
           indiceActivo !== -1
             ? limpiarTexto(fila[indiceActivo])
-            : "Sí"
+            : "Sí",
+
+        foto:
+          indiceFoto !== -1
+            ? limpiarTexto(fila[indiceFoto])
+            : "",
+
+        descripcion:
+          indiceDescripcion !== -1
+            ? limpiarTexto(fila[indiceDescripcion])
+            : "",
+
+        indicaciones:
+          indiceIndicaciones !== -1
+            ? limpiarTexto(fila[indiceIndicaciones])
+            : ""
       };
 
       return normalizarFilaKanthal(producto);
@@ -274,8 +353,23 @@ function procesarCSVProductos(textoCSV) {
   productosAgrupados =
     agruparProductos(filasProductos);
 
+  productosSeleccionadosComparacion =
+    productosSeleccionadosComparacion.filter(
+      (idProducto) =>
+        productosAgrupados.some(
+          (producto) =>
+            producto.id === idProducto
+        )
+    );
+
   cargarCategorias();
   filtrarProductos();
+
+  if (comparacionAbierta) {
+    mostrarProductosComparados();
+  } else {
+    actualizarEstadoComparacion();
+  }
 }
 
 
@@ -407,11 +501,26 @@ function agruparProductos(filasProductos) {
         id: crearIdProducto(clave),
         nombre: fila.nombre,
         categoria: fila.categoria,
+        foto: fila.foto,
+        descripcion: fila.descripcion,
+        indicaciones: fila.indicaciones,
         presentaciones: []
       });
     }
 
     const producto = agrupados.get(clave);
+
+    if (!producto.foto && fila.foto) {
+      producto.foto = fila.foto;
+    }
+
+    if (!producto.descripcion && fila.descripcion) {
+      producto.descripcion = fila.descripcion;
+    }
+
+    if (!producto.indicaciones && fila.indicaciones) {
+      producto.indicaciones = fila.indicaciones;
+    }
 
     const presentacionExistente =
       producto.presentaciones.some(
@@ -653,6 +762,8 @@ function filtrarProductos() {
             [
               producto.nombre,
               producto.categoria,
+              producto.descripcion,
+              producto.indicaciones,
               ...producto.presentaciones.map(
                 (presentacion) => {
                   return [
@@ -748,135 +859,180 @@ function mostrarProductos(lista) {
   }
 
   lista.forEach((producto) => {
-    const presentacionInicial =
-      producto.presentaciones[0];
+    contenedorProductos.appendChild(
+      crearTarjetaProducto(producto)
+    );
+  });
 
-    const tarjeta =
-      document.createElement("article");
+  estado.textContent =
+    `${lista.length} productos encontrados`;
 
-    tarjeta.className =
-      "tarjeta-producto";
+  sincronizarBotonesComparacion();
+}
 
-    tarjeta.dataset.idProducto =
-      producto.id;
 
-    tarjeta.dataset.nombre =
-      producto.nombre;
+function crearTarjetaProducto(
+  producto,
+  opciones = {}
+) {
+  const esComparacion =
+    Boolean(opciones.esComparacion);
 
-    tarjeta.dataset.categoria =
-      producto.categoria;
+  const presentacionInicial =
+    producto.presentaciones[0];
 
-    tarjeta.dataset.presentacion =
-      presentacionInicial.nombre;
+  const tarjeta =
+    document.createElement("article");
 
-    tarjeta.dataset.precio =
-      String(presentacionInicial.precio);
+  tarjeta.className =
+    esComparacion
+      ? "tarjeta-producto tarjeta-comparacion"
+      : "tarjeta-producto";
 
-    tarjeta.dataset.codigo =
-      presentacionInicial.codigo || "";
+  tarjeta.dataset.idProducto = producto.id;
+  tarjeta.dataset.nombre = producto.nombre;
+  tarjeta.dataset.categoria = producto.categoria;
+  tarjeta.dataset.presentacion = presentacionInicial.nombre;
+  tarjeta.dataset.precio = String(presentacionInicial.precio);
+  tarjeta.dataset.codigo = presentacionInicial.codigo || "";
 
-    const productoInicialEnCarrito =
-      carritoCompras.some((item) => {
-        return (
-          crearClaveCarrito(item) ===
-          crearClaveCarrito({
-            nombre: producto.nombre,
-            presentacion:
-              presentacionInicial.nombre,
-            codigo:
-              presentacionInicial.codigo || ""
-          })
-        );
-      });
+  const productoInicialEnCarrito =
+    carritoCompras.some((item) => {
+      return (
+        crearClaveCarrito(item) ===
+        crearClaveCarrito({
+          nombre: producto.nombre,
+          presentacion: presentacionInicial.nombre,
+          codigo: presentacionInicial.codigo || ""
+        })
+      );
+    });
 
-    const usarSelectorDesplegable =
-      producto.presentaciones.length >= 7;
+  const estaSeleccionado =
+    productosSeleccionadosComparacion.includes(
+      producto.id
+    );
 
-    const opcionesSelector =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <option
-                value="${indicePresentacion}"
-              >
-                ${escaparHTML(
-                  presentacion.nombre
-                )}
-              </option>
-            `;
-          }
-        )
-        .join("");
+  const usarSelectorDesplegable =
+    esComparacion ||
+    producto.presentaciones.length >= 7;
 
-    const botonesPresentaciones =
-      producto.presentaciones
-        .map(
-          (
-            presentacion,
-            indicePresentacion
-          ) => {
-            return `
-              <button
-                type="button"
-                class="boton-presentacion ${
-                  indicePresentacion === 0
-                    ? "seleccionada"
-                    : ""
-                }"
-                data-id-producto="${
-                  producto.id
-                }"
-                data-indice-presentacion="${
-                  indicePresentacion
-                }"
-              >
-                <span>
-                  ${escaparHTML(
-                    presentacion.nombre
-                  )}
-                </span>
-              </button>
-            `;
-          }
-        )
-        .join("");
+  const opcionesSelector =
+    producto.presentaciones
+      .map((presentacion, indicePresentacion) => `
+        <option value="${indicePresentacion}">
+          ${escaparHTML(presentacion.nombre)}
+        </option>
+      `)
+      .join("");
 
-    const controlPresentaciones =
-      usarSelectorDesplegable
-        ? `
-            <select
-              class="selector-presentacion"
-              data-id-producto="${producto.id}"
-              aria-label="Elegir presentación de ${escaparHTML(
-                producto.nombre
-              )}"
-            >
-              ${opcionesSelector}
-            </select>
-          `
-        : `
-            <div class="opciones-presentacion">
-              ${botonesPresentaciones}
-            </div>
-          `;
+  const botonesPresentaciones =
+    producto.presentaciones
+      .map((presentacion, indicePresentacion) => `
+        <button
+          type="button"
+          class="boton-presentacion ${
+            indicePresentacion === 0
+              ? "seleccionada"
+              : ""
+          }"
+          data-id-producto="${producto.id}"
+          data-indice-presentacion="${indicePresentacion}"
+        >
+          <span>${escaparHTML(presentacion.nombre)}</span>
+        </button>
+      `)
+      .join("");
 
-    tarjeta.innerHTML = `
-      <div class="encabezado-producto">
-        <div class="fila-categoria-producto">
-          <span class="categoria">
-            <img
-              src="img/logo.png"
-              alt=""
-              class="logo-categoria"
-              aria-hidden="true"
-            >
+  const controlPresentaciones =
+    usarSelectorDesplegable
+      ? `
+          <select
+            class="selector-presentacion"
+            data-id-producto="${producto.id}"
+            aria-label="Elegir presentación de ${escaparHTML(
+              producto.nombre
+            )}"
+          >
+            ${opcionesSelector}
+          </select>
+        `
+      : `
+          <div class="opciones-presentacion">
+            ${botonesPresentaciones}
+          </div>
+        `;
 
-            <span>${escaparHTML(producto.categoria)}</span>
-          </span>
+  const foto =
+    normalizarURLImagen(producto.foto);
+
+  const idDetalles =
+    `detalles-${producto.id}-${
+      esComparacion ? "comparacion" : "catalogo"
+    }`;
+
+  const contenidoDetalles = [
+    producto.descripcion
+      ? `
+          <div class="grupo-detalle-producto">
+            <strong>Descripción</strong>
+            <p>${escaparHTML(producto.descripcion)}</p>
+          </div>
+        `
+      : "",
+    producto.indicaciones
+      ? `
+          <div class="grupo-detalle-producto">
+            <strong>Indicaciones de uso</strong>
+            <p>${escaparHTML(producto.indicaciones)}</p>
+          </div>
+        `
+      : ""
+  ].join("") || `
+    <p class="detalle-pendiente">
+      Información pendiente de cargar.
+    </p>
+  `;
+
+  tarjeta.innerHTML = `
+    <div class="encabezado-producto">
+      <div class="fila-categoria-producto">
+        <span class="categoria">
+          <img
+            src="img/logo.png"
+            alt=""
+            class="logo-categoria"
+            aria-hidden="true"
+          >
+          <span>${escaparHTML(producto.categoria)}</span>
+        </span>
+
+        <div class="acciones-producto">
+          <button
+            type="button"
+            class="boton-comparar ${
+              estaSeleccionado ? "seleccionado" : ""
+            }"
+            data-id-producto="${producto.id}"
+            aria-pressed="${estaSeleccionado}"
+            aria-label="${
+              esComparacion ? "Quitar de la comparación" : "Comparar"
+            } ${escaparHTML(producto.nombre)}"
+            title="${
+              esComparacion ? "Quitar de la comparación" : "Comparar producto"
+            }"
+          >
+            <span class="icono-comparar" aria-hidden="true">⇄</span>
+            <span class="texto-comparar">
+              ${
+                esComparacion
+                  ? "Quitar"
+                  : estaSeleccionado
+                    ? "Elegido"
+                    : "Comparar"
+              }
+            </span>
+          </button>
 
           <button
             type="button"
@@ -890,116 +1046,372 @@ function mostrarProductos(lista) {
             </svg>
           </button>
         </div>
-
-        <div class="fila-titulo-producto">
-          <h2>
-            ${escaparHTML(producto.nombre)}
-          </h2>
-        </div>
-
-        <p class="codigo-producto">
-          ${
-            presentacionInicial.codigo
-              ? `Código: ${escaparHTML(
-                  presentacionInicial.codigo
-                )}`
-              : ""
-          }
-        </p>
       </div>
 
-      <div class="bloque-presentaciones">
-  <p class="titulo-opciones">
-    Presentación
-  </p>
-
-  ${controlPresentaciones}
-</div>
-
-      <div class="informacion-precio">
-        <p class="etiqueta-precio">
-          Precio unitario
-        </p>
-
-        <p
-          class="precio"
-          data-precio="${
-            presentacionInicial.precio
-          }"
-        >
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
-        </p>
-
+      <div class="fila-titulo-producto">
+        <h2>${escaparHTML(producto.nombre)}</h2>
       </div>
 
-      <div class="selector-cantidad">
-        <span>Cantidad</span>
+      <p class="codigo-producto">
+        ${
+          presentacionInicial.codigo
+            ? `Código: ${escaparHTML(presentacionInicial.codigo)}`
+            : ""
+        }
+      </p>
+    </div>
 
-        <div class="control-cantidad">
-          <button
-            type="button"
-            class="boton-cantidad restar"
-            aria-label="Disminuir cantidad"
-          >
-            −
-          </button>
+    <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+      <img
+        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
+        alt="${foto ? escaparHTML(producto.nombre) : ""}"
+        class="foto-producto ${foto ? "" : "foto-placeholder"}"
+        loading="lazy"
+      >
+    </div>
 
-          <input
-            type="number"
-            class="cantidad"
-            value="1"
-            min="1"
-            step="1"
-          >
-
-          <button
-            type="button"
-            class="boton-cantidad sumar"
-            aria-label="Aumentar cantidad"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <div class="total-producto">
-        <span>Total</span>
-
-        <strong class="precio-total">
-          ${formatearPrecio(
-            presentacionInicial.precio
-          )}
-        </strong>
-      </div>
-
+    <div class="zona-detalles-producto">
       <button
         type="button"
-        class="agregar-carrito ${
-          productoInicialEnCarrito
-            ? "agregado"
-            : ""
-        }"
+        class="ver-detalles"
+        aria-expanded="false"
+        aria-controls="${idDetalles}"
       >
-        <span class="icono-agregar" aria-hidden="true">🛒</span>
-        <span class="texto-agregar">
-          ${
-            productoInicialEnCarrito
-              ? "Agregado"
-              : "Agregar"
-          }
-        </span>
+        Ver detalles
       </button>
-    `;
 
-    contenedorProductos.appendChild(
-      tarjeta
+      <div
+        id="${idDetalles}"
+        class="detalles-producto"
+        hidden
+      >
+        ${contenidoDetalles}
+      </div>
+    </div>
+
+    <div class="bloque-presentaciones">
+      <p class="titulo-opciones">Presentación</p>
+      ${controlPresentaciones}
+    </div>
+
+    <div class="informacion-precio">
+      <p class="etiqueta-precio">Precio unitario</p>
+      <p
+        class="precio"
+        data-precio="${presentacionInicial.precio}"
+      >
+        ${formatearPrecio(presentacionInicial.precio)}
+      </p>
+    </div>
+
+    <div class="selector-cantidad">
+      <span>Cantidad</span>
+
+      <div class="control-cantidad">
+        <button
+          type="button"
+          class="boton-cantidad restar"
+          aria-label="Disminuir cantidad"
+        >−</button>
+
+        <input
+          type="number"
+          class="cantidad"
+          value="1"
+          min="1"
+          step="1"
+        >
+
+        <button
+          type="button"
+          class="boton-cantidad sumar"
+          aria-label="Aumentar cantidad"
+        >+</button>
+      </div>
+    </div>
+
+    <div class="total-producto">
+      <span>Total</span>
+      <strong class="precio-total">
+        ${formatearPrecio(presentacionInicial.precio)}
+      </strong>
+    </div>
+
+    <button
+      type="button"
+      class="agregar-carrito ${
+        productoInicialEnCarrito ? "agregado" : ""
+      }"
+    >
+      <span class="icono-agregar" aria-hidden="true">🛒</span>
+      <span class="texto-agregar">
+        ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+      </span>
+    </button>
+  `;
+
+  const imagenProducto =
+    tarjeta.querySelector(".foto-producto");
+
+  if (imagenProducto && foto) {
+    imagenProducto.addEventListener(
+      "error",
+      () => {
+        imagenProducto.src = "img/logo.png";
+        imagenProducto.alt = "";
+        imagenProducto.classList.add(
+          "foto-placeholder"
+        );
+        imagenProducto
+          .closest(".contenedor-foto-producto")
+          ?.classList.add("sin-foto");
+      },
+      { once: true }
+    );
+  }
+
+  return tarjeta;
+}
+
+
+function alternarDetallesProducto(boton) {
+  const tarjeta =
+    boton.closest(".tarjeta-producto");
+
+  const detalles =
+    tarjeta?.querySelector(
+      ".detalles-producto"
+    );
+
+  if (!detalles) {
+    return;
+  }
+
+  const seAbrira = detalles.hidden;
+
+  detalles.hidden = !seAbrira;
+  boton.setAttribute(
+    "aria-expanded",
+    String(seAbrira)
+  );
+  boton.textContent =
+    seAbrira
+      ? "Ocultar detalles"
+      : "Ver detalles";
+}
+
+
+function alternarProductoComparacion(idProducto) {
+  const indice =
+    productosSeleccionadosComparacion.indexOf(
+      idProducto
+    );
+
+  if (indice !== -1) {
+    productosSeleccionadosComparacion.splice(
+      indice,
+      1
+    );
+  } else {
+    if (
+      productosSeleccionadosComparacion.length >= 4
+    ) {
+      mostrarAvisoCopiado(
+        "Podés comparar hasta 4 productos."
+      );
+
+      return;
+    }
+
+    productosSeleccionadosComparacion.push(
+      idProducto
+    );
+  }
+
+  if (
+    comparacionAbierta &&
+    productosSeleccionadosComparacion.length < 2
+  ) {
+    cerrarVistaComparacion();
+  } else if (comparacionAbierta) {
+    mostrarProductosComparados();
+  }
+
+  actualizarEstadoComparacion();
+}
+
+
+function sincronizarBotonesComparacion() {
+  [contenedorProductos, productosComparados]
+    .filter(Boolean)
+    .forEach((contenedor) => {
+      contenedor
+        .querySelectorAll(".boton-comparar")
+        .forEach((boton) => {
+          const seleccionado =
+            productosSeleccionadosComparacion.includes(
+              boton.dataset.idProducto
+            );
+
+          const esTarjetaComparacion =
+            Boolean(
+              boton.closest(
+                ".tarjeta-comparacion"
+              )
+            );
+
+          boton.classList.toggle(
+            "seleccionado",
+            seleccionado
+          );
+          boton.setAttribute(
+            "aria-pressed",
+            String(seleccionado)
+          );
+
+          const texto =
+            boton.querySelector(
+              ".texto-comparar"
+            );
+
+          if (texto) {
+            texto.textContent =
+              esTarjetaComparacion
+                ? "Quitar"
+                : seleccionado
+                  ? "Elegido"
+                  : "Comparar";
+          }
+        });
+    });
+}
+
+
+function actualizarEstadoComparacion() {
+  const cantidad =
+    productosSeleccionadosComparacion.length;
+
+  if (barraComparacion) {
+    barraComparacion.hidden =
+      cantidad === 0 ||
+      comparacionAbierta ||
+      Boolean(productoCompartidoPendiente);
+  }
+
+  if (resumenComparacion) {
+    resumenComparacion.textContent =
+      `${cantidad} de 4 productos seleccionados`;
+  }
+
+  if (abrirComparacion) {
+    abrirComparacion.disabled = cantidad < 2;
+  }
+
+  if (contadorComparacion) {
+    contadorComparacion.textContent =
+      `${cantidad} productos lado a lado`;
+  }
+
+  sincronizarBotonesComparacion();
+}
+
+
+function mostrarProductosComparados() {
+  if (!productosComparados) {
+    return;
+  }
+
+  const seleccionados =
+    productosSeleccionadosComparacion
+      .map((idProducto) =>
+        productosAgrupados.find(
+          (producto) =>
+            producto.id === idProducto
+        )
+      )
+      .filter(Boolean);
+
+  productosSeleccionadosComparacion =
+    seleccionados.map(
+      (producto) => producto.id
+    );
+
+  productosComparados.innerHTML = "";
+  productosComparados.dataset.cantidad =
+    String(seleccionados.length);
+
+  seleccionados.forEach((producto) => {
+    productosComparados.appendChild(
+      crearTarjetaProducto(
+        producto,
+        { esComparacion: true }
+      )
     );
   });
 
-  estado.textContent =
-    `${lista.length} productos encontrados`;
+  actualizarEstadoComparacion();
+}
+
+
+function abrirVistaComparacion() {
+  if (
+    productosSeleccionadosComparacion.length < 2 ||
+    !seccionComparacion
+  ) {
+    return;
+  }
+
+  comparacionAbierta = true;
+  seccionComparacion.hidden = false;
+  contenedorProductos.hidden = true;
+
+  if (seccionBusqueda) {
+    seccionBusqueda.hidden = true;
+  }
+
+  document.body.classList.add(
+    "comparacion-abierta"
+  );
+
+  mostrarProductosComparados();
+  actualizarEstadoComparacion();
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+
+function cerrarVistaComparacion() {
+  comparacionAbierta = false;
+
+  if (seccionComparacion) {
+    seccionComparacion.hidden = true;
+  }
+
+  contenedorProductos.hidden = false;
+
+  if (seccionBusqueda) {
+    seccionBusqueda.hidden = false;
+  }
+
+  document.body.classList.remove(
+    "comparacion-abierta"
+  );
+
+  actualizarEstadoComparacion();
+}
+
+
+function vaciarSeleccionComparacion() {
+  productosSeleccionadosComparacion = [];
+
+  if (comparacionAbierta) {
+    cerrarVistaComparacion();
+  }
+
+  actualizarEstadoComparacion();
 }
 
 
@@ -1180,10 +1592,14 @@ async function compartirProducto(idProducto) {
 }
 
 
-function mostrarAvisoCopiado() {
+function mostrarAvisoCopiado(
+  mensaje = "Enlace copiado"
+) {
   if (!avisoCopiado) {
     return;
   }
+
+  avisoCopiado.textContent = mensaje;
 
   avisoCopiado.classList.add("visible");
 
@@ -1424,18 +1840,18 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
 
 
 function actualizarEstadoBotonesCarrito() {
-  if (!contenedorProductos) {
-    return;
-  }
-
-  contenedorProductos
-    .querySelectorAll(
-      ".tarjeta-producto"
-    )
-    .forEach((tarjeta) => {
-      actualizarEstadoBotonTarjeta(
-        tarjeta
-      );
+  [contenedorProductos, productosComparados]
+    .filter(Boolean)
+    .forEach((contenedor) => {
+      contenedor
+        .querySelectorAll(
+          ".tarjeta-producto"
+        )
+        .forEach((tarjeta) => {
+          actualizarEstadoBotonTarjeta(
+            tarjeta
+          );
+        });
     });
 }
 
@@ -1963,6 +2379,61 @@ function normalizarTexto(valor) {
 }
 
 
+function normalizarURLImagen(valor) {
+  let texto = limpiarTexto(valor);
+
+  if (!texto) {
+    return "";
+  }
+
+  const formulaImagen = texto.match(
+    /^=IMAGE\(\s*["']([^"']+)["']/i
+  );
+
+  if (formulaImagen) {
+    texto = formulaImagen[1];
+  }
+
+  try {
+    const url = new URL(
+      texto,
+      window.location.href
+    );
+
+    if (
+      url.hostname === "drive.google.com"
+    ) {
+      const coincidenciaRuta =
+        url.pathname.match(
+          /\/file\/d\/([^/]+)/
+        );
+
+      const id =
+        coincidenciaRuta?.[1] ||
+        url.searchParams.get("id");
+
+      if (id) {
+        return (
+          "https://drive.google.com/uc?export=view&id=" +
+          encodeURIComponent(id)
+        );
+      }
+    }
+
+    if (
+      url.protocol !== "http:" &&
+      url.protocol !== "https:"
+    ) {
+      return "";
+    }
+
+    return url.toString();
+  } catch (error) {
+    return "";
+  }
+}
+
+
 function escaparHTML(valor) {
   return limpiarTexto(valor)
     .replaceAll("&", "&amp;")
@@ -1977,9 +2448,33 @@ function escaparHTML(valor) {
    EVENTOS
 ========================================= */
 
-contenedorProductos.addEventListener(
-  "click",
-  (evento) => {
+function manejarClickTarjetaProducto(evento) {
+    const botonComparar =
+      evento.target.closest(
+        ".boton-comparar"
+      );
+
+    if (botonComparar) {
+      alternarProductoComparacion(
+        botonComparar.dataset.idProducto
+      );
+
+      return;
+    }
+
+    const botonDetalles =
+      evento.target.closest(
+        ".ver-detalles"
+      );
+
+    if (botonDetalles) {
+      alternarDetallesProducto(
+        botonDetalles
+      );
+
+      return;
+    }
+
     const botonCompartir =
       evento.target.closest(
         ".compartir-producto"
@@ -2040,13 +2535,24 @@ contenedorProductos.addEventListener(
         -1
       );
     }
-  }
-);
+}
 
 
 contenedorProductos.addEventListener(
-  "change",
-  (evento) => {
+  "click",
+  manejarClickTarjetaProducto
+);
+
+
+if (productosComparados) {
+  productosComparados.addEventListener(
+    "click",
+    manejarClickTarjetaProducto
+  );
+}
+
+
+function manejarCambioTarjetaProducto(evento) {
     if (
       !evento.target.classList.contains(
         "selector-presentacion"
@@ -2058,13 +2564,24 @@ contenedorProductos.addEventListener(
     seleccionarPresentacion(
       evento.target
     );
-  }
-);
+}
 
 
 contenedorProductos.addEventListener(
-  "input",
-  (evento) => {
+  "change",
+  manejarCambioTarjetaProducto
+);
+
+
+if (productosComparados) {
+  productosComparados.addEventListener(
+    "change",
+    manejarCambioTarjetaProducto
+  );
+}
+
+
+function manejarEntradaTarjetaProducto(evento) {
     if (
       !evento.target.classList.contains(
         "cantidad"
@@ -2080,8 +2597,21 @@ contenedorProductos.addEventListener(
 
     actualizarTotalTarjeta(tarjeta);
     marcarBotonTarjetaComoPendiente(tarjeta);
-  }
+}
+
+
+contenedorProductos.addEventListener(
+  "input",
+  manejarEntradaTarjetaProducto
 );
+
+
+if (productosComparados) {
+  productosComparados.addEventListener(
+    "input",
+    manejarEntradaTarjetaProducto
+  );
+}
 
 
 productosCarrito.addEventListener(
@@ -2175,6 +2705,38 @@ if (verCatalogoCompleto) {
 }
 
 
+if (abrirComparacion) {
+  abrirComparacion.addEventListener(
+    "click",
+    abrirVistaComparacion
+  );
+}
+
+
+if (limpiarComparacion) {
+  limpiarComparacion.addEventListener(
+    "click",
+    vaciarSeleccionComparacion
+  );
+}
+
+
+if (volverCatalogo) {
+  volverCatalogo.addEventListener(
+    "click",
+    cerrarVistaComparacion
+  );
+}
+
+
+if (limpiarComparacionVista) {
+  limpiarComparacionVista.addEventListener(
+    "click",
+    vaciarSeleccionComparacion
+  );
+}
+
+
 if (abrirCarrito) {
   abrirCarrito.addEventListener(
     "click",
@@ -2234,6 +2796,10 @@ document.addEventListener(
   (evento) => {
     if (evento.key === "Escape") {
       cerrarPanelCarrito();
+
+      if (comparacionAbierta) {
+        cerrarVistaComparacion();
+      }
     }
   }
 );
@@ -2245,6 +2811,7 @@ document.addEventListener(
 
 try {
   mostrarCarrito();
+  actualizarEstadoComparacion();
   cargarProductos();
 } catch (error) {
   console.error(
