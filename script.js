@@ -1130,13 +1130,6 @@ function crearTarjetaProducto(
       </div>
     </div>
 
-    <div class="total-producto">
-      <span>Total</span>
-      <strong class="precio-total">
-        ${formatearPrecio(presentacionInicial.precio)}
-      </strong>
-    </div>
-
     <button
       type="button"
       class="agregar-carrito ${
@@ -1489,7 +1482,7 @@ function seleccionarPresentacion(control) {
       ? `Código: ${presentacion.codigo}`
       : "";
 
-  actualizarTotalTarjeta(tarjeta);
+  normalizarCantidadTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
 }
 
@@ -1516,15 +1509,12 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  actualizarTotalTarjeta(tarjeta);
+  normalizarCantidadTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
 }
 
 
-function actualizarTotalTarjeta(tarjeta) {
-  const precio =
-    Number(tarjeta.dataset.precio) || 0;
-
+function normalizarCantidadTarjeta(tarjeta) {
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
 
@@ -1535,13 +1525,6 @@ function actualizarTotalTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
-
-  tarjeta.querySelector(
-    ".precio-total"
-  ).textContent =
-    formatearPrecio(
-      precio * cantidad
-    );
 }
 
 
@@ -2595,7 +2578,7 @@ function manejarEntradaTarjetaProducto(evento) {
         ".tarjeta-producto"
       );
 
-    actualizarTotalTarjeta(tarjeta);
+    normalizarCantidadTarjeta(tarjeta);
     marcarBotonTarjetaComoPendiente(tarjeta);
 }
 
