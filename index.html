@@ -1781,6 +1781,46 @@
     }
   </style>
 
+  <style id="comparacion-movil-v1">
+    @media (max-width:650px){
+      /* Queda debajo del buscador fijo y nunca se oculta parcialmente. */
+      body .barra-comparacion{
+        top:122px !important;
+        z-index:11 !important;
+      }
+
+      /* En comparación: dos tarjetas por fila. */
+      body .productos-comparados,
+      body .productos-comparados[data-cantidad="2"],
+      body .productos-comparados[data-cantidad="3"],
+      body .productos-comparados[data-cantidad="4"]{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:8px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion{
+        padding:8px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion h2{
+        font-size:.78rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .codigo-producto{
+        font-size:.58rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .categoria{
+        font-size:.54rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .ver-detalles{
+        min-height:28px !important;
+        font-size:.58rem !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
