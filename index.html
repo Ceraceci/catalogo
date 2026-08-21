@@ -1632,9 +1632,10 @@
     /* Precio, cantidad y carrito en una sola fila */
     .fila-compra{
       display:grid;
-      grid-template-columns:minmax(0,1fr) 94px 40px;
+      grid-template-columns:auto auto auto;
       align-items:center;
-      gap:6px;
+      justify-content:space-between;
+      gap:4px;
       margin-top:auto;
       padding-top:6px;
     }
@@ -1706,8 +1707,9 @@
 
     @media (max-width:650px){
       .fila-compra{
-        grid-template-columns:minmax(0,1fr) 60px 30px;
-        gap:3px;
+        grid-template-columns:auto auto auto;
+        justify-content:space-between;
+        gap:2px;
         padding-top:5px;
       }
 

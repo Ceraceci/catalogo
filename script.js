@@ -1070,25 +1070,6 @@ function crearTarjetaProducto(
       >
     </div>
 
-    <div class="zona-detalles-producto">
-      <button
-        type="button"
-        class="ver-detalles"
-        aria-expanded="false"
-        aria-controls="${idDetalles}"
-      >
-        Ver detalles
-      </button>
-
-      <div
-        id="${idDetalles}"
-        class="detalles-producto"
-        hidden
-      >
-        ${contenidoDetalles}
-      </div>
-    </div>
-
     <div class="bloque-presentaciones">
       <p class="titulo-opciones">Presentación</p>
       ${controlPresentaciones}
@@ -1144,6 +1125,25 @@ function crearTarjetaProducto(
           </svg>
         </span>
       </button>
+    </div>
+
+    <div class="zona-detalles-producto">
+      <button
+        type="button"
+        class="ver-detalles"
+        aria-expanded="false"
+        aria-controls="${idDetalles}"
+      >
+        Ver detalles
+      </button>
+
+      <div
+        id="${idDetalles}"
+        class="detalles-producto"
+        hidden
+      >
+        ${contenidoDetalles}
+      </div>
     </div>
   `;
 
