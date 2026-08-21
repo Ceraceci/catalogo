@@ -1094,53 +1094,57 @@ function crearTarjetaProducto(
       ${controlPresentaciones}
     </div>
 
-    <div class="informacion-precio">
-      <p class="etiqueta-precio">Precio unitario</p>
-      <p
-        class="precio"
-        data-precio="${presentacionInicial.precio}"
-      >
-        ${formatearPrecio(presentacionInicial.precio)}
-      </p>
-    </div>
-
-    <div class="selector-cantidad">
-      <span>Cantidad</span>
-
-      <div class="control-cantidad">
-        <button
-          type="button"
-          class="boton-cantidad restar"
-          aria-label="Disminuir cantidad"
-        >−</button>
-
-        <input
-          type="number"
-          class="cantidad"
-          value="1"
-          min="1"
-          step="1"
+    <div class="fila-compra">
+      <div class="informacion-precio">
+        <p
+          class="precio"
+          data-precio="${presentacionInicial.precio}"
         >
-
-        <button
-          type="button"
-          class="boton-cantidad sumar"
-          aria-label="Aumentar cantidad"
-        >+</button>
+          ${formatearPrecio(presentacionInicial.precio)}
+        </p>
       </div>
-    </div>
 
-    <button
-      type="button"
-      class="agregar-carrito ${
-        productoInicialEnCarrito ? "agregado" : ""
-      }"
-    >
-      <span class="icono-agregar" aria-hidden="true">🛒</span>
-      <span class="texto-agregar">
-        ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-      </span>
-    </button>
+      <div class="selector-cantidad">
+        <div class="control-cantidad">
+          <button
+            type="button"
+            class="boton-cantidad restar"
+            aria-label="Disminuir cantidad"
+          >−</button>
+
+          <input
+            type="number"
+            class="cantidad"
+            value="1"
+            min="1"
+            step="1"
+          >
+
+          <button
+            type="button"
+            class="boton-cantidad sumar"
+            aria-label="Aumentar cantidad"
+          >+</button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="agregar-carrito ${
+          productoInicialEnCarrito ? "agregado" : ""
+        }"
+        aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+        title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+      >
+        <span class="icono-agregar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M3 3h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6.1"></path>
+            <circle cx="10" cy="19" r="1.5"></circle>
+            <circle cx="18" cy="19" r="1.5"></circle>
+          </svg>
+        </span>
+      </button>
+    </div>
   `;
 
   const imagenProducto =
@@ -1760,14 +1764,12 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
     return;
   }
 
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent = "Agregar";
-  }
-
   boton.classList.remove("agregado");
+  boton.setAttribute(
+    "aria-label",
+    "Agregar al carrito"
+  );
+  boton.title = "Agregar al carrito";
 }
 
 
@@ -1805,20 +1807,20 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
       );
     });
 
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent =
-      estaEnCarrito
-        ? "Agregado"
-        : "Agregar";
-  }
-
   boton.classList.toggle(
     "agregado",
     estaEnCarrito
   );
+
+  const descripcionBoton = estaEnCarrito
+    ? "Producto agregado"
+    : "Agregar al carrito";
+
+  boton.setAttribute(
+    "aria-label",
+    descripcionBoton
+  );
+  boton.title = descripcionBoton;
 }
 
 

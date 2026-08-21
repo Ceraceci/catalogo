@@ -1628,6 +1628,120 @@
     }
   </style>
 
+  <style id="compra-compacta-v1">
+    /* Precio, cantidad y carrito en una sola fila */
+    .fila-compra{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 94px 40px;
+      align-items:center;
+      gap:6px;
+      margin-top:auto;
+      padding-top:6px;
+    }
+
+    body .fila-compra .informacion-precio,
+    body .fila-compra .selector-cantidad{
+      display:block !important;
+      min-width:0 !important;
+      min-height:0 !important;
+      height:auto !important;
+      margin:0 !important;
+      padding:0 !important;
+      border:0 !important;
+    }
+
+    body .fila-compra .precio{
+      display:block !important;
+      margin:0 !important;
+      color:var(--color-principal) !important;
+      font-size:1.32rem !important;
+      font-weight:800 !important;
+      line-height:1 !important;
+      letter-spacing:-.025em !important;
+      text-align:left !important;
+      white-space:nowrap !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      width:94px !important;
+      height:34px !important;
+      grid-template-columns:28px 36px 28px !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad{
+      height:32px !important;
+    }
+
+    body .fila-compra .agregar-carrito{
+      display:grid !important;
+      place-items:center !important;
+      width:40px !important;
+      min-width:40px !important;
+      height:36px !important;
+      min-height:36px !important;
+      margin:0 !important;
+      padding:0 !important;
+      border-radius:8px !important;
+    }
+
+    .fila-compra .icono-agregar{
+      display:grid !important;
+      place-items:center;
+      width:24px;
+      height:24px;
+      color:#fff;
+    }
+
+    .fila-compra .icono-agregar svg{
+      display:block;
+      width:24px;
+      height:24px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.15;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    @media (max-width:650px){
+      .fila-compra{
+        grid-template-columns:minmax(0,1fr) 60px 30px;
+        gap:3px;
+        padding-top:5px;
+      }
+
+      body .fila-compra .precio{
+        font-size:1.29rem !important;
+      }
+
+      body .fila-compra .control-cantidad{
+        width:60px !important;
+        height:30px !important;
+        grid-template-columns:19px 22px 19px !important;
+      }
+
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad{
+        height:28px !important;
+        font-size:.78rem !important;
+      }
+
+      body .fila-compra .agregar-carrito{
+        width:30px !important;
+        min-width:30px !important;
+        height:30px !important;
+        min-height:30px !important;
+      }
+
+      .fila-compra .icono-agregar,
+      .fila-compra .icono-agregar svg{
+        width:20px;
+        height:20px;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
