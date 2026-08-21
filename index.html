@@ -1747,25 +1747,36 @@
   <style id="fotos-completas-v1">
     /* Muestra cada foto completa, centrada y sin deformarla ni recortarla. */
     body .contenedor-foto-producto{
+      position:relative;
       min-width:0;
       min-height:0;
-      padding:7px;
+      padding:0;
     }
 
     body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
       display:block !important;
-      width:100% !important;
-      height:100% !important;
-      max-width:100% !important;
-      max-height:100% !important;
+      position:absolute !important;
+      top:7px !important;
+      right:7px !important;
+      bottom:7px !important;
+      left:7px !important;
+      width:calc(100% - 14px) !important;
+      height:calc(100% - 14px) !important;
+      max-width:none !important;
+      max-height:none !important;
       padding:0 !important;
       object-fit:contain !important;
       object-position:center center !important;
     }
 
     @media (max-width:650px){
-      body .contenedor-foto-producto{
-        padding:5px;
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+        top:5px !important;
+        right:5px !important;
+        bottom:5px !important;
+        left:5px !important;
+        width:calc(100% - 10px) !important;
+        height:calc(100% - 10px) !important;
       }
     }
   </style>
