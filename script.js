@@ -914,7 +914,6 @@ function crearTarjetaProducto(
     );
 
   const usarSelectorDesplegable =
-    esComparacion ||
     producto.presentaciones.length >= 7;
 
   const opcionesSelector =
