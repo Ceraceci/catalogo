@@ -1067,6 +1067,7 @@ function crearTarjetaProducto(
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? "" : "foto-placeholder"}"
         loading="lazy"
+        referrerpolicy="no-referrer"
       >
     </div>
 
@@ -2399,8 +2400,9 @@ function normalizarURLImagen(valor) {
 
       if (id) {
         return (
-          "https://drive.google.com/uc?export=view&id=" +
-          encodeURIComponent(id)
+          "https://drive.google.com/thumbnail?id=" +
+          encodeURIComponent(id) +
+          "&sz=w1200"
         );
       }
     }
