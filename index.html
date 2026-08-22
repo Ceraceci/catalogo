@@ -1875,10 +1875,13 @@
       column-gap:10px !important;
       row-gap:8px !important;
       width:100% !important;
+      margin-top:0 !important;
+      padding-top:8px !important;
     }
 
     body .fila-compra .informacion-precio{
       grid-column:1 / -1 !important;
+      grid-row:1 !important;
       justify-self:stretch !important;
       width:100% !important;
     }
@@ -1892,11 +1895,13 @@
 
     body .fila-compra .selector-cantidad{
       grid-column:1 !important;
+      grid-row:2 !important;
       justify-self:end !important;
     }
 
     body .fila-compra .agregar-carrito{
       grid-column:2 !important;
+      grid-row:2 !important;
       justify-self:start !important;
     }
 
@@ -1955,7 +1960,7 @@
       body .productos-comparados .fila-compra{
         grid-template-columns:minmax(0,1fr) 30px !important;
         justify-content:stretch !important;
-        column-gap:6px !important;
+        column-gap:10px !important;
         row-gap:7px !important;
       }
 
@@ -1974,7 +1979,7 @@
       body .productos-comparados .fila-compra .control-cantidad{
         width:100% !important;
         height:30px !important;
-        grid-template-columns:minmax(24px,1fr) 28px minmax(24px,1fr) !important;
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
       }
 
       body .fila-compra .boton-cantidad,
