@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="30">
+  <meta name="ceraceci-version" content="32">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2373,6 +2373,67 @@
 
       body .productos-comparados .fila-compra .precio{
         font-size:.90rem !important;
+      }
+    }
+  </style>
+
+  <style id="ajuste-controles-v31">
+    body .boton-cantidad,
+    body .cantidad{
+      font-weight:700 !important;
+    }
+
+    body .fila-compra .icono-agregar svg{
+      stroke-width:1.8 !important;
+    }
+  </style>
+
+  <style id="ajuste-movil-v32">
+    @media (max-width:650px){
+      /* Aprovecha el espacio del encabezado para títulos de tres líneas. */
+      body .encabezado-producto,
+      body #productos .encabezado-producto,
+      body .productos-comparados .encabezado-producto,
+      body .tarjeta-comparacion .encabezado-producto{
+        min-height:60px !important;
+        height:60px !important;
+        padding-bottom:0 !important;
+      }
+
+      body .encabezado-producto .fila-titulo-producto{
+        min-height:47px !important;
+        height:47px !important;
+        overflow:hidden !important;
+      }
+
+      body .encabezado-producto h2,
+      body .tarjeta-comparacion .encabezado-producto h2{
+        min-height:0 !important;
+        max-height:3.45em !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      body .encabezado-producto .codigo-producto{
+        min-height:11px !important;
+        height:11px !important;
+        line-height:11px !important;
+      }
+
+      body .contenedor-foto-producto{
+        margin-top:2px !important;
+      }
+
+      /* Borde negro más visible en todo el control de cantidad. */
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        border:1.5px solid #1f1f1f !important;
+      }
+
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        border-right:1.5px solid #1f1f1f !important;
+        border-left:1.5px solid #1f1f1f !important;
       }
     }
   </style>
