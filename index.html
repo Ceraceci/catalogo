@@ -2135,23 +2135,24 @@
     body #productos .encabezado-producto,
     body .productos-comparados .encabezado-producto,
     body .tarjeta-comparacion .encabezado-producto{
-      min-height:49.5px !important;
-      padding-right:30.6px !important;
+      min-height:calc(var(--alto-control-tarjeta) + var(--alto-control-tarjeta) + 2.7px) !important;
+      padding-right:calc(var(--alto-control-tarjeta) + 7.2px) !important;
     }
 
     body .encabezado-producto .acciones-producto{
       gap:2.7px !important;
-      width:23.4px !important;
+      width:var(--alto-control-tarjeta) !important;
     }
 
     body .encabezado-producto .compartir-producto,
     body .encabezado-producto .boton-comparar,
     body .tarjeta-comparacion .compartir-producto,
     body .tarjeta-comparacion .boton-comparar{
-      width:23.4px !important;
-      min-width:23.4px !important;
-      height:23.4px !important;
-      min-height:23.4px !important;
+      width:var(--alto-control-tarjeta) !important;
+      min-width:var(--alto-control-tarjeta) !important;
+      height:var(--alto-control-tarjeta) !important;
+      min-height:var(--alto-control-tarjeta) !important;
+      box-sizing:border-box !important;
     }
 
     body .contenedor-foto-producto{
@@ -2170,6 +2171,23 @@
 
     body .productos-comparados .fila-compra{
       row-gap:5.4px !important;
+    }
+
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito{
+      height:var(--alto-control-tarjeta) !important;
+      min-height:var(--alto-control-tarjeta) !important;
+      max-height:var(--alto-control-tarjeta) !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito{
+      width:var(--alto-control-tarjeta) !important;
+      min-width:var(--alto-control-tarjeta) !important;
+      max-width:var(--alto-control-tarjeta) !important;
     }
 
     body .zona-detalles-producto{
