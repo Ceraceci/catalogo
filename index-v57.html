@@ -1,0 +1,3652 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <!--
+    CERACECI: evita que navegadores móviles reutilicen una
+    versión vieja del HTML durante demasiado tiempo.
+  -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <title>Ceraceci - Catálogo</title>
+  <meta name="ceraceci-version" content="55">
+
+  <!--
+    CACHE-BUSTER PERMANENTE:
+    cada apertura genera una URL nueva para style.css y script.js.
+    Así el navegador no puede quedarse usando archivos viejos.
+  -->
+  <script>
+    window.CERACECI_ASSET_VERSION = Date.now().toString();
+
+    const estilosCeraceci = document.createElement("link");
+    estilosCeraceci.rel = "stylesheet";
+    estilosCeraceci.href =
+      "style.css?v=" + window.CERACECI_ASSET_VERSION;
+
+    document.head.appendChild(estilosCeraceci);
+  </script>
+
+  <style id="ajustes-v49">
+    /* Presentaciones alineadas a la izquierda */
+    .opciones-presentacion{
+      display:flex !important;
+      flex-wrap:wrap !important;
+      flex-direction:row !important;
+      justify-content:flex-start !important;
+      gap:4px !important;
+    }
+
+    .selector-presentacion{
+      margin-left:0 !important;
+      margin-right:auto !important;
+    }
+
+    /* Reducción vertical proporcional y visible */
+    .tarjeta-producto{
+      padding-top:10px !important;
+      padding-bottom:10px !important;
+    }
+
+    .encabezado-producto{
+      gap:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    .bloque-presentaciones,
+    .informacion-precio{
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    .titulo-opciones,
+    .etiqueta-precio{
+      margin-bottom:6px !important;
+    }
+
+    .selector-cantidad{
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    .total-producto{
+      margin-bottom:6px !important;
+      padding-top:8px !important;
+      padding-bottom:8px !important;
+    }
+
+    .boton-presentacion,
+    .selector-presentacion{
+      min-height:28px !important;
+      padding-top:4px !important;
+      padding-bottom:4px !important;
+    }
+
+    .control-cantidad{
+      height:30px !important;
+    }
+
+    .boton-cantidad,
+    .cantidad{
+      height:28px !important;
+    }
+
+    .agregar-carrito{
+      min-height:33px !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
+    @media (min-width:651px){
+      /* Instagram, WhatsApp y carrito debajo */
+      .acciones-flotantes{
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:flex-end !important;
+      }
+
+      .instagram-flotante{order:1 !important;}
+      .whatsapp-flotante{order:2 !important;}
+      .abrir-carrito{order:3 !important;}
+
+      /*
+       * Escritorio bastante más compacto:
+       * reducción visible cercana al 22%, manteniendo proporciones.
+       */
+      .tarjeta-producto{
+        min-height:320px !important;
+        padding:9px !important;
+      }
+
+      .encabezado-producto{
+        grid-template-rows:23px 1.9em .95em !important;
+        row-gap:5px !important;
+        min-height:78px !important;
+        height:78px !important;
+        padding-bottom:5px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:23px !important;
+        height:23px !important;
+      }
+
+      .categoria{
+        padding:3px 7px !important;
+        font-size:.63rem !important;
+      }
+
+      .compartir-producto{
+        width:27px !important;
+        height:27px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:1.9em !important;
+        height:1.9em !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:1.9em !important;
+        max-height:1.9em !important;
+        font-size:.86rem !important;
+        line-height:1.1 !important;
+      }
+
+      .codigo-producto{
+        min-height:.95em !important;
+        height:.95em !important;
+        font-size:.59rem !important;
+      }
+
+      .bloque-presentaciones{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .titulo-opciones,
+      .etiqueta-precio{
+        margin-bottom:5px !important;
+        font-size:.62rem !important;
+      }
+
+      .boton-presentacion,
+      .selector-presentacion{
+        min-height:25px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+        font-size:.69rem !important;
+      }
+
+      .informacion-precio{
+        min-height:50px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        font-size:1.22rem !important;
+      }
+
+      .selector-cantidad{
+        min-height:36px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .selector-cantidad > span{
+        font-size:.72rem !important;
+      }
+
+      .control-cantidad{
+        height:28px !important;
+        grid-template-columns:28px 38px 28px !important;
+      }
+
+      .boton-cantidad,
+      .cantidad{
+        height:26px !important;
+      }
+
+      .total-producto{
+        min-height:34px !important;
+        margin-bottom:5px !important;
+        padding:6px 8px !important;
+      }
+
+      .agregar-carrito{
+        min-height:30px !important;
+        padding:4px 8px !important;
+        font-size:.78rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Carrito, Instagram y WhatsApp */
+      .acciones-flotantes{
+        display:grid !important;
+        grid-template-columns:minmax(132px,1fr) 42px 42px !important;
+        align-items:center !important;
+      }
+
+      .abrir-carrito{
+        grid-column:1 !important;
+        grid-row:1 !important;
+      }
+
+      .instagram-flotante{
+        grid-column:2 !important;
+        grid-row:1 !important;
+      }
+
+      .whatsapp-flotante{
+        grid-column:3 !important;
+        grid-row:1 !important;
+      }
+
+      .tarjeta-producto{
+        padding-top:8px !important;
+        padding-bottom:8px !important;
+      }
+
+      .encabezado-producto{
+        min-height:74px !important;
+        gap:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .bloque-presentaciones,
+      .informacion-precio{
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .titulo-opciones,
+      .etiqueta-precio{
+        margin-bottom:4px !important;
+      }
+
+      .boton-presentacion,
+      .selector-presentacion{
+        min-height:25px !important;
+      }
+
+      .precio{
+        font-size:1.1rem !important;
+      }
+
+      .selector-cantidad{
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+
+      .control-cantidad{
+        height:30px !important;
+      }
+
+      .boton-cantidad,
+      .cantidad{
+        height:28px !important;
+      }
+
+      .total-producto{
+        margin-bottom:4px !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      .agregar-carrito{
+        min-height:31px !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+    }
+
+    @media (max-width:390px){
+      .acciones-flotantes{
+        grid-template-columns:minmax(116px,1fr) 40px 40px !important;
+      }
+    }
+  
+
+    /* Logo dentro de la cápsula del carrito */
+    .logo-carrito{
+      flex:0 0 auto;
+      width:24px;
+      height:24px;
+      object-fit:contain;
+      display:block;
+    }
+
+    /* El botón de presentación se adapta al contenido */
+    .selector-presentacion{
+      width:auto !important;
+      max-width:100% !important;
+      min-width:max-content !important;
+    }
+
+    @media (min-width:651px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:4px !important;
+      }
+
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
+
+      .logo-carrito{
+        width:26px;
+        height:26px;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Mitad de distancia entre logo principal y subtítulo */
+      .logo-contenedor{
+        gap:3px !important;
+      }
+
+      .selector-presentacion{
+        width:auto !important;
+        max-width:100% !important;
+      }
+
+      .logo-carrito{
+        width:22px;
+        height:22px;
+      }
+    }
+
+  
+
+    /* =========================================
+       V43 — ALINEACIÓN Y CONTROLES DE TARJETAS
+    ========================================= */
+
+    /* La cantidad solo cambia mediante − y + */
+    .cantidad{
+      pointer-events:none !important;
+      user-select:none !important;
+      cursor:default !important;
+      caret-color:transparent !important;
+    }
+
+    /* El precio recupera proporción vertical */
+    .precio{
+      line-height:1.14 !important;
+      letter-spacing:0 !important;
+      font-stretch:normal !important;
+    }
+
+    /* Escritorio */
+    @media (min-width:651px){
+      /* Acercar Agregar a Total */
+      .total-producto{
+        margin-bottom:3px !important;
+      }
+
+      .agregar-carrito{
+        margin-top:0 !important;
+      }
+
+      /* Precio menos aplastado */
+      .precio{
+        line-height:1.15 !important;
+        font-weight:800 !important;
+      }
+    }
+
+    /* Móvil: retícula fija para alinear todas las tarjetas */
+    @media (max-width:650px){
+      .tarjeta-producto{
+        min-height:405px !important;
+      }
+
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:28px 2.3em 1.15em !important;
+        row-gap:5px !important;
+        min-height:98px !important;
+        height:98px !important;
+        padding-bottom:5px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:28px !important;
+        height:28px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.3em !important;
+        height:2.3em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.3em !important;
+        max-height:2.3em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      .bloque-presentaciones{
+        min-height:62px !important;
+      }
+
+      .informacion-precio{
+        min-height:55px !important;
+      }
+
+      .selector-cantidad{
+        min-height:39px !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+      }
+
+      .agregar-carrito{
+        min-height:34px !important;
+        margin-top:0 !important;
+      }
+
+      .precio{
+        line-height:1.14 !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V44 — RETÍCULA FINAL DE TARJETAS
+    ========================================= */
+
+    /* La cantidad solo cambia con − y + */
+    .cantidad{
+      pointer-events:none !important;
+      user-select:none !important;
+      cursor:default !important;
+      caret-color:transparent !important;
+    }
+
+    /* Precio con proporción vertical normal */
+    .precio{
+      line-height:1.14 !important;
+      font-stretch:normal !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Mismo margen inferior que superior */
+    .tarjeta-producto{
+      padding-bottom:10px !important;
+    }
+
+    .agregar-carrito{
+      margin-bottom:0 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+
+      /* Encabezado: nombre y código en filas separadas sin solaparse */
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:25px 2.4em 1.15em !important;
+        row-gap:6px !important;
+        min-height:92px !important;
+        height:92px !important;
+        padding-bottom:6px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:25px !important;
+        height:25px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.4em !important;
+        height:2.4em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.4em !important;
+        max-height:2.4em !important;
+        line-height:1.18 !important;
+        font-size:.88rem !important;
+        overflow:hidden !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+        margin:0 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      /* Mantener todas las tarjetas alineadas */
+      .bloque-presentaciones{
+        min-height:50px !important;
+      }
+
+      .informacion-precio{
+        min-height:54px !important;
+      }
+
+      .selector-cantidad{
+        min-height:38px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+        margin-bottom:3px !important;
+      }
+
+      /* Acercar Agregar a Total */
+      .agregar-carrito{
+        margin-top:0 !important;
+      }
+
+      /* El precio unitario deja de verse aplastado */
+      .precio{
+        line-height:1.16 !important;
+        font-weight:800 !important;
+      }
+
+      /* Reducir el espacio inferior real */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:9px !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /* Retícula uniforme sin espacio vacío debajo */
+      .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:8px !important;
+      }
+
+      .encabezado-producto{
+        display:grid !important;
+        grid-template-rows:28px 2.3em 1.15em !important;
+        row-gap:5px !important;
+        min-height:98px !important;
+        height:98px !important;
+        padding-bottom:5px !important;
+      }
+
+      .fila-categoria-producto{
+        min-height:28px !important;
+        height:28px !important;
+      }
+
+      .fila-titulo-producto{
+        min-height:2.3em !important;
+        height:2.3em !important;
+        overflow:hidden !important;
+      }
+
+      .tarjeta-producto h2{
+        min-height:2.3em !important;
+        max-height:2.3em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto{
+        min-height:1.15em !important;
+        height:1.15em !important;
+        line-height:1.15 !important;
+      }
+
+      .codigo-producto:empty{
+        visibility:hidden !important;
+      }
+
+      .bloque-presentaciones{
+        min-height:62px !important;
+      }
+
+      .informacion-precio{
+        min-height:55px !important;
+      }
+
+      .selector-cantidad{
+        min-height:39px !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+        margin-bottom:5px !important;
+      }
+
+      .agregar-carrito{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      .precio{
+        line-height:1.14 !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V45 — PRECIO UNITARIO Y TOTAL EN UNA FILA
+    ========================================= */
+
+    .informacion-precio,
+    .total-producto{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:10px !important;
+    }
+
+    .etiqueta-precio,
+    .etiqueta-total{
+      margin:0 !important;
+      min-width:0 !important;
+      color:var(--color-texto-suave) !important;
+      font-size:.67rem !important;
+      line-height:1 !important;
+      text-transform:uppercase !important;
+      letter-spacing:.07em !important;
+    }
+
+    .precio,
+    .precio-total{
+      margin:0 !important;
+      margin-left:auto !important;
+      text-align:right !important;
+      white-space:nowrap !important;
+    }
+
+    @media (min-width:651px){
+      .etiqueta-precio{
+        display:flex !important;
+        flex-direction:row !important;
+        align-items:center !important;
+        gap:.28em !important;
+        white-space:nowrap !important;
+      }
+
+      .informacion-precio{
+        min-height:46px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .total-producto{
+        min-height:36px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .etiqueta-precio{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        align-content:center !important;
+        justify-items:start !important;
+        gap:0 !important;
+        width:max-content !important;
+        max-width:4.6em !important;
+        line-height:.88 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        display:block !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+
+      .precio{
+        align-self:center !important;
+        font-size:1.14rem !important;
+        line-height:1.08 !important;
+      }
+
+      .total-producto{
+        min-height:42px !important;
+      }
+
+      .etiqueta-total{
+        display:block !important;
+        width:max-content !important;
+      }
+
+      .precio-total{
+        align-self:center !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V46 — AJUSTES DE PRECIO, TOTAL Y PRESENTACIÓN
+    ========================================= */
+
+    /* Mayúscula inicial, resto en minúsculas */
+    .titulo-opciones,
+    .etiqueta-precio,
+    .etiqueta-total{
+      text-transform:none !important;
+      letter-spacing:0 !important;
+    }
+
+    /* Cápsula Total más baja */
+    .total-producto{
+      min-height:0 !important;
+      padding-top:5px !important;
+      padding-bottom:5px !important;
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+
+      /*
+       * Duplicar la separación entre Precio y Unitario
+       * sin aumentar la altura total del bloque:
+       * se aprovecha el espacio libre superior e inferior.
+       */
+      .etiqueta-precio{
+        grid-template-rows:auto auto !important;
+        align-content:space-between !important;
+        height:2.35em !important;
+        line-height:1 !important;
+      }
+
+      .precio-palabra,
+      .unitario-palabra{
+        line-height:1 !important;
+      }
+
+      .informacion-precio{
+        min-height:42px !important;
+        height:42px !important;
+        padding-top:3px !important;
+        padding-bottom:3px !important;
+      }
+
+      /* Presentación: 6 px iguales arriba, entre elementos y abajo */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-rows:auto auto !important;
+        row-gap:6px !important;
+        min-height:0 !important;
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* Total apenas contiene texto y precio */
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:4px !important;
+        padding-bottom:4px !important;
+      }
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      .total-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-top:5px !important;
+        padding-bottom:5px !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V47 — TIPOGRAFÍA UNIFICADA SIN CAMBIAR ALTURAS
+    ========================================= */
+
+    /*
+     * Código, Presentación, Precio unitario, Cantidad y Total
+     * usan exactamente el mismo tamaño y un tono más oscuro.
+     */
+    .codigo-producto,
+    .titulo-opciones,
+    .etiqueta-precio,
+    .selector-cantidad > span,
+    .etiqueta-total,
+    .total-producto > span{
+      color:#4a433e !important;
+      font-size:.78rem !important;
+      font-weight:500 !important;
+      line-height:1 !important;
+      letter-spacing:0 !important;
+      text-transform:none !important;
+    }
+
+    /*
+     * El valor de Precio unitario nunca supera el tamaño
+     * del nombre del producto.
+     */
+    .precio{
+      font-size:1rem !important;
+      line-height:1.12 !important;
+    }
+
+    /* No modificar dimensiones de bloques, cápsulas ni tarjetas. */
+    @media (min-width:651px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.88rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      .codigo-producto,
+      .titulo-opciones,
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.78rem !important;
+      }
+
+      .precio{
+        font-size:.86rem !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V48 — ALINEACIÓN Y JERARQUÍA DE PRECIOS
+    ========================================= */
+
+    /* Precio unitario sin negrita; Total en negrita */
+    .precio{
+      font-weight:400 !important;
+      font-family:Arial, Helvetica, sans-serif !important;
+      font-stretch:normal !important;
+      transform:none !important;
+    }
+
+    .precio-total{
+      font-weight:800 !important;
+    }
+
+    /* Código: etiqueta normal y valor más pequeño */
+    .codigo-etiqueta{
+      font-size:1em !important;
+      font-weight:500 !important;
+    }
+
+    .codigo-valor{
+      font-size:.82em !important;
+      font-weight:400 !important;
+    }
+
+    /* Flecha blanca en el selector Kanthal */
+    .selector-presentacion{
+      color:#fff !important;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:right 13px center !important;
+      background-size:14px 14px !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /*
+       * Precio unitario, selector de cantidad y Total
+       * comparten el mismo eje central horizontal.
+       */
+      .informacion-precio,
+      .selector-cantidad,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) 106px !important;
+        align-items:center !important;
+        column-gap:10px !important;
+      }
+
+      .etiqueta-precio,
+      .selector-cantidad > span,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .control-cantidad,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:center !important;
+        text-align:center !important;
+        margin-left:0 !important;
+      }
+
+      /* Precio unitario menos achatado, como el Total */
+      .precio{
+        line-height:1.2 !important;
+        letter-spacing:0 !important;
+        white-space:nowrap !important;
+      }
+
+      .precio-total{
+        line-height:1.2 !important;
+        white-space:nowrap !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      /* Ambos precios comparten exactamente el mismo borde derecho */
+      .informacion-precio,
+      .total-producto{
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto !important;
+        align-items:center !important;
+        column-gap:8px !important;
+      }
+
+      .etiqueta-precio,
+      .etiqueta-total{
+        grid-column:1 !important;
+        justify-self:start !important;
+      }
+
+      .precio,
+      .precio-total{
+        grid-column:2 !important;
+        justify-self:end !important;
+        text-align:right !important;
+        margin-left:0 !important;
+        min-width:0 !important;
+      }
+    }
+
+  
+
+    /* =========================================
+       V49 — PRESENTACIÓN, TOTAL Y CANTIDAD
+    ========================================= */
+
+    /* El precio unitario vuelve a estar en negrita */
+    .precio{
+      font-weight:700 !important;
+    }
+
+    /* Total más grande y en negrita, pero menor que el nombre */
+    .etiqueta-total,
+    .total-producto > span{
+      font-size:.84rem !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+    }
+
+    /* ESCRITORIO */
+    @media (min-width:651px){
+      /* Presentación y botones en la misma línea */
+      .bloque-presentaciones{
+        display:grid !important;
+        grid-template-columns:auto minmax(0,1fr) !important;
+        align-items:center !important;
+        column-gap:10px !important;
+        min-height:0 !important;
+      }
+
+      .titulo-opciones{
+        margin:0 !important;
+        grid-column:1 !important;
+        white-space:nowrap !important;
+      }
+
+      .opciones-presentacion,
+      .selector-presentacion{
+        grid-column:2 !important;
+        justify-self:end !important;
+        margin-top:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      /* El número central de − 1 + un poco más chico */
+      .cantidad{
+        font-size:.82rem !important;
+      }
+
+      /* Mantener − y + con su tamaño actual */
+      .boton-cantidad{
+        font-size:1rem !important;
+      }
+
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.84rem !important;
+      }
+    }
+
+    /* MÓVIL */
+    @media (max-width:650px){
+      .etiqueta-total,
+      .total-producto > span{
+        font-size:.82rem !important;
+      }
+    }
+
+  </style>
+
+  <style id="redisenio-tarjetas-v1">
+    /* Fotos, detalles desplegables y selección para comparar */
+    .acciones-producto{
+      display:flex;
+      flex:0 0 auto;
+      align-items:center;
+      gap:5px;
+    }
+
+    .boton-comparar{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      min-height:27px;
+      padding:4px 7px;
+      color:var(--color-principal);
+      font-size:.64rem;
+      font-weight:700;
+      line-height:1;
+      background:var(--color-control);
+      border:1px solid var(--color-borde);
+      border-radius:999px;
+      cursor:pointer;
+    }
+
+    .boton-comparar:hover,
+    .boton-comparar.seleccionado{
+      color:#fff;
+      background:var(--color-principal);
+      border-color:var(--color-principal);
+    }
+
+    .icono-comparar{
+      font-size:.85rem;
+      line-height:1;
+    }
+
+    body .fila-categoria-producto .categoria{
+      max-width:calc(100% - 128px) !important;
+    }
+
+    .contenedor-foto-producto{
+      display:grid;
+      place-items:center;
+      width:100%;
+      height:150px;
+      margin-top:8px;
+      overflow:hidden;
+      background:var(--color-fondo);
+      border:1px solid var(--color-borde);
+      border-radius:10px;
+    }
+
+    .contenedor-foto-producto.sin-foto{
+      background:#eee8e3;
+    }
+
+    .foto-producto{
+      display:block;
+      width:100%;
+      height:100%;
+      padding:7px;
+      object-fit:contain;
+    }
+
+    .foto-producto.foto-placeholder{
+      width:54%;
+      height:54%;
+      padding:0;
+      opacity:.28;
+    }
+
+    .zona-detalles-producto{
+      padding:7px 0;
+      border-bottom:1px solid var(--color-borde);
+    }
+
+    .ver-detalles{
+      width:100%;
+      min-height:30px;
+      padding:5px 8px;
+      color:var(--color-principal);
+      font-size:.72rem;
+      font-weight:700;
+      background:transparent;
+      border:1px solid var(--color-principal);
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    .ver-detalles:hover{
+      color:#fff;
+      background:var(--color-principal);
+    }
+
+    .detalles-producto{
+      margin-top:7px;
+      padding:8px;
+      color:#4a433e;
+      font-size:.72rem;
+      line-height:1.35;
+      background:#eee8e3;
+      border-radius:8px;
+    }
+
+    .detalles-producto[hidden],
+    .barra-comparacion[hidden],
+    .seccion-comparacion[hidden],
+    #productos[hidden]{
+      display:none !important;
+    }
+
+    .grupo-detalle-producto + .grupo-detalle-producto{
+      margin-top:8px;
+    }
+
+    .grupo-detalle-producto strong{
+      display:block;
+      margin-bottom:3px;
+      color:var(--color-texto);
+    }
+
+    .grupo-detalle-producto p,
+    .detalle-pendiente{
+      margin:0;
+      white-space:pre-line;
+    }
+
+    /* Barra que aparece al elegir productos */
+    .barra-comparacion{
+      position:sticky;
+      top:78px;
+      z-index:9;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin:0 0 10px;
+      padding:9px 11px;
+      background:rgba(238,225,216,.97);
+      border:1px solid #d2b7ac;
+      border-radius:12px;
+      box-shadow:var(--sombra);
+      backdrop-filter:blur(8px);
+    }
+
+    .barra-comparacion p{
+      margin:0;
+      color:var(--color-principal-oscuro);
+      font-size:.78rem;
+      font-weight:700;
+    }
+
+    .acciones-barra-comparacion{
+      display:flex;
+      align-items:center;
+      gap:7px;
+    }
+
+    .limpiar-comparacion,
+    .abrir-comparacion,
+    .volver-catalogo,
+    .limpiar-comparacion-vista{
+      min-height:34px;
+      padding:6px 10px;
+      font-size:.75rem;
+      font-weight:700;
+      border-radius:8px;
+      cursor:pointer;
+    }
+
+    .limpiar-comparacion,
+    .volver-catalogo,
+    .limpiar-comparacion-vista{
+      color:var(--color-principal);
+      background:var(--color-control);
+      border:1px solid var(--color-principal);
+    }
+
+    .abrir-comparacion{
+      color:#fff;
+      background:var(--color-principal);
+      border:1px solid var(--color-principal);
+    }
+
+    .abrir-comparacion:disabled{
+      cursor:not-allowed;
+      opacity:.45;
+    }
+
+    /* Comparación dentro de la misma página */
+    .seccion-comparacion{
+      width:100%;
+    }
+
+    body.comparacion-abierta .busqueda,
+    body.comparacion-abierta #estado{
+      display:none !important;
+    }
+
+    .encabezado-comparacion{
+      display:grid;
+      grid-template-columns:auto minmax(0,1fr) auto;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+      padding:10px;
+      background:#eee8e3;
+      border:1px solid var(--color-borde);
+      border-radius:12px;
+    }
+
+    .encabezado-comparacion h1,
+    .encabezado-comparacion p{
+      margin:0;
+      text-align:center;
+    }
+
+    .encabezado-comparacion h1{
+      color:var(--color-principal-oscuro);
+      font-size:1.1rem;
+    }
+
+    .encabezado-comparacion p{
+      margin-top:2px;
+      color:var(--color-texto-suave);
+      font-size:.72rem;
+    }
+
+    .productos-comparados{
+      width:100%;
+      gap:8px;
+    }
+
+    .productos-comparados[data-cantidad="2"]{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .productos-comparados[data-cantidad="3"]{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .productos-comparados[data-cantidad="4"]{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    body .productos-comparados .tarjeta-comparacion{
+      min-width:0 !important;
+      min-height:0 !important;
+      height:auto !important;
+      padding:7px !important;
+    }
+
+    body .tarjeta-comparacion .encabezado-producto{
+      display:flex !important;
+      flex-direction:column !important;
+      gap:4px !important;
+      min-height:0 !important;
+      height:auto !important;
+      padding-bottom:5px !important;
+    }
+
+    body .tarjeta-comparacion .fila-categoria-producto,
+    body .tarjeta-comparacion .fila-titulo-producto,
+    body .tarjeta-comparacion .codigo-producto{
+      min-height:0 !important;
+      height:auto !important;
+    }
+
+    body .tarjeta-comparacion .fila-categoria-producto .categoria{
+      max-width:calc(100% - 30px) !important;
+    }
+
+    .tarjeta-comparacion .compartir-producto{
+      display:none;
+    }
+
+    .tarjeta-comparacion .boton-comparar{
+      width:26px;
+      min-width:26px;
+      min-height:26px;
+      padding:0;
+      border-radius:50%;
+    }
+
+    .tarjeta-comparacion .texto-comparar{
+      display:none;
+    }
+
+    body .tarjeta-comparacion h2{
+      min-height:2.3em !important;
+      max-height:2.3em !important;
+      font-size:.74rem !important;
+      line-height:1.15 !important;
+    }
+
+    body .tarjeta-comparacion .codigo-producto{
+      overflow:hidden;
+      font-size:.59rem !important;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .tarjeta-comparacion .contenedor-foto-producto{
+      height:auto;
+      aspect-ratio:1 / 1;
+      margin-top:5px;
+      border-radius:7px;
+    }
+
+    .tarjeta-comparacion .zona-detalles-producto{
+      padding:5px 0;
+    }
+
+    .tarjeta-comparacion .ver-detalles{
+      min-height:26px;
+      padding:3px;
+      font-size:.61rem;
+    }
+
+    .tarjeta-comparacion .detalles-producto{
+      margin-top:4px;
+      padding:5px;
+      font-size:.6rem;
+    }
+
+    body .productos-comparados .bloque-presentaciones{
+      display:block !important;
+      min-height:0 !important;
+      padding:5px 0 !important;
+    }
+
+    .productos-comparados .titulo-opciones{
+      display:block !important;
+      margin:0 0 4px !important;
+      font-size:.61rem !important;
+    }
+
+    body .productos-comparados .selector-presentacion{
+      display:block !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:100% !important;
+      min-height:27px !important;
+      padding:3px 17px 3px 4px !important;
+      font-size:.59rem !important;
+      background-position:right 3px center !important;
+      background-size:10px 10px !important;
+    }
+
+    body .productos-comparados .informacion-precio,
+    body .productos-comparados .selector-cantidad,
+    body .productos-comparados .total-producto{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:3px !important;
+      min-height:0 !important;
+      height:auto !important;
+      padding:5px 0 !important;
+    }
+
+    body .productos-comparados .total-producto{
+      margin-bottom:4px !important;
+      padding:5px !important;
+    }
+
+    .productos-comparados .etiqueta-precio,
+    .productos-comparados .selector-cantidad > span,
+    .productos-comparados .total-producto > span{
+      display:block !important;
+      font-size:.58rem !important;
+      line-height:1 !important;
+    }
+
+    body .productos-comparados .precio,
+    body .productos-comparados .precio-total{
+      margin:0 !important;
+      font-size:.66rem !important;
+      line-height:1 !important;
+      text-align:right !important;
+      white-space:nowrap;
+    }
+
+    body .productos-comparados .control-cantidad{
+      width:68px !important;
+      height:26px !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    }
+
+    body .productos-comparados .boton-cantidad,
+    body .productos-comparados .cantidad{
+      height:24px !important;
+      font-size:.68rem !important;
+    }
+
+    body .productos-comparados .agregar-carrito{
+      min-height:29px !important;
+      padding:3px !important;
+      font-size:.64rem !important;
+    }
+
+    @media (max-width:650px){
+      body .fila-categoria-producto .categoria{
+        max-width:calc(100% - 69px) !important;
+      }
+
+      .boton-comparar{
+        width:27px;
+        min-width:27px;
+        padding:0;
+        border-radius:50%;
+      }
+
+      .boton-comparar .texto-comparar{
+        display:none;
+      }
+
+      .contenedor-foto-producto{
+        height:112px;
+        margin-top:6px;
+      }
+
+      .barra-comparacion{
+        top:103px;
+        padding:7px 8px;
+      }
+
+      .barra-comparacion p{
+        max-width:120px;
+        font-size:.66rem;
+        line-height:1.1;
+      }
+
+      .limpiar-comparacion,
+      .abrir-comparacion{
+        min-height:31px;
+        padding:4px 7px;
+        font-size:.65rem;
+      }
+
+      .encabezado-comparacion{
+        grid-template-columns:1fr auto;
+        gap:7px;
+        padding:8px;
+      }
+
+      .encabezado-comparacion > div{
+        grid-column:1 / -1;
+        grid-row:1;
+      }
+
+      .volver-catalogo{
+        grid-column:1;
+        grid-row:2;
+      }
+
+      .limpiar-comparacion-vista{
+        grid-column:2;
+        grid-row:2;
+      }
+
+      .productos-comparados{
+        gap:4px;
+      }
+
+      body .productos-comparados .tarjeta-comparacion{
+        padding:4px !important;
+        border-radius:8px !important;
+      }
+
+      .tarjeta-comparacion .categoria{
+        padding:2px 3px !important;
+        font-size:.46rem !important;
+      }
+
+      .tarjeta-comparacion .logo-categoria{
+        display:none;
+      }
+
+      .tarjeta-comparacion .boton-comparar{
+        width:21px;
+        min-width:21px;
+        min-height:21px;
+        font-size:.58rem;
+      }
+
+      body .tarjeta-comparacion h2{
+        font-size:.57rem !important;
+      }
+
+      body .tarjeta-comparacion .codigo-producto{
+        font-size:.46rem !important;
+      }
+
+      .tarjeta-comparacion .ver-detalles{
+        min-height:23px;
+        font-size:.49rem;
+      }
+
+      .productos-comparados .titulo-opciones,
+      .productos-comparados .etiqueta-precio,
+      .productos-comparados .selector-cantidad > span,
+      .productos-comparados .total-producto > span{
+        font-size:.46rem !important;
+      }
+
+      body .productos-comparados .selector-presentacion{
+        min-height:24px !important;
+        font-size:.48rem !important;
+      }
+
+      body .productos-comparados .informacion-precio,
+      body .productos-comparados .selector-cantidad,
+      body .productos-comparados .total-producto{
+        display:block !important;
+        padding:4px 0 !important;
+      }
+
+      body .productos-comparados .precio,
+      body .productos-comparados .precio-total{
+        display:block !important;
+        margin-top:3px !important;
+        font-size:.57rem !important;
+        text-align:left !important;
+      }
+
+      body .productos-comparados .control-cantidad{
+        width:100% !important;
+        margin-top:3px;
+      }
+
+      body .productos-comparados .agregar-carrito{
+        min-height:26px !important;
+        font-size:.5rem !important;
+      }
+
+      .productos-comparados .icono-agregar{
+        display:none;
+      }
+    }
+  </style>
+
+  <style id="compra-compacta-v1">
+    /* Precio, cantidad y carrito en una sola fila */
+    .fila-compra{
+      display:grid;
+      grid-template-columns:auto auto auto;
+      align-items:center;
+      justify-content:space-between;
+      gap:4px;
+      margin-top:auto;
+      padding-top:6px;
+    }
+
+    body .fila-compra .informacion-precio,
+    body .fila-compra .selector-cantidad{
+      display:block !important;
+      min-width:0 !important;
+      min-height:0 !important;
+      height:auto !important;
+      margin:0 !important;
+      padding:0 !important;
+      border:0 !important;
+    }
+
+    body .fila-compra .precio{
+      display:block !important;
+      margin:0 !important;
+      color:var(--color-principal) !important;
+      font-size:1.32rem !important;
+      font-weight:800 !important;
+      line-height:1 !important;
+      letter-spacing:-.025em !important;
+      text-align:left !important;
+      white-space:nowrap !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      width:94px !important;
+      height:34px !important;
+      grid-template-columns:28px 36px 28px !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad{
+      height:32px !important;
+    }
+
+    body .fila-compra .agregar-carrito{
+      display:grid !important;
+      place-items:center !important;
+      width:40px !important;
+      min-width:40px !important;
+      height:36px !important;
+      min-height:36px !important;
+      margin:0 !important;
+      padding:0 !important;
+      border-radius:8px !important;
+    }
+
+    .fila-compra .icono-agregar{
+      display:grid !important;
+      place-items:center;
+      width:24px;
+      height:24px;
+      color:#fff;
+    }
+
+    .fila-compra .icono-agregar svg{
+      display:block;
+      width:24px;
+      height:24px;
+      fill:none;
+      stroke:currentColor;
+      stroke-width:2.15;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    @media (max-width:650px){
+      .fila-compra{
+        grid-template-columns:auto auto auto;
+        justify-content:space-between;
+        gap:2px;
+        padding-top:5px;
+      }
+
+      body .fila-compra .precio{
+        font-size:1.29rem !important;
+      }
+
+      body .fila-compra .control-cantidad{
+        width:60px !important;
+        height:30px !important;
+        grid-template-columns:19px 22px 19px !important;
+      }
+
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad{
+        height:28px !important;
+        font-size:.78rem !important;
+      }
+
+      body .fila-compra .agregar-carrito{
+        width:30px !important;
+        min-width:30px !important;
+        height:30px !important;
+        min-height:30px !important;
+      }
+
+      .fila-compra .icono-agregar,
+      .fila-compra .icono-agregar svg{
+        width:20px;
+        height:20px;
+      }
+    }
+  </style>
+
+  <style id="fotos-completas-v1">
+    /* Muestra cada foto completa, centrada y sin deformarla ni recortarla. */
+    body .contenedor-foto-producto{
+      position:relative;
+      min-width:0;
+      min-height:0;
+      padding:0;
+    }
+
+    body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      display:block !important;
+      position:absolute !important;
+      top:7px !important;
+      right:7px !important;
+      bottom:7px !important;
+      left:7px !important;
+      width:calc(100% - 14px) !important;
+      height:calc(100% - 14px) !important;
+      max-width:none !important;
+      max-height:none !important;
+      padding:0 !important;
+      object-fit:contain !important;
+      object-position:center center !important;
+    }
+
+    @media (max-width:650px){
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+        top:5px !important;
+        right:5px !important;
+        bottom:5px !important;
+        left:5px !important;
+        width:calc(100% - 10px) !important;
+        height:calc(100% - 10px) !important;
+      }
+    }
+  </style>
+
+  <style id="comparacion-movil-v1">
+    /* Más separación para evitar tocar Compartir al elegir Comparar. */
+    body .acciones-producto{
+      gap:10px !important;
+    }
+
+    @media (max-width:650px){
+      /* Queda debajo del buscador fijo y nunca se oculta parcialmente. */
+      body .barra-comparacion{
+        top:122px !important;
+        z-index:11 !important;
+      }
+
+      /* En comparación: dos tarjetas por fila. */
+      body .productos-comparados,
+      body .productos-comparados[data-cantidad="2"],
+      body .productos-comparados[data-cantidad="3"],
+      body .productos-comparados[data-cantidad="4"]{
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:8px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion{
+        padding:8px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion h2{
+        font-size:.78rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .codigo-producto{
+        font-size:.58rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .categoria{
+        font-size:.54rem !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .ver-detalles{
+        min-height:28px !important;
+        font-size:.58rem !important;
+      }
+    }
+  </style>
+
+  <style id="compra-centrada-v2">
+    /* Presentaciones visibles, sin título y centradas en todas las tarjetas. */
+    body .titulo-opciones{
+      display:none !important;
+    }
+
+    body .bloque-presentaciones{
+      display:block !important;
+      min-height:0 !important;
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+    }
+
+    body .opciones-presentacion,
+    body .productos-comparados .opciones-presentacion{
+      display:flex !important;
+      flex-wrap:wrap !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:5px !important;
+      width:100% !important;
+    }
+
+    body .boton-presentacion{
+      flex:0 0 auto !important;
+    }
+
+    /* Solo Alambre usa un selector desplegable y queda centrado. */
+    body .selector-presentacion-alambre,
+    body .productos-comparados .selector-presentacion-alambre{
+      display:block !important;
+      width:auto !important;
+      min-width:112px !important;
+      max-width:100% !important;
+      margin-right:auto !important;
+      margin-left:auto !important;
+      text-align:center !important;
+      text-align-last:center !important;
+    }
+
+    /* Precio centrado arriba; cantidad y carrito centrados debajo. */
+    body .fila-compra{
+      display:grid !important;
+      grid-template-columns:auto auto !important;
+      align-items:center !important;
+      justify-content:center !important;
+      column-gap:10px !important;
+      row-gap:8px !important;
+      width:100% !important;
+      margin-top:0 !important;
+      padding-top:8px !important;
+    }
+
+    body .fila-compra .informacion-precio{
+      grid-column:1 / -1 !important;
+      grid-row:1 !important;
+      justify-self:stretch !important;
+      width:100% !important;
+    }
+
+    body .fila-compra .precio{
+      width:100% !important;
+      font-size:1.75rem !important;
+      line-height:1.05 !important;
+      text-align:center !important;
+    }
+
+    body .fila-compra .selector-cantidad{
+      grid-column:1 !important;
+      grid-row:3 !important;
+      justify-self:end !important;
+    }
+
+    body .fila-compra > .bloque-presentaciones{
+      grid-column:1 / -1 !important;
+      grid-row:2 !important;
+      width:100% !important;
+      margin:0 !important;
+    }
+
+    body .fila-compra .agregar-carrito{
+      grid-column:2 !important;
+      grid-row:3 !important;
+      justify-self:start !important;
+    }
+
+    @media (min-width:651px){
+      body #productos .encabezado-producto{
+        row-gap:3px !important;
+        min-height:74px !important;
+        height:74px !important;
+      }
+    }
+
+    body .productos-comparados .fila-compra{
+      grid-template-columns:auto auto !important;
+      justify-content:center !important;
+      column-gap:6px !important;
+      row-gap:6px !important;
+    }
+
+    body .productos-comparados .fila-compra .informacion-precio{
+      display:block !important;
+      grid-column:1 / -1 !important;
+      width:100% !important;
+      padding:0 !important;
+    }
+
+    body .productos-comparados .fila-compra .precio{
+      width:100% !important;
+      margin:0 !important;
+      font-size:1.12rem !important;
+      text-align:center !important;
+    }
+
+    body .productos-comparados .fila-compra .selector-cantidad{
+      display:block !important;
+      grid-column:1 !important;
+      justify-self:end !important;
+      padding:0 !important;
+    }
+
+    body .productos-comparados .fila-compra .control-cantidad{
+      width:68px !important;
+      height:30px !important;
+      grid-template-columns:22px 24px 22px !important;
+    }
+
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      height:28px !important;
+    }
+
+    body .productos-comparados .fila-compra .agregar-carrito{
+      display:grid !important;
+      grid-column:2 !important;
+      justify-self:start !important;
+      width:32px !important;
+      min-width:32px !important;
+      height:30px !important;
+      min-height:30px !important;
+      padding:0 !important;
+    }
+
+    @media (max-width:650px){
+      body #productos .encabezado-producto{
+        row-gap:3px !important;
+        min-height:94px !important;
+        height:94px !important;
+      }
+
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) 30px !important;
+        justify-content:stretch !important;
+        column-gap:10px !important;
+        row-gap:7px !important;
+      }
+
+      body .fila-compra .precio{
+        font-size:1.45rem !important;
+        text-align:center !important;
+      }
+
+      body .fila-compra .selector-cantidad,
+      body .productos-comparados .fila-compra .selector-cantidad{
+        width:100% !important;
+        justify-self:stretch !important;
+      }
+
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        width:100% !important;
+        height:30px !important;
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      }
+
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        height:28px !important;
+      }
+
+      body .fila-compra .agregar-carrito,
+      body .productos-comparados .fila-compra .agregar-carrito{
+        width:30px !important;
+        min-width:30px !important;
+        height:30px !important;
+        min-height:30px !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:1.05rem !important;
+      }
+    }
+  </style>
+
+  <style id="cabecera-compacta-v1">
+    /* Cabecera más baja: sin categoría y con acciones apiladas a la derecha. */
+    body .categoria,
+    body .fila-categoria-producto{
+      display:none !important;
+    }
+
+    body .encabezado-producto,
+    body #productos .encabezado-producto,
+    body .productos-comparados .encabezado-producto,
+    body .tarjeta-comparacion .encabezado-producto{
+      display:block !important;
+      position:relative !important;
+      min-height:55px !important;
+      height:auto !important;
+      padding-right:34px !important;
+      padding-bottom:4px !important;
+    }
+
+    body .encabezado-producto .fila-titulo-producto,
+    body .encabezado-producto .codigo-producto{
+      width:100% !important;
+      margin-right:0 !important;
+    }
+
+    body .encabezado-producto .acciones-producto{
+      display:flex !important;
+      position:absolute !important;
+      top:0 !important;
+      right:0 !important;
+      flex-direction:column !important;
+      align-items:center !important;
+      gap:3px !important;
+      width:26px !important;
+      margin:0 !important;
+    }
+
+    body .encabezado-producto .compartir-producto,
+    body .encabezado-producto .boton-comparar,
+    body .tarjeta-comparacion .compartir-producto,
+    body .tarjeta-comparacion .boton-comparar{
+      display:grid !important;
+      place-items:center !important;
+      width:26px !important;
+      min-width:26px !important;
+      height:26px !important;
+      min-height:26px !important;
+      padding:0 !important;
+      border-radius:50% !important;
+    }
+
+    body .boton-comparar .texto-comparar{
+      display:none !important;
+    }
+
+    /* Todos los controles pedidos comparten exactamente la misma altura. */
+    body .tarjeta-producto{
+      --alto-control-tarjeta:34px;
+    }
+
+    body .productos-comparados .tarjeta-producto{
+      --alto-control-tarjeta:30px;
+    }
+
+    body .tarjeta-producto .boton-presentacion,
+    body .tarjeta-producto .selector-presentacion,
+    body .tarjeta-producto .ver-detalles,
+    body .tarjeta-producto .control-cantidad,
+    body .tarjeta-producto .agregar-carrito{
+      height:var(--alto-control-tarjeta) !important;
+      min-height:var(--alto-control-tarjeta) !important;
+      max-height:var(--alto-control-tarjeta) !important;
+    }
+
+    body .tarjeta-producto .boton-cantidad,
+    body .tarjeta-producto .cantidad{
+      height:calc(var(--alto-control-tarjeta) - 2px) !important;
+      min-height:calc(var(--alto-control-tarjeta) - 2px) !important;
+    }
+
+    @media (max-width:650px){
+      body .tarjeta-producto{
+        --alto-control-tarjeta:30px;
+      }
+    }
+  </style>
+
+  <style id="reduccion-tarjetas-10-v1">
+    /* Reducción vertical del 10%, sin modificar el tamaño de las fotos. */
+    body .encabezado-producto,
+    body .bloque-presentaciones,
+    body .zona-detalles-producto{
+      border-bottom:0 !important;
+    }
+
+    /* Carrito blanco y rojo; se invierte únicamente al agregar. */
+    body .agregar-carrito,
+    body .agregar-carrito:hover,
+    body .agregar-carrito:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border:1px solid var(--color-principal) !important;
+    }
+
+    body .agregar-carrito .icono-agregar{
+      color:var(--color-principal) !important;
+    }
+
+    body .agregar-carrito.agregado,
+    body .agregar-carrito.agregado:hover,
+    body .agregar-carrito.agregado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .agregar-carrito.agregado .icono-agregar{
+      color:#fff !important;
+    }
+
+    /* En móvil, el estado táctil no debe simular que sigue seleccionado. */
+    body .boton-comparar,
+    body .boton-comparar:hover,
+    body .boton-comparar:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .boton-comparar.seleccionado,
+    body .boton-comparar.seleccionado:hover,
+    body .boton-comparar.seleccionado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Ver/Ocultar detalles conserva siempre su aspecto original. */
+    body .ver-detalles,
+    body .ver-detalles:hover,
+    body .ver-detalles:focus,
+    body .ver-detalles:active,
+    body .ver-detalles[aria-expanded="true"]{
+      color:var(--color-principal) !important;
+      background:transparent !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body #productos .ver-detalles{
+      font-size:.83rem !important;
+    }
+
+    body .productos-comparados .ver-detalles{
+      font-size:.70rem !important;
+    }
+
+    body .icono-comparar{
+      font-size:1.02rem !important;
+    }
+
+    body .tarjeta-producto{
+      --alto-control-tarjeta:30.6px;
+    }
+
+    body .productos-comparados .tarjeta-producto{
+      --alto-control-tarjeta:27px;
+    }
+
+    body #productos .tarjeta-producto{
+      padding-top:9px !important;
+      padding-bottom:9px !important;
+    }
+
+    body .productos-comparados .tarjeta-comparacion{
+      padding-top:6.3px !important;
+      padding-bottom:6.3px !important;
+    }
+
+    body .encabezado-producto,
+    body #productos .encabezado-producto,
+    body .productos-comparados .encabezado-producto,
+    body .tarjeta-comparacion .encabezado-producto{
+      min-height:calc(var(--alto-control-tarjeta) + var(--alto-control-tarjeta) + 2.7px) !important;
+      padding-right:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+    }
+
+    body .encabezado-producto .acciones-producto{
+      gap:2.7px !important;
+      width:var(--alto-control-tarjeta) !important;
+    }
+
+    body .encabezado-producto .compartir-producto,
+    body .encabezado-producto .boton-comparar,
+    body .tarjeta-comparacion .compartir-producto,
+    body .tarjeta-comparacion .boton-comparar{
+      width:var(--alto-control-tarjeta) !important;
+      min-width:var(--alto-control-tarjeta) !important;
+      height:var(--alto-control-tarjeta) !important;
+      min-height:var(--alto-control-tarjeta) !important;
+      box-sizing:border-box !important;
+    }
+
+    body .contenedor-foto-producto{
+      margin-top:7.2px !important;
+    }
+
+    body .bloque-presentaciones{
+      padding-top:5.4px !important;
+      padding-bottom:5.4px !important;
+    }
+
+    body .fila-compra{
+      row-gap:7.2px !important;
+      padding-top:7.2px !important;
+    }
+
+    body .productos-comparados .fila-compra{
+      row-gap:5.4px !important;
+    }
+
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito{
+      height:var(--alto-control-tarjeta) !important;
+      min-height:var(--alto-control-tarjeta) !important;
+      max-height:var(--alto-control-tarjeta) !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito{
+      width:var(--alto-control-tarjeta) !important;
+      min-width:var(--alto-control-tarjeta) !important;
+      max-width:var(--alto-control-tarjeta) !important;
+    }
+
+    body .zona-detalles-producto{
+      padding-top:6.3px !important;
+      padding-bottom:6.3px !important;
+    }
+
+    body .fila-compra .precio{
+      font-size:1.58rem !important;
+    }
+
+    body .productos-comparados .fila-compra .precio{
+      font-size:1.01rem !important;
+    }
+
+    @media (max-width:650px){
+      body .tarjeta-producto{
+        --alto-control-tarjeta:27px;
+      }
+
+      body .productos-comparados .tarjeta-comparacion{
+        padding-top:7.2px !important;
+        padding-bottom:7.2px !important;
+      }
+
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        row-gap:0 !important;
+      }
+
+      body .fila-compra > .bloque-presentaciones{
+        margin-top:0 !important;
+        margin-bottom:6.3px !important;
+      }
+
+      body .productos-comparados .fila-compra > .bloque-presentaciones{
+        margin-bottom:5.4px !important;
+      }
+
+      body .fila-compra .precio{
+        font-size:1.31rem !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:.95rem !important;
+      }
+
+      body .productos-comparados .ver-detalles{
+        font-size:.67rem !important;
+      }
+    }
+  </style>
+
+  <style id="correccion-final-v29">
+    /* El estado real de Comparar manda sobre hover/focus táctil. */
+    body .boton-comparar[aria-pressed="false"],
+    body .boton-comparar[aria-pressed="false"]:hover,
+    body .boton-comparar[aria-pressed="false"]:focus,
+    body .boton-comparar[aria-pressed="false"]:active{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .boton-comparar[aria-pressed="true"],
+    body .boton-comparar[aria-pressed="true"]:hover,
+    body .boton-comparar[aria-pressed="true"]:focus,
+    body .boton-comparar[aria-pressed="true"]:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto,
+    body .compartir-producto:hover,
+    body .compartir-producto:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Elimina únicamente los divisores internos señalados. */
+    body .tarjeta-producto > .encabezado-producto,
+    body .tarjeta-producto .fila-compra > .bloque-presentaciones,
+    body .tarjeta-producto > .zona-detalles-producto,
+    body .tarjeta-producto .fila-compra > .informacion-precio{
+      border-top:0 !important;
+      border-bottom:0 !important;
+      box-shadow:none !important;
+    }
+  </style>
+
+  <style id="ajuste-precio-v30">
+    /* Precio más proporcionado y levemente más pequeño. */
+    body .fila-compra .precio{
+      font-size:1.50rem !important;
+      font-weight:700 !important;
+      font-stretch:normal !important;
+      letter-spacing:0 !important;
+      transform:none !important;
+    }
+
+    body .productos-comparados .fila-compra .precio{
+      font-size:.96rem !important;
+    }
+
+    @media (max-width:650px){
+      body .fila-compra .precio{
+        font-size:1.24rem !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:.90rem !important;
+      }
+    }
+  </style>
+
+  <style id="ajuste-controles-v31">
+    body .boton-cantidad,
+    body .cantidad{
+      font-weight:700 !important;
+    }
+
+    body .fila-compra .icono-agregar svg{
+      stroke-width:1.8 !important;
+    }
+  </style>
+
+  <style id="ajuste-movil-v32">
+    @media (max-width:650px){
+      /* Aprovecha el espacio del encabezado para títulos de tres líneas. */
+      body .encabezado-producto,
+      body #productos .encabezado-producto,
+      body .productos-comparados .encabezado-producto,
+      body .tarjeta-comparacion .encabezado-producto{
+        min-height:60px !important;
+        height:60px !important;
+        padding-bottom:0 !important;
+      }
+
+      body .encabezado-producto .fila-titulo-producto{
+        min-height:47px !important;
+        height:47px !important;
+        overflow:hidden !important;
+      }
+
+      body .encabezado-producto h2,
+      body .tarjeta-comparacion .encabezado-producto h2{
+        min-height:0 !important;
+        max-height:3.45em !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      body .encabezado-producto .codigo-producto{
+        min-height:11px !important;
+        height:11px !important;
+        line-height:11px !important;
+      }
+
+      body .contenedor-foto-producto{
+        margin-top:2px !important;
+      }
+
+      /* Borde negro más visible en todo el control de cantidad. */
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        border:1.5px solid #1f1f1f !important;
+      }
+
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        border-right:1.5px solid #1f1f1f !important;
+        border-left:1.5px solid #1f1f1f !important;
+      }
+    }
+  </style>
+
+  <style id="espaciado-uniforme-v33">
+    body .tarjeta-producto{
+      --espacio-vertical-tarjeta:6.3px;
+    }
+
+    body .fila-compra,
+    body .productos-comparados .fila-compra{
+      row-gap:0 !important;
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+    }
+
+    body .fila-compra > .bloque-presentaciones,
+    body .productos-comparados .fila-compra > .bloque-presentaciones{
+      margin-top:0 !important;
+      margin-bottom:0 !important;
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+      padding-bottom:var(--espacio-vertical-tarjeta) !important;
+    }
+
+    body .zona-detalles-producto,
+    body .productos-comparados .zona-detalles-producto{
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+    }
+  </style>
+
+  <style id="relleno-tarjetas-v34">
+    /* Reduce aproximadamente a la mitad el espacio contra el borde exterior. */
+    body #productos .tarjeta-producto{
+      padding:4.5px 7px !important;
+    }
+
+    body .productos-comparados .tarjeta-comparacion{
+      padding:3.15px 3.5px !important;
+    }
+
+    @media (max-width:650px){
+      body .productos-comparados .tarjeta-comparacion{
+        padding:3.6px 4px !important;
+      }
+
+      /* Un poco más de aire para que se vean los descendentes, como la “g”. */
+      body .encabezado-producto .codigo-producto{
+        min-height:13px !important;
+        height:13px !important;
+        line-height:12px !important;
+        padding-bottom:1px !important;
+        overflow:visible !important;
+      }
+
+      body .contenedor-foto-producto{
+        margin-top:3px !important;
+      }
+    }
+  </style>
+
+  <style id="bordes-cantidad-v35">
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      border:1.5px solid var(--color-principal) !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-right:1.5px solid var(--color-principal) !important;
+      border-left:1.5px solid var(--color-principal) !important;
+    }
+  </style>
+
+  <style id="tamano-cantidad-v36">
+    /* Solo aumenta los caracteres; el control conserva todas sus dimensiones. */
+    @media (min-width:651px){
+      body #productos .boton-cantidad{
+        font-size:1.5rem !important;
+        line-height:1 !important;
+      }
+
+      body #productos .cantidad{
+        font-size:1.23rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .boton-cantidad,
+      body .productos-comparados .cantidad{
+        font-size:1.02rem !important;
+        line-height:1 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        font-size:1.17rem !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+  <style id="tamano-textos-controles-v37">
+    /* Texto +50%; las dimensiones exteriores de los botones no cambian. */
+    @media (min-width:651px){
+      body #productos .boton-presentacion,
+      body #productos .selector-presentacion,
+      body .productos-comparados .boton-presentacion{
+        font-size:1.035rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .selector-presentacion{
+        font-size:.885rem !important;
+        line-height:1 !important;
+      }
+
+      body #productos .ver-detalles{
+        font-size:1.245rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .ver-detalles{
+        font-size:1.05rem !important;
+        line-height:1 !important;
+      }
+
+      body #buscador,
+      body #filtroCategoria{
+        font-size:1.5rem !important;
+        line-height:1 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body #productos .boton-presentacion,
+      body #productos .selector-presentacion,
+      body .productos-comparados .boton-presentacion{
+        font-size:1.05rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .selector-presentacion{
+        font-size:.885rem !important;
+        line-height:1 !important;
+      }
+
+      body #productos .ver-detalles{
+        font-size:1.245rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .ver-detalles{
+        font-size:1.005rem !important;
+        line-height:1 !important;
+      }
+
+      body #buscador{
+        font-size:1.2rem !important;
+        line-height:1 !important;
+      }
+
+      body #filtroCategoria{
+        font-size:1.23rem !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+  <style id="reduccion-textos-v38">
+    @media (min-width:651px){
+      body #productos .boton-cantidad{
+        font-size:1.35rem !important;
+      }
+
+      body #productos .cantidad{
+        font-size:1.11rem !important;
+      }
+
+      body .productos-comparados .boton-cantidad,
+      body .productos-comparados .cantidad{
+        font-size:.92rem !important;
+      }
+
+      body #productos .ver-detalles{
+        font-size:1.12rem !important;
+      }
+
+      body .productos-comparados .ver-detalles{
+        font-size:.95rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        font-size:1.05rem !important;
+      }
+
+      body #productos .ver-detalles{
+        font-size:1.12rem !important;
+      }
+
+      body .productos-comparados .ver-detalles{
+        font-size:.90rem !important;
+      }
+    }
+  </style>
+
+  <style id="presentaciones-una-fila-v40">
+    @media (max-width:650px){
+      body .opciones-presentacion,
+      body .productos-comparados .opciones-presentacion{
+        flex-wrap:nowrap !important;
+        overflow:visible !important;
+      }
+
+      body .boton-presentacion{
+        flex:0 0 auto !important;
+        white-space:nowrap !important;
+      }
+    }
+  </style>
+
+  <style id="ajustes-tipograficos-v45">
+    body #productos .tarjeta-producto h2{
+      font-size:15.7px !important;
+      line-height:1.1 !important;
+    }
+
+    body #productos .boton-presentacion,
+    body #productos .selector-presentacion,
+    body #productos .boton-cantidad,
+    body #productos .cantidad,
+    body #productos .ver-detalles{
+      font-size:15.5px !important;
+    }
+
+    body #productos .boton-cantidad,
+    body #productos .cantidad{
+      color:var(--color-principal) !important;
+    }
+
+    body .boton-cantidad,
+    body .cantidad{
+      font-weight:400 !important;
+    }
+
+    body .ver-detalles,
+    body .ver-detalles:hover,
+    body .ver-detalles:focus,
+    body .ver-detalles:active,
+    body .ver-detalles[aria-expanded="true"]{
+      background:var(--color-control) !important;
+    }
+
+    body .boton-comparar,
+    body .boton-comparar:hover,
+    body .boton-comparar:focus,
+    body .agregar-carrito,
+    body .agregar-carrito:hover,
+    body .agregar-carrito:focus{
+      background:var(--color-control) !important;
+    }
+
+    body .texto-finalizar-carrito{
+      gap:2px !important;
+    }
+
+    @media (max-width:650px){
+      body #productos .encabezado-producto{
+        min-height:61px !important;
+        height:61px !important;
+      }
+
+      body #productos .fila-titulo-producto{
+        min-height:48px !important;
+        height:48px !important;
+      }
+
+      body #productos .tarjeta-producto h2{
+        line-height:1.06 !important;
+      }
+    }
+  </style>
+
+  <style id="igualacion-comparacion-v46">
+    /* Los tres controles superiores usan 24 px en escritorio. */
+    @media (min-width:651px){
+      body #buscador,
+      body #filtroCategoria,
+      body #ordenarProductos{
+        font-size:24px !important;
+        line-height:1 !important;
+      }
+    }
+
+    /* Comparar conserva el blanco cálido cuando no está seleccionado. */
+    body .boton-comparar[aria-pressed="false"],
+    body .boton-comparar[aria-pressed="false"]:hover,
+    body .boton-comparar[aria-pressed="false"]:focus,
+    body .boton-comparar[aria-pressed="false"]:active{
+      background:var(--color-control) !important;
+    }
+
+    /* En móvil, la comparación replica las medidas del catálogo. */
+    @media (max-width:650px){
+      body .productos-comparados .tarjeta-comparacion{
+        --alto-control-tarjeta:27px;
+        padding:4.5px 7px !important;
+        border-radius:var(--radio) !important;
+      }
+
+      body .productos-comparados .encabezado-producto{
+        min-height:61px !important;
+        height:61px !important;
+      }
+
+      body .productos-comparados .fila-titulo-producto{
+        min-height:48px !important;
+        height:48px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion h2{
+        min-height:0 !important;
+        max-height:3.45em !important;
+        font-size:15.7px !important;
+        line-height:1.06 !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .codigo-producto{
+        min-height:13px !important;
+        height:13px !important;
+        padding-bottom:1px !important;
+        overflow:visible !important;
+        font-size:.78rem !important;
+        line-height:12px !important;
+      }
+
+      body .productos-comparados .tarjeta-comparacion .contenedor-foto-producto{
+        height:112px !important;
+        aspect-ratio:auto !important;
+        margin-top:3px !important;
+        border-radius:10px !important;
+      }
+
+      body .productos-comparados .boton-presentacion,
+      body .productos-comparados .selector-presentacion,
+      body .productos-comparados .boton-cantidad,
+      body .productos-comparados .cantidad,
+      body .productos-comparados .ver-detalles{
+        font-size:15.5px !important;
+      }
+
+      body .productos-comparados .selector-presentacion{
+        width:auto !important;
+        min-width:112px !important;
+        max-width:100% !important;
+        padding:5px 30px 5px 8px !important;
+        background-position:right 13px center !important;
+        background-size:14px 14px !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:1.24rem !important;
+      }
+
+      body .productos-comparados .zona-detalles-producto{
+        padding-top:6.3px !important;
+        padding-bottom:6.3px !important;
+      }
+
+      body .productos-comparados .detalles-producto{
+        margin-top:7px !important;
+        padding:8px !important;
+        font-size:.72rem !important;
+        line-height:1.35 !important;
+        border-radius:8px !important;
+      }
+    }
+  </style>
+
+  <style id="correccion-cantidad-v47">
+    /* El símbolo debe contrastar cuando el botón se pinta de rojo. */
+    body .boton-cantidad:hover,
+    body .boton-cantidad:focus,
+    body .boton-cantidad:active{
+      color:#fff !important;
+    }
+  </style>
+
+  <style id="grosor-precio-cantidad-v48">
+    body .boton-cantidad,
+    body .cantidad,
+    body .fila-compra .precio{
+      font-weight:700 !important;
+    }
+  </style>
+
+  <style id="contraste-cantidad-v49">
+    body #productos .boton-cantidad:hover,
+    body #productos .boton-cantidad:focus,
+    body #productos .boton-cantidad:active,
+    body .productos-comparados .boton-cantidad:hover,
+    body .productos-comparados .boton-cantidad:focus,
+    body .productos-comparados .boton-cantidad:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+  </style>
+
+  <style id="comparacion-identica-v50">
+    /* Las tarjetas comparadas usan las mismas medidas finales del catálogo. */
+    body #productosComparados .tarjeta-producto{
+      padding:4.5px 7px !important;
+    }
+
+    body #productosComparados .tarjeta-producto h2{
+      font-size:15.7px !important;
+      line-height:1.1 !important;
+    }
+
+    body #productosComparados .boton-presentacion,
+    body #productosComparados .selector-presentacion,
+    body #productosComparados .boton-cantidad,
+    body #productosComparados .cantidad,
+    body #productosComparados .ver-detalles{
+      font-size:15.5px !important;
+    }
+
+    body #productosComparados .boton-cantidad,
+    body #productosComparados .cantidad{
+      color:var(--color-principal) !important;
+    }
+
+    body #productosComparados .boton-cantidad:hover,
+    body #productosComparados .boton-cantidad:focus,
+    body #productosComparados .boton-cantidad:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    @media (min-width:651px){
+      body #productosComparados .encabezado-producto{
+        row-gap:3px !important;
+        min-height:74px !important;
+        height:74px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body #productosComparados .encabezado-producto{
+        min-height:61px !important;
+        height:61px !important;
+      }
+
+      body #productosComparados .fila-titulo-producto{
+        min-height:48px !important;
+        height:48px !important;
+      }
+
+      body #productosComparados .tarjeta-producto h2{
+        line-height:1.06 !important;
+      }
+    }
+  </style>
+
+  <style id="subtitulo-principal-v53">
+    body .logo-contenedor{
+      gap:0 !important;
+    }
+
+    body .subtitulo-principal{
+      margin-top:-18px !important;
+      font-size:2.175rem !important;
+      line-height:1.05 !important;
+    }
+
+    @media (max-width:650px){
+      body .subtitulo-principal{
+        margin-top:-17px !important;
+        font-size:1.575rem !important;
+      }
+    }
+  </style>
+
+  <style id="proporcion-logo-subtitulo-v54">
+    body .contenedor{
+      padding-top:0 !important;
+    }
+
+    body .logo-contenedor{
+      gap:0 !important;
+      padding-top:0 !important;
+    }
+
+    body .logo{
+      margin-top:0 !important;
+    }
+
+    body .subtitulo-principal{
+      margin-top:0 !important;
+    }
+  </style>
+
+  <style id="ajustes-finales-v55">
+    /* Comparación: sin la leyenda “productos lado a lado”. */
+    body #contadorComparacion{
+      display:none !important;
+    }
+
+    /* En escritorio, Volver y Quitar todos quedan juntos y conservan sus tamaños. */
+    @media (min-width:651px){
+      body .encabezado-comparacion{
+        grid-template-columns:1fr auto 1fr !important;
+      }
+
+      body .acciones-encabezado-comparacion{
+        grid-column:1 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        gap:8px !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:2 !important;
+        text-align:center !important;
+      }
+
+      /* Tarjetas de escritorio: reducción proporcional del 10%. */
+      body #productos .tarjeta-producto,
+      body #productosComparados .tarjeta-producto{
+        zoom:.9;
+      }
+
+      /* Buscar, categorías y orden: 10% menos que los 24 px actuales. */
+      body #buscador,
+      body #filtroCategoria,
+      body #ordenarProductos{
+        font-size:21.6px !important;
+      }
+    }
+
+    /* En móvil el título queda arriba y los dos botones permanecen juntos debajo. */
+    @media (max-width:650px){
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:1 !important;
+        text-align:center !important;
+      }
+
+      body .acciones-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:2 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:7px !important;
+      }
+    }
+
+    /* Ver detalles: cerrado = estado original; abierto = rojo con texto blanco. */
+    body .ver-detalles[aria-expanded="false"],
+    body .ver-detalles[aria-expanded="false"]:hover,
+    body .ver-detalles[aria-expanded="false"]:focus,
+    body .ver-detalles[aria-expanded="false"]:active{
+      color:var(--color-principal) !important;
+      background:var(--color-control) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .ver-detalles[aria-expanded="true"],
+    body .ver-detalles[aria-expanded="true"]:hover,
+    body .ver-detalles[aria-expanded="true"]:focus,
+    body .ver-detalles[aria-expanded="true"]:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Precio: línea visual 10% más baja en PC y móvil. */
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio{
+      line-height:.945 !important;
+    }
+  </style>
+
+
+  <style id="mejoras-visuales-tarjetas-v56">
+    /* 1–3. Tarjetas más limpias: borde fino, sombra suave y radios unificados. */
+    body .tarjeta-producto{
+      --radio-visual-tarjeta:10px;
+      border-width:.75px !important;
+      border-color:rgba(111,103,97,.22) !important;
+      border-radius:var(--radio-visual-tarjeta) !important;
+      box-shadow:0 5px 16px rgba(70,40,25,.055) !important;
+    }
+
+    body .contenedor-foto-producto,
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .ver-detalles,
+    body .control-cantidad,
+    body .agregar-carrito,
+    body .detalles-producto{
+      border-radius:var(--radio-visual-tarjeta) !important;
+    }
+
+    /* 4. La foto gana protagonismo sin cambiar su ubicación ni su tamaño exterior. */
+    body .contenedor-foto-producto{
+      border-width:.75px !important;
+      border-color:rgba(111,103,97,.16) !important;
+      background:rgba(252,251,250,.46) !important;
+      box-shadow:inset 0 0 0 .5px rgba(255,255,255,.55) !important;
+    }
+
+    body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      padding:4px !important;
+    }
+
+    /* 5. Jerarquía: nombre primero, precio segundo, presentación como apoyo. */
+    body #productos .tarjeta-producto h2,
+    body #productosComparados .tarjeta-producto h2{
+      color:#181411 !important;
+      font-weight:700 !important;
+      letter-spacing:-.01em !important;
+    }
+
+    body #productos .codigo-producto,
+    body #productosComparados .codigo-producto{
+      color:#827871 !important;
+      font-weight:400 !important;
+    }
+
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio{
+      color:var(--color-principal) !important;
+      font-weight:800 !important;
+      letter-spacing:-.015em !important;
+    }
+
+    body .boton-presentacion,
+    body .selector-presentacion{
+      font-weight:600 !important;
+    }
+
+    body .boton-presentacion:not(.seleccionada){
+      border-color:rgba(111,103,97,.24) !important;
+    }
+
+    /* 6. Sólo PC: elevación mínima al pasar el mouse, sin reordenar nada. */
+    @media (min-width:651px) and (hover:hover){
+      body .tarjeta-producto{
+        transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease !important;
+        transform:translateY(0);
+      }
+
+      body .tarjeta-producto:hover{
+        transform:translateY(-3px);
+        border-color:rgba(152,55,30,.28) !important;
+        box-shadow:0 10px 24px rgba(70,40,25,.095) !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="refinamiento-ecommerce-v57">
+    /*
+      Refinamiento visual V57
+      Inspiración: densidad y jerarquía de ecommerce moderno,
+      manteniendo posiciones, controles y comportamiento existentes.
+    */
+
+    /* 1. Tarjeta más liviana: menos sensación de caja. */
+    body .tarjeta-producto{
+      background:var(--color-fondo) !important;
+      border:1px solid rgba(111,103,97,.12) !important;
+      box-shadow:0 2px 8px rgba(70,40,25,.032) !important;
+    }
+
+    /* 2. Foto más limpia y protagonista, sin marco visible. */
+    body .contenedor-foto-producto{
+      background:var(--color-control) !important;
+      border-color:transparent !important;
+      box-shadow:none !important;
+    }
+
+    body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      padding:2px !important;
+    }
+
+    /* 3. Nombre con peso intermedio: mantiene jerarquía sin verse pesado. */
+    body #productos .tarjeta-producto h2,
+    body #productosComparados .tarjeta-producto h2{
+      color:#211d1a !important;
+      font-weight:600 !important;
+      letter-spacing:-.005em !important;
+    }
+
+    /* 4. Precio más limpio: fuerte, pero menos macizo. */
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio{
+      font-weight:700 !important;
+      letter-spacing:-.008em !important;
+      font-variant-numeric:tabular-nums !important;
+      text-rendering:optimizeLegibility;
+    }
+
+    /* 5. Código claramente secundario: aprox. 7% más pequeño y más suave. */
+    @media (min-width:651px){
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:.614rem !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body #productos .codigo-producto{
+        font-size:.577rem !important;
+      }
+
+      body #productosComparados .codigo-producto{
+        font-size:.725rem !important;
+      }
+    }
+
+    body #productos .codigo-producto,
+    body #productosComparados .codigo-producto{
+      color:#968b84 !important;
+      font-weight:400 !important;
+    }
+
+    /* 6. Presentaciones más planas; la selección roja sigue siendo inequívoca. */
+    body .boton-presentacion:not(.seleccionada){
+      color:#4b4540 !important;
+      background:rgba(252,251,250,.74) !important;
+      border:1px solid rgba(111,103,97,.18) !important;
+      box-shadow:none !important;
+      font-weight:500 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion.seleccionada:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:600 !important;
+    }
+
+    body .selector-presentacion{
+      box-shadow:none !important;
+      font-weight:600 !important;
+    }
+
+    /* 7. Mismo blanco cálido, borde y transición para acciones blancas. */
+    body .compartir-producto,
+    body .boton-comparar[aria-pressed="false"],
+    body .agregar-carrito:not(.agregado),
+    body .ver-detalles[aria-expanded="false"]{
+      color:var(--color-principal) !important;
+      background:var(--color-control) !important;
+      border:1px solid var(--color-principal) !important;
+      box-shadow:none !important;
+    }
+
+    body .boton-comparar[aria-pressed="true"],
+    body .agregar-carrito.agregado,
+    body .ver-detalles[aria-expanded="true"]{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto,
+    body .boton-comparar,
+    body .agregar-carrito,
+    body .ver-detalles,
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-cantidad{
+      transition:
+        color .14s ease,
+        background-color .14s ease,
+        border-color .14s ease,
+        box-shadow .14s ease !important;
+    }
+
+    /* 8. Cantidad menos dominante en reposo; rojo pleno al interactuar. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      border-color:rgba(152,55,30,.58) !important;
+      background:var(--color-control) !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:rgba(152,55,30,.82) !important;
+      border-right-color:rgba(152,55,30,.58) !important;
+      border-left-color:rgba(152,55,30,.58) !important;
+      background:var(--color-control) !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad{
+      color:rgba(152,55,30,.82) !important;
+      background:var(--color-control) !important;
+    }
+
+    body .fila-compra .boton-cantidad:hover,
+    body .fila-compra .boton-cantidad:focus,
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:hover,
+    body .productos-comparados .fila-compra .boton-cantidad:focus,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    /* 9. Más aire entre bloques sin agrandar la tarjeta: se redistribuye padding. */
+    body #productos .tarjeta-producto,
+    body #productosComparados .tarjeta-producto{
+      padding-top:3.5px !important;
+      padding-bottom:3.5px !important;
+    }
+
+    body .fila-compra,
+    body .productos-comparados .fila-compra{
+      padding-top:7.8px !important;
+    }
+
+    body .fila-compra > .bloque-presentaciones,
+    body .productos-comparados .fila-compra > .bloque-presentaciones{
+      padding-top:5.8px !important;
+      padding-bottom:5.8px !important;
+    }
+
+    body .zona-detalles-producto,
+    body .productos-comparados .zona-detalles-producto{
+      padding-top:6.8px !important;
+      padding-bottom:6.0px !important;
+    }
+
+    /* 10. Hover de escritorio: elevación + sombra progresiva de 180 ms. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .tarjeta-producto{
+        transform:translateY(0);
+        transition:
+          transform .18s cubic-bezier(.2,.7,.2,1),
+          box-shadow .18s cubic-bezier(.2,.7,.2,1),
+          border-color .18s ease !important;
+      }
+
+      body .tarjeta-producto:hover{
+        transform:translateY(-3px);
+        border-color:rgba(152,55,30,.20) !important;
+        box-shadow:0 9px 22px rgba(70,40,25,.085) !important;
+      }
+
+      /* 11. Hover fino: cambio breve, sin invadir el estado seleccionado. */
+      body .compartir-producto:hover,
+      body .boton-comparar[aria-pressed="false"]:hover,
+      body .agregar-carrito:not(.agregado):hover,
+      body .ver-detalles[aria-expanded="false"]:hover{
+        color:var(--color-principal) !important;
+        background:#f7efeb !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .boton-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        background:#faf5f2 !important;
+        border-color:rgba(152,55,30,.45) !important;
+      }
+    }
+
+    /* Pulsación: rojo pleno y texto/ícono blanco. */
+    body .compartir-producto:active,
+    body .boton-comparar[aria-pressed="false"]:active,
+    body .agregar-carrito:not(.agregado):active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* 12. Alineación óptica de compartir, comparar y carrito. */
+    body .encabezado-producto .compartir-producto,
+    body .encabezado-producto .boton-comparar,
+    body .fila-compra .agregar-carrito{
+      display:grid !important;
+      place-items:center !important;
+    }
+
+    body .compartir-producto svg{
+      width:52% !important;
+      height:52% !important;
+      transform:translateY(-.2px);
+    }
+
+    body .icono-comparar{
+      display:block !important;
+      line-height:1 !important;
+      transform:translateY(-.5px);
+    }
+
+    body .fila-compra .icono-agregar,
+    body .fila-compra .icono-agregar svg{
+      display:grid !important;
+      place-items:center !important;
+    }
+
+    body .fila-compra .icono-agregar svg{
+      width:68% !important;
+      height:68% !important;
+      stroke-width:1.8 !important;
+      transform:translateY(-.2px);
+    }
+
+    /* En pantallas táctiles no dependemos del hover. */
+    @media (hover:none), (pointer:coarse){
+      body .compartir-producto:hover,
+      body .boton-comparar[aria-pressed="false"]:hover,
+      body .agregar-carrito:not(.agregado):hover,
+      body .ver-detalles[aria-expanded="false"]:hover{
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <main class="contenedor">
+
+    <header class="cabecera">
+      <div class="logo-contenedor">
+
+        <img
+          src="img/logo.png"
+          alt="Ceraceci"
+          class="logo"
+        >
+
+        <p class="subtitulo-principal">
+          Insumos para cerámica
+        </p>
+
+      </div>
+    </header>
+
+    <section
+      id="avisoProductoCompartido"
+      class="aviso-producto-compartido"
+      hidden
+    >
+      <button
+        type="button"
+        id="verCatalogoCompleto"
+        class="ver-catalogo-completo"
+      >
+        ← Ver catálogo completo
+      </button>
+    </section>
+
+    <section class="busqueda">
+      <form
+        class="fila-busqueda-orden"
+        id="formBusqueda"
+        role="search"
+        onsubmit="event.preventDefault(); document.getElementById('buscador').blur(); return false;"
+      >
+        <input
+          type="search"
+          id="buscador"
+          placeholder="Buscar por nombre, código, categoría o presentación..."
+          autocomplete="off"
+          enterkeyhint="search"
+        >
+
+        <label
+          class="control-orden"
+          aria-label="Ordenar productos"
+          title="Ordenar productos"
+        >
+          <span class="icono-orden" aria-hidden="true">⇅</span>
+
+          <select id="ordenarProductos" aria-label="Ordenar productos">
+            <option value="inicial">
+              Orden inicial
+            </option>
+
+            <option value="precio-asc">
+              Precio: menor a mayor
+            </option>
+
+            <option value="precio-desc">
+              Precio: mayor a menor
+            </option>
+          </select>
+        </label>
+      </form>
+
+      <select id="filtroCategoria">
+        <option value="">
+          Todas las categorías
+        </option>
+      </select>
+    </section>
+
+    <section
+      id="barraComparacion"
+      class="barra-comparacion"
+      aria-live="polite"
+      hidden
+    >
+      <p id="resumenComparacion">
+        0 de 4 productos seleccionados
+      </p>
+
+      <div class="acciones-barra-comparacion">
+        <button
+          type="button"
+          id="limpiarComparacion"
+          class="limpiar-comparacion"
+        >
+          Limpiar
+        </button>
+
+        <button
+          type="button"
+          id="abrirComparacion"
+          class="abrir-comparacion"
+          disabled
+        >
+          Comparar productos
+        </button>
+      </div>
+    </section>
+
+    <section
+      id="seccionComparacion"
+      class="seccion-comparacion"
+      hidden
+    >
+      <div class="encabezado-comparacion">
+        <div class="acciones-encabezado-comparacion">
+          <button
+            type="button"
+            id="volverCatalogo"
+            class="volver-catalogo"
+          >
+            ← Volver al catálogo
+          </button>
+
+          <button
+            type="button"
+            id="limpiarComparacionVista"
+            class="limpiar-comparacion-vista"
+          >
+            Quitar todos
+          </button>
+        </div>
+
+        <div class="titulo-encabezado-comparacion">
+          <h1>Comparar productos</h1>
+        </div>
+      </div>
+
+      <div
+        id="productosComparados"
+        class="productos"
+        data-cantidad="0"
+      ></div>
+    </section>
+
+    <p id="estado">
+      Cargando productos...
+    </p>
+
+    <section
+      id="productos"
+      class="productos"
+    ></section>
+
+  </main>
+
+  <div class="acciones-flotantes">
+
+    <a
+      href="https://www.instagram.com/ceraceci/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="instagram-flotante"
+      aria-label="Visitar Instagram"
+      title="Seguinos en Instagram"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm10.5 1.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/>
+      </svg>
+    </a>
+
+    <a
+      href="https://wa.me/5492477314865?text=Hola%20Ceraceci%2C%20estoy%20viendo%20el%20cat%C3%A1logo%20y%20quisiera%20hacer%20una%20consulta."
+      target="_blank"
+      rel="noopener noreferrer"
+      class="whatsapp-flotante"
+      aria-label="Consultar por WhatsApp"
+      title="Consultanos por WhatsApp"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M16.03 3C8.84 3 3 8.73 3 15.8c0 2.51.74 4.95 2.15 7.03L3 29l6.38-2.08a13.2 13.2 0 006.65 1.8c7.2 0 13.03-5.73 13.03-12.8C29.06 8.73 23.23 3 16.03 3zm7.6 18.07c-.32.89-1.88 1.67-2.58 1.72-.66.05-1.49.08-2.41-.2-.56-.17-1.28-.42-2.2-.81-3.88-1.66-6.4-5.53-6.6-5.8-.2-.27-1.58-2.07-1.58-3.95 0-1.88.99-2.8 1.34-3.18.35-.38.77-.47 1.03-.47.26 0 .52 0 .75.01.24.01.55-.09.86.65.32.77 1.08 2.66 1.18 2.86.1.2.16.43.03.69-.13.27-.2.43-.4.66-.2.23-.41.51-.59.69-.2.2-.4.42-.17.82.23.39 1.02 1.67 2.2 2.71 1.51 1.33 2.78 1.75 3.18 1.95.4.2.64.17.87-.1.23-.27.99-1.14 1.25-1.53.26-.39.52-.32.87-.2.35.12 2.24 1.05 2.62 1.24.39.2.64.3.74.47.1.16.1.94-.22 1.83z"/>
+      </svg>
+    </a>
+
+    <button
+      type="button"
+      id="abrirCarrito"
+      class="abrir-carrito"
+      aria-label="Abrir carrito"
+      title="Abrir carrito"
+    >
+      <strong id="cantidadCarrito">
+        <img
+          src="img/logo.png"
+          alt=""
+          class="logo-carrito"
+          aria-hidden="true"
+        >
+        <span class="texto-finalizar-carrito">
+          <span>Finaliza aquí</span>
+          <span>tu pedido</span>
+        </span>
+
+        <span class="icono-carrito" aria-hidden="true">🛒</span>
+        <span class="separador-carrito" aria-hidden="true">|</span>
+        <span id="valorCarrito">$ 0</span>
+      </strong>
+    </button>
+
+  </div>
+
+  <div id="fondoCarrito" class="fondo-carrito"></div>
+
+  <aside id="carrito" class="carrito" aria-label="Carrito de compras">
+    <div class="encabezado-carrito">
+      <div>
+        <p>Tu pedido</p>
+        <h2>Carrito de compras</h2>
+      </div>
+
+      <button
+        type="button"
+        id="cerrarCarrito"
+        class="cerrar-carrito"
+        aria-label="Cerrar carrito"
+      >
+        ×
+      </button>
+    </div>
+
+    <div id="productosCarrito" class="productos-carrito"></div>
+
+    <div class="pie-carrito">
+      <div class="total-carrito">
+        <span>Total estimado</span>
+        <strong id="totalCarrito">$ 0</strong>
+      </div>
+
+      <button type="button" id="finalizarPedido" class="finalizar-pedido">
+        Finalizar pedido por WhatsApp
+      </button>
+
+      <button type="button" id="vaciarCarrito" class="vaciar-carrito">
+        Vaciar carrito
+      </button>
+    </div>
+  </aside>
+
+  <div id="avisoCopiado" class="aviso-copiado" role="status" aria-live="polite">
+    Enlace copiado
+  </div>
+
+  <!--
+    Carga siempre la versión actual de script.js.
+    No hace falta volver a cambiar ?v=57, ?v=58, etc.
+  -->
+  <script>
+    const scriptCeraceci = document.createElement("script");
+
+    scriptCeraceci.src =
+      "script.js?v=" +
+      (
+        window.CERACECI_ASSET_VERSION ||
+        Date.now().toString()
+      );
+
+    scriptCeraceci.async = false;
+
+    document.body.appendChild(
+      scriptCeraceci
+    );
+  </script>
+</body>
+</html>
