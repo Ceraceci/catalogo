@@ -921,18 +921,6 @@ function crearTarjetaProducto(
       producto.id
     );
 
-  const usarSelectorDesplegable =
-    producto.presentaciones.length >= 7;
-
-  const opcionesSelector =
-    producto.presentaciones
-      .map((presentacion, indicePresentacion) => `
-        <option value="${indicePresentacion}">
-          ${escaparHTML(presentacion.nombre)}
-        </option>
-      `)
-      .join("");
-
   const botonesPresentaciones =
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
@@ -951,24 +939,17 @@ function crearTarjetaProducto(
       `)
       .join("");
 
-  const controlPresentaciones =
-    usarSelectorDesplegable
-      ? `
-          <select
-            class="selector-presentacion"
-            data-id-producto="${producto.id}"
-            aria-label="Elegir presentación de ${escaparHTML(
-              producto.nombre
-            )}"
-          >
-            ${opcionesSelector}
-          </select>
-        `
-      : `
-          <div class="opciones-presentacion">
-            ${botonesPresentaciones}
-          </div>
-        `;
+  const controlPresentaciones = `
+    <div
+      class="opciones-presentacion"
+      role="group"
+      aria-label="Presentaciones de ${escaparHTML(
+        producto.nombre
+      )}"
+    >
+      ${botonesPresentaciones}
+    </div>
+  `;
 
   const foto =
     normalizarURLImagen(producto.foto);
@@ -1079,7 +1060,6 @@ function crearTarjetaProducto(
     </div>
 
     <div class="bloque-presentaciones">
-      <p class="titulo-opciones">Presentación</p>
       ${controlPresentaciones}
     </div>
 
