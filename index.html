@@ -17,6 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
+  <meta name="ceraceci-version" content="28">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2113,6 +2114,77 @@
 
   <style id="reduccion-tarjetas-10-v1">
     /* Reducción vertical del 10%, sin modificar el tamaño de las fotos. */
+    body .encabezado-producto,
+    body .bloque-presentaciones,
+    body .zona-detalles-producto{
+      border-bottom:0 !important;
+    }
+
+    /* Carrito blanco y rojo; se invierte únicamente al agregar. */
+    body .agregar-carrito,
+    body .agregar-carrito:hover,
+    body .agregar-carrito:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border:1px solid var(--color-principal) !important;
+    }
+
+    body .agregar-carrito .icono-agregar{
+      color:var(--color-principal) !important;
+    }
+
+    body .agregar-carrito.agregado,
+    body .agregar-carrito.agregado:hover,
+    body .agregar-carrito.agregado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .agregar-carrito.agregado .icono-agregar{
+      color:#fff !important;
+    }
+
+    /* En móvil, el estado táctil no debe simular que sigue seleccionado. */
+    body .boton-comparar,
+    body .boton-comparar:hover,
+    body .boton-comparar:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .boton-comparar.seleccionado,
+    body .boton-comparar.seleccionado:hover,
+    body .boton-comparar.seleccionado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Ver/Ocultar detalles conserva siempre su aspecto original. */
+    body .ver-detalles,
+    body .ver-detalles:hover,
+    body .ver-detalles:focus,
+    body .ver-detalles:active,
+    body .ver-detalles[aria-expanded="true"]{
+      color:var(--color-principal) !important;
+      background:transparent !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body #productos .ver-detalles{
+      font-size:.83rem !important;
+    }
+
+    body .productos-comparados .ver-detalles{
+      font-size:.70rem !important;
+    }
+
+    body .icono-comparar{
+      font-size:1.02rem !important;
+    }
+
     body .tarjeta-producto{
       --alto-control-tarjeta:30.6px;
     }
@@ -2213,8 +2285,18 @@
         padding-bottom:7.2px !important;
       }
 
-      body .fila-compra{
-        row-gap:6.3px !important;
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        row-gap:0 !important;
+      }
+
+      body .fila-compra > .bloque-presentaciones{
+        margin-top:0 !important;
+        margin-bottom:6.3px !important;
+      }
+
+      body .productos-comparados .fila-compra > .bloque-presentaciones{
+        margin-bottom:5.4px !important;
       }
 
       body .fila-compra .precio{
@@ -2224,6 +2306,41 @@
       body .productos-comparados .fila-compra .precio{
         font-size:.95rem !important;
       }
+
+      body .productos-comparados .ver-detalles{
+        font-size:.67rem !important;
+      }
+    }
+  </style>
+
+  <style id="correccion-final-v28">
+    /* El estado real de Comparar manda sobre hover/focus táctil. */
+    body .boton-comparar[aria-pressed="false"],
+    body .boton-comparar[aria-pressed="false"]:hover,
+    body .boton-comparar[aria-pressed="false"]:focus,
+    body .boton-comparar[aria-pressed="false"]:active{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .boton-comparar[aria-pressed="true"],
+    body .boton-comparar[aria-pressed="true"]:hover,
+    body .boton-comparar[aria-pressed="true"]:focus,
+    body .boton-comparar[aria-pressed="true"]:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Elimina únicamente los divisores internos señalados. */
+    body .tarjeta-producto > .encabezado-producto,
+    body .tarjeta-producto .fila-compra > .bloque-presentaciones,
+    body .tarjeta-producto > .zona-detalles-producto,
+    body .tarjeta-producto .fila-compra > .informacion-precio{
+      border-top:0 !important;
+      border-bottom:0 !important;
+      box-shadow:none !important;
     }
   </style>
 

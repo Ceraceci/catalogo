@@ -2472,6 +2472,8 @@ function manejarClickTarjetaProducto(evento) {
         botonComparar.dataset.idProducto
       );
 
+      botonComparar.blur();
+
       return;
     }
 
