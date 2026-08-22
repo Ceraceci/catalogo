@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="48">
+  <meta name="ceraceci-version" content="50">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2838,6 +2838,74 @@
     }
   </style>
 
+  <style id="contraste-cantidad-v49">
+    body #productos .boton-cantidad:hover,
+    body #productos .boton-cantidad:focus,
+    body #productos .boton-cantidad:active,
+    body .productos-comparados .boton-cantidad:hover,
+    body .productos-comparados .boton-cantidad:focus,
+    body .productos-comparados .boton-cantidad:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+  </style>
+
+  <style id="comparacion-identica-v50">
+    /* Las tarjetas comparadas usan las mismas medidas finales del catálogo. */
+    body #productosComparados .tarjeta-producto{
+      padding:4.5px 7px !important;
+    }
+
+    body #productosComparados .tarjeta-producto h2{
+      font-size:15.7px !important;
+      line-height:1.1 !important;
+    }
+
+    body #productosComparados .boton-presentacion,
+    body #productosComparados .selector-presentacion,
+    body #productosComparados .boton-cantidad,
+    body #productosComparados .cantidad,
+    body #productosComparados .ver-detalles{
+      font-size:15.5px !important;
+    }
+
+    body #productosComparados .boton-cantidad,
+    body #productosComparados .cantidad{
+      color:var(--color-principal) !important;
+    }
+
+    body #productosComparados .boton-cantidad:hover,
+    body #productosComparados .boton-cantidad:focus,
+    body #productosComparados .boton-cantidad:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    @media (min-width:651px){
+      body #productosComparados .encabezado-producto{
+        row-gap:3px !important;
+        min-height:74px !important;
+        height:74px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body #productosComparados .encabezado-producto{
+        min-height:61px !important;
+        height:61px !important;
+      }
+
+      body #productosComparados .fila-titulo-producto{
+        min-height:48px !important;
+        height:48px !important;
+      }
+
+      body #productosComparados .tarjeta-producto h2{
+        line-height:1.06 !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -2978,7 +3046,7 @@
 
       <div
         id="productosComparados"
-        class="productos productos-comparados"
+        class="productos"
         data-cantidad="0"
       ></div>
     </section>

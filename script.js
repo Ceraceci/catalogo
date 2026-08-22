@@ -1148,7 +1148,7 @@ function crearTarjetaProducto(
 
   tarjeta.className =
     esComparacion
-      ? "tarjeta-producto tarjeta-comparacion"
+      ? "tarjeta-producto tarjeta-en-comparacion"
       : "tarjeta-producto";
 
   tarjeta.dataset.idProducto = producto.id;
@@ -1501,7 +1501,7 @@ function sincronizarBotonesComparacion() {
           const esTarjetaComparacion =
             Boolean(
               boton.closest(
-                ".tarjeta-comparacion"
+                ".tarjeta-en-comparacion"
               )
             );
 
