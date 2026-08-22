@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="44">
+  <meta name="ceraceci-version" content="45">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2661,7 +2661,7 @@
     }
   </style>
 
-  <style id="ajustes-tipograficos-v44">
+  <style id="ajustes-tipograficos-v45">
     body #productos .tarjeta-producto h2{
       font-size:15.7px !important;
       line-height:1.1 !important;
@@ -2690,7 +2690,16 @@
     body .ver-detalles:focus,
     body .ver-detalles:active,
     body .ver-detalles[aria-expanded="true"]{
-      background:#fff !important;
+      background:var(--color-control) !important;
+    }
+
+    body .boton-comparar,
+    body .boton-comparar:hover,
+    body .boton-comparar:focus,
+    body .agregar-carrito,
+    body .agregar-carrito:hover,
+    body .agregar-carrito:focus{
+      background:var(--color-control) !important;
     }
 
     body .texto-finalizar-carrito{
