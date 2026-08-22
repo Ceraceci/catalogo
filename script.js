@@ -2339,7 +2339,9 @@ function formatearPrecio(precio) {
       currency: "ARS",
       maximumFractionDigits: 0
     }
-  ).format(precio);
+  )
+    .format(precio)
+    .replace(/\$\s+/u, "$");
 }
 
 

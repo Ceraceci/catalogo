@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="28">
+  <meta name="ceraceci-version" content="30">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2313,7 +2313,7 @@
     }
   </style>
 
-  <style id="correccion-final-v28">
+  <style id="correccion-final-v29">
     /* El estado real de Comparar manda sobre hover/focus táctil. */
     body .boton-comparar[aria-pressed="false"],
     body .boton-comparar[aria-pressed="false"]:hover,
@@ -2333,6 +2333,14 @@
       border-color:var(--color-principal) !important;
     }
 
+    body .compartir-producto,
+    body .compartir-producto:hover,
+    body .compartir-producto:focus{
+      color:var(--color-principal) !important;
+      background:#fff !important;
+      border-color:var(--color-principal) !important;
+    }
+
     /* Elimina únicamente los divisores internos señalados. */
     body .tarjeta-producto > .encabezado-producto,
     body .tarjeta-producto .fila-compra > .bloque-presentaciones,
@@ -2341,6 +2349,31 @@
       border-top:0 !important;
       border-bottom:0 !important;
       box-shadow:none !important;
+    }
+  </style>
+
+  <style id="ajuste-precio-v30">
+    /* Precio más proporcionado y levemente más pequeño. */
+    body .fila-compra .precio{
+      font-size:1.50rem !important;
+      font-weight:700 !important;
+      font-stretch:normal !important;
+      letter-spacing:0 !important;
+      transform:none !important;
+    }
+
+    body .productos-comparados .fila-compra .precio{
+      font-size:.96rem !important;
+    }
+
+    @media (max-width:650px){
+      body .fila-compra .precio{
+        font-size:1.24rem !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:.90rem !important;
+      }
     }
   </style>
 
