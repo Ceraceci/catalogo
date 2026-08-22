@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="32">
+  <meta name="ceraceci-version" content="36">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2434,6 +2434,105 @@
       body .productos-comparados .fila-compra .cantidad{
         border-right:1.5px solid #1f1f1f !important;
         border-left:1.5px solid #1f1f1f !important;
+      }
+    }
+  </style>
+
+  <style id="espaciado-uniforme-v33">
+    body .tarjeta-producto{
+      --espacio-vertical-tarjeta:6.3px;
+    }
+
+    body .fila-compra,
+    body .productos-comparados .fila-compra{
+      row-gap:0 !important;
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+    }
+
+    body .fila-compra > .bloque-presentaciones,
+    body .productos-comparados .fila-compra > .bloque-presentaciones{
+      margin-top:0 !important;
+      margin-bottom:0 !important;
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+      padding-bottom:var(--espacio-vertical-tarjeta) !important;
+    }
+
+    body .zona-detalles-producto,
+    body .productos-comparados .zona-detalles-producto{
+      padding-top:var(--espacio-vertical-tarjeta) !important;
+    }
+  </style>
+
+  <style id="relleno-tarjetas-v34">
+    /* Reduce aproximadamente a la mitad el espacio contra el borde exterior. */
+    body #productos .tarjeta-producto{
+      padding:4.5px 7px !important;
+    }
+
+    body .productos-comparados .tarjeta-comparacion{
+      padding:3.15px 3.5px !important;
+    }
+
+    @media (max-width:650px){
+      body .productos-comparados .tarjeta-comparacion{
+        padding:3.6px 4px !important;
+      }
+
+      /* Un poco más de aire para que se vean los descendentes, como la “g”. */
+      body .encabezado-producto .codigo-producto{
+        min-height:13px !important;
+        height:13px !important;
+        line-height:12px !important;
+        padding-bottom:1px !important;
+        overflow:visible !important;
+      }
+
+      body .contenedor-foto-producto{
+        margin-top:3px !important;
+      }
+    }
+  </style>
+
+  <style id="bordes-cantidad-v35">
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      border:1.5px solid var(--color-principal) !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-right:1.5px solid var(--color-principal) !important;
+      border-left:1.5px solid var(--color-principal) !important;
+    }
+  </style>
+
+  <style id="tamano-cantidad-v36">
+    /* Solo aumenta los caracteres; el control conserva todas sus dimensiones. */
+    @media (min-width:651px){
+      body #productos .boton-cantidad{
+        font-size:1.5rem !important;
+        line-height:1 !important;
+      }
+
+      body #productos .cantidad{
+        font-size:1.23rem !important;
+        line-height:1 !important;
+      }
+
+      body .productos-comparados .boton-cantidad,
+      body .productos-comparados .cantidad{
+        font-size:1.02rem !important;
+        line-height:1 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        font-size:1.17rem !important;
+        line-height:1 !important;
       }
     }
   </style>
