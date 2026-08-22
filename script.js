@@ -1560,10 +1560,6 @@ function actualizarEstadoComparacion() {
     abrirComparacion.disabled = cantidad < 2;
   }
 
-  if (contadorComparacion) {
-    contadorComparacion.textContent =
-      `${cantidad} productos lado a lado`;
-  }
 
   sincronizarBotonesComparacion();
 }
@@ -2099,6 +2095,11 @@ function actualizarEstadoBotonesCarrito() {
 }
 
 
+function formatearPrecioCarrito(valor) {
+  return formatearPrecio(valor).replace(/^\$/, "$ ");
+}
+
+
 function mostrarCarrito() {
   productosCarrito.innerHTML = "";
 
@@ -2115,14 +2116,14 @@ function mostrarCarrito() {
 
     if (valorCarrito) {
       valorCarrito.textContent =
-        formatearPrecio(0);
+        formatearPrecioCarrito(0);
     } else if (cantidadCarrito) {
       cantidadCarrito.textContent =
-        `🛒 | ${formatearPrecio(0)}`;
+        `🛒 | ${formatearPrecioCarrito(0)}`;
     }
 
     totalCarrito.textContent =
-      formatearPrecio(0);
+      formatearPrecioCarrito(0);
 
     finalizarPedido.disabled = true;
     vaciarCarrito.disabled = true;
@@ -2248,14 +2249,14 @@ function mostrarCarrito() {
 
   if (valorCarrito) {
     valorCarrito.textContent =
-      formatearPrecio(precioTotal);
+      formatearPrecioCarrito(precioTotal);
   } else if (cantidadCarrito) {
     cantidadCarrito.textContent =
-      `🛒 | ${formatearPrecio(precioTotal)}`;
+      `🛒 | ${formatearPrecioCarrito(precioTotal)}`;
   }
 
   totalCarrito.textContent =
-    formatearPrecio(precioTotal);
+    formatearPrecioCarrito(precioTotal);
 
   finalizarPedido.disabled = false;
   vaciarCarrito.disabled = false;

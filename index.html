@@ -2944,6 +2944,171 @@
     }
   </style>
 
+  <style id="ajustes-finales-v55">
+    /* Comparación: sin la leyenda “productos lado a lado”. */
+    body #contadorComparacion{
+      display:none !important;
+    }
+
+    /* En escritorio, Volver y Quitar todos quedan juntos y conservan sus tamaños. */
+    @media (min-width:651px){
+      body .encabezado-comparacion{
+        grid-template-columns:1fr auto 1fr !important;
+      }
+
+      body .acciones-encabezado-comparacion{
+        grid-column:1 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:flex-start !important;
+        gap:8px !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:2 !important;
+        text-align:center !important;
+      }
+
+      /* Tarjetas de escritorio: reducción proporcional del 10%. */
+      body #productos .tarjeta-producto,
+      body #productosComparados .tarjeta-producto{
+        zoom:.9;
+      }
+
+      /* Buscar, categorías y orden: 10% menos que los 24 px actuales. */
+      body #buscador,
+      body #filtroCategoria,
+      body #ordenarProductos{
+        font-size:21.6px !important;
+      }
+    }
+
+    /* En móvil el título queda arriba y los dos botones permanecen juntos debajo. */
+    @media (max-width:650px){
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:1 !important;
+        text-align:center !important;
+      }
+
+      body .acciones-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:2 !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:space-between !important;
+        gap:7px !important;
+      }
+    }
+
+    /* Ver detalles: cerrado = estado original; abierto = rojo con texto blanco. */
+    body .ver-detalles[aria-expanded="false"],
+    body .ver-detalles[aria-expanded="false"]:hover,
+    body .ver-detalles[aria-expanded="false"]:focus,
+    body .ver-detalles[aria-expanded="false"]:active{
+      color:var(--color-principal) !important;
+      background:var(--color-control) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .ver-detalles[aria-expanded="true"],
+    body .ver-detalles[aria-expanded="true"]:hover,
+    body .ver-detalles[aria-expanded="true"]:focus,
+    body .ver-detalles[aria-expanded="true"]:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Precio: línea visual 10% más baja en PC y móvil. */
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio{
+      line-height:.945 !important;
+    }
+  </style>
+
+
+  <style id="mejoras-visuales-tarjetas-v56">
+    /* 1–3. Tarjetas más limpias: borde fino, sombra suave y radios unificados. */
+    body .tarjeta-producto{
+      --radio-visual-tarjeta:10px;
+      border-width:.75px !important;
+      border-color:rgba(111,103,97,.22) !important;
+      border-radius:var(--radio-visual-tarjeta) !important;
+      box-shadow:0 5px 16px rgba(70,40,25,.055) !important;
+    }
+
+    body .contenedor-foto-producto,
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .ver-detalles,
+    body .control-cantidad,
+    body .agregar-carrito,
+    body .detalles-producto{
+      border-radius:var(--radio-visual-tarjeta) !important;
+    }
+
+    /* 4. La foto gana protagonismo sin cambiar su ubicación ni su tamaño exterior. */
+    body .contenedor-foto-producto{
+      border-width:.75px !important;
+      border-color:rgba(111,103,97,.16) !important;
+      background:rgba(252,251,250,.46) !important;
+      box-shadow:inset 0 0 0 .5px rgba(255,255,255,.55) !important;
+    }
+
+    body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      padding:4px !important;
+    }
+
+    /* 5. Jerarquía: nombre primero, precio segundo, presentación como apoyo. */
+    body #productos .tarjeta-producto h2,
+    body #productosComparados .tarjeta-producto h2{
+      color:#181411 !important;
+      font-weight:700 !important;
+      letter-spacing:-.01em !important;
+    }
+
+    body #productos .codigo-producto,
+    body #productosComparados .codigo-producto{
+      color:#827871 !important;
+      font-weight:400 !important;
+    }
+
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio{
+      color:var(--color-principal) !important;
+      font-weight:800 !important;
+      letter-spacing:-.015em !important;
+    }
+
+    body .boton-presentacion,
+    body .selector-presentacion{
+      font-weight:600 !important;
+    }
+
+    body .boton-presentacion:not(.seleccionada){
+      border-color:rgba(111,103,97,.24) !important;
+    }
+
+    /* 6. Sólo PC: elevación mínima al pasar el mouse, sin reordenar nada. */
+    @media (min-width:651px) and (hover:hover){
+      body .tarjeta-producto{
+        transition:transform .16s ease, box-shadow .16s ease, border-color .16s ease !important;
+        transform:translateY(0);
+      }
+
+      body .tarjeta-producto:hover{
+        transform:translateY(-3px);
+        border-color:rgba(152,55,30,.28) !important;
+        box-shadow:0 10px 24px rgba(70,40,25,.095) !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -3060,26 +3225,27 @@
       hidden
     >
       <div class="encabezado-comparacion">
-        <button
-          type="button"
-          id="volverCatalogo"
-          class="volver-catalogo"
-        >
-          ← Volver al catálogo
-        </button>
+        <div class="acciones-encabezado-comparacion">
+          <button
+            type="button"
+            id="volverCatalogo"
+            class="volver-catalogo"
+          >
+            ← Volver al catálogo
+          </button>
 
-        <div>
-          <h1>Comparar productos</h1>
-          <p id="contadorComparacion"></p>
+          <button
+            type="button"
+            id="limpiarComparacionVista"
+            class="limpiar-comparacion-vista"
+          >
+            Quitar todos
+          </button>
         </div>
 
-        <button
-          type="button"
-          id="limpiarComparacionVista"
-          class="limpiar-comparacion-vista"
-        >
-          Quitar todos
-        </button>
+        <div class="titulo-encabezado-comparacion">
+          <h1>Comparar productos</h1>
+        </div>
       </div>
 
       <div
@@ -3149,7 +3315,7 @@
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
         <span class="separador-carrito" aria-hidden="true">|</span>
-        <span id="valorCarrito">$0</span>
+        <span id="valorCarrito">$ 0</span>
       </strong>
     </button>
 
@@ -3179,7 +3345,7 @@
     <div class="pie-carrito">
       <div class="total-carrito">
         <span>Total estimado</span>
-        <strong id="totalCarrito">$0</strong>
+        <strong id="totalCarrito">$ 0</strong>
       </div>
 
       <button type="button" id="finalizarPedido" class="finalizar-pedido">
