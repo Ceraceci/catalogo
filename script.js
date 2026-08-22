@@ -1188,7 +1188,11 @@ function crearTarjetaProducto(
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
         >
-          <span>${escaparHTML(presentacion.nombre)}</span>
+          <span>${escaparHTML(
+            formatearEtiquetaPresentacion(
+              presentacion.nombre
+            )
+          )}</span>
         </button>
       `)
       .join("");
@@ -1201,7 +1205,11 @@ function crearTarjetaProducto(
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
         <option value="${indicePresentacion}">
-          ${escaparHTML(presentacion.nombre)}
+          ${escaparHTML(
+            formatearEtiquetaPresentacion(
+              presentacion.nombre
+            )
+          )}
         </option>
       `)
       .join("");
@@ -2639,6 +2647,33 @@ function formatearNombreProducto(valor) {
 }
 
 
+function formatearEtiquetaPresentacion(valor) {
+  const presentacion = limpiarTexto(valor)
+    .toLocaleLowerCase("es-AR");
+
+  if (!presentacion) {
+    return "";
+  }
+
+  const conInicialMayuscula =
+    presentacion.replace(
+      /^(\s*)(\p{L})/u,
+      (_, espacios, letra) =>
+        espacios +
+        letra.toLocaleUpperCase("es-AR")
+    );
+
+  return conInicialMayuscula
+    .replace(/\bml\b/giu, "mL")
+    .replace(/\bl\b/giu, "L")
+    .replace(/°c\b/giu, "°C")
+    .replace(
+      /\b(?:kg|g|cc|mm|cm|m)\b/giu,
+      (unidad) => unidad.toLowerCase()
+    );
+}
+
+
 function normalizarTexto(valor) {
   return limpiarTexto(valor)
     .normalize("NFD")
@@ -3044,6 +3079,17 @@ vaciarCarrito.addEventListener(
     }
 
     carritoCompras = [];
+
+    [contenedorProductos, productosComparados]
+      .filter(Boolean)
+      .forEach((contenedor) => {
+        contenedor
+          .querySelectorAll(".cantidad")
+          .forEach((campoCantidad) => {
+            campoCantidad.value = 1;
+          });
+      });
+
     guardarYActualizarCarrito();
     cerrarPanelCarrito();
   }
