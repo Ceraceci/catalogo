@@ -2106,6 +2106,9 @@ function finalizarPedidoWhatsApp() {
         formatearPrecio(producto.precio * producto.cantidad)
     );
 
+  const detalleProductos =
+    lineasProductos.join("\n\n");
+
   const precioTotal =
     carritoCompras.reduce(
       (total, producto) => {
@@ -2122,7 +2125,7 @@ function finalizarPedidoWhatsApp() {
     "¡Hola!",
     "Me gustaría consultar por este pedido:",
     "",
-    ...lineasProductos,
+    detalleProductos,
     "",
     `Total: ${formatearPrecio(precioTotal)}`,
     "",

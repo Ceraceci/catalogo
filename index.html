@@ -2111,6 +2111,104 @@
     }
   </style>
 
+  <style id="reduccion-tarjetas-10-v1">
+    /* Reducción vertical del 10%, sin modificar el tamaño de las fotos. */
+    body .tarjeta-producto{
+      --alto-control-tarjeta:30.6px;
+    }
+
+    body .productos-comparados .tarjeta-producto{
+      --alto-control-tarjeta:27px;
+    }
+
+    body #productos .tarjeta-producto{
+      padding-top:9px !important;
+      padding-bottom:9px !important;
+    }
+
+    body .productos-comparados .tarjeta-comparacion{
+      padding-top:6.3px !important;
+      padding-bottom:6.3px !important;
+    }
+
+    body .encabezado-producto,
+    body #productos .encabezado-producto,
+    body .productos-comparados .encabezado-producto,
+    body .tarjeta-comparacion .encabezado-producto{
+      min-height:49.5px !important;
+      padding-right:30.6px !important;
+    }
+
+    body .encabezado-producto .acciones-producto{
+      gap:2.7px !important;
+      width:23.4px !important;
+    }
+
+    body .encabezado-producto .compartir-producto,
+    body .encabezado-producto .boton-comparar,
+    body .tarjeta-comparacion .compartir-producto,
+    body .tarjeta-comparacion .boton-comparar{
+      width:23.4px !important;
+      min-width:23.4px !important;
+      height:23.4px !important;
+      min-height:23.4px !important;
+    }
+
+    body .contenedor-foto-producto{
+      margin-top:7.2px !important;
+    }
+
+    body .bloque-presentaciones{
+      padding-top:5.4px !important;
+      padding-bottom:5.4px !important;
+    }
+
+    body .fila-compra{
+      row-gap:7.2px !important;
+      padding-top:7.2px !important;
+    }
+
+    body .productos-comparados .fila-compra{
+      row-gap:5.4px !important;
+    }
+
+    body .zona-detalles-producto{
+      padding-top:6.3px !important;
+      padding-bottom:6.3px !important;
+    }
+
+    body .fila-compra .precio{
+      font-size:1.58rem !important;
+    }
+
+    body .productos-comparados .fila-compra .precio{
+      font-size:1.01rem !important;
+    }
+
+    @media (max-width:650px){
+      body .tarjeta-producto{
+        --alto-control-tarjeta:27px;
+      }
+
+      body .productos-comparados .tarjeta-comparacion{
+        padding-top:7.2px !important;
+        padding-bottom:7.2px !important;
+      }
+
+      body .fila-compra{
+        row-gap:6.3px !important;
+      }
+
+      body .fila-compra .precio{
+        font-size:1.31rem !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:.95rem !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
