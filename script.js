@@ -1010,58 +1010,6 @@ function crearTarjetaProducto(
 
   tarjeta.innerHTML = `
     <div class="encabezado-producto">
-      <div class="fila-categoria-producto">
-        <span class="categoria">
-          <img
-            src="img/logo.png"
-            alt=""
-            class="logo-categoria"
-            aria-hidden="true"
-          >
-          <span>${escaparHTML(producto.categoria)}</span>
-        </span>
-
-        <div class="acciones-producto">
-          <button
-            type="button"
-            class="boton-comparar ${
-              estaSeleccionado ? "seleccionado" : ""
-            }"
-            data-id-producto="${producto.id}"
-            aria-pressed="${estaSeleccionado}"
-            aria-label="${
-              esComparacion ? "Quitar de la comparación" : "Comparar"
-            } ${escaparHTML(producto.nombre)}"
-            title="${
-              esComparacion ? "Quitar de la comparación" : "Comparar producto"
-            }"
-          >
-            <span class="icono-comparar" aria-hidden="true">⇄</span>
-            <span class="texto-comparar">
-              ${
-                esComparacion
-                  ? "Quitar"
-                  : estaSeleccionado
-                    ? "Elegido"
-                    : "Comparar"
-              }
-            </span>
-          </button>
-
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
       <div class="fila-titulo-producto">
         <h2>${escaparHTML(producto.nombre)}</h2>
       </div>
@@ -1070,9 +1018,40 @@ function crearTarjetaProducto(
         ${
           presentacionInicial.codigo
             ? `Código: ${escaparHTML(presentacionInicial.codigo)}`
-            : ""
+          : ""
         }
       </p>
+
+      <div class="acciones-producto">
+        <button
+          type="button"
+          class="compartir-producto"
+          data-id-producto="${producto.id}"
+          aria-label="Compartir ${escaparHTML(producto.nombre)}"
+          title="Compartir producto"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="boton-comparar ${
+            estaSeleccionado ? "seleccionado" : ""
+          }"
+          data-id-producto="${producto.id}"
+          aria-pressed="${estaSeleccionado}"
+          aria-label="${
+            esComparacion ? "Quitar de la comparación" : "Comparar"
+          } ${escaparHTML(producto.nombre)}"
+          title="${
+            esComparacion ? "Quitar de la comparación" : "Comparar producto"
+          }"
+        >
+          <span class="icono-comparar" aria-hidden="true">⇄</span>
+        </button>
+      </div>
     </div>
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
@@ -2123,7 +2102,8 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
+        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion}) ` +
+        formatearPrecio(producto.precio * producto.cantidad)
     );
 
   const precioTotal =
