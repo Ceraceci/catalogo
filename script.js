@@ -850,6 +850,454 @@ function ordenarListaProductos(lista) {
    TARJETAS DE PRODUCTOS
 ========================================= */
 
+const consultaMovilTarjetas =
+  window.matchMedia("(max-width: 650px)");
+
+let ajusteMovilProgramado = 0;
+
+
+function limpiarAjustesMovilesTarjetas() {
+  document
+    .querySelectorAll(".tarjeta-producto h2")
+    .forEach((titulo) => {
+      [
+        "display",
+        "font-size",
+        "line-height",
+        "max-height",
+        "overflow",
+        "white-space",
+        "-webkit-line-clamp",
+        "line-clamp",
+        "-webkit-box-orient"
+      ].forEach((propiedad) =>
+        titulo.style.removeProperty(propiedad)
+      );
+    });
+
+  document
+    .querySelectorAll(".opciones-presentacion")
+    .forEach((contenedor) => {
+      contenedor.style.removeProperty("flex-wrap");
+      contenedor.style.removeProperty("gap");
+    });
+
+  document
+    .querySelectorAll(".boton-presentacion")
+    .forEach((boton) => {
+      [
+        "height",
+        "min-height",
+        "max-height",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+        "padding-left",
+        "font-size",
+        "line-height",
+        "border-radius",
+        "white-space"
+      ].forEach((propiedad) =>
+        boton.style.removeProperty(propiedad)
+      );
+    });
+}
+
+
+function encontrarTamanoTituloMovil(
+  titulo,
+  cantidadLineas
+) {
+  const altoDisponible =
+    titulo.parentElement?.clientHeight || 47;
+
+  const interlineado = 1.08;
+
+  let minimo = 9;
+  let maximo = Math.min(
+    22,
+    altoDisponible /
+      (cantidadLineas * interlineado)
+  );
+
+  let mejor = minimo;
+
+  titulo.style.setProperty(
+    "display",
+    "block",
+    "important"
+  );
+  titulo.style.setProperty(
+    "max-height",
+    "none",
+    "important"
+  );
+  titulo.style.setProperty(
+    "-webkit-line-clamp",
+    "unset",
+    "important"
+  );
+  titulo.style.setProperty(
+    "line-clamp",
+    "unset",
+    "important"
+  );
+  titulo.style.setProperty(
+    "overflow",
+    "visible",
+    "important"
+  );
+  titulo.style.setProperty(
+    "white-space",
+    cantidadLineas === 1
+      ? "nowrap"
+      : "normal",
+    "important"
+  );
+
+  for (let intento = 0; intento < 12; intento++) {
+    const tamano =
+      (minimo + maximo) / 2;
+
+    titulo.style.setProperty(
+      "font-size",
+      `${tamano}px`,
+      "important"
+    );
+    titulo.style.setProperty(
+      "line-height",
+      String(interlineado),
+      "important"
+    );
+
+    const altoMaximo =
+      tamano * interlineado * cantidadLineas;
+
+    const entra =
+      titulo.scrollWidth <=
+        titulo.clientWidth + 1 &&
+      titulo.scrollHeight <=
+        altoMaximo + 1;
+
+    if (entra) {
+      mejor = tamano;
+      minimo = tamano;
+    } else {
+      maximo = tamano;
+    }
+  }
+
+  return mejor;
+}
+
+
+function ajustarTituloTarjetaMovil(tarjeta) {
+  const titulo =
+    tarjeta.querySelector(
+      ".fila-titulo-producto h2"
+    );
+
+  if (!titulo || titulo.clientWidth === 0) {
+    return;
+  }
+
+  let lineasElegidas = 3;
+  let tamanoElegido = 9;
+
+  for (
+    let cantidadLineas = 1;
+    cantidadLineas <= 3;
+    cantidadLineas++
+  ) {
+    const tamano =
+      encontrarTamanoTituloMovil(
+        titulo,
+        cantidadLineas
+      );
+
+    lineasElegidas = cantidadLineas;
+    tamanoElegido = tamano;
+
+    if (
+      tamano >= 15 ||
+      cantidadLineas === 3
+    ) {
+      break;
+    }
+  }
+
+  const interlineado = 1.08;
+
+  titulo.style.setProperty(
+    "display",
+    "-webkit-box",
+    "important"
+  );
+  titulo.style.setProperty(
+    "font-size",
+    `${tamanoElegido.toFixed(2)}px`,
+    "important"
+  );
+  titulo.style.setProperty(
+    "line-height",
+    String(interlineado),
+    "important"
+  );
+  titulo.style.setProperty(
+    "max-height",
+    `${(
+      tamanoElegido *
+      interlineado *
+      lineasElegidas
+    ).toFixed(2)}px`,
+    "important"
+  );
+  titulo.style.setProperty(
+    "-webkit-line-clamp",
+    String(lineasElegidas),
+    "important"
+  );
+  titulo.style.setProperty(
+    "line-clamp",
+    String(lineasElegidas),
+    "important"
+  );
+  titulo.style.setProperty(
+    "-webkit-box-orient",
+    "vertical",
+    "important"
+  );
+  titulo.style.setProperty(
+    "overflow",
+    "hidden",
+    "important"
+  );
+  titulo.style.setProperty(
+    "white-space",
+    "normal",
+    "important"
+  );
+}
+
+
+function aplicarEscalaPresentaciones(
+  contenedor,
+  botones,
+  escala,
+  medidasBase
+) {
+  const alto =
+    medidasBase.alto * escala;
+
+  contenedor.style.setProperty(
+    "flex-wrap",
+    "nowrap",
+    "important"
+  );
+  contenedor.style.setProperty(
+    "gap",
+    `${medidasBase.separacion * escala}px`,
+    "important"
+  );
+
+  botones.forEach((boton) => {
+    boton.style.setProperty(
+      "height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "min-height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "max-height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-top",
+      `${medidasBase.paddingVertical * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-right",
+      `${medidasBase.paddingHorizontal * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-bottom",
+      `${medidasBase.paddingVertical * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-left",
+      `${medidasBase.paddingHorizontal * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "font-size",
+      `${medidasBase.fuente * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "line-height",
+      "1",
+      "important"
+    );
+    boton.style.setProperty(
+      "border-radius",
+      `${medidasBase.radio * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "white-space",
+      "nowrap",
+      "important"
+    );
+  });
+}
+
+
+function ajustarPresentacionesTarjetaMovil(
+  tarjeta
+) {
+  const contenedor =
+    tarjeta.querySelector(
+      ".opciones-presentacion"
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+  const botones = [
+    ...contenedor.querySelectorAll(
+      ".boton-presentacion"
+    )
+  ];
+
+  if (
+    botones.length === 0 ||
+    contenedor.clientWidth === 0
+  ) {
+    return;
+  }
+
+  contenedor.style.removeProperty("gap");
+
+  botones.forEach((boton) => {
+    [
+      "height",
+      "min-height",
+      "max-height",
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+      "font-size",
+      "line-height",
+      "border-radius",
+      "white-space"
+    ].forEach((propiedad) =>
+      boton.style.removeProperty(propiedad)
+    );
+  });
+
+  const estiloBoton =
+    getComputedStyle(botones[0]);
+
+  const medidasBase = {
+    alto:
+      botones[0].getBoundingClientRect().height,
+    fuente:
+      parseFloat(estiloBoton.fontSize) || 16,
+    paddingVertical:
+      parseFloat(estiloBoton.paddingTop) || 0,
+    paddingHorizontal:
+      parseFloat(estiloBoton.paddingLeft) || 0,
+    radio:
+      parseFloat(estiloBoton.borderRadius) || 7,
+    separacion:
+      parseFloat(
+        getComputedStyle(contenedor).gap
+      ) || 5
+  };
+
+  let escala = 1;
+
+  while (escala > 0.3) {
+    aplicarEscalaPresentaciones(
+      contenedor,
+      botones,
+      escala,
+      medidasBase
+    );
+
+    const anchoOcupado =
+      botones.reduce(
+        (total, boton) =>
+          total +
+          boton.getBoundingClientRect().width,
+        0
+      ) +
+      medidasBase.separacion *
+        escala *
+        Math.max(0, botones.length - 1);
+
+    if (
+      anchoOcupado <=
+      contenedor.clientWidth + 1
+    ) {
+      break;
+    }
+
+    escala -= 0.03;
+  }
+}
+
+
+function ajustarTarjetasMoviles() {
+  if (!consultaMovilTarjetas.matches) {
+    limpiarAjustesMovilesTarjetas();
+    return;
+  }
+
+  document
+    .querySelectorAll(".tarjeta-producto")
+    .forEach((tarjeta) => {
+      ajustarTituloTarjetaMovil(tarjeta);
+      ajustarPresentacionesTarjetaMovil(
+        tarjeta
+      );
+    });
+}
+
+
+function programarAjusteTarjetasMoviles() {
+  if (ajusteMovilProgramado) {
+    cancelAnimationFrame(
+      ajusteMovilProgramado
+    );
+  }
+
+  ajusteMovilProgramado =
+    requestAnimationFrame(() => {
+      ajusteMovilProgramado =
+        requestAnimationFrame(() => {
+          ajusteMovilProgramado = 0;
+          ajustarTarjetasMoviles();
+        });
+    });
+}
+
+
+window.addEventListener(
+  "resize",
+  programarAjusteTarjetasMoviles
+);
+
 function mostrarProductos(lista) {
   contenedorProductos.innerHTML = "";
 
@@ -876,6 +1324,7 @@ function mostrarProductos(lista) {
     `${lista.length} productos encontrados`;
 
   sincronizarBotonesComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1228,6 +1677,7 @@ function alternarProductoComparacion(idProducto) {
   }
 
   actualizarEstadoComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1391,6 +1841,7 @@ function cerrarVistaComparacion() {
   );
 
   actualizarEstadoComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1481,6 +1932,7 @@ function seleccionarPresentacion(control) {
 
   normalizarCantidadTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
+  programarAjusteTarjetasMoviles();
 }
 
 

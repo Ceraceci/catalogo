@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="38">
+  <meta name="ceraceci-version" content="39">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -2642,6 +2642,21 @@
 
       body .productos-comparados .ver-detalles{
         font-size:.90rem !important;
+      }
+    }
+  </style>
+
+  <style id="ajuste-automatico-movil-v39">
+    @media (max-width:650px){
+      body .opciones-presentacion,
+      body .productos-comparados .opciones-presentacion{
+        flex-wrap:nowrap !important;
+        overflow:visible !important;
+      }
+
+      body .boton-presentacion{
+        flex:0 0 auto !important;
+        white-space:nowrap !important;
       }
     }
   </style>
