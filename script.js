@@ -339,7 +339,15 @@ function procesarCSVProductos(textoCSV) {
             : ""
       };
 
-      return normalizarFilaKanthal(producto);
+      const productoNormalizado =
+        normalizarFilaKanthal(producto);
+
+      return {
+        ...productoNormalizado,
+        nombre: formatearNombreProducto(
+          productoNormalizado.nombre
+        )
+      };
     })
     .filter((producto) => {
       return (
@@ -2033,15 +2041,22 @@ function cargarCarritoGuardado() {
       return [];
     }
 
-    return datos.filter((producto) => {
-      return (
-        producto &&
-        producto.nombre &&
-        producto.presentacion &&
-        Number(producto.precio) > 0 &&
-        Number(producto.cantidad) > 0
-      );
-    });
+    return datos
+      .filter((producto) => {
+        return (
+          producto &&
+          producto.nombre &&
+          producto.presentacion &&
+          Number(producto.precio) > 0 &&
+          Number(producto.cantidad) > 0
+        );
+      })
+      .map((producto) => ({
+        ...producto,
+        nombre: formatearNombreProducto(
+          producto.nombre
+        )
+      }));
   } catch (error) {
     console.error(
       "No se pudo recuperar el carrito.",
@@ -2350,6 +2365,31 @@ function limpiarTexto(valor) {
   }
 
   return String(valor).trim();
+}
+
+
+function formatearNombreProducto(valor) {
+  const nombre = limpiarTexto(valor)
+    .toLocaleLowerCase("es-AR");
+
+  if (!nombre) {
+    return "";
+  }
+
+  return nombre
+    .split(/\s+/)
+    .map((palabra) => {
+      if (palabra === "de") {
+        return "de";
+      }
+
+      return palabra.replace(
+        /\p{L}/u,
+        (letra) =>
+          letra.toLocaleUpperCase("es-AR")
+      );
+    })
+    .join(" ");
 }
 
 
