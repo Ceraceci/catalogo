@@ -939,17 +939,43 @@ function crearTarjetaProducto(
       `)
       .join("");
 
-  const controlPresentaciones = `
-    <div
-      class="opciones-presentacion"
-      role="group"
-      aria-label="Presentaciones de ${escaparHTML(
-        producto.nombre
-      )}"
-    >
-      ${botonesPresentaciones}
-    </div>
-  `;
+  const usarSelectorAlambre =
+    normalizarTexto(producto.nombre) ===
+    "alambre kanthal a1";
+
+  const opcionesSelectorAlambre =
+    producto.presentaciones
+      .map((presentacion, indicePresentacion) => `
+        <option value="${indicePresentacion}">
+          ${escaparHTML(presentacion.nombre)}
+        </option>
+      `)
+      .join("");
+
+  const controlPresentaciones =
+    usarSelectorAlambre
+      ? `
+          <select
+            class="selector-presentacion selector-presentacion-alambre"
+            data-id-producto="${producto.id}"
+            aria-label="Elegir presentación de ${escaparHTML(
+              producto.nombre
+            )}"
+          >
+            ${opcionesSelectorAlambre}
+          </select>
+        `
+      : `
+          <div
+            class="opciones-presentacion"
+            role="group"
+            aria-label="Presentaciones de ${escaparHTML(
+              producto.nombre
+            )}"
+          >
+            ${botonesPresentaciones}
+          </div>
+        `;
 
   const foto =
     normalizarURLImagen(producto.foto);
@@ -2113,16 +2139,13 @@ function finalizarPedidoWhatsApp() {
     );
 
   const mensaje = [
-    "¡Hola! 😊",
-    "",
+    "¡Hola!",
     "Me gustaría consultar por este pedido:",
-    "",
     ...lineasProductos,
     "",
-    `💰 Total: ${formatearPrecio(precioTotal)}`,
+    `Total: ${formatearPrecio(precioTotal)}`,
     "",
-    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
-    "",
+    "¿Está todo disponible? ¿Qué formas de pago tienen y cómo coordinamos la entrega?",
     "¡Muchas gracias!"
   ].join("\n");
 

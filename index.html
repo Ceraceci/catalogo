@@ -1853,6 +1853,19 @@
       flex:0 0 auto !important;
     }
 
+    /* Solo Alambre usa un selector desplegable y queda centrado. */
+    body .selector-presentacion-alambre,
+    body .productos-comparados .selector-presentacion-alambre{
+      display:block !important;
+      width:auto !important;
+      min-width:112px !important;
+      max-width:100% !important;
+      margin-right:auto !important;
+      margin-left:auto !important;
+      text-align:center !important;
+      text-align-last:center !important;
+    }
+
     /* Precio centrado arriba; cantidad y carrito centrados debajo. */
     body .fila-compra{
       display:grid !important;
@@ -1938,10 +1951,11 @@
     }
 
     @media (max-width:650px){
-      body .fila-compra{
-        grid-template-columns:auto auto !important;
-        justify-content:center !important;
-        column-gap:8px !important;
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) 30px !important;
+        justify-content:stretch !important;
+        column-gap:6px !important;
         row-gap:7px !important;
       }
 
@@ -1950,19 +1964,36 @@
         text-align:center !important;
       }
 
-      body .productos-comparados .fila-compra .precio{
-        font-size:1.05rem !important;
+      body .fila-compra .selector-cantidad,
+      body .productos-comparados .fila-compra .selector-cantidad{
+        width:100% !important;
+        justify-self:stretch !important;
       }
 
+      body .fila-compra .control-cantidad,
       body .productos-comparados .fila-compra .control-cantidad{
-        width:60px !important;
+        width:100% !important;
         height:30px !important;
-        grid-template-columns:19px 22px 19px !important;
+        grid-template-columns:minmax(24px,1fr) 28px minmax(24px,1fr) !important;
       }
 
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        height:28px !important;
+      }
+
+      body .fila-compra .agregar-carrito,
       body .productos-comparados .fila-compra .agregar-carrito{
         width:30px !important;
         min-width:30px !important;
+        height:30px !important;
+        min-height:30px !important;
+      }
+
+      body .productos-comparados .fila-compra .precio{
+        font-size:1.05rem !important;
       }
     }
   </style>
@@ -2166,8 +2197,7 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Click aquí</span>
-          <span>para finalizar</span>
+          <span>Finaliza aquí</span>
           <span>tu pedido</span>
         </span>
 
