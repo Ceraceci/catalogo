@@ -1085,10 +1085,6 @@ function crearTarjetaProducto(
       >
     </div>
 
-    <div class="bloque-presentaciones">
-      ${controlPresentaciones}
-    </div>
-
     <div class="fila-compra">
       <div class="informacion-precio">
         <p
@@ -1097,6 +1093,10 @@ function crearTarjetaProducto(
         >
           ${formatearPrecio(presentacionInicial.precio)}
         </p>
+      </div>
+
+      <div class="bloque-presentaciones">
+        ${controlPresentaciones}
       </div>
 
       <div class="selector-cantidad">
@@ -2141,6 +2141,7 @@ function finalizarPedidoWhatsApp() {
   const mensaje = [
     "¡Hola!",
     "Me gustaría consultar por este pedido:",
+    "",
     ...lineasProductos,
     "",
     `Total: ${formatearPrecio(precioTotal)}`,

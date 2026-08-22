@@ -1895,14 +1895,29 @@
 
     body .fila-compra .selector-cantidad{
       grid-column:1 !important;
-      grid-row:2 !important;
+      grid-row:3 !important;
       justify-self:end !important;
+    }
+
+    body .fila-compra > .bloque-presentaciones{
+      grid-column:1 / -1 !important;
+      grid-row:2 !important;
+      width:100% !important;
+      margin:0 !important;
     }
 
     body .fila-compra .agregar-carrito{
       grid-column:2 !important;
-      grid-row:2 !important;
+      grid-row:3 !important;
       justify-self:start !important;
+    }
+
+    @media (min-width:651px){
+      body #productos .encabezado-producto{
+        row-gap:3px !important;
+        min-height:74px !important;
+        height:74px !important;
+      }
     }
 
     body .productos-comparados .fila-compra{
@@ -1956,6 +1971,12 @@
     }
 
     @media (max-width:650px){
+      body #productos .encabezado-producto{
+        row-gap:3px !important;
+        min-height:94px !important;
+        height:94px !important;
+      }
+
       body .fila-compra,
       body .productos-comparados .fila-compra{
         grid-template-columns:minmax(0,1fr) 30px !important;
