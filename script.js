@@ -3043,16 +3043,9 @@ vaciarCarrito.addEventListener(
       return;
     }
 
-    const confirmar = window.confirm(
-      "¿Querés vaciar todo el carrito?"
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
     carritoCompras = [];
     guardarYActualizarCarrito();
+    cerrarPanelCarrito();
   }
 );
 }
