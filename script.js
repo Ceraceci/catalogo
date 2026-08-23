@@ -1751,14 +1751,7 @@ function vaciarSeleccionComparacion() {
 
 
 function volverDesdeComparacion() {
-  if (
-    window.matchMedia("(max-width: 650px)").matches
-  ) {
-    vaciarSeleccionComparacion();
-    return;
-  }
-
-  cerrarVistaComparacion();
+  vaciarSeleccionComparacion();
 }
 
 
@@ -3122,6 +3115,59 @@ if (productosComparados) {
     manejarEntradaTarjetaProducto
   );
 }
+
+
+/* En móvil, :active puede desaparecer antes de llegar a dibujarse.
+   Esta clase refleja el toque real y afecta sólo al − o + pulsado. */
+function activarPulsacionCantidad(evento) {
+  if (
+    !window.matchMedia("(max-width: 650px)").matches
+  ) {
+    return;
+  }
+
+  const boton =
+    evento.target.closest?.(".boton-cantidad");
+
+  if (!boton) {
+    return;
+  }
+
+  boton.classList.add("presionado");
+}
+
+
+function limpiarPulsacionCantidad() {
+  document
+    .querySelectorAll(".boton-cantidad.presionado")
+    .forEach((boton) => {
+      boton.classList.remove("presionado");
+    });
+}
+
+
+document.addEventListener(
+  "pointerdown",
+  activarPulsacionCantidad,
+  true
+);
+
+document.addEventListener(
+  "pointerup",
+  limpiarPulsacionCantidad,
+  true
+);
+
+document.addEventListener(
+  "pointercancel",
+  limpiarPulsacionCantidad,
+  true
+);
+
+window.addEventListener(
+  "blur",
+  limpiarPulsacionCantidad
+);
 
 
 productosCarrito.addEventListener(

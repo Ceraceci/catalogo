@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="101">
+  <meta name="ceraceci-version" content="103">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6421,9 +6421,9 @@
     }
   </style>
 
-  <style id="estado-cantidad-v101">
+  <style id="estado-cantidad-v102">
     /* =========================================================
-       V101 — pulsación independiente de − y + en móvil
+       V102 — pulsación independiente de − y + en móvil
        ========================================================= */
 
     /* PC: hover blanco cálido, texto rojo y borde rojo. */
@@ -6481,13 +6481,48 @@
 
       /* Sólo − o + se invierte mientras ese sector está siendo tocado. */
       html body #productos .fila-compra .control-cantidad .boton-cantidad:active,
-      html body #productosComparados .fila-compra .control-cantidad .boton-cantidad:active{
+      html body #productos .fila-compra .control-cantidad .boton-cantidad.presionado,
+      html body #productosComparados .fila-compra .control-cantidad .boton-cantidad:active,
+      html body #productosComparados .fila-compra .control-cantidad .boton-cantidad.presionado{
         color:#fff !important;
         -webkit-text-fill-color:#fff !important;
         background:var(--color-principal) !important;
         border-color:var(--color-principal) !important;
         font-weight:700 !important;
       }
+    }
+  </style>
+
+  <style id="espaciado-cantidad-v103">
+    /* La referencia es el espacio actual entre − 1 + y Más info.
+       Presentaciones usa exactamente esa misma separación. */
+    html body #productos .tarjeta-producto,
+    html body #productosComparados .tarjeta-producto{
+      --espacio-cantidad-info:8px;
+    }
+
+    html body #productos .fila-compra,
+    html body #productosComparados .fila-compra{
+      row-gap:0 !important;
+    }
+
+    html body #productos .fila-compra > .bloque-presentaciones,
+    html body #productosComparados .fila-compra > .bloque-presentaciones{
+      margin-bottom:0 !important;
+      padding-bottom:var(--espacio-cantidad-info) !important;
+    }
+
+    html body #productos .fila-compra .selector-cantidad,
+    html body #productosComparados .fila-compra .selector-cantidad{
+      margin-top:0 !important;
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+    }
+
+    html body #productos .zona-detalles-producto,
+    html body #productosComparados .zona-detalles-producto{
+      margin-top:0 !important;
+      padding-top:var(--espacio-cantidad-info) !important;
     }
   </style>
 
