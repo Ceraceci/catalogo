@@ -3265,6 +3265,10 @@ if (ordenarProductos) {
       }
 
       filtrarProductos();
+
+      // V108: evita que el select quede con un estado visual de foco
+      // después de elegir cualquiera de las dos opciones.
+      ordenarProductos.blur();
     }
   );
 }

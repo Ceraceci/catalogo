@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="104">
+  <meta name="ceraceci-version" content="108">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6576,12 +6576,93 @@
   </style>
 
 
-  <style id="ajuste-equidistancia-precio-v105">
-    /* V105 — el precio queda visualmente equidistante entre la foto
-       y el botón de presentación, tanto en móvil como en PC. */
+  <style id="ajuste-equidistancia-precio-v107">
+    /* V107 — centra visualmente el precio entre la foto y Presentaciones.
+       Valores verificados por geometría real del render en móvil y PC. */
     html body #productos .fila-compra > .informacion-precio,
     html body #productosComparados .fila-compra > .informacion-precio{
-      transform:translateY(-10px) !important;
+      transform:translateY(-4.15625px) !important;
+    }
+
+    @media (max-width:650px){
+      html body #productos .fila-compra > .informacion-precio,
+      html body #productosComparados .fila-compra > .informacion-precio{
+        transform:translateY(-3px) !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v108-filtros">
+    /* =========================================================
+       V108 — estado estable del filtro de orden en PC y móvil
+       ========================================================= */
+
+    /* PC: las dos opciones de orden conservan exactamente la misma
+       geometría. Evita saltos, recortes y halos de foco al elegirlas. */
+    @media (min-width:651px){
+      html body .busqueda{
+        grid-template-columns:minmax(0,1fr) minmax(190px,240px) minmax(230px,250px) !important;
+      }
+
+      html body .control-orden{
+        min-width:0 !important;
+      }
+
+      html body .control-orden select{
+        box-sizing:border-box !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        padding:0 38px 0 13px !important;
+        overflow:hidden !important;
+        color:var(--color-texto) !important;
+        -webkit-text-fill-color:var(--color-texto) !important;
+        background-color:var(--color-control) !important;
+        border:1px solid var(--color-borde) !important;
+        border-radius:11px !important;
+        outline:none !important;
+        box-shadow:none !important;
+        white-space:nowrap !important;
+        text-overflow:ellipsis !important;
+        transform:none !important;
+      }
+
+      html body .control-orden.orden-activo select,
+      html body .control-orden.orden-activo select:hover,
+      html body .control-orden.orden-activo select:focus,
+      html body .control-orden.orden-activo select:focus-visible{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background-color:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        outline:none !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+    }
+
+    /* Móvil: cuando hay un orden aplicado, el botón queda rojo con
+       el símbolo blanco. Al volver a “Filtros”, recupera el estado normal. */
+    @media (max-width:650px){
+      html body .control-orden.orden-activo,
+      html body .control-orden.orden-activo:hover,
+      html body .control-orden.orden-activo:focus-within{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+      }
+
+      html body .control-orden.orden-activo .icono-orden,
+      html body .control-orden.orden-activo:hover .icono-orden,
+      html body .control-orden.orden-activo:focus-within .icono-orden{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+      }
     }
   </style>
 
