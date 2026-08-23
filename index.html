@@ -17,23 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="114">
+  <meta name="ceraceci-version" content="115">
 
   <!--
-    CACHE-BUSTER PERMANENTE:
-    cada apertura genera una URL nueva para style.css y script.js.
-    Así el navegador no puede quedarse usando archivos viejos.
+    La hoja se carga de forma bloqueante para impedir que el navegador
+    muestre el logo y el resto de la página antes de aplicar sus tamaños.
+    El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <script>
-    window.CERACECI_ASSET_VERSION = Date.now().toString();
-
-    const estilosCeraceci = document.createElement("link");
-    estilosCeraceci.rel = "stylesheet";
-    estilosCeraceci.href =
-      "style.css?v=" + window.CERACECI_ASSET_VERSION;
-
-    document.head.appendChild(estilosCeraceci);
-  </script>
+  <link rel="stylesheet" href="style.css?v=115">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -6737,6 +6728,8 @@
           src="img/logo.png"
           alt="Ceraceci"
           class="logo"
+          width="150"
+          height="150"
         >
 
         <p class="subtitulo-principal">
@@ -6916,6 +6909,8 @@
           alt=""
           class="logo-carrito"
           aria-hidden="true"
+          width="30"
+          height="30"
         >
         <span class="texto-finalizar-carrito">
           <span class="texto-carrito-pc">Ver</span>
@@ -7209,25 +7204,6 @@
       }, true);
     })();
   </script>
-<!--
-    Carga siempre la versión actual de script.js.
-    No hace falta volver a cambiar ?v=57, ?v=58, etc.
-  -->
-  <script>
-    const scriptCeraceci = document.createElement("script");
-
-    scriptCeraceci.src =
-      "script.js?v=" +
-      (
-        window.CERACECI_ASSET_VERSION ||
-        Date.now().toString()
-      );
-
-    scriptCeraceci.async = false;
-
-    document.body.appendChild(
-      scriptCeraceci
-    );
-  </script>
+  <script src="script.js?v=115"></script>
 </body>
 </html>
