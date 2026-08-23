@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="123">
+  <meta name="ceraceci-version" content="124">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=123">
+  <link rel="stylesheet" href="style.css?v=124">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7329,6 +7329,35 @@
     }
   </style>
 
+  <style id="desplegable-alambre-v124">
+    @media (min-width:651px){
+      /* La tarjeta abierta se coloca por encima de las filas siguientes. */
+      html body #productos .tarjeta-producto.selector-desplegado,
+      html body #productosComparados .tarjeta-producto.selector-desplegado{
+        position:relative !important;
+        z-index:200 !important;
+        overflow:visible !important;
+      }
+
+      html body #productos,
+      html body #productosComparados,
+      html body .seccion-comparacion,
+      html body .tarjeta-producto.selector-desplegado .bloque-presentaciones{
+        overflow:visible !important;
+      }
+
+      html body .tarjeta-producto.selector-desplegado .select-personalizado-presentacion-pc,
+      html body .tarjeta-producto.selector-desplegado .select-personalizado-lista-pc{
+        z-index:210 !important;
+      }
+
+      html body .tarjeta-producto.selector-desplegado .select-personalizado-lista-pc{
+        max-height:min(60vh,520px) !important;
+        overflow-y:auto !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -7806,6 +7835,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=123"></script>
+  <script src="script.js?v=124"></script>
 </body>
 </html>

@@ -703,6 +703,9 @@ function cerrarSelectoresPersonalizadosPC(excepto = null) {
     control.raiz.classList.remove("abierto");
     control.boton.setAttribute("aria-expanded", "false");
     control.lista.hidden = true;
+    control.raiz
+      .closest(".tarjeta-producto")
+      ?.classList.remove("selector-desplegado");
   });
 }
 
@@ -715,6 +718,9 @@ function cerrarSelectorPersonalizadoPC(control) {
   control.raiz.classList.remove("abierto");
   control.boton.setAttribute("aria-expanded", "false");
   control.lista.hidden = true;
+  control.raiz
+    .closest(".tarjeta-producto")
+    ?.classList.remove("selector-desplegado");
 }
 
 
@@ -727,6 +733,9 @@ function abrirSelectorPersonalizadoPC(control) {
   control.raiz.classList.add("abierto");
   control.boton.setAttribute("aria-expanded", "true");
   control.lista.hidden = false;
+  control.raiz
+    .closest(".tarjeta-producto")
+    ?.classList.add("selector-desplegado");
 
   const opcionSeleccionada =
     control.lista.querySelector(".seleccionada");
