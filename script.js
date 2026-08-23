@@ -2525,12 +2525,6 @@ function agregarProductoAlCarrito(boton) {
 
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
-
-  mostrarAvisoCopiado(
-    cantidad === 1
-      ? "1 unidad agregada al carrito"
-      : `${cantidad} unidades agregadas al carrito`
-  );
 }
 
 
