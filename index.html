@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="110">
+  <meta name="ceraceci-version" content="113">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6593,9 +6593,9 @@
   </style>
 
 
-  <style id="ajustes-v110-filtros-categorias-presentaciones">
+  <style id="ajustes-v111-filtros-categorias-presentaciones">
     /* =========================================================
-       V110 — estados activos de Filtros y Categorías
+       V111 — estados activos de Filtros y Categorías
        ========================================================= */
 
     /* PC: las dos opciones de orden conservan exactamente la misma
@@ -6649,6 +6649,24 @@
         outline:none !important;
         box-shadow:none !important;
         transform:none !important;
+      }
+
+      /* Al desplegar Categorías o Filtros, sólo la opción elegida
+         queda roja. El resto conserva el fondo blanco cálido. */
+      html body #filtroCategoria option,
+      html body .control-orden select option{
+        color:var(--color-texto) !important;
+        -webkit-text-fill-color:var(--color-texto) !important;
+        font-weight:400 !important;
+        background:var(--color-control) !important;
+      }
+
+      html body #filtroCategoria option:checked,
+      html body .control-orden select option:checked{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        font-weight:700 !important;
+        background:var(--color-principal) !important;
       }
     }
 
