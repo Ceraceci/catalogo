@@ -5223,6 +5223,24 @@
     }
   </style>
 
+  <style id="ajuste-foto-movil-v79">
+    /* V79 — móvil: desplaza la foto hacia la derecha para equilibrar
+       el espacio foto ↔ acciones con acciones ↔ borde derecho. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:8px !important;
+        margin-right:30px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:64% 50% !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
