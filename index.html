@@ -6257,16 +6257,15 @@
 
 
 
-  <style id="carrito-y-marca-superior-v90">
-    /* V90 — carrito uniforme PC/móvil + retiro de marca sticky superior. */
+  <style id="carrito-y-marca-superior-v92">
+    /* V92 — carrito compacto y centrado en PC y móvil. */
 
-    /* Se elimina cualquier marca CERACECI fija en la parte superior. */
+    /* Se mantiene eliminada la marca CERACECI fija superior. */
     body .marca-sticky-catalogo,
     body .marca-comparacion-movil{
       display:none !important;
     }
 
-    /* La barra de búsqueda vuelve a ocupar una sola fila de controles en PC. */
     body .busqueda{
       grid-template-areas:"buscar categoria ordenar" !important;
     }
@@ -6275,16 +6274,22 @@
       row-gap:6px !important;
     }
 
-    /* Carrito: mismo lenguaje visual en PC y móvil. */
+    /* Carrito: Ver 🛒 | $ 0 */
     body .abrir-carrito{
       display:flex !important;
       align-items:center !important;
       justify-content:center !important;
       box-sizing:border-box !important;
+      height:38px !important;
+      min-height:38px !important;
+      max-height:38px !important;
+      padding:0 10px !important;
       color:#171717 !important;
       background:var(--color-control) !important;
       border:1px solid #1c1c1c !important;
+      border-radius:999px !important;
       box-shadow:0 4px 14px rgba(0,0,0,.055) !important;
+      overflow:hidden !important;
     }
 
     body .abrir-carrito .logo-carrito{
@@ -6298,70 +6303,89 @@
       width:auto !important;
       min-width:0 !important;
       max-width:100% !important;
+      height:36px !important;
+      min-height:0 !important;
       margin:0 auto !important;
+      padding:0 !important;
+      gap:7px !important;
       color:#171717 !important;
       background:transparent !important;
       border:0 !important;
       box-shadow:none !important;
       white-space:nowrap !important;
+      line-height:1 !important;
     }
 
     body .abrir-carrito .texto-finalizar-carrito{
       display:inline-flex !important;
       align-items:center !important;
       justify-content:center !important;
-      min-width:0 !important;
       width:auto !important;
+      min-width:0 !important;
       margin:0 !important;
       padding:0 !important;
     }
 
     body .abrir-carrito .texto-carrito-pc,
-    body .abrir-carrito .texto-carrito-movil,
-    body .abrir-carrito #valorCarrito{
+    body .abrir-carrito .texto-carrito-movil{
       color:#171717 !important;
       -webkit-text-fill-color:#171717 !important;
+      font-size:34px !important;
       font-weight:700 !important;
+      line-height:.9 !important;
       white-space:nowrap !important;
+      margin:0 !important;
+      padding:0 !important;
     }
 
-    body .abrir-carrito .icono-carrito,
-    body .abrir-carrito .separador-carrito{
+    body .abrir-carrito .icono-carrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
       color:#171717 !important;
       -webkit-text-fill-color:#171717 !important;
+      font-size:21px !important;
+      line-height:1 !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito .separador-carrito{
+      display:inline-block !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:20px !important;
+      font-weight:400 !important;
+      line-height:1 !important;
+      margin:0 1px !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito #valorCarrito{
+      display:inline-block !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:20px !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+      margin:0 !important;
+      padding:0 !important;
+      white-space:nowrap !important;
     }
 
     @media (min-width:651px){
       body .abrir-carrito{
-        min-height:54px !important;
-        padding:0 13px !important;
-      }
-
-      body .abrir-carrito strong#cantidadCarrito{
-        height:36px !important;
-        padding:0 4px !important;
-        gap:7px !important;
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
       }
 
       body .abrir-carrito .texto-carrito-pc{
         display:inline-block !important;
-        font-size:22px !important;
-        line-height:1 !important;
       }
 
       body .abrir-carrito .texto-carrito-movil{
         display:none !important;
-      }
-
-      body .abrir-carrito .icono-carrito{
-        font-size:21px !important;
-        line-height:1 !important;
-      }
-
-      body .abrir-carrito .separador-carrito,
-      body .abrir-carrito #valorCarrito{
-        font-size:20px !important;
-        line-height:1 !important;
       }
     }
 
@@ -6375,16 +6399,10 @@
 
       body .abrir-carrito{
         width:100% !important;
-        height:44px !important;
-        min-height:44px !important;
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
         padding:0 8px !important;
-        border-radius:999px !important;
-      }
-
-      body .abrir-carrito strong#cantidadCarrito{
-        height:32px !important;
-        padding:0 !important;
-        gap:7px !important;
       }
 
       body .abrir-carrito .texto-carrito-pc{
@@ -6393,19 +6411,6 @@
 
       body .abrir-carrito .texto-carrito-movil{
         display:inline-block !important;
-        font-size:28px !important;
-        line-height:1 !important;
-      }
-
-      body .abrir-carrito .icono-carrito{
-        font-size:21px !important;
-        line-height:1 !important;
-      }
-
-      body .abrir-carrito .separador-carrito,
-      body .abrir-carrito #valorCarrito{
-        font-size:20px !important;
-        line-height:1 !important;
       }
     }
   </style>
