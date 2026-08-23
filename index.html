@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="69">
+  <meta name="ceraceci-version" content="81">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -5261,6 +5261,161 @@
     }
   </style>
 
+
+
+  <style id="ajustes-v81">
+    /* =========================================================
+       V81 — jerarquía sticky + estados PC + zoom + carrito + fondo
+       ========================================================= */
+
+    /* Fondo de los canales entre tarjetas apenas más oscuro.
+       background-clip evita teñir el padding inferior de la grilla. */
+    body .productos{
+      background:#f1ece8 !important;
+      background-clip:content-box !important;
+    }
+
+    /* El texto flotante del carrito queda en una sola línea y gana presencia
+       sin modificar la altura actual del botón ni de su cápsula interna. */
+    body .texto-finalizar-carrito{
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:center !important;
+      min-width:0 !important;
+      line-height:1 !important;
+      white-space:nowrap !important;
+    }
+
+    body .texto-finalizar-carrito span,
+    body .texto-finalizar-carrito span:first-child,
+    body .texto-finalizar-carrito span:last-child{
+      display:inline !important;
+      font-size:15px !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+      white-space:nowrap !important;
+    }
+
+    /* Escritorio: todos los controles comerciales usan la misma lógica.
+       Reposo = neutro; hover = blanco cálido + rojo; seleccionado = rojo + blanco. */
+    @media (min-width:651px){
+      body .boton-presentacion:not(.seleccionada),
+      body .selector-presentacion:not(.seleccionada),
+      body .boton-comparar[aria-pressed="false"],
+      body .fila-compra .agregar-carrito:not(.agregado),
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado){
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .boton-presentacion.seleccionada,
+      body .boton-presentacion[aria-pressed="true"],
+      body .selector-presentacion.seleccionada,
+      body .boton-comparar[aria-pressed="true"],
+      body .fila-compra .agregar-carrito.agregado,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .agregar-carrito.agregado .icono-agregar,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado .icono-agregar,
+      body .fila-compra .agregar-carrito.agregado svg,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado svg{
+        color:#fff !important;
+        fill:currentColor !important;
+        stroke:currentColor !important;
+      }
+    }
+
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada):hover,
+      body .selector-presentacion:not(.seleccionada):hover,
+      body .boton-comparar[aria-pressed="false"]:hover,
+      body .fila-compra .agregar-carrito:not(.agregado):hover,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+      }
+
+      body .fila-compra .agregar-carrito:not(.agregado):hover .icono-agregar,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover .icono-agregar,
+      body .fila-compra .agregar-carrito:not(.agregado):hover svg,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover svg{
+        color:var(--color-principal) !important;
+        fill:currentColor !important;
+        stroke:currentColor !important;
+      }
+
+      /* Un control ya seleccionado no cambia al señalarlo. */
+      body .boton-presentacion.seleccionada:hover,
+      body .boton-presentacion[aria-pressed="true"]:hover,
+      body .selector-presentacion.seleccionada:hover,
+      body .boton-comparar[aria-pressed="true"]:hover,
+      body .fila-compra .agregar-carrito.agregado:hover,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado:hover{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Zoom PC: la lupa conserva el mismo tamaño grande en ambos niveles.
+       Se mantiene blanco/negro, pero con trazos más finos. */
+    @media (min-width:651px){
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+      body .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='1.35'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M13.5 10v7M10 13.5h7' stroke='%23161616' stroke-width='1.35' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay.nivel-2 .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='1.35'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M10 13.5h7' stroke='%23161616' stroke-width='1.35' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-out !important;
+      }
+    }
+
+    /* Móvil: marca sticky al mismo tamaño que los títulos de producto. */
+    @media (max-width:650px){
+      body .marca-sticky-catalogo,
+      body .marca-sticky-catalogo strong,
+      body .marca-sticky-catalogo > span{
+        font-size:17.27px !important;
+        line-height:1.05 !important;
+      }
+
+      body .marca-sticky-catalogo{
+        gap:4px !important;
+      }
+
+      body .marca-sticky-catalogo strong{
+        color:var(--color-principal) !important;
+      }
+
+      body .marca-sticky-catalogo > span:last-child{
+        color:#2d2926 !important;
+        font-weight:500 !important;
+      }
+
+      body.marca-scroll-activa .marca-sticky-catalogo{
+        max-height:22px !important;
+      }
+
+      body .texto-finalizar-carrito span,
+      body .texto-finalizar-carrito span:first-child,
+      body .texto-finalizar-carrito span:last-child{
+        font-size:14px !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -5466,8 +5621,7 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Finaliza aquí</span>
-          <span>tu pedido</span>
+          <span>Finalizar pedido</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
