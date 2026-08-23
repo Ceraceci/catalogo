@@ -1180,11 +1180,7 @@ function crearTarjetaProducto(
       .map((presentacion, indicePresentacion) => `
         <button
           type="button"
-          class="boton-presentacion ${
-            indicePresentacion === 0
-              ? "seleccionada"
-              : ""
-          }"
+          class="boton-presentacion"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
         >
@@ -1709,6 +1705,13 @@ function seleccionarPresentacion(control) {
         );
       });
 
+    /* Una sola presentación se mantiene visualmente neutra. */
+    if (producto.presentaciones.length > 1) {
+      control.classList.add("seleccionada");
+    }
+  }
+
+  if (control.matches(".selector-presentacion")) {
     control.classList.add("seleccionada");
   }
 

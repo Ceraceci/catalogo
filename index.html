@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="65">
+  <meta name="ceraceci-version" content="69">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -4496,6 +4496,167 @@
         margin:0 1px 0 7px !important;
         opacity:1 !important;
         pointer-events:auto !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v69">
+    /* =========================================================
+       V69 — controles neutros + acciones junto a la foto móvil
+       ========================================================= */
+
+    /* − 1 +: negro real en todos los estados, sin rojo residual. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad,
+    body .fila-compra .boton-cantidad:hover,
+    body .fila-compra .boton-cantidad:focus,
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:hover,
+    body .productos-comparados .fila-compra .boton-cantidad:focus,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-left:1px solid rgba(111,103,97,.22) !important;
+      border-right:1px solid rgba(111,103,97,.22) !important;
+    }
+
+    /* Carrito: neutro en reposo y rojo/blanco al quedar agregado. */
+    body .fila-compra .agregar-carrito:not(.agregado),
+    body .productos-comparados .fila-compra .agregar-carrito:not(.agregado){
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .agregar-carrito:not(.agregado) .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito:not(.agregado) .icono-agregar{
+      color:#171717 !important;
+    }
+
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado,
+    body .fila-compra .agregar-carrito.agregado:hover,
+    body .fila-compra .agregar-carrito.agregado:focus,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado:hover,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .fila-compra .agregar-carrito.agregado .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado .icono-agregar{
+      color:#fff !important;
+    }
+
+    body .fila-compra .agregar-carrito:active,
+    body .productos-comparados .fila-compra .agregar-carrito:active{
+      transform:scale(.97) !important;
+    }
+
+    /* Presentaciones: ninguna parece pulsada al cargar.
+       Sólo una selección explícita adquiere rojo. */
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .selector-presentacion:not(.seleccionada){
+      color:#49433f !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.24) !important;
+      box-shadow:none !important;
+      font-weight:500 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .selector-presentacion.seleccionada{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:600 !important;
+    }
+
+    /* Una única presentación permanece neutra siempre. */
+    body .opciones-presentacion > .boton-presentacion:only-child,
+    body .opciones-presentacion > .boton-presentacion:only-child:hover,
+    body .opciones-presentacion > .boton-presentacion:only-child:focus,
+    body .opciones-presentacion > .boton-presentacion:only-child:active{
+      color:#49433f !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.24) !important;
+      font-weight:500 !important;
+    }
+
+    @media (max-width:650px){
+      /* Título y código conservan el centro real de toda la tarjeta. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        padding-left:0 !important;
+        padding-right:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto,
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        width:100% !important;
+        text-align:center !important;
+      }
+
+      /* La foto deja una columna angosta a su derecha para Compartir/Comparar. */
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-right:38px !important;
+      }
+
+      /* Los botones siguen perteneciendo al encabezado, pero visualmente
+         se colocan a la derecha de la foto, uno debajo del otro. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        position:absolute !important;
+        top:101px !important;
+        right:0 !important;
+        z-index:4 !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:5px !important;
+        width:32px !important;
+        margin:0 !important;
+      }
+
+      body #productos .encabezado-producto .compartir-producto,
+      body #productos .encabezado-producto .boton-comparar,
+      body #productosComparados .encabezado-producto .compartir-producto,
+      body #productosComparados .encabezado-producto .boton-comparar{
+        width:32px !important;
+        min-width:32px !important;
+        max-width:32px !important;
+        height:32px !important;
+        min-height:32px !important;
+        max-height:32px !important;
+        padding:0 !important;
       }
     }
   </style>
