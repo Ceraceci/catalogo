@@ -1807,6 +1807,12 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
+  /* Estado visual persistente, igual que una presentación seleccionada. */
+  const controlCantidad = tarjeta.querySelector(".control-cantidad");
+  if (controlCantidad) {
+    controlCantidad.classList.add("seleccionado");
+  }
+
   normalizarCantidadTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
 }
