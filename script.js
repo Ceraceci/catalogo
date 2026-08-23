@@ -858,6 +858,12 @@ let ajusteMovilProgramado = 0;
 
 function limpiarAjustesMovilesTarjetas() {
   document
+    .querySelectorAll(".tarjeta-producto.titulo-tres-lineas")
+    .forEach((tarjeta) =>
+      tarjeta.classList.remove("titulo-tres-lineas")
+    );
+
+  document
     .querySelectorAll(".opciones-presentacion")
     .forEach((contenedor) => {
       contenedor.style.removeProperty("flex-wrap");
@@ -1064,6 +1070,34 @@ function ajustarPresentacionesTarjetaMovil(
 }
 
 
+function actualizarLineasTituloTarjetaMovil(tarjeta) {
+  const titulo = tarjeta.querySelector(".fila-titulo-producto h2");
+
+  tarjeta.classList.remove("titulo-tres-lineas");
+
+  if (!titulo || !consultaMovilTarjetas.matches) {
+    return;
+  }
+
+  const estilo = getComputedStyle(titulo);
+  const altoLinea = parseFloat(estilo.lineHeight);
+
+  if (!altoLinea || !Number.isFinite(altoLinea)) {
+    return;
+  }
+
+  /* scrollHeight conserva la altura natural del texto aunque esté recortado
+     por line-clamp; así sólo marcamos los títulos que realmente requieren
+     una tercera línea al ancho actual de la tarjeta. */
+  const lineasNaturales = titulo.scrollHeight / altoLinea;
+
+  tarjeta.classList.toggle(
+    "titulo-tres-lineas",
+    lineasNaturales > 2.35
+  );
+}
+
+
 function ajustarTarjetasMoviles() {
   if (!consultaMovilTarjetas.matches) {
     limpiarAjustesMovilesTarjetas();
@@ -1073,6 +1107,10 @@ function ajustarTarjetasMoviles() {
   document
     .querySelectorAll(".tarjeta-producto")
     .forEach((tarjeta) => {
+      actualizarLineasTituloTarjetaMovil(
+        tarjeta
+      );
+
       ajustarPresentacionesTarjetaMovil(
         tarjeta
       );
@@ -1705,10 +1743,9 @@ function seleccionarPresentacion(control) {
         );
       });
 
-    /* Una sola presentación se mantiene visualmente neutra. */
-    if (producto.presentaciones.length > 1) {
-      control.classList.add("seleccionada");
-    }
+    /* Todas las presentaciones, incluso cuando hay una sola,
+       se pueden seleccionar y muestran el mismo estado activo. */
+    control.classList.add("seleccionada");
   }
 
   if (control.matches(".selector-presentacion")) {

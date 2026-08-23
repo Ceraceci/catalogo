@@ -4661,6 +4661,238 @@
     }
   </style>
 
+
+  <style id="ajustes-v70">
+    /* =========================================================
+       V70 — centrado acciones móvil + estados táctiles coherentes
+       ========================================================= */
+
+    /* Presentaciones: más legibles en ambas versiones. */
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .selector-presentacion:not(.seleccionada),
+    body .opciones-presentacion > .boton-presentacion:only-child{
+      font-weight:700 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .selector-presentacion.seleccionada{
+      font-weight:700 !important;
+    }
+
+    /* − 1 +: reposo negro; al presionar, mismo feedback rojo/blanco que el resto. */
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+    }
+
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    @media (max-width:650px){
+      /* Compartir y Comparar perfectamente centrados respecto de los 150 px de foto.
+         Encabezado: 58 px. Botones: 32 + 5 + 32 = 69 px. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        top:calc(58px + (150px - 69px) / 2) !important;
+        right:0 !important;
+        height:69px !important;
+        justify-content:center !important;
+        transform:none !important;
+      }
+
+      /* Quitar parpadeo táctil de las presentaciones sin alterar su selección real. */
+      body .boton-presentacion,
+      body .selector-presentacion{
+        -webkit-tap-highlight-color:transparent !important;
+        transition:none !important;
+        animation:none !important;
+        touch-action:manipulation;
+      }
+
+      body .boton-presentacion:not(.seleccionada):active,
+      body .opciones-presentacion > .boton-presentacion:only-child:active{
+        color:#49433f !important;
+        -webkit-text-fill-color:#49433f !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.24) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+
+      body .boton-presentacion.seleccionada:active,
+      body .selector-presentacion.seleccionada:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+
+      /* Icono Filtros negro y ópticamente centrado. */
+      body .control-orden .icono-orden{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        transform:none !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v71">
+    /* =========================================================
+       V71 — títulos móviles + presentación única + separadores rojos
+       ========================================================= */
+
+    /* Una sola presentación funciona exactamente igual que el resto:
+       neutra al cargar y roja/blanca después de ser elegida. */
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada,
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:hover,
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+    }
+
+    /* El rojo aparece en el espacio real entre tarjetas. Las tarjetas
+       conservan su fondo cálido. */
+    body #productos{
+      background:var(--color-principal) !important;
+    }
+
+    /* Si la última fila queda incompleta, cubrimos los tracks vacíos con
+       el fondo general para que no aparezca un gran bloque rojo. */
+    body #productos::after{
+      content:"";
+      display:none;
+      min-width:0;
+      background:var(--color-fondo);
+    }
+
+    @media (min-width:1101px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 1))::after{
+        display:block;
+        grid-column:2 / 5;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 2))::after{
+        display:block;
+        grid-column:3 / 5;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 3))::after{
+        display:block;
+        grid-column:4 / 5;
+      }
+    }
+
+    @media (min-width:801px) and (max-width:1100px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(3n + 1))::after{
+        display:block;
+        grid-column:2 / 4;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(3n + 2))::after{
+        display:block;
+        grid-column:3 / 4;
+      }
+    }
+
+    @media (max-width:800px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(2n + 1))::after{
+        display:block;
+        grid-column:2 / 3;
+      }
+    }
+
+    body.modo-producto-compartido #productos{
+      background:transparent !important;
+    }
+
+    body.modo-producto-compartido #productos::after{
+      display:none !important;
+    }
+
+    @media (max-width:650px){
+      /* Menor distancia código -> foto para todas las tarjetas. */
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        min-height:14px !important;
+        height:14px !important;
+        line-height:14px !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:55px !important;
+        height:55px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+        row-gap:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        min-height:39px !important;
+        height:39px !important;
+        margin:0 !important;
+      }
+
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
+      }
+
+      /* Sólo los títulos que realmente necesitan 3 líneas ganan altura
+         y un pequeño aire extra antes del código. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        min-height:74px !important;
+        height:74px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        min-height:55px !important;
+        height:55px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas h2,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas h2{
+        min-height:0 !important;
+        max-height:55px !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* En móvil, la presentación única seleccionada tampoco parpadea. */
+      body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
