@@ -2551,7 +2551,7 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} | ${producto.nombre} | ${formatearEtiquetaPresentacion(producto.presentacion)} | ` +
+        `${producto.cantidad} ${producto.nombre} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
         formatearPrecio(producto.precio * producto.cantidad)
     );
 
