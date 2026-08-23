@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="103">
+  <meta name="ceraceci-version" content="104">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6523,6 +6523,55 @@
     html body #productosComparados .zona-detalles-producto{
       margin-top:0 !important;
       padding-top:var(--espacio-cantidad-info) !important;
+    }
+  </style>
+
+  <style id="precio-y-compartir-v104">
+    /* El precio queda centrado verticalmente entre la foto y Presentaciones. */
+    html body #productos .tarjeta-producto,
+    html body #productosComparados .tarjeta-producto{
+      --espacio-precio:8px;
+    }
+
+    html body #productos .fila-compra,
+    html body #productosComparados .fila-compra{
+      padding-top:var(--espacio-precio) !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio,
+    html body #productosComparados .fila-compra > .informacion-precio{
+      margin:0 !important;
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio .precio,
+    html body #productosComparados .fila-compra > .informacion-precio .precio{
+      margin:0 !important;
+    }
+
+    html body #productos .fila-compra > .bloque-presentaciones,
+    html body #productosComparados .fila-compra > .bloque-presentaciones{
+      padding-top:var(--espacio-precio) !important;
+    }
+
+    @media (max-width:650px){
+      /* Compartir sólo se invierte durante el contacto real del dedo. */
+      html body #productos .compartir-producto.compartir-presionado,
+      html body #productosComparados .compartir-producto.compartir-presionado{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+      }
+
+      html body #productos .compartir-producto.compartir-presionado svg,
+      html body #productosComparados .compartir-producto.compartir-presionado svg{
+        color:#fff !important;
+        fill:#fff !important;
+        stroke:#fff !important;
+      }
     }
   </style>
 

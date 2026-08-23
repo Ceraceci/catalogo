@@ -2960,17 +2960,17 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
-      /* En móvil, Compartir conserva el estado rojo/blanco después de pulsarlo.
-         En escritorio mantiene un feedback breve para no quedar marcado. */
-      botonCompartir.classList.add(
-        "compartir-presionado"
-      );
-
-      window.clearTimeout(
-        botonCompartir._temporizadorFeedback
-      );
-
+      /* En móvil, el feedback depende únicamente del contacto del dedo.
+         En escritorio conserva el feedback breve existente. */
       if (!window.matchMedia("(max-width: 650px)").matches) {
+        botonCompartir.classList.add(
+          "compartir-presionado"
+        );
+
+        window.clearTimeout(
+          botonCompartir._temporizadorFeedback
+        );
+
         botonCompartir._temporizadorFeedback =
           window.setTimeout(() => {
             botonCompartir.classList.remove(
@@ -3118,55 +3118,72 @@ if (productosComparados) {
 
 
 /* En móvil, :active puede desaparecer antes de llegar a dibujarse.
-   Esta clase refleja el toque real y afecta sólo al − o + pulsado. */
-function activarPulsacionCantidad(evento) {
+   Estas clases reflejan el contacto real del dedo. */
+function activarPulsacionMovil(evento) {
   if (
     !window.matchMedia("(max-width: 650px)").matches
   ) {
     return;
   }
 
-  const boton =
+  const botonCantidad =
     evento.target.closest?.(".boton-cantidad");
 
-  if (!boton) {
-    return;
+  if (botonCantidad) {
+    botonCantidad.classList.add("presionado");
   }
 
-  boton.classList.add("presionado");
+  const botonCompartir =
+    evento.target.closest?.(".compartir-producto");
+
+  if (botonCompartir) {
+    botonCompartir.classList.add(
+      "compartir-presionado"
+    );
+  }
 }
 
 
-function limpiarPulsacionCantidad() {
+function limpiarPulsacionesMoviles() {
   document
     .querySelectorAll(".boton-cantidad.presionado")
     .forEach((boton) => {
       boton.classList.remove("presionado");
+    });
+
+  document
+    .querySelectorAll(
+      ".compartir-producto.compartir-presionado"
+    )
+    .forEach((boton) => {
+      boton.classList.remove(
+        "compartir-presionado"
+      );
     });
 }
 
 
 document.addEventListener(
   "pointerdown",
-  activarPulsacionCantidad,
+  activarPulsacionMovil,
   true
 );
 
 document.addEventListener(
   "pointerup",
-  limpiarPulsacionCantidad,
+  limpiarPulsacionesMoviles,
   true
 );
 
 document.addEventListener(
   "pointercancel",
-  limpiarPulsacionCantidad,
+  limpiarPulsacionesMoviles,
   true
 );
 
 window.addEventListener(
   "blur",
-  limpiarPulsacionCantidad
+  limpiarPulsacionesMoviles
 );
 
 
