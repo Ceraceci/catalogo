@@ -1739,6 +1739,13 @@ function vaciarSeleccionComparacion() {
     cerrarVistaComparacion();
   }
 
+  /* Elimina también las tarjetas de la vista oculta para que al volver
+     al catálogo no quede ningún estado visual anterior en el DOM. */
+  if (productosComparados) {
+    productosComparados.innerHTML = "";
+    productosComparados.dataset.cantidad = "0";
+  }
+
   actualizarEstadoComparacion();
 }
 
@@ -1919,11 +1926,11 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  /* En móvil, − 1 + queda seleccionado hasta agregar el producto.
-     En PC no conserva selección después del clic. */
+  /* La pulsación se representa únicamente con :active en − o +.
+     El control completo nunca conserva una selección. */
   establecerSeleccionCantidadTarjeta(
     tarjeta,
-    window.matchMedia("(max-width: 650px)").matches
+    false
   );
 
   /* Evita que el foco conserve estilos de una pulsación anterior. */
@@ -3098,7 +3105,7 @@ function manejarEntradaTarjetaProducto(evento) {
 
     establecerSeleccionCantidadTarjeta(
       tarjeta,
-      window.matchMedia("(max-width: 650px)").matches
+      false
     );
 }
 

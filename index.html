@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="81">
+  <meta name="ceraceci-version" content="101">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6421,13 +6421,13 @@
     }
   </style>
 
-  <style id="estado-cantidad-v97">
+  <style id="estado-cantidad-v101">
     /* =========================================================
-       V97 — estados definitivos de − 1 + en PC y móvil
+       V101 — pulsación independiente de − y + en móvil
        ========================================================= */
 
     /* PC: hover blanco cálido, texto rojo y borde rojo. */
-    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+    @media (min-width:651px){
       html body #productos .fila-compra .control-cantidad:hover,
       html body #productosComparados .fila-compra .control-cantidad:hover{
         color:var(--color-principal) !important;
@@ -6442,6 +6442,7 @@
         color:var(--color-principal) !important;
         -webkit-text-fill-color:var(--color-principal) !important;
         background:var(--color-control) !important;
+        font-weight:700 !important;
       }
 
       /* Al pulsar − o +, sólo el segmento pulsado se invierte. */
@@ -6454,39 +6455,38 @@
     }
 
     @media (max-width:650px){
-      /* Reposo móvil, incluso si el navegador conserva :hover o :focus. */
-      html body #productos .fila-compra .control-cantidad:not(.seleccionado),
-      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado){
+      /* En móvil, el control completo siempre permanece en estado normal. */
+      html body #productos .fila-compra .control-cantidad,
+      html body #productos .fila-compra .control-cantidad.seleccionado,
+      html body #productosComparados .fila-compra .control-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado{
         color:#171717 !important;
         background:var(--color-control) !important;
         border-color:rgba(111,103,97,.28) !important;
       }
 
-      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
-      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .cantidad,
-      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
-      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .cantidad{
+      html body #productos .fila-compra .control-cantidad .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad .cantidad,
+      html body #productos .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad.seleccionado .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .cantidad{
         color:#171717 !important;
         -webkit-text-fill-color:#171717 !important;
         background:var(--color-control) !important;
+        font-weight:700 !important;
       }
 
-      /* Selección móvil persistente hasta agregar al carrito. */
-      html body #productos .fila-compra .control-cantidad.seleccionado,
-      html body #productosComparados .fila-compra .control-cantidad.seleccionado{
-        color:#fff !important;
-        background:var(--color-principal) !important;
-        border-color:var(--color-principal) !important;
-      }
-
-      html body #productos .fila-compra .control-cantidad.seleccionado .boton-cantidad,
-      html body #productos .fila-compra .control-cantidad.seleccionado .cantidad,
-      html body #productosComparados .fila-compra .control-cantidad.seleccionado .boton-cantidad,
-      html body #productosComparados .fila-compra .control-cantidad.seleccionado .cantidad{
+      /* Sólo − o + se invierte mientras ese sector está siendo tocado. */
+      html body #productos .fila-compra .control-cantidad .boton-cantidad:active,
+      html body #productosComparados .fila-compra .control-cantidad .boton-cantidad:active{
         color:#fff !important;
         -webkit-text-fill-color:#fff !important;
         background:var(--color-principal) !important;
-        border-color:rgba(255,255,255,.48) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
       }
     }
   </style>
