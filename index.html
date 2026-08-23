@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="115">
+  <meta name="ceraceci-version" content="117">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=115">
+  <link rel="stylesheet" href="style.css?v=117">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -6650,14 +6650,39 @@
         -webkit-text-fill-color:var(--color-texto) !important;
         font-weight:400 !important;
         background:var(--color-control) !important;
+        box-shadow:0 0 0 100vmax var(--color-control) inset !important;
+      }
+
+      html body #filtroCategoria option:hover,
+      html body #filtroCategoria option:focus,
+      html body #filtroCategoria option:focus-visible,
+      html body #filtroCategoria option:active,
+      html body .control-orden select option:hover,
+      html body .control-orden select option:focus,
+      html body .control-orden select option:focus-visible,
+      html body .control-orden select option:active{
+        color:var(--color-texto) !important;
+        -webkit-text-fill-color:var(--color-texto) !important;
+        font-weight:400 !important;
+        background:var(--color-control) !important;
+        box-shadow:0 0 0 100vmax var(--color-control) inset !important;
+        outline:none !important;
       }
 
       html body #filtroCategoria option:checked,
-      html body .control-orden select option:checked{
+      html body #filtroCategoria option:checked:hover,
+      html body #filtroCategoria option:checked:focus,
+      html body #filtroCategoria option:checked:active,
+      html body .control-orden select option:checked,
+      html body .control-orden select option:checked:hover,
+      html body .control-orden select option:checked:focus,
+      html body .control-orden select option:checked:active{
         color:#fff !important;
         -webkit-text-fill-color:#fff !important;
         font-weight:700 !important;
         background:var(--color-principal) !important;
+        box-shadow:0 0 0 100vmax var(--color-principal) inset !important;
+        outline:none !important;
       }
     }
 
@@ -6713,6 +6738,47 @@
     html body #productos .boton-presentacion span,
     html body #productosComparados .boton-presentacion span{
       font-weight:700 !important;
+    }
+  </style>
+
+  <style id="zoom-unico-v117">
+    /* PC y móvil: un solo nivel, ocupando el máximo espacio disponible. */
+    html body .zoom-imagen-overlay .zoom-imagen-escenario{
+      width:100% !important;
+      height:100% !important;
+      padding:8px !important;
+      overflow:hidden !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-marco{
+      width:auto !important;
+      height:auto !important;
+      max-width:100% !important;
+      max-height:100% !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      display:block !important;
+      width:auto !important;
+      height:auto !important;
+      max-width:calc(100vw - 16px) !important;
+      max-height:calc(100vh - 16px) !important;
+      object-fit:contain !important;
+      background:var(--color-fondo) !important;
+      border-radius:8px !important;
+      transition:none !important;
+    }
+
+    @media (min-width:651px){
+      html body .zoom-imagen-overlay .cerrar-zoom-imagen{
+        position:fixed !important;
+        top:12px !important;
+        right:12px !important;
+        display:grid !important;
+      }
     }
   </style>
 
@@ -7000,7 +7066,7 @@
     </div>
   </div>
 
-  <script id="zoom-productos-v67">
+  <script id="zoom-productos-v117">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
@@ -7018,65 +7084,24 @@
         if (!src) return;
 
         botonAnterior = document.activeElement;
-        overlay.classList.remove("nivel-2");
-        imagenAmpliada.style.width = "";
-        imagenAmpliada.style.height = "";
         imagenAmpliada.src = src;
         imagenAmpliada.alt = imagenOrigen.alt || "Imagen del producto";
         overlay.classList.add("abierto");
         overlay.setAttribute("aria-hidden", "false");
         document.body.classList.add("zoom-imagen-abierto");
 
-        if (mediaPC.matches) {
-          requestAnimationFrame(() => {
-            botonCerrar.focus({ preventScroll: true });
-          });
-        }
       }
 
       function cerrarZoom() {
-        overlay.classList.remove("abierto", "nivel-2");
+        overlay.classList.remove("abierto");
         overlay.setAttribute("aria-hidden", "true");
         document.body.classList.remove("zoom-imagen-abierto");
-        imagenAmpliada.style.width = "";
-        imagenAmpliada.style.height = "";
         imagenAmpliada.src = "";
 
         if (mediaPC.matches && botonAnterior instanceof HTMLElement) {
           botonAnterior.focus({ preventScroll: true });
         }
         botonAnterior = null;
-      }
-
-      function ajustarSegundoZoom() {
-        if (!mediaPC.matches || !overlay.classList.contains("nivel-2")) return;
-
-        const anchoNatural = imagenAmpliada.naturalWidth;
-        const altoNatural = imagenAmpliada.naturalHeight;
-        if (!anchoNatural || !altoNatural) return;
-
-        const anchoDisponible = Math.max(220, window.innerWidth - 120);
-        const altoDisponible = Math.max(180, window.innerHeight - 56);
-        const escala = Math.min(
-          anchoDisponible / anchoNatural,
-          altoDisponible / altoNatural
-        );
-
-        imagenAmpliada.style.width = `${Math.floor(anchoNatural * escala)}px`;
-        imagenAmpliada.style.height = `${Math.floor(altoNatural * escala)}px`;
-      }
-
-      function alternarSegundoZoom() {
-        if (!mediaPC.matches || !overlay.classList.contains("abierto")) return;
-
-        if (!overlay.classList.contains("nivel-2")) {
-          overlay.classList.add("nivel-2");
-          ajustarSegundoZoom();
-        } else {
-          overlay.classList.remove("nivel-2");
-          imagenAmpliada.style.width = "";
-          imagenAmpliada.style.height = "";
-        }
       }
 
       document.addEventListener("click", (event) => {
@@ -7093,11 +7118,6 @@
 
       imagenAmpliada.addEventListener("click", (event) => {
         event.stopPropagation();
-        if (mediaPC.matches) {
-          alternarSegundoZoom();
-          return;
-        }
-
         cerrarZoom();
       });
 
@@ -7115,12 +7135,6 @@
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && overlay.classList.contains("abierto")) {
           cerrarZoom();
-        }
-      });
-
-      window.addEventListener("resize", () => {
-        if (mediaPC.matches && overlay.classList.contains("nivel-2")) {
-          ajustarSegundoZoom();
         }
       });
 
@@ -7204,6 +7218,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=115"></script>
+  <script src="script.js?v=117"></script>
 </body>
 </html>
