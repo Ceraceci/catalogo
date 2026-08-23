@@ -3377,8 +3377,8 @@
 
 
 
-  <style id="ajustes-pc-zoom-v58">
-    /* V58: barra superior más compacta, precio +5% de altura y zoom de imagen en PC. */
+  <style id="ajustes-pc-zoom-v60">
+    /* V60: zoom PC centrado, proporcional, sin recorte ni scroll; X junto a la foto. */
     @media (min-width:651px){
       /* Reduce lo suficiente para que “Todas las categorías” se vea completo. */
       body #buscador,
@@ -3420,19 +3420,27 @@
     .zoom-imagen-escenario{
       width:100%;
       height:100%;
-      overflow:auto;
+      overflow:hidden;
       display:flex;
       align-items:center;
       justify-content:center;
       box-sizing:border-box;
-      padding:68px 5vw 5vh;
-      overscroll-behavior:contain;
+      padding:32px;
     }
 
     .zoom-imagen-overlay.nivel-2 .zoom-imagen-escenario{
-      align-items:flex-start;
-      justify-content:flex-start;
-      padding:90px 12vw 12vh;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+    }
+
+    .zoom-imagen-marco{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      max-width:calc(100vw - 56px);
+      max-height:calc(100vh - 56px);
     }
 
     .zoom-imagen-ampliada{
@@ -3448,30 +3456,31 @@
       cursor:zoom-in;
       user-select:none;
       -webkit-user-drag:none;
-      transition:max-width .18s ease, max-height .18s ease;
+      transition:width .18s ease, height .18s ease, max-width .18s ease, max-height .18s ease;
     }
 
     .zoom-imagen-overlay.nivel-2 .zoom-imagen-ampliada{
       max-width:none;
       max-height:none;
+      object-fit:contain;
       cursor:zoom-out;
     }
 
     .cerrar-zoom-imagen{
-      position:fixed;
-      top:18px;
-      right:22px;
+      position:absolute;
+      top:-12px;
+      right:-12px;
       z-index:10001;
       display:grid;
       place-items:center;
-      width:42px;
-      height:42px;
+      width:38px;
+      height:38px;
       padding:0;
       color:#fff;
-      background:rgba(24,20,17,.55);
-      border:1px solid rgba(255,255,255,.55);
+      background:rgba(24,20,17,.68);
+      border:1px solid rgba(255,255,255,.7);
       border-radius:50%;
-      font:300 32px/1 Arial,sans-serif;
+      font:300 30px/1 Arial,sans-serif;
       cursor:pointer;
       transition:background-color .14s ease, transform .14s ease;
     }
@@ -3751,29 +3760,30 @@
     aria-modal="true"
     aria-label="Ampliación de imagen del producto"
   >
-    <button
-      type="button"
-      id="cerrarZoomImagen"
-      class="cerrar-zoom-imagen"
-      aria-label="Cerrar imagen ampliada"
-      title="Cerrar"
-    >×</button>
-
     <div class="zoom-imagen-escenario">
-      <img
-        id="zoomImagenAmpliada"
-        class="zoom-imagen-ampliada"
-        src=""
-        alt=""
-        draggable="false"
-      >
+      <div class="zoom-imagen-marco">
+        <img
+          id="zoomImagenAmpliada"
+          class="zoom-imagen-ampliada"
+          src=""
+          alt=""
+          draggable="false"
+        >
+        <button
+          type="button"
+          id="cerrarZoomImagen"
+          class="cerrar-zoom-imagen"
+          aria-label="Cerrar imagen ampliada"
+          title="Cerrar"
+        >×</button>
+      </div>
     </div>
   </div>
 
 
 
 
-  <script id="zoom-productos-pc-v59">
+  <script id="zoom-productos-pc-v60">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
@@ -3783,7 +3793,6 @@
 
       if (!overlay || !escenario || !imagenAmpliada || !botonCerrar) return;
 
-      let anchoNivelUno = 0;
       let botonAnterior = null;
 
       function abrirZoom(imagenOrigen) {
@@ -3796,16 +3805,13 @@
         botonAnterior = document.activeElement;
         overlay.classList.remove("nivel-2");
         imagenAmpliada.style.width = "";
+        imagenAmpliada.style.height = "";
         imagenAmpliada.src = src;
         imagenAmpliada.alt = imagenOrigen.alt || "Imagen del producto";
         overlay.classList.add("abierto");
         overlay.setAttribute("aria-hidden", "false");
         document.body.classList.add("zoom-imagen-abierto");
-        escenario.scrollTop = 0;
-        escenario.scrollLeft = 0;
-
         requestAnimationFrame(() => {
-          anchoNivelUno = imagenAmpliada.getBoundingClientRect().width || 0;
           botonCerrar.focus({ preventScroll: true });
         });
       }
@@ -3815,35 +3821,44 @@
         overlay.setAttribute("aria-hidden", "true");
         document.body.classList.remove("zoom-imagen-abierto");
         imagenAmpliada.style.width = "";
+        imagenAmpliada.style.height = "";
         imagenAmpliada.src = "";
-        anchoNivelUno = 0;
         if (botonAnterior instanceof HTMLElement) {
           botonAnterior.focus({ preventScroll: true });
         }
         botonAnterior = null;
       }
 
+      function ajustarSegundoZoom() {
+        if (!overlay.classList.contains("nivel-2")) return;
+
+        const anchoNatural = imagenAmpliada.naturalWidth;
+        const altoNatural = imagenAmpliada.naturalHeight;
+        if (!anchoNatural || !altoNatural) return;
+
+        // Deja un margen pequeño para la X y garantiza que la imagen completa
+        // siempre entre en la pantalla, sin barras ni recortes.
+        const anchoDisponible = Math.max(220, window.innerWidth - 56);
+        const altoDisponible = Math.max(180, window.innerHeight - 56);
+        const escala = Math.min(
+          anchoDisponible / anchoNatural,
+          altoDisponible / altoNatural
+        );
+
+        imagenAmpliada.style.width = `${Math.floor(anchoNatural * escala)}px`;
+        imagenAmpliada.style.height = `${Math.floor(altoNatural * escala)}px`;
+      }
+
       function alternarSegundoZoom() {
         if (!overlay.classList.contains("abierto")) return;
 
         if (!overlay.classList.contains("nivel-2")) {
-          const anchoActual = anchoNivelUno || imagenAmpliada.getBoundingClientRect().width;
-          const anchoObjetivo = Math.min(
-            Math.max(anchoActual * 1.55, anchoActual + 320),
-            window.innerWidth * 1.55
-          );
-
           overlay.classList.add("nivel-2");
-          imagenAmpliada.style.width = `${Math.round(anchoObjetivo)}px`;
-          requestAnimationFrame(() => {
-            escenario.scrollLeft = Math.max(0, (escenario.scrollWidth - escenario.clientWidth) / 2);
-            escenario.scrollTop = Math.max(0, (escenario.scrollHeight - escenario.clientHeight) / 2);
-          });
+          ajustarSegundoZoom();
         } else {
           overlay.classList.remove("nivel-2");
           imagenAmpliada.style.width = "";
-          escenario.scrollTop = 0;
-          escenario.scrollLeft = 0;
+          imagenAmpliada.style.height = "";
         }
       }
 
@@ -3879,6 +3894,10 @@
         if (event.key === "Escape" && overlay.classList.contains("abierto")) {
           cerrarZoom();
         }
+      });
+
+      window.addEventListener("resize", () => {
+        if (overlay.classList.contains("nivel-2")) ajustarSegundoZoom();
       });
 
       mediaPC.addEventListener?.("change", (event) => {
