@@ -5778,6 +5778,283 @@
     }
   </style>
 
+
+  <style id="ajustes-finales-v86">
+    /* =========================================================
+       V86 — cantidad definitiva + carrito móvil + comparación
+       ========================================================= */
+
+    /* − 1 +: nunca conserva un estado seleccionado. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .boton-cantidad{
+      -webkit-tap-highlight-color:transparent !important;
+      touch-action:manipulation;
+    }
+
+    /* PC: hover igual a Más info. — blanco cálido, texto y borde rojos. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    /* Móvil: neutraliza :hover/:focus pegado tras un toque. */
+    @media (max-width:650px), (hover:none), (pointer:coarse){
+      body .fila-compra .control-cantidad:hover,
+      body .fila-compra .control-cantidad:focus,
+      body .productos-comparados .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:focus{
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:hover,
+      body .fila-compra .control-cantidad .boton-cantidad:focus,
+      body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .cantidad{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+    }
+
+    /* Escritorio: presentación mantiene negrita y hover rojo, sin fondo rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]:hover,
+      body .selector-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+      }
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+    }
+
+    /* Marca inferior móvil. */
+    body .marca-inferior-movil{
+      display:none;
+    }
+
+    body .marca-comparacion-movil{
+      display:none;
+    }
+
+    @media (max-width:650px){
+      /* Carrito simplificado: Ver + carrito + total. */
+      body .abrir-carrito .logo-carrito{
+        display:none !important;
+      }
+
+      body .texto-carrito-pc{
+        display:none !important;
+      }
+
+      body .texto-carrito-movil{
+        display:inline !important;
+        font-size:20px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+      }
+
+      body #valorCarrito{
+        font-size:20px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito strong{
+        gap:6px !important;
+        padding-right:9px !important;
+        padding-left:9px !important;
+      }
+
+      /* Franja de marca inferior, debajo de toda la barra de acciones. */
+      body .marca-inferior-movil{
+        position:fixed;
+        right:0;
+        bottom:0;
+        left:0;
+        z-index:32;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:4px;
+        min-height:28px;
+        padding:3px 8px calc(3px + env(safe-area-inset-bottom));
+        color:#2d2926;
+        background:rgba(246,242,238,.985);
+        border-top:1px solid rgba(111,103,97,.16);
+        font-size:17.27px;
+        line-height:1;
+        white-space:nowrap;
+      }
+
+      body .marca-inferior-movil strong{
+        color:var(--color-principal);
+        font-weight:700;
+      }
+
+      body .marca-inferior-movil > span:last-child{
+        color:#2d2926;
+        font-weight:500;
+      }
+
+      body .acciones-flotantes{
+        bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+        padding-bottom:7px !important;
+      }
+
+      body .aviso-copiado{
+        bottom:116px !important;
+      }
+
+      /* Comparación: misma marca sticky que el catálogo normal. */
+      body .marca-comparacion-movil{
+        position:sticky;
+        top:8px;
+        z-index:24;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:4px;
+        min-height:34px;
+        margin-bottom:6px;
+        padding:5px 8px;
+        color:#2d2926;
+        background:rgba(246,242,238,.97);
+        border:1px solid rgba(111,103,97,.16);
+        border-radius:10px;
+        box-shadow:0 3px 10px rgba(70,40,25,.055);
+        backdrop-filter:blur(8px);
+        font-size:17.27px;
+        line-height:1.05;
+        white-space:nowrap;
+      }
+
+      body .marca-comparacion-movil strong{
+        color:var(--color-principal);
+        font-weight:700;
+      }
+
+      body .marca-comparacion-movil > span:last-child{
+        color:#2d2926;
+        font-weight:500;
+      }
+
+      /* Volver al catálogo: mismo ritmo vertical que las filas de tarjetas. */
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        margin-top:6px !important;
+        margin-bottom:106px !important;
+      }
+
+      /* Reflejo discreto cada 3 segundos. */
+      body .volver-catalogo{
+        position:relative !important;
+        overflow:hidden !important;
+      }
+
+      body .volver-catalogo::after{
+        content:"";
+        position:absolute;
+        top:-35%;
+        bottom:-35%;
+        left:-46%;
+        width:30%;
+        background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.15) 20%, rgba(255,255,255,.72) 50%, rgba(255,255,255,.15) 80%, transparent 100%);
+        transform:skewX(-18deg);
+        pointer-events:none;
+        animation:reflejo-volver-catalogo-v86 3s ease-in-out infinite;
+      }
+
+      body .volver-catalogo:active::after{
+        opacity:0;
+      }
+    }
+
+    @keyframes reflejo-volver-catalogo-v86{
+      0%, 72%{ left:-46%; opacity:0; }
+      76%{ opacity:1; }
+      94%{ left:116%; opacity:1; }
+      100%{ left:116%; opacity:0; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body .volver-catalogo::after{
+        animation:none !important;
+        display:none !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -5898,6 +6175,12 @@
       class="seccion-comparacion"
       hidden
     >
+      <div class="marca-comparacion-movil" aria-hidden="true">
+        <strong>CERACECI</strong>
+        <span>·</span>
+        <span>Insumos para cerámica</span>
+      </div>
+
       <div class="encabezado-comparacion">
         <div class="titulo-encabezado-comparacion">
           <h1>Comparar productos</h1>
@@ -5975,7 +6258,8 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Finalizar mi pedido</span>
+          <span class="texto-carrito-pc">Finalizar mi pedido</span>
+          <span class="texto-carrito-movil">Ver</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
@@ -5984,6 +6268,12 @@
       </strong>
     </button>
 
+  </div>
+
+  <div class="marca-inferior-movil" aria-hidden="true">
+    <strong>CERACECI</strong>
+    <span>·</span>
+    <span>Insumos para cerámica</span>
   </div>
 
   <div id="fondoCarrito" class="fondo-carrito"></div>
@@ -6180,6 +6470,79 @@
     })();
   </script>
 
+
+
+  <script id="ajustes-interaccion-v86">
+    (() => {
+      /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
+      function limpiarCantidad(boton) {
+        if (!boton) return;
+        boton.classList.remove("seleccionado");
+        const control = boton.closest(".control-cantidad");
+        if (control) {
+          control.classList.remove("seleccionado");
+          control.querySelectorAll(".boton-cantidad.seleccionado").forEach((elemento) => {
+            elemento.classList.remove("seleccionado");
+          });
+        }
+        if (typeof boton.blur === "function") boton.blur();
+      }
+
+      document.addEventListener("pointerup", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, true);
+
+      document.addEventListener("pointercancel", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, true);
+
+      document.addEventListener("touchend", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, { capture:true, passive:true });
+
+      /* En móvil, al abrir Comparar se encuadra la vista instantáneamente. */
+      document.addEventListener("click", (event) => {
+        const abrir = event.target.closest?.("#abrirComparacion");
+        if (!abrir || !window.matchMedia("(max-width:650px)").matches) return;
+
+        window.setTimeout(() => {
+          const seccion = document.getElementById("seccionComparacion");
+          if (!seccion || seccion.hidden) return;
+
+          seccion.style.zoom = "";
+
+          const acciones = document.querySelector(".acciones-flotantes");
+          const marcaInferior = document.querySelector(".marca-inferior-movil");
+          const reservadoAbajo =
+            (acciones?.getBoundingClientRect().height || 58) +
+            (marcaInferior?.getBoundingClientRect().height || 28) +
+            8;
+
+          const disponible = Math.max(320, window.innerHeight - reservadoAbajo - 12);
+          const alto = seccion.scrollHeight;
+
+          if (alto > disponible) {
+            const escala = Math.max(.82, Math.min(1, disponible / alto));
+            seccion.style.zoom = String(escala);
+          }
+
+          const marca = seccion.querySelector(".marca-comparacion-movil");
+          const titulo = seccion.querySelector(".encabezado-comparacion");
+          const destino = titulo || seccion;
+          const compensacion = (marca?.getBoundingClientRect().height || 0) + 8;
+          const top = window.scrollY + destino.getBoundingClientRect().top - compensacion;
+          window.scrollTo({ top:Math.max(0, top), behavior:"auto" });
+        }, 80);
+      }, true);
+
+      /* Al volver al catálogo se elimina cualquier escala temporal. */
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest?.("#volverCatalogo")) return;
+        const seccion = document.getElementById("seccionComparacion");
+        if (seccion) seccion.style.zoom = "";
+      }, true);
+    })();
+  </script>
 
 
   <script id="marca-sticky-v65">
