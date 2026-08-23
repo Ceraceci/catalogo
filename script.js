@@ -690,7 +690,12 @@ function actualizarEstadoFiltroCategoria() {
 
 
 function cerrarSelectoresPersonalizadosPC(excepto = null) {
-  selectoresPersonalizadosPC.forEach((control) => {
+  selectoresPersonalizadosPC.forEach((control, select) => {
+    if (!select.isConnected) {
+      selectoresPersonalizadosPC.delete(select);
+      return;
+    }
+
     if (control.raiz === excepto) {
       return;
     }
@@ -754,7 +759,10 @@ function sincronizarSelectorPersonalizadoPC(select) {
       : "";
 
   const seleccionActiva =
-    select === filtroCategoria
+    select === filtroCategoria ||
+    select.classList.contains(
+      "selector-presentacion-alambre"
+    )
       ? select.value !== ""
       : select.value !== "inicial";
 
@@ -1621,6 +1629,9 @@ function crearTarjetaProducto(
     usarSelectorAlambre
       ? `
           <select
+            id="selector-alambre-${producto.id}-${
+              esComparacion ? "comparacion" : "catalogo"
+            }"
             class="selector-presentacion selector-presentacion-alambre"
             data-id-producto="${producto.id}"
             aria-label="Elegir diámetro de ${escaparHTML(
@@ -1687,57 +1698,35 @@ function crearTarjetaProducto(
         }
       </p>
 
-      <div class="acciones-producto ${
-        estaSeleccionado ? "menu-con-seleccion" : ""
-      }">
+      <div class="acciones-producto">
         <button
           type="button"
-          class="menu-producto-toggle"
-          aria-expanded="false"
-          aria-label="Más acciones de ${escaparHTML(producto.nombre)}"
-          title="Más acciones"
+          class="compartir-producto"
+          data-id-producto="${producto.id}"
+          aria-label="Compartir ${escaparHTML(producto.nombre)}"
+          title="Compartir producto"
         >
-          <span aria-hidden="true">⋯</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+          </svg>
         </button>
 
-        <div class="menu-producto-desplegable" hidden>
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-            <span class="texto-accion-menu">Compartir</span>
-          </button>
-
-          <button
-            type="button"
-            class="boton-comparar ${
-              estaSeleccionado ? "seleccionado" : ""
-            }"
-            data-id-producto="${producto.id}"
-            aria-pressed="${estaSeleccionado}"
-            aria-label="${
-              esComparacion ? "Quitar de la comparación" : "Comparar"
-            } ${escaparHTML(producto.nombre)}"
-            title="${
-              esComparacion ? "Quitar de la comparación" : "Comparar producto"
-            }"
-          >
-            <span class="icono-comparar" aria-hidden="true">⇄</span>
-            <span class="texto-accion-menu texto-comparar">${
-              esComparacion
-                ? "Quitar"
-                : estaSeleccionado
-                  ? "Elegido"
-                  : "Comparar"
-            }</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          class="boton-comparar ${
+            estaSeleccionado ? "seleccionado" : ""
+          }"
+          data-id-producto="${producto.id}"
+          aria-pressed="${estaSeleccionado}"
+          aria-label="${
+            esComparacion ? "Quitar de la comparación" : "Comparar"
+          } ${escaparHTML(producto.nombre)}"
+          title="${
+            esComparacion ? "Quitar de la comparación" : "Comparar producto"
+          }"
+        >
+          <span class="icono-comparar" aria-hidden="true">⇄</span>
+        </button>
       </div>
     </div>
 
@@ -1843,6 +1832,19 @@ function crearTarjetaProducto(
     );
   }
 
+  const selectorAlambre =
+    tarjeta.querySelector(
+      ".selector-presentacion-alambre"
+    );
+
+  if (selectorAlambre) {
+    crearSelectorPersonalizadoPC(
+      selectorAlambre,
+      "select-personalizado-presentacion-pc",
+      selectorAlambre
+    );
+  }
+
   return tarjeta;
 }
 
@@ -1942,16 +1944,6 @@ function sincronizarBotonesComparacion() {
             "aria-pressed",
             String(seleccionado)
           );
-
-          const acciones =
-            boton.closest(".acciones-producto");
-
-          if (acciones) {
-            acciones.classList.toggle(
-              "menu-con-seleccion",
-              seleccionado
-            );
-          }
 
           const texto =
             boton.querySelector(
@@ -3318,73 +3310,13 @@ function escaparHTML(valor) {
    EVENTOS
 ========================================= */
 
-function cerrarMenusProducto(excepto = null) {
-  document
-    .querySelectorAll(".acciones-producto.menu-abierto")
-    .forEach((acciones) => {
-      if (acciones === excepto) {
-        return;
-      }
-
-      acciones.classList.remove("menu-abierto");
-
-      const boton =
-        acciones.querySelector(".menu-producto-toggle");
-      const menu =
-        acciones.querySelector(".menu-producto-desplegable");
-
-      if (boton) {
-        boton.setAttribute("aria-expanded", "false");
-      }
-
-      if (menu) {
-        menu.hidden = true;
-      }
-    });
-}
-
-
-function alternarMenuProducto(boton) {
-  const acciones =
-    boton.closest(".acciones-producto");
-
-  if (!acciones) {
-    return;
-  }
-
-  const menu =
-    acciones.querySelector(".menu-producto-desplegable");
-  const seAbrira =
-    !acciones.classList.contains("menu-abierto");
-
-  cerrarMenusProducto(acciones);
-  acciones.classList.toggle("menu-abierto", seAbrira);
-  boton.setAttribute("aria-expanded", String(seAbrira));
-
-  if (menu) {
-    menu.hidden = !seAbrira;
-  }
-}
-
 function manejarClickTarjetaProducto(evento) {
-    const botonMenu =
-      evento.target.closest(
-        ".menu-producto-toggle"
-      );
-
-    if (botonMenu) {
-      alternarMenuProducto(botonMenu);
-      return;
-    }
-
     const botonComparar =
       evento.target.closest(
         ".boton-comparar"
       );
 
     if (botonComparar) {
-      cerrarMenusProducto();
-
       alternarProductoComparacion(
         botonComparar.dataset.idProducto
       );
@@ -3413,8 +3345,6 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
-      cerrarMenusProducto();
-
       /* En móvil, el feedback depende únicamente del contacto del dedo.
          En escritorio conserva el feedback breve existente. */
       if (!window.matchMedia("(max-width: 650px)").matches) {
@@ -3503,20 +3433,6 @@ if (productosComparados) {
     manejarClickTarjetaProducto
   );
 }
-
-
-document.addEventListener("click", (evento) => {
-  if (!evento.target.closest?.(".acciones-producto")) {
-    cerrarMenusProducto();
-  }
-});
-
-
-document.addEventListener("keydown", (evento) => {
-  if (evento.key === "Escape") {
-    cerrarMenusProducto();
-  }
-});
 
 
 function manejarCambioTarjetaProducto(evento) {
