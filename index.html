@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="119">
+  <meta name="ceraceci-version" content="120">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=119">
+  <link rel="stylesheet" href="style.css?v=120">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7063,6 +7063,213 @@
     }
   </style>
 
+  <style id="experiencia-compra-v120">
+    /* V120 — menos ruido en las tarjetas, sin ocultar estados importantes. */
+    html body #productos .encabezado-producto .acciones-producto,
+    html body #productosComparados .encabezado-producto .acciones-producto{
+      overflow:visible !important;
+    }
+
+    html body .acciones-producto.menu-abierto{
+      z-index:35 !important;
+    }
+
+    html body .menu-producto-toggle{
+      box-sizing:border-box;
+      display:grid;
+      place-items:center;
+      width:32px;
+      min-width:32px;
+      max-width:32px;
+      height:32px;
+      min-height:32px;
+      max-height:32px;
+      padding:0 0 5px;
+      color:var(--color-principal);
+      -webkit-text-fill-color:var(--color-principal);
+      font-size:25px;
+      font-weight:700;
+      line-height:1;
+      background:var(--color-control);
+      border:1px solid var(--color-borde);
+      border-radius:50%;
+      box-shadow:none;
+      cursor:pointer;
+    }
+
+    html body .menu-producto-toggle:hover,
+    html body .menu-producto-toggle:focus-visible,
+    html body .acciones-producto.menu-abierto .menu-producto-toggle,
+    html body .acciones-producto.menu-con-seleccion .menu-producto-toggle{
+      color:#fff;
+      -webkit-text-fill-color:#fff;
+      background:var(--color-principal);
+      border-color:var(--color-principal);
+    }
+
+    html body .menu-producto-desplegable{
+      box-sizing:border-box;
+      position:absolute;
+      top:0;
+      right:calc(100% + 6px);
+      z-index:36;
+      display:grid;
+      width:138px;
+      padding:5px;
+      gap:3px;
+      background:var(--color-control);
+      border:1px solid var(--color-borde);
+      border-radius:10px;
+      box-shadow:0 8px 22px rgba(45,31,24,.18);
+    }
+
+    html body .menu-producto-desplegable[hidden]{
+      display:none !important;
+    }
+
+    html body #productos .encabezado-producto .menu-producto-desplegable .compartir-producto,
+    html body #productos .encabezado-producto .menu-producto-desplegable .boton-comparar,
+    html body #productosComparados .encabezado-producto .menu-producto-desplegable .compartir-producto,
+    html body #productosComparados .encabezado-producto .menu-producto-desplegable .boton-comparar{
+      box-sizing:border-box !important;
+      display:flex !important;
+      align-items:center !important;
+      justify-content:flex-start !important;
+      gap:7px !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      height:34px !important;
+      min-height:34px !important;
+      max-height:34px !important;
+      padding:0 9px !important;
+      color:var(--color-texto) !important;
+      -webkit-text-fill-color:var(--color-texto) !important;
+      font-size:13px !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+      text-align:left !important;
+      background:var(--color-control) !important;
+      border:0 !important;
+      border-radius:7px !important;
+      box-shadow:none !important;
+    }
+
+    html body .menu-producto-desplegable .compartir-producto svg{
+      flex:0 0 16px;
+      width:16px !important;
+      height:16px !important;
+    }
+
+    html body .menu-producto-desplegable .texto-accion-menu,
+    html body .menu-producto-desplegable .texto-comparar{
+      display:inline !important;
+      min-width:0;
+      font-size:13px !important;
+      font-weight:700 !important;
+    }
+
+    html body #productos .menu-producto-desplegable .boton-comparar[aria-pressed="true"],
+    html body #productosComparados .menu-producto-desplegable .boton-comparar[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    @media (hover:hover) and (pointer:fine){
+      html body #productos .menu-producto-desplegable .compartir-producto:hover,
+      html body #productos .menu-producto-desplegable .boton-comparar:hover,
+      html body #productosComparados .menu-producto-desplegable .compartir-producto:hover,
+      html body #productosComparados .menu-producto-desplegable .boton-comparar:hover{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    html body #productos .menu-producto-desplegable .compartir-producto:active,
+    html body #productos .menu-producto-desplegable .compartir-producto.compartir-presionado,
+    html body #productos .menu-producto-desplegable .boton-comparar:active,
+    html body #productosComparados .menu-producto-desplegable .compartir-producto:active,
+    html body #productosComparados .menu-producto-desplegable .compartir-producto.compartir-presionado,
+    html body #productosComparados .menu-producto-desplegable .boton-comparar:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    /* “Agregar” reemplaza al pictograma y conserva el estado agregado. */
+    html body #productos .fila-compra .agregar-carrito,
+    html body #productosComparados .fila-compra .agregar-carrito{
+      padding:0 8px !important;
+      font-size:14px !important;
+      font-weight:700 !important;
+      letter-spacing:0 !important;
+    }
+
+    html body .texto-agregar-carrito{
+      display:inline-block;
+      font:inherit;
+      line-height:1;
+    }
+
+    /* Cambio de precio suave al elegir otra presentación. */
+    html body .precio.precio-actualizado{
+      animation:precio-actualizado-v120 .30s ease-out;
+    }
+
+    @keyframes precio-actualizado-v120{
+      0%{ opacity:.42; transform:scale(.92); }
+      60%{ opacity:1; transform:scale(1.06); }
+      100%{ opacity:1; transform:scale(1); }
+    }
+
+    /* La confirmación temporal queda por encima de la barra fija. */
+    html body .aviso-copiado{
+      max-width:min(88vw,420px);
+      text-align:center;
+      white-space:normal;
+      background:var(--color-principal);
+      box-shadow:0 8px 24px rgba(45,31,24,.22);
+    }
+
+    @media (min-width:651px){
+      html body .contenedor{
+        padding-bottom:160px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body{
+        padding-bottom:calc(126px + env(safe-area-inset-bottom)) !important;
+      }
+
+      html body .contenedor{
+        padding-bottom:28px !important;
+      }
+
+      html body .menu-producto-toggle{
+        width:32px;
+        min-width:32px;
+        max-width:32px;
+        height:32px;
+        min-height:32px;
+        max-height:32px;
+      }
+
+      html body .menu-producto-desplegable{
+        right:calc(100% + 4px);
+        width:132px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body .precio.precio-actualizado{
+        animation:none !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -7540,6 +7747,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=119"></script>
+  <script src="script.js?v=120"></script>
 </body>
 </html>

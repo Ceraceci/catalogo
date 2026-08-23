@@ -1687,35 +1687,57 @@ function crearTarjetaProducto(
         }
       </p>
 
-      <div class="acciones-producto">
+      <div class="acciones-producto ${
+        estaSeleccionado ? "menu-con-seleccion" : ""
+      }">
         <button
           type="button"
-          class="compartir-producto"
-          data-id-producto="${producto.id}"
-          aria-label="Compartir ${escaparHTML(producto.nombre)}"
-          title="Compartir producto"
+          class="menu-producto-toggle"
+          aria-expanded="false"
+          aria-label="Más acciones de ${escaparHTML(producto.nombre)}"
+          title="Más acciones"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-          </svg>
+          <span aria-hidden="true">⋯</span>
         </button>
 
-        <button
-          type="button"
-          class="boton-comparar ${
-            estaSeleccionado ? "seleccionado" : ""
-          }"
-          data-id-producto="${producto.id}"
-          aria-pressed="${estaSeleccionado}"
-          aria-label="${
-            esComparacion ? "Quitar de la comparación" : "Comparar"
-          } ${escaparHTML(producto.nombre)}"
-          title="${
-            esComparacion ? "Quitar de la comparación" : "Comparar producto"
-          }"
-        >
-          <span class="icono-comparar" aria-hidden="true">⇄</span>
-        </button>
+        <div class="menu-producto-desplegable" hidden>
+          <button
+            type="button"
+            class="compartir-producto"
+            data-id-producto="${producto.id}"
+            aria-label="Compartir ${escaparHTML(producto.nombre)}"
+            title="Compartir producto"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+            </svg>
+            <span class="texto-accion-menu">Compartir</span>
+          </button>
+
+          <button
+            type="button"
+            class="boton-comparar ${
+              estaSeleccionado ? "seleccionado" : ""
+            }"
+            data-id-producto="${producto.id}"
+            aria-pressed="${estaSeleccionado}"
+            aria-label="${
+              esComparacion ? "Quitar de la comparación" : "Comparar"
+            } ${escaparHTML(producto.nombre)}"
+            title="${
+              esComparacion ? "Quitar de la comparación" : "Comparar producto"
+            }"
+          >
+            <span class="icono-comparar" aria-hidden="true">⇄</span>
+            <span class="texto-accion-menu texto-comparar">${
+              esComparacion
+                ? "Quitar"
+                : estaSeleccionado
+                  ? "Elegido"
+                  : "Comparar"
+            }</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1775,13 +1797,9 @@ function crearTarjetaProducto(
         aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
         title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
       >
-        <span class="icono-agregar" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false">
-            <path d="M3 3h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6.1"></path>
-            <circle cx="10" cy="19" r="1.5"></circle>
-            <circle cx="18" cy="19" r="1.5"></circle>
-          </svg>
-        </span>
+        <span class="texto-agregar-carrito">${
+          productoInicialEnCarrito ? "Agregado" : "Agregar"
+        }</span>
       </button>
     </div>
 
@@ -1924,6 +1942,16 @@ function sincronizarBotonesComparacion() {
             "aria-pressed",
             String(seleccionado)
           );
+
+          const acciones =
+            boton.closest(".acciones-producto");
+
+          if (acciones) {
+            acciones.classList.toggle(
+              "menu-con-seleccion",
+              seleccionado
+            );
+          }
 
           const texto =
             boton.querySelector(
@@ -2180,6 +2208,24 @@ function seleccionarPresentacion(control) {
     formatearPrecio(
       presentacion.precio
     );
+
+  elementoPrecio.classList.remove(
+    "precio-actualizado"
+  );
+  void elementoPrecio.offsetWidth;
+  elementoPrecio.classList.add(
+    "precio-actualizado"
+  );
+
+  window.clearTimeout(
+    elementoPrecio._temporizadorActualizacion
+  );
+  elementoPrecio._temporizadorActualizacion =
+    window.setTimeout(() => {
+      elementoPrecio.classList.remove(
+        "precio-actualizado"
+      );
+    }, 320);
 
   tarjeta.querySelector(
     ".codigo-producto"
@@ -2487,6 +2533,12 @@ function agregarProductoAlCarrito(boton) {
 
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
+
+  mostrarAvisoCopiado(
+    cantidad === 1
+      ? "1 unidad agregada al carrito"
+      : `${cantidad} unidades agregadas al carrito`
+  );
 }
 
 
@@ -2519,6 +2571,13 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
     "Agregar al carrito"
   );
   boton.title = "Agregar al carrito";
+
+  const textoBoton =
+    boton.querySelector(".texto-agregar-carrito");
+
+  if (textoBoton) {
+    textoBoton.textContent = "Agregar";
+  }
 }
 
 
@@ -2570,6 +2629,15 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
     descripcionBoton
   );
   boton.title = descripcionBoton;
+
+  const textoBoton =
+    boton.querySelector(".texto-agregar-carrito");
+
+  if (textoBoton) {
+    textoBoton.textContent = estaEnCarrito
+      ? "Agregado"
+      : "Agregar";
+  }
 }
 
 
@@ -3250,13 +3318,73 @@ function escaparHTML(valor) {
    EVENTOS
 ========================================= */
 
+function cerrarMenusProducto(excepto = null) {
+  document
+    .querySelectorAll(".acciones-producto.menu-abierto")
+    .forEach((acciones) => {
+      if (acciones === excepto) {
+        return;
+      }
+
+      acciones.classList.remove("menu-abierto");
+
+      const boton =
+        acciones.querySelector(".menu-producto-toggle");
+      const menu =
+        acciones.querySelector(".menu-producto-desplegable");
+
+      if (boton) {
+        boton.setAttribute("aria-expanded", "false");
+      }
+
+      if (menu) {
+        menu.hidden = true;
+      }
+    });
+}
+
+
+function alternarMenuProducto(boton) {
+  const acciones =
+    boton.closest(".acciones-producto");
+
+  if (!acciones) {
+    return;
+  }
+
+  const menu =
+    acciones.querySelector(".menu-producto-desplegable");
+  const seAbrira =
+    !acciones.classList.contains("menu-abierto");
+
+  cerrarMenusProducto(acciones);
+  acciones.classList.toggle("menu-abierto", seAbrira);
+  boton.setAttribute("aria-expanded", String(seAbrira));
+
+  if (menu) {
+    menu.hidden = !seAbrira;
+  }
+}
+
 function manejarClickTarjetaProducto(evento) {
+    const botonMenu =
+      evento.target.closest(
+        ".menu-producto-toggle"
+      );
+
+    if (botonMenu) {
+      alternarMenuProducto(botonMenu);
+      return;
+    }
+
     const botonComparar =
       evento.target.closest(
         ".boton-comparar"
       );
 
     if (botonComparar) {
+      cerrarMenusProducto();
+
       alternarProductoComparacion(
         botonComparar.dataset.idProducto
       );
@@ -3285,6 +3413,8 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
+      cerrarMenusProducto();
+
       /* En móvil, el feedback depende únicamente del contacto del dedo.
          En escritorio conserva el feedback breve existente. */
       if (!window.matchMedia("(max-width: 650px)").matches) {
@@ -3373,6 +3503,20 @@ if (productosComparados) {
     manejarClickTarjetaProducto
   );
 }
+
+
+document.addEventListener("click", (evento) => {
+  if (!evento.target.closest?.(".acciones-producto")) {
+    cerrarMenusProducto();
+  }
+});
+
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape") {
+    cerrarMenusProducto();
+  }
+});
 
 
 function manejarCambioTarjetaProducto(evento) {
