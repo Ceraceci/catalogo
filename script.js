@@ -3345,28 +3345,11 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
-      /* En móvil, el feedback depende únicamente del contacto del dedo.
-         En escritorio conserva el feedback breve existente. */
-      if (!window.matchMedia("(max-width: 650px)").matches) {
-        botonCompartir.classList.add(
-          "compartir-presionado"
-        );
-
-        window.clearTimeout(
-          botonCompartir._temporizadorFeedback
-        );
-
-        botonCompartir._temporizadorFeedback =
-          window.setTimeout(() => {
-            botonCompartir.classList.remove(
-              "compartir-presionado"
-            );
-          }, 260);
-      }
-
       compartirProducto(
         botonCompartir.dataset.idProducto
       );
+
+      botonCompartir.blur();
 
       return;
     }
@@ -3502,9 +3485,18 @@ if (productosComparados) {
 }
 
 
-/* En móvil, :active puede desaparecer antes de llegar a dibujarse.
-   Estas clases reflejan el contacto real del dedo. */
+/* Compartir refleja el contacto real en PC y móvil. Cantidad necesita
+   esta ayuda únicamente en pantallas táctiles. */
 function activarPulsacionMovil(evento) {
+  const botonCompartir =
+    evento.target.closest?.(".compartir-producto");
+
+  if (botonCompartir) {
+    botonCompartir.classList.add(
+      "compartir-presionado"
+    );
+  }
+
   if (
     !window.matchMedia("(max-width: 650px)").matches
   ) {
@@ -3516,15 +3508,6 @@ function activarPulsacionMovil(evento) {
 
   if (botonCantidad) {
     botonCantidad.classList.add("presionado");
-  }
-
-  const botonCompartir =
-    evento.target.closest?.(".compartir-producto");
-
-  if (botonCompartir) {
-    botonCompartir.classList.add(
-      "compartir-presionado"
-    );
   }
 }
 

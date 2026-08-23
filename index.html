@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="121">
+  <meta name="ceraceci-version" content="122">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=121">
+  <link rel="stylesheet" href="style.css?v=122">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7254,6 +7254,81 @@
     }
   </style>
 
+  <style id="compartir-y-volver-v122">
+    /* Compartir vuelve al estado neutro al soltarlo o perder el foco. */
+    html body #productos .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productosComparados .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productos .compartir-producto:not(.compartir-presionado):focus:not(:active),
+    html body #productosComparados .compartir-producto:not(.compartir-presionado):focus:not(:active){
+      color:#49413d !important;
+      -webkit-text-fill-color:#49413d !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    html body #productos .compartir-producto:not(.compartir-presionado):not(:active) svg,
+    html body #productosComparados .compartir-producto:not(.compartir-presionado):not(:active) svg{
+      color:currentColor !important;
+      fill:currentColor !important;
+      stroke:currentColor !important;
+    }
+
+    /* En PC conserva el mismo hover discreto de − 1 +. */
+    @media (hover:hover) and (pointer:fine){
+      html body #productos .compartir-producto:not(.compartir-presionado):hover:not(:active),
+      html body #productosComparados .compartir-producto:not(.compartir-presionado):hover:not(:active){
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Los navegadores táctiles no conservan un hover simulado. */
+    @media (hover:none), (pointer:coarse){
+      html body #productos .compartir-producto:not(.compartir-presionado),
+      html body #productos .compartir-producto:not(.compartir-presionado):hover,
+      html body #productos .compartir-producto:not(.compartir-presionado):focus,
+      html body #productosComparados .compartir-producto:not(.compartir-presionado),
+      html body #productosComparados .compartir-producto:not(.compartir-presionado):hover,
+      html body #productosComparados .compartir-producto:not(.compartir-presionado):focus{
+        color:#49413d !important;
+        -webkit-text-fill-color:#49413d !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+    }
+
+    /* Sólo durante el contacto: fondo rojo e ícono blanco. */
+    html body #productos .compartir-producto:active,
+    html body #productos .compartir-producto.compartir-presionado,
+    html body #productosComparados .compartir-producto:active,
+    html body #productosComparados .compartir-producto.compartir-presionado{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    html body #productos .compartir-producto:active svg,
+    html body #productos .compartir-producto.compartir-presionado svg,
+    html body #productosComparados .compartir-producto:active svg,
+    html body #productosComparados .compartir-producto.compartir-presionado svg{
+      color:#fff !important;
+      fill:#fff !important;
+      stroke:#fff !important;
+    }
+
+    @media (max-width:650px){
+      /* Acerca el botón a la última fila sin tocar el espacio inferior seguro. */
+      html body .seccion-comparacion > .acciones-encabezado-comparacion{
+        margin-top:2px !important;
+        margin-bottom:106px !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -7731,6 +7806,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=121"></script>
+  <script src="script.js?v=122"></script>
 </body>
 </html>
