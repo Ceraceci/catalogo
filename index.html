@@ -6255,6 +6255,161 @@
     }
   </style>
 
+
+
+  <style id="carrito-y-marca-superior-v90">
+    /* V90 — carrito uniforme PC/móvil + retiro de marca sticky superior. */
+
+    /* Se elimina cualquier marca CERACECI fija en la parte superior. */
+    body .marca-sticky-catalogo,
+    body .marca-comparacion-movil{
+      display:none !important;
+    }
+
+    /* La barra de búsqueda vuelve a ocupar una sola fila de controles en PC. */
+    body .busqueda{
+      grid-template-areas:"buscar categoria ordenar" !important;
+    }
+
+    body.marca-scroll-activa .busqueda{
+      row-gap:6px !important;
+    }
+
+    /* Carrito: mismo lenguaje visual en PC y móvil. */
+    body .abrir-carrito{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      box-sizing:border-box !important;
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid #1c1c1c !important;
+      box-shadow:0 4px 14px rgba(0,0,0,.055) !important;
+    }
+
+    body .abrir-carrito .logo-carrito{
+      display:none !important;
+    }
+
+    body .abrir-carrito strong#cantidadCarrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:auto !important;
+      min-width:0 !important;
+      max-width:100% !important;
+      margin:0 auto !important;
+      color:#171717 !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      white-space:nowrap !important;
+    }
+
+    body .abrir-carrito .texto-finalizar-carrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      min-width:0 !important;
+      width:auto !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito .texto-carrito-pc,
+    body .abrir-carrito .texto-carrito-movil,
+    body .abrir-carrito #valorCarrito{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:700 !important;
+      white-space:nowrap !important;
+    }
+
+    body .abrir-carrito .icono-carrito,
+    body .abrir-carrito .separador-carrito{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+    }
+
+    @media (min-width:651px){
+      body .abrir-carrito{
+        min-height:54px !important;
+        padding:0 13px !important;
+      }
+
+      body .abrir-carrito strong#cantidadCarrito{
+        height:36px !important;
+        padding:0 4px !important;
+        gap:7px !important;
+      }
+
+      body .abrir-carrito .texto-carrito-pc{
+        display:inline-block !important;
+        font-size:22px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .texto-carrito-movil{
+        display:none !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .separador-carrito,
+      body .abrir-carrito #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .busqueda{
+        grid-template-areas:
+          "buscarorden"
+          "categoria" !important;
+        grid-template-columns:minmax(0,1fr) !important;
+      }
+
+      body .abrir-carrito{
+        width:100% !important;
+        height:44px !important;
+        min-height:44px !important;
+        padding:0 8px !important;
+        border-radius:999px !important;
+      }
+
+      body .abrir-carrito strong#cantidadCarrito{
+        height:32px !important;
+        padding:0 !important;
+        gap:7px !important;
+      }
+
+      body .abrir-carrito .texto-carrito-pc{
+        display:none !important;
+      }
+
+      body .abrir-carrito .texto-carrito-movil{
+        display:inline-block !important;
+        font-size:28px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .separador-carrito,
+      body .abrir-carrito #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -6291,11 +6446,6 @@
     </section>
 
     <section class="busqueda">
-      <div class="marca-sticky-catalogo" aria-hidden="true">
-        <strong>CERACECI</strong>
-        <span>·</span>
-        <span>Insumos para cerámica</span>
-      </div>
       <form
         class="fila-busqueda-orden"
         id="formBusqueda"
@@ -6375,11 +6525,6 @@
       class="seccion-comparacion"
       hidden
     >
-      <div class="marca-comparacion-movil" aria-hidden="true">
-        <strong>CERACECI</strong>
-        <span>·</span>
-        <span>Insumos para cerámica</span>
-      </div>
 
       <div class="encabezado-comparacion">
         <div class="titulo-encabezado-comparacion">
@@ -6458,7 +6603,7 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span class="texto-carrito-pc">Finalizar mi pedido</span>
+          <span class="texto-carrito-pc">Ver</span>
           <span class="texto-carrito-movil">Ver</span>
         </span>
 
@@ -6743,25 +6888,7 @@
       }, true);
     })();
   </script>
-
-
-  <script id="marca-sticky-v65">
-    (() => {
-      const cabecera = document.querySelector(".cabecera");
-      if (!cabecera) return;
-
-      const actualizarMarca = () => {
-        const limite = cabecera.getBoundingClientRect().bottom;
-        document.body.classList.toggle("marca-scroll-activa", limite <= 8);
-      };
-
-      actualizarMarca();
-      window.addEventListener("scroll", actualizarMarca, { passive: true });
-      window.addEventListener("resize", actualizarMarca, { passive: true });
-    })();
-  </script>
-
-  <!--
+<!--
     Carga siempre la versión actual de script.js.
     No hace falta volver a cambiar ?v=57, ?v=58, etc.
   -->
