@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="108">
+  <meta name="ceraceci-version" content="110">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -6593,9 +6593,9 @@
   </style>
 
 
-  <style id="ajustes-v108-filtros">
+  <style id="ajustes-v110-filtros-categorias-presentaciones">
     /* =========================================================
-       V108 — estado estable del filtro de orden en PC y móvil
+       V110 — estados activos de Filtros y Categorías
        ========================================================= */
 
     /* PC: las dos opciones de orden conservan exactamente la misma
@@ -6621,6 +6621,9 @@
         color:var(--color-texto) !important;
         -webkit-text-fill-color:var(--color-texto) !important;
         background-color:var(--color-control) !important;
+        background-repeat:no-repeat !important;
+        background-position:right 13px center !important;
+        background-size:14px 14px !important;
         border:1px solid var(--color-borde) !important;
         border-radius:11px !important;
         outline:none !important;
@@ -6636,12 +6639,36 @@
       html body .control-orden.orden-activo select:focus-visible{
         color:#fff !important;
         -webkit-text-fill-color:#fff !important;
+        font-weight:700 !important;
         background-color:var(--color-principal) !important;
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+        background-repeat:no-repeat !important;
+        background-position:right 13px center !important;
+        background-size:14px 14px !important;
         border-color:var(--color-principal) !important;
         outline:none !important;
         box-shadow:none !important;
         transform:none !important;
       }
+    }
+
+    /* PC y móvil: Categorías sólo queda roja cuando hay una categoría
+       elegida. “Todas las categorías” conserva el estado neutro. */
+    html body #filtroCategoria.categoria-activa,
+    html body #filtroCategoria.categoria-activa:hover,
+    html body #filtroCategoria.categoria-activa:focus,
+    html body #filtroCategoria.categoria-activa:focus-visible{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:700 !important;
+      background-color:var(--color-principal) !important;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:right 13px center !important;
+      background-size:14px 14px !important;
+      border-color:var(--color-principal) !important;
+      outline:none !important;
+      box-shadow:none !important;
     }
 
     /* Móvil: cuando hay un orden aplicado, el botón queda rojo con
@@ -6663,6 +6690,20 @@
         color:#fff !important;
         -webkit-text-fill-color:#fff !important;
       }
+    }
+
+    /* En PC y móvil, Presentaciones conserva la negrita al volver
+       del estado rojo seleccionado al estado neutro. */
+    html body #productos .boton-presentacion,
+    html body #productosComparados .boton-presentacion,
+    html body #productos .selector-presentacion,
+    html body #productosComparados .selector-presentacion{
+      font-weight:700 !important;
+    }
+
+    html body #productos .boton-presentacion span,
+    html body #productosComparados .boton-presentacion span{
+      font-weight:700 !important;
     }
   </style>
 

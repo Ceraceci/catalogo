@@ -676,6 +676,18 @@ function extraerCantidadPresentacion(texto) {
    CATEGORÍAS Y FILTROS
 ========================================= */
 
+function actualizarEstadoFiltroCategoria() {
+  if (!filtroCategoria) {
+    return;
+  }
+
+  filtroCategoria.classList.toggle(
+    "categoria-activa",
+    Boolean(filtroCategoria.value)
+  );
+}
+
+
 function cargarCategorias() {
   const categoriaSeleccionada =
     filtroCategoria.value;
@@ -722,6 +734,8 @@ function cargarCategorias() {
     filtroCategoria.value =
       categoriaSeleccionada;
   }
+
+  actualizarEstadoFiltroCategoria();
 }
 
 
@@ -3247,7 +3261,11 @@ buscador.addEventListener(
 
 filtroCategoria.addEventListener(
   "change",
-  filtrarProductos
+  () => {
+    actualizarEstadoFiltroCategoria();
+    filtrarProductos();
+    filtroCategoria.blur();
+  }
 );
 
 
