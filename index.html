@@ -6274,7 +6274,7 @@
       row-gap:6px !important;
     }
 
-    /* Carrito: 🛒 | $ 0 en PC; Ver 🛒 | $ 0 en móvil. */
+    /* Carrito: Ver 🛒 | $ 0 en PC y móvil. */
     body .abrir-carrito{
       display:flex !important;
       align-items:center !important;
@@ -6326,6 +6326,7 @@
       padding:0 !important;
     }
 
+    body .abrir-carrito .texto-carrito-pc,
     body .abrir-carrito .texto-carrito-movil{
       color:#171717 !important;
       -webkit-text-fill-color:#171717 !important;
@@ -6380,6 +6381,15 @@
       }
 
       body .abrir-carrito .texto-finalizar-carrito{
+        display:inline-flex !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-pc{
+        display:inline-block !important;
+        font-size:28px !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-movil{
         display:none !important;
       }
     }
@@ -6400,9 +6410,13 @@
         padding:0 8px !important;
       }
 
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-pc{
+        display:none !important;
+      }
+
       html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-movil{
         display:inline-block !important;
-        font-size:28px !important;
+        font-size:22px !important;
       }
     }
   </style>
@@ -6600,6 +6614,7 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
+          <span class="texto-carrito-pc">Ver</span>
           <span class="texto-carrito-movil">Ver</span>
         </span>
 
