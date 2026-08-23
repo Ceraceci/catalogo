@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="55">
+  <meta name="ceraceci-version" content="61">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -3499,6 +3499,57 @@
     }
   </style>
 
+
+
+  <style id="ajustes-tipografia-v61">
+    /* V61 — tamaños solicitados para títulos/códigos y X del buscador móvil. */
+
+    @media (min-width:651px){
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        font-size:16.5px !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:13.5px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* +10% respecto de los tamaños anteriores. */
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        font-size:17.27px !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:10.16px !important;
+      }
+
+      /* X nativa del input search: mismo rojo de la interfaz y aprox. 2×. */
+      body #buscador::-webkit-search-cancel-button{
+        -webkit-appearance:none;
+        appearance:none;
+        width:28px;
+        height:28px;
+        min-width:28px;
+        margin:0 1px 0 8px;
+        opacity:1;
+        background-color:var(--color-principal);
+        -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+        -webkit-mask-repeat:no-repeat;
+        -webkit-mask-position:center;
+        -webkit-mask-size:100% 100%;
+        mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+        mask-repeat:no-repeat;
+        mask-position:center;
+        mask-size:100% 100%;
+        cursor:pointer;
+      }
+    }
+  </style>
 </head>
 
 <body>
