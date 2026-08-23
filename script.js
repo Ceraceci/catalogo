@@ -1891,6 +1891,12 @@ function cambiarCantidadTarjeta(
       );
   }
 
+  /* Evita que el foco conserve estilos de una pulsación anterior. */
+  boton.classList.remove("seleccionado");
+  if (typeof boton.blur === "function") {
+    boton.blur();
+  }
+
   normalizarCantidadTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
 }

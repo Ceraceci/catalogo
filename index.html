@@ -5650,6 +5650,134 @@
     }
   </style>
 
+
+
+  <style id="ajuste-carrito-movil-v84">
+    /* V84 — carrito móvil: texto y total a 20 px, sin cambiar la altura. */
+    @media (max-width:650px){
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+
+  <style id="correcciones-estados-v85">
+    /* =========================================================
+       V85 — estados coherentes de cantidad y presentaciones
+       ========================================================= */
+
+    /* PRESENTACIONES — estado inicial */
+    body .boton-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .boton-presentacion[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      font-weight:700 !important;
+      box-shadow:none !important;
+    }
+
+    /* PRESENTACIONES — seleccionada: rojo + blanco y negrita. */
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion[aria-pressed="true"],
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion[aria-pressed="true"]:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .boton-presentacion[aria-pressed="true"]:focus,
+    body .boton-presentacion.seleccionada:active,
+    body .boton-presentacion[aria-pressed="true"]:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+      box-shadow:none !important;
+    }
+
+    /* PC — hover de presentación sin perder negrita. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]:hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+      }
+    }
+
+    /* − 1 + — nunca conserva estado seleccionado. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .fila-compra .control-cantidad .boton-cantidad:focus:not(:active),
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus:not(:active){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    /* Mientras se pulsa − o +, sólo ese segmento se invierte. */
+    body .fila-compra .control-cantidad .boton-cantidad:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* PC — hover del control igual a Más info.: blanco, texto/borde rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    /* Mantener el mensaje del carrito definido en V84. */
+    @media (max-width:650px){
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
