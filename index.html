@@ -5241,6 +5241,26 @@
     }
   </style>
 
+
+
+  <style id="ajuste-equilibrio-foto-movil-v80">
+    /* V80 — móvil: la foto se acerca un poco más a la columna de acciones.
+       Se conserva el tamaño y la columna Compartir/Comparar no se mueve. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:14px !important;
+        margin-right:24px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:70% 50% !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
