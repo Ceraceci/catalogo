@@ -339,7 +339,15 @@ function procesarCSVProductos(textoCSV) {
             : ""
       };
 
-      return normalizarFilaKanthal(producto);
+      const productoNormalizado =
+        normalizarFilaKanthal(producto);
+
+      return {
+        ...productoNormalizado,
+        nombre: formatearNombreProducto(
+          productoNormalizado.nombre
+        )
+      };
     })
     .filter((producto) => {
       return (
@@ -842,6 +850,337 @@ function ordenarListaProductos(lista) {
    TARJETAS DE PRODUCTOS
 ========================================= */
 
+const consultaMovilTarjetas =
+  window.matchMedia("(max-width: 650px)");
+
+let ajusteMovilProgramado = 0;
+
+
+function limpiarAjustesMovilesTarjetas() {
+  document
+    .querySelectorAll(".tarjeta-producto.titulo-tres-lineas")
+    .forEach((tarjeta) =>
+      tarjeta.classList.remove("titulo-tres-lineas")
+    );
+
+  document
+    .querySelectorAll(".acciones-producto")
+    .forEach((acciones) =>
+      acciones.style.removeProperty("top")
+    );
+
+  document
+    .querySelectorAll(".opciones-presentacion")
+    .forEach((contenedor) => {
+      contenedor.style.removeProperty("flex-wrap");
+      contenedor.style.removeProperty("gap");
+    });
+
+  document
+    .querySelectorAll(".boton-presentacion")
+    .forEach((boton) => {
+      [
+        "height",
+        "min-height",
+        "max-height",
+        "padding-top",
+        "padding-right",
+        "padding-bottom",
+        "padding-left",
+        "font-size",
+        "line-height",
+        "border-radius",
+        "white-space"
+      ].forEach((propiedad) =>
+        boton.style.removeProperty(propiedad)
+      );
+    });
+}
+
+
+function aplicarEscalaPresentaciones(
+  contenedor,
+  botones,
+  escala,
+  medidasBase
+) {
+  const alto =
+    medidasBase.alto * escala;
+
+  contenedor.style.setProperty(
+    "flex-wrap",
+    "nowrap",
+    "important"
+  );
+  contenedor.style.setProperty(
+    "gap",
+    `${medidasBase.separacion * escala}px`,
+    "important"
+  );
+
+  botones.forEach((boton) => {
+    boton.style.setProperty(
+      "height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "min-height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "max-height",
+      `${alto}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-top",
+      `${medidasBase.paddingVertical * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-right",
+      `${medidasBase.paddingHorizontal * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-bottom",
+      `${medidasBase.paddingVertical * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "padding-left",
+      `${medidasBase.paddingHorizontal * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "font-size",
+      `${medidasBase.fuente * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "line-height",
+      "1",
+      "important"
+    );
+    boton.style.setProperty(
+      "border-radius",
+      `${medidasBase.radio * escala}px`,
+      "important"
+    );
+    boton.style.setProperty(
+      "white-space",
+      "nowrap",
+      "important"
+    );
+  });
+}
+
+
+function ajustarPresentacionesTarjetaMovil(
+  tarjeta
+) {
+  const contenedor =
+    tarjeta.querySelector(
+      ".opciones-presentacion"
+    );
+
+  if (!contenedor) {
+    return;
+  }
+
+  const botones = [
+    ...contenedor.querySelectorAll(
+      ".boton-presentacion"
+    )
+  ];
+
+  if (
+    botones.length === 0 ||
+    contenedor.clientWidth === 0
+  ) {
+    return;
+  }
+
+  contenedor.style.removeProperty("gap");
+
+  botones.forEach((boton) => {
+    [
+      "height",
+      "min-height",
+      "max-height",
+      "padding-top",
+      "padding-right",
+      "padding-bottom",
+      "padding-left",
+      "font-size",
+      "line-height",
+      "border-radius",
+      "white-space"
+    ].forEach((propiedad) =>
+      boton.style.removeProperty(propiedad)
+    );
+  });
+
+  const estiloBoton =
+    getComputedStyle(botones[0]);
+
+  const medidasBase = {
+    alto:
+      botones[0].getBoundingClientRect().height,
+    fuente:
+      parseFloat(estiloBoton.fontSize) || 16,
+    paddingVertical:
+      parseFloat(estiloBoton.paddingTop) || 0,
+    paddingHorizontal:
+      parseFloat(estiloBoton.paddingLeft) || 0,
+    radio:
+      parseFloat(estiloBoton.borderRadius) || 7,
+    separacion:
+      parseFloat(
+        getComputedStyle(contenedor).gap
+      ) || 5
+  };
+
+  let escala = 1;
+
+  while (escala > 0.3) {
+    aplicarEscalaPresentaciones(
+      contenedor,
+      botones,
+      escala,
+      medidasBase
+    );
+
+    const anchoOcupado =
+      botones.reduce(
+        (total, boton) =>
+          total +
+          boton.getBoundingClientRect().width,
+        0
+      ) +
+      medidasBase.separacion *
+        escala *
+        Math.max(0, botones.length - 1);
+
+    if (
+      anchoOcupado <=
+      contenedor.clientWidth + 1
+    ) {
+      break;
+    }
+
+    escala -= 0.03;
+  }
+}
+
+
+function actualizarLineasTituloTarjetaMovil(tarjeta) {
+  const titulo = tarjeta.querySelector(".fila-titulo-producto h2");
+
+  tarjeta.classList.remove("titulo-tres-lineas");
+
+  if (!titulo || !consultaMovilTarjetas.matches) {
+    return;
+  }
+
+  const estilo = getComputedStyle(titulo);
+  const altoLinea = parseFloat(estilo.lineHeight);
+
+  if (!altoLinea || !Number.isFinite(altoLinea)) {
+    return;
+  }
+
+  /* scrollHeight conserva la altura natural del texto aunque esté recortado
+     por line-clamp; así sólo marcamos los títulos que realmente requieren
+     una tercera línea al ancho actual de la tarjeta. */
+  const lineasNaturales = titulo.scrollHeight / altoLinea;
+
+  tarjeta.classList.toggle(
+    "titulo-tres-lineas",
+    lineasNaturales > 2.35
+  );
+}
+
+
+function centrarAccionesFotoTarjetaMovil(tarjeta) {
+  const encabezado = tarjeta.querySelector(".encabezado-producto");
+  const foto = tarjeta.querySelector(".contenedor-foto-producto");
+  const acciones = tarjeta.querySelector(".acciones-producto");
+
+  if (!encabezado || !foto || !acciones) {
+    return;
+  }
+
+  const rectEncabezado = encabezado.getBoundingClientRect();
+  const rectFoto = foto.getBoundingClientRect();
+  const rectAcciones = acciones.getBoundingClientRect();
+
+  if (!rectFoto.height || !rectAcciones.height) {
+    return;
+  }
+
+  const centroFoto =
+    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
+
+  const top = centroFoto - rectAcciones.height / 2;
+
+  acciones.style.setProperty(
+    "top",
+    `${Math.round(top * 10) / 10}px`,
+    "important"
+  );
+}
+
+
+function ajustarTarjetasMoviles() {
+  if (!consultaMovilTarjetas.matches) {
+    limpiarAjustesMovilesTarjetas();
+    return;
+  }
+
+  document
+    .querySelectorAll(".tarjeta-producto")
+    .forEach((tarjeta) => {
+      actualizarLineasTituloTarjetaMovil(
+        tarjeta
+      );
+
+      ajustarPresentacionesTarjetaMovil(
+        tarjeta
+      );
+
+      centrarAccionesFotoTarjetaMovil(
+        tarjeta
+      );
+    });
+}
+
+
+function programarAjusteTarjetasMoviles() {
+  if (ajusteMovilProgramado) {
+    cancelAnimationFrame(
+      ajusteMovilProgramado
+    );
+  }
+
+  ajusteMovilProgramado =
+    requestAnimationFrame(() => {
+      ajusteMovilProgramado =
+        requestAnimationFrame(() => {
+          ajusteMovilProgramado = 0;
+          ajustarTarjetasMoviles();
+        });
+    });
+}
+
+
+window.addEventListener(
+  "resize",
+  programarAjusteTarjetasMoviles
+);
+
 function mostrarProductos(lista) {
   contenedorProductos.innerHTML = "";
 
@@ -868,6 +1207,7 @@ function mostrarProductos(lista) {
     `${lista.length} productos encontrados`;
 
   sincronizarBotonesComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -886,7 +1226,7 @@ function crearTarjetaProducto(
 
   tarjeta.className =
     esComparacion
-      ? "tarjeta-producto tarjeta-comparacion"
+      ? "tarjeta-producto tarjeta-en-comparacion"
       : "tarjeta-producto";
 
   tarjeta.dataset.idProducto = producto.id;
@@ -913,52 +1253,66 @@ function crearTarjetaProducto(
       producto.id
     );
 
-  const usarSelectorDesplegable =
-    esComparacion ||
-    producto.presentaciones.length >= 7;
-
-  const opcionesSelector =
-    producto.presentaciones
-      .map((presentacion, indicePresentacion) => `
-        <option value="${indicePresentacion}">
-          ${escaparHTML(presentacion.nombre)}
-        </option>
-      `)
-      .join("");
-
   const botonesPresentaciones =
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
         <button
           type="button"
-          class="boton-presentacion ${
-            indicePresentacion === 0
-              ? "seleccionada"
-              : ""
-          }"
+          class="boton-presentacion"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
+          aria-pressed="false"
         >
-          <span>${escaparHTML(presentacion.nombre)}</span>
+          <span>${escaparHTML(
+            formatearEtiquetaPresentacion(
+              presentacion.nombre
+            )
+          )}</span>
         </button>
       `)
       .join("");
 
+  const usarSelectorAlambre =
+    normalizarTexto(producto.nombre) ===
+    "alambre kanthal a1";
+
+  const opcionesSelectorAlambre =
+    `
+      <option value="">Diámetro</option>
+    ` +
+    producto.presentaciones
+      .map((presentacion, indicePresentacion) => `
+        <option value="${indicePresentacion}">
+          ${escaparHTML(
+            formatearEtiquetaPresentacion(
+              presentacion.nombre
+            )
+          )}
+        </option>
+      `)
+      .join("");
+
   const controlPresentaciones =
-    usarSelectorDesplegable
+    usarSelectorAlambre
       ? `
           <select
-            class="selector-presentacion"
+            class="selector-presentacion selector-presentacion-alambre"
             data-id-producto="${producto.id}"
-            aria-label="Elegir presentación de ${escaparHTML(
+            aria-label="Elegir diámetro de ${escaparHTML(
               producto.nombre
             )}"
           >
-            ${opcionesSelector}
+            ${opcionesSelectorAlambre}
           </select>
         `
       : `
-          <div class="opciones-presentacion">
+          <div
+            class="opciones-presentacion"
+            role="group"
+            aria-label="Presentaciones de ${escaparHTML(
+              producto.nombre
+            )}"
+          >
             ${botonesPresentaciones}
           </div>
         `;
@@ -996,58 +1350,6 @@ function crearTarjetaProducto(
 
   tarjeta.innerHTML = `
     <div class="encabezado-producto">
-      <div class="fila-categoria-producto">
-        <span class="categoria">
-          <img
-            src="img/logo.png"
-            alt=""
-            class="logo-categoria"
-            aria-hidden="true"
-          >
-          <span>${escaparHTML(producto.categoria)}</span>
-        </span>
-
-        <div class="acciones-producto">
-          <button
-            type="button"
-            class="boton-comparar ${
-              estaSeleccionado ? "seleccionado" : ""
-            }"
-            data-id-producto="${producto.id}"
-            aria-pressed="${estaSeleccionado}"
-            aria-label="${
-              esComparacion ? "Quitar de la comparación" : "Comparar"
-            } ${escaparHTML(producto.nombre)}"
-            title="${
-              esComparacion ? "Quitar de la comparación" : "Comparar producto"
-            }"
-          >
-            <span class="icono-comparar" aria-hidden="true">⇄</span>
-            <span class="texto-comparar">
-              ${
-                esComparacion
-                  ? "Quitar"
-                  : estaSeleccionado
-                    ? "Elegido"
-                    : "Comparar"
-              }
-            </span>
-          </button>
-
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-
       <div class="fila-titulo-producto">
         <h2>${escaparHTML(producto.nombre)}</h2>
       </div>
@@ -1055,10 +1357,41 @@ function crearTarjetaProducto(
       <p class="codigo-producto">
         ${
           presentacionInicial.codigo
-            ? `Código: ${escaparHTML(presentacionInicial.codigo)}`
-            : ""
+            ? escaparHTML(presentacionInicial.codigo)
+          : ""
         }
       </p>
+
+      <div class="acciones-producto">
+        <button
+          type="button"
+          class="compartir-producto"
+          data-id-producto="${producto.id}"
+          aria-label="Compartir ${escaparHTML(producto.nombre)}"
+          title="Compartir producto"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+          </svg>
+        </button>
+
+        <button
+          type="button"
+          class="boton-comparar ${
+            estaSeleccionado ? "seleccionado" : ""
+          }"
+          data-id-producto="${producto.id}"
+          aria-pressed="${estaSeleccionado}"
+          aria-label="${
+            esComparacion ? "Quitar de la comparación" : "Comparar"
+          } ${escaparHTML(producto.nombre)}"
+          title="${
+            esComparacion ? "Quitar de la comparación" : "Comparar producto"
+          }"
+        >
+          <span class="icono-comparar" aria-hidden="true">⇄</span>
+        </button>
+      </div>
     </div>
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
@@ -1067,7 +1400,64 @@ function crearTarjetaProducto(
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? "" : "foto-placeholder"}"
         loading="lazy"
+        referrerpolicy="no-referrer"
       >
+    </div>
+
+    <div class="fila-compra">
+      <div class="informacion-precio">
+        <p
+          class="precio"
+          data-precio="${presentacionInicial.precio}"
+        >
+          ${formatearPrecio(presentacionInicial.precio)}
+        </p>
+      </div>
+
+      <div class="bloque-presentaciones">
+        ${controlPresentaciones}
+      </div>
+
+      <div class="selector-cantidad">
+        <div class="control-cantidad">
+          <button
+            type="button"
+            class="boton-cantidad restar"
+            aria-label="Disminuir cantidad"
+          >−</button>
+
+          <input
+            type="number"
+            class="cantidad"
+            value="1"
+            min="1"
+            step="1"
+          >
+
+          <button
+            type="button"
+            class="boton-cantidad sumar"
+            aria-label="Aumentar cantidad"
+          >+</button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="agregar-carrito ${
+          productoInicialEnCarrito ? "agregado" : ""
+        }"
+        aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+        title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+      >
+        <span class="icono-agregar" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M3 3h2l2.2 10.1a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6.1"></path>
+            <circle cx="10" cy="19" r="1.5"></circle>
+            <circle cx="18" cy="19" r="1.5"></circle>
+          </svg>
+        </span>
+      </button>
     </div>
 
     <div class="zona-detalles-producto">
@@ -1077,7 +1467,7 @@ function crearTarjetaProducto(
         aria-expanded="false"
         aria-controls="${idDetalles}"
       >
-        Ver detalles
+        Más info.
       </button>
 
       <div
@@ -1088,60 +1478,6 @@ function crearTarjetaProducto(
         ${contenidoDetalles}
       </div>
     </div>
-
-    <div class="bloque-presentaciones">
-      <p class="titulo-opciones">Presentación</p>
-      ${controlPresentaciones}
-    </div>
-
-    <div class="informacion-precio">
-      <p class="etiqueta-precio">Precio unitario</p>
-      <p
-        class="precio"
-        data-precio="${presentacionInicial.precio}"
-      >
-        ${formatearPrecio(presentacionInicial.precio)}
-      </p>
-    </div>
-
-    <div class="selector-cantidad">
-      <span>Cantidad</span>
-
-      <div class="control-cantidad">
-        <button
-          type="button"
-          class="boton-cantidad restar"
-          aria-label="Disminuir cantidad"
-        >−</button>
-
-        <input
-          type="number"
-          class="cantidad"
-          value="1"
-          min="1"
-          step="1"
-        >
-
-        <button
-          type="button"
-          class="boton-cantidad sumar"
-          aria-label="Aumentar cantidad"
-        >+</button>
-      </div>
-    </div>
-
-    <button
-      type="button"
-      class="agregar-carrito ${
-        productoInicialEnCarrito ? "agregado" : ""
-      }"
-    >
-      <span class="icono-agregar" aria-hidden="true">🛒</span>
-      <span class="texto-agregar">
-        ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-      </span>
-    </button>
-
   `;
 
   const imagenProducto =
@@ -1190,8 +1526,8 @@ function alternarDetallesProducto(boton) {
   );
   boton.textContent =
     seAbrira
-      ? "Ocultar detalles"
-      : "Ver detalles";
+      ? "Ocultar info."
+      : "Más info.";
 }
 
 
@@ -1232,6 +1568,7 @@ function alternarProductoComparacion(idProducto) {
   }
 
   actualizarEstadoComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1250,7 +1587,7 @@ function sincronizarBotonesComparacion() {
           const esTarjetaComparacion =
             Boolean(
               boton.closest(
-                ".tarjeta-comparacion"
+                ".tarjeta-en-comparacion"
               )
             );
 
@@ -1301,10 +1638,6 @@ function actualizarEstadoComparacion() {
     abrirComparacion.disabled = cantidad < 2;
   }
 
-  if (contadorComparacion) {
-    contadorComparacion.textContent =
-      `${cantidad} productos lado a lado`;
-  }
 
   sincronizarBotonesComparacion();
 }
@@ -1395,6 +1728,7 @@ function cerrarVistaComparacion() {
   );
 
   actualizarEstadoComparacion();
+  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1409,6 +1743,18 @@ function vaciarSeleccionComparacion() {
 }
 
 
+function volverDesdeComparacion() {
+  if (
+    window.matchMedia("(max-width: 650px)").matches
+  ) {
+    vaciarSeleccionComparacion();
+    return;
+  }
+
+  cerrarVistaComparacion();
+}
+
+
 function seleccionarPresentacion(control) {
   const tarjeta =
     control.closest(".tarjeta-producto");
@@ -1416,8 +1762,23 @@ function seleccionarPresentacion(control) {
   const idProducto =
     control.dataset.idProducto;
 
+  const esSelectorPresentacion =
+    control.matches(".selector-presentacion");
+
+  /* Alambre: "Diámetro" funciona como estado neutro.
+     Al volver a elegirlo se quita la selección visual,
+     igual que al deseleccionar un botón de presentación. */
+  if (
+    esSelectorPresentacion &&
+    control.value === ""
+  ) {
+    control.classList.remove("seleccionada");
+    programarAjusteTarjetasMoviles();
+    return;
+  }
+
   const indicePresentacion =
-    control.matches(".selector-presentacion")
+    esSelectorPresentacion
       ? Number(control.value)
       : Number(
           control.dataset.indicePresentacion
@@ -1443,6 +1804,9 @@ function seleccionarPresentacion(control) {
   }
 
   if (control.matches(".boton-presentacion")) {
+    const yaEstabaSeleccionada =
+      control.classList.contains("seleccionada");
+
     tarjeta
       .querySelectorAll(
         ".boton-presentacion"
@@ -1451,8 +1815,24 @@ function seleccionarPresentacion(control) {
         opcion.classList.remove(
           "seleccionada"
         );
+        opcion.setAttribute(
+          "aria-pressed",
+          "false"
+        );
       });
 
+    /* Un segundo toque sobre la misma presentación la deselecciona
+       visualmente. Esto funciona también cuando existe una sola opción. */
+    if (!yaEstabaSeleccionada) {
+      control.classList.add("seleccionada");
+      control.setAttribute(
+        "aria-pressed",
+        "true"
+      );
+    }
+  }
+
+  if (control.matches(".selector-presentacion")) {
     control.classList.add("seleccionada");
   }
 
@@ -1480,11 +1860,40 @@ function seleccionarPresentacion(control) {
     ".codigo-producto"
   ).textContent =
     presentacion.codigo
-      ? `Código: ${presentacion.codigo}`
+      ? presentacion.codigo
       : "";
 
-  actualizarTotalTarjeta(tarjeta);
+  normalizarCantidadTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
+  programarAjusteTarjetasMoviles();
+}
+
+
+function establecerSeleccionCantidadTarjeta(
+  tarjeta,
+  seleccionada
+) {
+  if (!tarjeta) {
+    return;
+  }
+
+  const controlCantidad =
+    tarjeta.querySelector(".control-cantidad");
+
+  if (!controlCantidad) {
+    return;
+  }
+
+  controlCantidad.classList.toggle(
+    "seleccionado",
+    Boolean(seleccionada)
+  );
+
+  controlCantidad
+    .querySelectorAll(".boton-cantidad.seleccionado")
+    .forEach((botonCantidad) => {
+      botonCantidad.classList.remove("seleccionado");
+    });
 }
 
 
@@ -1510,15 +1919,25 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  actualizarTotalTarjeta(tarjeta);
+  /* En móvil, − 1 + queda seleccionado hasta agregar el producto.
+     En PC no conserva selección después del clic. */
+  establecerSeleccionCantidadTarjeta(
+    tarjeta,
+    window.matchMedia("(max-width: 650px)").matches
+  );
+
+  /* Evita que el foco conserve estilos de una pulsación anterior. */
+  boton.classList.remove("seleccionado");
+  if (typeof boton.blur === "function") {
+    boton.blur();
+  }
+
+  normalizarCantidadTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
 }
 
 
-function actualizarTotalTarjeta(tarjeta) {
-  const precio =
-    Number(tarjeta.dataset.precio) || 0;
-
+function normalizarCantidadTarjeta(tarjeta) {
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
 
@@ -1529,29 +1948,13 @@ function actualizarTotalTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
-
-  const precioTotal =
-    tarjeta.querySelector(
-      ".precio-total"
-    );
-
-  if (precioTotal) {
-    precioTotal.textContent =
-      formatearPrecio(
-        precio * cantidad
-      );
-  }
 }
 
 
 
 
-async function compartirProducto(idProducto, botonCompartir = null) {
+async function compartirProducto(idProducto) {
   const url = new URL(window.location.href);
-
-  if (botonCompartir) {
-    botonCompartir.classList.add("compartiendo");
-  }
 
   url.search = "";
   url.searchParams.set(
@@ -1591,11 +1994,6 @@ async function compartirProducto(idProducto, botonCompartir = null) {
       "Copiá este enlace:",
       url.toString()
     );
-  } finally {
-    if (botonCompartir) {
-      botonCompartir.classList.remove("compartiendo");
-      botonCompartir.blur();
-    }
   }
 }
 
@@ -1757,6 +2155,11 @@ function agregarProductoAlCarrito(boton) {
     carritoCompras.push(producto);
   }
 
+  establecerSeleccionCantidadTarjeta(
+    tarjeta,
+    false
+  );
+
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
 }
@@ -1785,14 +2188,12 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
     return;
   }
 
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent = "Agregar";
-  }
-
   boton.classList.remove("agregado");
+  boton.setAttribute(
+    "aria-label",
+    "Agregar al carrito"
+  );
+  boton.title = "Agregar al carrito";
 }
 
 
@@ -1830,20 +2231,20 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
       );
     });
 
-  const textoBoton =
-    boton.querySelector(".texto-agregar");
-
-  if (textoBoton) {
-    textoBoton.textContent =
-      estaEnCarrito
-        ? "Agregado"
-        : "Agregar";
-  }
-
   boton.classList.toggle(
     "agregado",
     estaEnCarrito
   );
+
+  const descripcionBoton = estaEnCarrito
+    ? "Producto agregado"
+    : "Agregar al carrito";
+
+  boton.setAttribute(
+    "aria-label",
+    descripcionBoton
+  );
+  boton.title = descripcionBoton;
 }
 
 
@@ -1864,6 +2265,11 @@ function actualizarEstadoBotonesCarrito() {
 }
 
 
+function formatearPrecioCarrito(valor) {
+  return formatearPrecio(valor).replace(/^\$/, "$ ");
+}
+
+
 function mostrarCarrito() {
   productosCarrito.innerHTML = "";
 
@@ -1880,14 +2286,14 @@ function mostrarCarrito() {
 
     if (valorCarrito) {
       valorCarrito.textContent =
-        formatearPrecio(0);
+        formatearPrecioCarrito(0);
     } else if (cantidadCarrito) {
       cantidadCarrito.textContent =
-        `🛒 | ${formatearPrecio(0)}`;
+        `🛒 | ${formatearPrecioCarrito(0)}`;
     }
 
     totalCarrito.textContent =
-      formatearPrecio(0);
+      formatearPrecioCarrito(0);
 
     finalizarPedido.disabled = true;
     vaciarCarrito.disabled = true;
@@ -1927,7 +2333,6 @@ function mostrarCarrito() {
             producto.codigo
               ? `
                 <small>
-                  Código:
                   ${escaparHTML(
                     producto.codigo
                   )}
@@ -2013,14 +2418,14 @@ function mostrarCarrito() {
 
   if (valorCarrito) {
     valorCarrito.textContent =
-      formatearPrecio(precioTotal);
+      formatearPrecioCarrito(precioTotal);
   } else if (cantidadCarrito) {
     cantidadCarrito.textContent =
-      `🛒 | ${formatearPrecio(precioTotal)}`;
+      `🛒 | ${formatearPrecioCarrito(precioTotal)}`;
   }
 
   totalCarrito.textContent =
-    formatearPrecio(precioTotal);
+    formatearPrecioCarrito(precioTotal);
 
   finalizarPedido.disabled = false;
   vaciarCarrito.disabled = false;
@@ -2056,15 +2461,22 @@ function cargarCarritoGuardado() {
       return [];
     }
 
-    return datos.filter((producto) => {
-      return (
-        producto &&
-        producto.nombre &&
-        producto.presentacion &&
-        Number(producto.precio) > 0 &&
-        Number(producto.cantidad) > 0
-      );
-    });
+    return datos
+      .filter((producto) => {
+        return (
+          producto &&
+          producto.nombre &&
+          producto.presentacion &&
+          Number(producto.precio) > 0 &&
+          Number(producto.cantidad) > 0
+        );
+      })
+      .map((producto) => ({
+        ...producto,
+        nombre: formatearNombreProducto(
+          producto.nombre
+        )
+      }));
   } catch (error) {
     console.error(
       "No se pudo recuperar el carrito.",
@@ -2125,8 +2537,12 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
+        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion}) ` +
+        formatearPrecio(producto.precio * producto.cantidad)
     );
+
+  const detalleProductos =
+    lineasProductos.join("\n\n");
 
   const precioTotal =
     carritoCompras.reduce(
@@ -2141,16 +2557,14 @@ function finalizarPedidoWhatsApp() {
     );
 
   const mensaje = [
-    "¡Hola! 😊",
-    "",
+    "¡Hola!",
     "Me gustaría consultar por este pedido:",
     "",
-    ...lineasProductos,
+    detalleProductos,
     "",
-    `💰 Total: ${formatearPrecio(precioTotal)}`,
+    `Total: ${formatearPrecio(precioTotal)}`,
     "",
-    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
-    "",
+    "¿Está todo disponible? ¿Qué formas de pago tienen y cómo coordinamos la entrega?",
     "¡Muchas gracias!"
   ].join("\n");
 
@@ -2360,7 +2774,9 @@ function formatearPrecio(precio) {
       currency: "ARS",
       maximumFractionDigits: 0
     }
-  ).format(precio);
+  )
+    .format(precio)
+    .replace(/\$\s+/u, "$");
 }
 
 
@@ -2373,6 +2789,58 @@ function limpiarTexto(valor) {
   }
 
   return String(valor).trim();
+}
+
+
+function formatearNombreProducto(valor) {
+  const nombre = limpiarTexto(valor)
+    .toLocaleLowerCase("es-AR");
+
+  if (!nombre) {
+    return "";
+  }
+
+  return nombre
+    .split(/\s+/)
+    .map((palabra) => {
+      if (palabra === "de") {
+        return "de";
+      }
+
+      return palabra.replace(
+        /\p{L}/u,
+        (letra) =>
+          letra.toLocaleUpperCase("es-AR")
+      );
+    })
+    .join(" ");
+}
+
+
+function formatearEtiquetaPresentacion(valor) {
+  const presentacion = limpiarTexto(valor)
+    .toLocaleLowerCase("es-AR");
+
+  if (!presentacion) {
+    return "";
+  }
+
+  const conInicialMayuscula =
+    presentacion.replace(
+      /^(\s*)(\p{L})/u,
+      (_, espacios, letra) =>
+        espacios +
+        letra.toLocaleUpperCase("es-AR")
+    );
+
+  return conInicialMayuscula
+    .replace(/\bml\b/giu, "mL")
+    .replace(/\bl\b/giu, "L")
+    .replace(/°c\b/giu, "°C")
+    .replace(
+      /\b(?:kg|g|cc|mm|cm|m)\b/giu,
+      (unidad) => unidad.toLowerCase()
+    );
 }
 
 
@@ -2422,8 +2890,9 @@ function normalizarURLImagen(valor) {
 
       if (id) {
         return (
-          "https://drive.google.com/uc?export=view&id=" +
-          encodeURIComponent(id)
+          "https://drive.google.com/thumbnail?id=" +
+          encodeURIComponent(id) +
+          "&sz=w1200"
         );
       }
     }
@@ -2467,6 +2936,8 @@ function manejarClickTarjetaProducto(evento) {
         botonComparar.dataset.idProducto
       );
 
+      botonComparar.blur();
+
       return;
     }
 
@@ -2489,9 +2960,27 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
+      /* En móvil, Compartir conserva el estado rojo/blanco después de pulsarlo.
+         En escritorio mantiene un feedback breve para no quedar marcado. */
+      botonCompartir.classList.add(
+        "compartir-presionado"
+      );
+
+      window.clearTimeout(
+        botonCompartir._temporizadorFeedback
+      );
+
+      if (!window.matchMedia("(max-width: 650px)").matches) {
+        botonCompartir._temporizadorFeedback =
+          window.setTimeout(() => {
+            botonCompartir.classList.remove(
+              "compartir-presionado"
+            );
+          }, 260);
+      }
+
       compartirProducto(
-        botonCompartir.dataset.idProducto,
-        botonCompartir
+        botonCompartir.dataset.idProducto
       );
 
       return;
@@ -2546,119 +3035,6 @@ function manejarClickTarjetaProducto(evento) {
     }
 }
 
-
-
-
-/* =========================================
-   ESTADO VISUAL DEL CONTROL − CANTIDAD +
-   V66: el rojo existe solo mientras se mantiene
-   presionado − o +. En PC, después de soltar,
-   vuelve a reposo aunque el mouse siga encima.
-========================================= */
-
-let controlCantidadPresionado = null;
-
-function iniciarPulsacionCantidad(evento) {
-  const botonCantidad =
-    evento.target.closest?.(".boton-cantidad");
-
-  if (!botonCantidad) {
-    return;
-  }
-
-  const controlCantidad =
-    botonCantidad.closest(".control-cantidad");
-
-  if (!controlCantidad) {
-    return;
-  }
-
-  controlCantidad.classList.remove(
-    "cantidad-hover-bloqueado"
-  );
-
-  controlCantidad.classList.add(
-    "cantidad-presionada"
-  );
-
-  controlCantidadPresionado = controlCantidad;
-}
-
-function finalizarPulsacionCantidad() {
-  if (!controlCantidadPresionado) {
-    return;
-  }
-
-  const controlCantidad =
-    controlCantidadPresionado;
-
-  controlCantidad.classList.remove(
-    "cantidad-presionada"
-  );
-
-  const elementoActivo = document.activeElement;
-
-  if (
-    elementoActivo &&
-    controlCantidad.contains(elementoActivo) &&
-    typeof elementoActivo.blur === "function"
-  ) {
-    elementoActivo.blur();
-  }
-
-  if (
-    window.matchMedia(
-      "(hover:hover) and (pointer:fine)"
-    ).matches
-  ) {
-    controlCantidad.classList.add(
-      "cantidad-hover-bloqueado"
-    );
-
-    controlCantidad.addEventListener(
-      "pointerleave",
-      () => {
-        controlCantidad.classList.remove(
-          "cantidad-hover-bloqueado"
-        );
-      },
-      { once: true }
-    );
-  }
-
-  controlCantidadPresionado = null;
-}
-
-function prepararEstadosCantidad(contenedor) {
-  if (!contenedor) {
-    return;
-  }
-
-  contenedor.addEventListener(
-    "pointerdown",
-    iniciarPulsacionCantidad
-  );
-}
-
-prepararEstadosCantidad(contenedorProductos);
-prepararEstadosCantidad(productosComparados);
-
-document.addEventListener(
-  "pointerup",
-  finalizarPulsacionCantidad,
-  true
-);
-
-document.addEventListener(
-  "pointercancel",
-  finalizarPulsacionCantidad,
-  true
-);
-
-window.addEventListener(
-  "blur",
-  finalizarPulsacionCantidad
-);
 
 contenedorProductos.addEventListener(
   "click",
@@ -2717,8 +3093,13 @@ function manejarEntradaTarjetaProducto(evento) {
         ".tarjeta-producto"
       );
 
-    actualizarTotalTarjeta(tarjeta);
+    normalizarCantidadTarjeta(tarjeta);
     marcarBotonTarjetaComoPendiente(tarjeta);
+
+    establecerSeleccionCantidadTarjeta(
+      tarjeta,
+      window.matchMedia("(max-width: 650px)").matches
+    );
 }
 
 
@@ -2846,7 +3227,7 @@ if (limpiarComparacion) {
 if (volverCatalogo) {
   volverCatalogo.addEventListener(
     "click",
-    cerrarVistaComparacion
+    volverDesdeComparacion
   );
 }
 
@@ -2891,16 +3272,20 @@ vaciarCarrito.addEventListener(
       return;
     }
 
-    const confirmar = window.confirm(
-      "¿Querés vaciar todo el carrito?"
-    );
-
-    if (!confirmar) {
-      return;
-    }
-
     carritoCompras = [];
+
+    [contenedorProductos, productosComparados]
+      .filter(Boolean)
+      .forEach((contenedor) => {
+        contenedor
+          .querySelectorAll(".cantidad")
+          .forEach((campoCantidad) => {
+            campoCantidad.value = 1;
+          });
+      });
+
     guardarYActualizarCarrito();
+    cerrarPanelCarrito();
   }
 );
 }

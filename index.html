@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="65">
+  <meta name="ceraceci-version" content="81">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -321,8 +321,8 @@
     /* Logo dentro de la cápsula del carrito */
     .logo-carrito{
       flex:0 0 auto;
-      width:24px;
-      height:24px;
+      width:28px;
+      height:28px;
       object-fit:contain;
       display:block;
     }
@@ -346,8 +346,8 @@
       }
 
       .logo-carrito{
-        width:26px;
-        height:26px;
+        width:30px;
+        height:30px;
       }
     }
 
@@ -363,8 +363,8 @@
       }
 
       .logo-carrito{
-        width:22px;
-        height:22px;
+        width:25px;
+        height:25px;
       }
     }
 
@@ -3783,7 +3783,7 @@
     }
 
     body .marca-sticky-catalogo strong{
-      color:#2d2926;
+      color:var(--color-principal);
       font-size:12.5px;
       font-weight:800;
       letter-spacing:.09em;
@@ -3870,148 +3870,2623 @@
   </style>
 
 
-  <style id="estados-interaccion-v66">
+  <style id="anchos-uniformes-controles-v66">
+    /* V66 — anchos uniformes de controles */
+    body .bloque-presentaciones,
+    body .fila-compra,
+    body .zona-detalles-producto{
+      width:100% !important;
+      box-sizing:border-box !important;
+    }
+
+    body .opciones-presentacion,
+    body .productos-comparados .opciones-presentacion{
+      display:grid !important;
+      grid-template-columns:repeat(auto-fit,minmax(0,1fr)) !important;
+      gap:5px !important;
+      width:100% !important;
+    }
+
+    body .boton-presentacion,
+    body .selector-presentacion{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra{
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+      width:100% !important;
+      column-gap:8px !important;
+    }
+
+    body .fila-compra .selector-cantidad,
+    body .fila-compra .agregar-carrito{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      justify-self:stretch !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .control-cantidad{
+      border:1px solid rgba(111,103,97,.28) !important;
+      border-radius:10px !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .ver-detalles{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:100% !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .ver-detalles,
+    body .control-cantidad,
+    body .agregar-carrito,
+    body .boton-presentacion,
+    body .selector-presentacion{
+      min-height:34px !important;
+    }
+
+    @media (max-width:650px){
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+        column-gap:6px !important;
+      }
+
+      body .fila-compra .agregar-carrito,
+      body .productos-comparados .fila-compra .agregar-carrito{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+        height:30px !important;
+      }
+
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        width:100% !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-finales-pc-movil-v67">
     /* =========================================================
-       V66 — estados táctiles y de mouse de Compartir y Cantidad
+       V67 — última tanda visual PC + móvil
        ========================================================= */
 
-    /* CANTIDAD — reposo real: negro + blanco cálido + borde negro. */
+    /* Cantidad y carrito: lenguaje visual negro/blanco uniforme. */
     body .fila-compra .control-cantidad,
     body .productos-comparados .fila-compra .control-cantidad{
-      border-color:#1f1f1f !important;
+      border:1px solid #1f1f1f !important;
       background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:#1f1f1f !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-left:1px solid #1f1f1f !important;
+      border-right:1px solid #1f1f1f !important;
+    }
+
+    body .fila-compra .agregar-carrito,
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid #1f1f1f !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .agregar-carrito .icono-agregar,
+    body .fila-compra .agregar-carrito.agregado .icono-agregar{
+      color:#171717 !important;
+    }
+
+    body .fila-compra .agregar-carrito .icono-agregar svg,
+    body .fila-compra .agregar-carrito.agregado .icono-agregar svg{
+      stroke:currentColor !important;
+      fill:none !important;
+    }
+
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:active,
+    body .fila-compra .agregar-carrito:active,
+    body .productos-comparados .fila-compra .agregar-carrito:active{
+      color:#fff !important;
+      background:#1f1f1f !important;
+    }
+
+    body .fila-compra .agregar-carrito:active .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito:active .icono-agregar{
+      color:#fff !important;
+    }
+
+    /* ---------- ESCRITORIO ---------- */
+    @media (min-width:651px){
+      /* Título principal al tamaño de la búsqueda; código un escalón menor. */
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        font-size:17.5px !important;
+        line-height:1.16 !important;
+        text-align:center !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:15.5px !important;
+        line-height:1.12 !important;
+        text-align:center !important;
+        color:#817872 !important;
+      }
+
+      /* Compensación simétrica para que título y código queden centrados
+         aunque las acciones estén apiladas a la derecha. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        padding-left:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+        padding-right:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        min-height:41px !important;
+        height:41px !important;
+      }
+
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        display:-webkit-box !important;
+        width:100% !important;
+        min-height:0 !important;
+        max-height:41px !important;
+        -webkit-line-clamp:2 !important;
+        line-clamp:2 !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        min-height:18px !important;
+        height:18px !important;
+        margin:0 !important;
+      }
+
+      /* Cursor lupa intermedio (32 px), blanco y negro. */
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+      body .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='2'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='2.7' stroke-linecap='round'/%3E%3Cpath d='M13.5 10v7M10 13.5h7' stroke='%23161616' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay.nivel-2 .zoom-imagen-ampliada{
+        cursor:zoom-out !important;
+      }
+
+      /* X del zoom: fuera de la foto, alineada arriba, blanco cálido + rojo. */
+      body .cerrar-zoom-imagen{
+        top:0 !important;
+        right:-44px !important;
+        width:36px !important;
+        height:36px !important;
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border:1px solid var(--color-principal) !important;
+        border-radius:50% !important;
+        font:400 28px/1 Arial,sans-serif !important;
+        box-shadow:0 3px 10px rgba(35,26,22,.10) !important;
+      }
+
+      body .cerrar-zoom-imagen:hover,
+      body .cerrar-zoom-imagen:focus-visible{
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        transform:none !important;
+      }
+
+      body .cerrar-zoom-imagen:active{
+        color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* ---------- MÓVIL ---------- */
+    @media (max-width:650px){
+      /* X del buscador: mismo tamaño visual que el icono de filtros. */
+      body #buscador::-webkit-search-cancel-button{
+        -webkit-appearance:none !important;
+        appearance:none !important;
+        width:22px !important;
+        height:22px !important;
+        min-width:22px !important;
+        margin:0 1px 0 7px !important;
+        opacity:1 !important;
+        background-color:var(--color-principal) !important;
+        -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+        -webkit-mask-repeat:no-repeat !important;
+        -webkit-mask-position:center !important;
+        -webkit-mask-size:100% 100% !important;
+        mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+        mask-repeat:no-repeat !important;
+        mask-position:center !important;
+        mask-size:100% 100% !important;
+      }
+
+      /* Icono de Filtros ópticamente centrado. */
+      body .control-orden{
+        display:grid !important;
+        place-items:center !important;
+      }
+
+      body .control-orden .icono-orden{
+        display:grid !important;
+        place-items:center !important;
+        width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:1.35rem !important;
+        line-height:1 !important;
+        transform:translateY(-1px) !important;
+      }
+
+      /* Cantidad mucho más ancha; carrito sólo conserva el ancho del icono. */
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) 32px !important;
+        column-gap:6px !important;
+      }
+
+      body .fila-compra .selector-cantidad,
+      body .productos-comparados .fila-compra .selector-cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        justify-self:stretch !important;
+      }
+
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        height:30px !important;
+        min-height:30px !important;
+        max-height:30px !important;
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      }
+
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        height:28px !important;
+        min-height:28px !important;
+        max-height:28px !important;
+        padding:0 !important;
+        text-align:center !important;
+      }
+
+      body .fila-compra .agregar-carrito,
+      body .fila-compra .agregar-carrito.agregado,
+      body .productos-comparados .fila-compra .agregar-carrito,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado{
+        width:32px !important;
+        min-width:32px !important;
+        max-width:32px !important;
+        height:30px !important;
+        min-height:30px !important;
+        max-height:30px !important;
+        padding:0 !important;
+        justify-self:end !important;
+      }
+
+      body .fila-compra .agregar-carrito .icono-agregar svg,
+      body .productos-comparados .fila-compra .agregar-carrito .icono-agregar svg{
+        width:17px !important;
+        height:17px !important;
+      }
+
+      /* Compactación máxima segura entre código e imagen. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:58px !important;
+        height:58px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        min-height:40px !important;
+        height:40px !important;
+        margin:0 !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        min-height:16px !important;
+        height:16px !important;
+        line-height:16px !important;
+        margin:0 !important;
+      }
+
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
+      }
+
+      /* Más info. casi al ras del borde inferior, sin pegarse visualmente. */
+      body #productos .zona-detalles-producto,
+      body #productosComparados .zona-detalles-producto{
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      body #productos .tarjeta-producto,
+      body #productosComparados .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:5px !important;
+      }
+
+      /* Zoom móvil de un solo nivel: imagen completa, proporcional y centrada. */
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+        cursor:zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay{
+        display:none !important;
+      }
+
+      body .zoom-imagen-overlay.abierto{
+        display:block !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-escenario{
+        width:100% !important;
+        height:100% !important;
+        padding:8px !important;
+        overflow:hidden !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-marco{
+        width:auto !important;
+        height:auto !important;
+        max-width:100% !important;
+        max-height:100% !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-ampliada{
+        display:block !important;
+        width:auto !important;
+        height:auto !important;
+        max-width:calc(100vw - 16px) !important;
+        max-height:calc(100vh - 16px) !important;
+        object-fit:contain !important;
+        background:var(--color-fondo) !important;
+        border-radius:8px !important;
+        cursor:default !important;
+      }
+
+      body .zoom-imagen-overlay .cerrar-zoom-imagen{
+        display:none !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v68">
+    /* =========================================================
+       V68 — refinamiento de controles + centrado móvil
+       ========================================================= */
+
+    /* En ambas versiones: cantidad y carrito negros, pero con el
+       mismo borde suave y fondo cálido de "Más info.". */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .agregar-carrito,
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.22) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-left:1px solid rgba(111,103,97,.22) !important;
+      border-right:1px solid rgba(111,103,97,.22) !important;
+    }
+
+    /* Ningún estado vuelve rojos los signos ni el número. */
+    body .fila-compra .boton-cantidad:hover,
+    body .fila-compra .boton-cantidad:focus,
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:hover,
+    body .productos-comparados .fila-compra .boton-cantidad:focus,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#171717 !important;
+      background:rgba(111,103,97,.07) !important;
+      border-color:rgba(111,103,97,.22) !important;
+    }
+
+    body .fila-compra .agregar-carrito:hover,
+    body .fila-compra .agregar-carrito:focus,
+    body .fila-compra .agregar-carrito:active,
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito:hover,
+    body .productos-comparados .fila-compra .agregar-carrito:focus,
+    body .productos-comparados .fila-compra .agregar-carrito:active,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+    }
+
+    body .fila-compra .agregar-carrito .icono-agregar,
+    body .fila-compra .agregar-carrito.agregado .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado .icono-agregar{
+      color:#171717 !important;
+    }
+
+    /* Marca sticky: ambas partes con el mismo tamaño; el subtítulo
+       conserva el tono secundario. */
+    body .marca-sticky-catalogo{
+      font-size:12.5px !important;
+    }
+
+    body .marca-sticky-catalogo strong,
+    body .marca-sticky-catalogo > span:last-child{
+      font-size:1em !important;
+    }
+
+    body .marca-sticky-catalogo > span:last-child{
+      color:#342f2c !important;
+      font-weight:500 !important;
+    }
+
+    @media (max-width:650px){
+      /* Título y código centrados horizontal y verticalmente como en PC. */
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        width:100% !important;
+        margin:0 !important;
+        text-align:center !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:100% !important;
+        text-align:center !important;
+      }
+
+      /* Marca sticky móvil: CERACECI e Insumos para cerámica, mismo tamaño. */
+      body .marca-sticky-catalogo{
+        font-size:11.5px !important;
+      }
+
+      /* Controles superiores más bajos, sin reducir tipografía. */
+      body .fila-busqueda-orden{
+        grid-template-columns:minmax(0,1fr) 38px !important;
+        column-gap:6px !important;
+      }
+
+      body #buscador,
+      body #filtroCategoria{
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
+      }
+
+      body #buscador{
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+      }
+
+      body #filtroCategoria{
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+      }
+
+      body .control-orden{
+        width:38px !important;
+        min-width:38px !important;
+        max-width:38px !important;
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
+        display:grid !important;
+        place-items:center !important;
+      }
+
+      body .control-orden .icono-orden{
+        display:grid !important;
+        place-items:center !important;
+        width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        line-height:1 !important;
+        transform:none !important;
+      }
+
+      body .control-orden select{
+        width:38px !important;
+        height:38px !important;
+        min-height:0 !important;
+      }
+
+      /* La X roja sólo existe visualmente cuando hay texto escrito. */
+      body #buscador:placeholder-shown::-webkit-search-cancel-button{
+        width:0 !important;
+        min-width:0 !important;
+        height:0 !important;
+        margin:0 !important;
+        opacity:0 !important;
+        pointer-events:none !important;
+      }
+
+      body #buscador:not(:placeholder-shown)::-webkit-search-cancel-button{
+        width:22px !important;
+        min-width:22px !important;
+        height:22px !important;
+        margin:0 1px 0 7px !important;
+        opacity:1 !important;
+        pointer-events:auto !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v69">
+    /* =========================================================
+       V69 — controles neutros + acciones junto a la foto móvil
+       ========================================================= */
+
+    /* − 1 +: negro real en todos los estados, sin rojo residual. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad,
+    body .fila-compra .boton-cantidad:hover,
+    body .fila-compra .boton-cantidad:focus,
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:hover,
+    body .productos-comparados .fila-compra .boton-cantidad:focus,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-left:1px solid rgba(111,103,97,.22) !important;
+      border-right:1px solid rgba(111,103,97,.22) !important;
+    }
+
+    /* Carrito: neutro en reposo y rojo/blanco al quedar agregado. */
+    body .fila-compra .agregar-carrito:not(.agregado),
+    body .productos-comparados .fila-compra .agregar-carrito:not(.agregado){
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .agregar-carrito:not(.agregado) .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito:not(.agregado) .icono-agregar{
+      color:#171717 !important;
+    }
+
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado,
+    body .fila-compra .agregar-carrito.agregado:hover,
+    body .fila-compra .agregar-carrito.agregado:focus,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado:hover,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado:focus{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .fila-compra .agregar-carrito.agregado .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado .icono-agregar{
+      color:#fff !important;
+    }
+
+    body .fila-compra .agregar-carrito:active,
+    body .productos-comparados .fila-compra .agregar-carrito:active{
+      transform:scale(.97) !important;
+    }
+
+    /* Presentaciones: ninguna parece pulsada al cargar.
+       Sólo una selección explícita adquiere rojo. */
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .selector-presentacion:not(.seleccionada){
+      color:#49433f !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.24) !important;
+      box-shadow:none !important;
+      font-weight:500 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .selector-presentacion.seleccionada{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:600 !important;
+    }
+
+    /* Una única presentación permanece neutra siempre. */
+    body .opciones-presentacion > .boton-presentacion:only-child,
+    body .opciones-presentacion > .boton-presentacion:only-child:hover,
+    body .opciones-presentacion > .boton-presentacion:only-child:focus,
+    body .opciones-presentacion > .boton-presentacion:only-child:active{
+      color:#49433f !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.24) !important;
+      font-weight:500 !important;
+    }
+
+    @media (max-width:650px){
+      /* Título y código conservan el centro real de toda la tarjeta. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        padding-left:0 !important;
+        padding-right:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto,
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        width:100% !important;
+        text-align:center !important;
+      }
+
+      /* La foto deja una columna angosta a su derecha para Compartir/Comparar. */
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-right:38px !important;
+      }
+
+      /* Los botones siguen perteneciendo al encabezado, pero visualmente
+         se colocan a la derecha de la foto, uno debajo del otro. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        position:absolute !important;
+        top:101px !important;
+        right:0 !important;
+        z-index:4 !important;
+        display:flex !important;
+        flex-direction:column !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:5px !important;
+        width:32px !important;
+        margin:0 !important;
+      }
+
+      body #productos .encabezado-producto .compartir-producto,
+      body #productos .encabezado-producto .boton-comparar,
+      body #productosComparados .encabezado-producto .compartir-producto,
+      body #productosComparados .encabezado-producto .boton-comparar{
+        width:32px !important;
+        min-width:32px !important;
+        max-width:32px !important;
+        height:32px !important;
+        min-height:32px !important;
+        max-height:32px !important;
+        padding:0 !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v70">
+    /* =========================================================
+       V70 — centrado acciones móvil + estados táctiles coherentes
+       ========================================================= */
+
+    /* Presentaciones: más legibles en ambas versiones. */
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .selector-presentacion:not(.seleccionada),
+    body .opciones-presentacion > .boton-presentacion:only-child{
+      font-weight:700 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .selector-presentacion.seleccionada{
+      font-weight:700 !important;
+    }
+
+    /* − 1 +: reposo negro; al presionar, mismo feedback rojo/blanco que el resto. */
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+    }
+
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    @media (max-width:650px){
+      /* Compartir y Comparar perfectamente centrados respecto de los 150 px de foto.
+         Encabezado: 58 px. Botones: 32 + 5 + 32 = 69 px. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        top:calc(58px + (150px - 69px) / 2) !important;
+        right:0 !important;
+        height:69px !important;
+        justify-content:center !important;
+        transform:none !important;
+      }
+
+      /* Quitar parpadeo táctil de las presentaciones sin alterar su selección real. */
+      body .boton-presentacion,
+      body .selector-presentacion{
+        -webkit-tap-highlight-color:transparent !important;
+        transition:none !important;
+        animation:none !important;
+        touch-action:manipulation;
+      }
+
+      body .boton-presentacion:not(.seleccionada):active,
+      body .opciones-presentacion > .boton-presentacion:only-child:active{
+        color:#49433f !important;
+        -webkit-text-fill-color:#49433f !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.24) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+
+      body .boton-presentacion.seleccionada:active,
+      body .selector-presentacion.seleccionada:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+
+      /* Icono Filtros negro y ópticamente centrado. */
+      body .control-orden .icono-orden{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        transform:none !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v71">
+    /* =========================================================
+       V71 — títulos móviles + presentación única + separadores rojos
+       ========================================================= */
+
+    /* Una sola presentación funciona exactamente igual que el resto:
+       neutra al cargar y roja/blanca después de ser elegida. */
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada,
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:hover,
+    body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+    }
+
+    /* El rojo aparece en el espacio real entre tarjetas. Las tarjetas
+       conservan su fondo cálido. */
+    body #productos{
+      background:var(--color-principal) !important;
+    }
+
+    /* Si la última fila queda incompleta, cubrimos los tracks vacíos con
+       el fondo general para que no aparezca un gran bloque rojo. */
+    body #productos::after{
+      content:"";
+      display:none;
+      min-width:0;
+      background:var(--color-fondo);
+    }
+
+    @media (min-width:1101px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 1))::after{
+        display:block;
+        grid-column:2 / 5;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 2))::after{
+        display:block;
+        grid-column:3 / 5;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(4n + 3))::after{
+        display:block;
+        grid-column:4 / 5;
+      }
+    }
+
+    @media (min-width:801px) and (max-width:1100px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(3n + 1))::after{
+        display:block;
+        grid-column:2 / 4;
+      }
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(3n + 2))::after{
+        display:block;
+        grid-column:3 / 4;
+      }
+    }
+
+    @media (max-width:800px){
+      body #productos:has(> .tarjeta-producto:last-child:nth-child(2n + 1))::after{
+        display:block;
+        grid-column:2 / 3;
+      }
+    }
+
+    body.modo-producto-compartido #productos{
+      background:transparent !important;
+    }
+
+    body.modo-producto-compartido #productos::after{
+      display:none !important;
+    }
+
+    @media (max-width:650px){
+      /* Menor distancia código -> foto para todas las tarjetas. */
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        min-height:14px !important;
+        height:14px !important;
+        line-height:14px !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:55px !important;
+        height:55px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+        row-gap:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        min-height:39px !important;
+        height:39px !important;
+        margin:0 !important;
+      }
+
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
+      }
+
+      /* Sólo los títulos que realmente necesitan 3 líneas ganan altura
+         y un pequeño aire extra antes del código. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        min-height:74px !important;
+        height:74px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        min-height:55px !important;
+        height:55px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas h2,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas h2{
+        min-height:0 !important;
+        max-height:55px !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* En móvil, la presentación única seleccionada tampoco parpadea. */
+      body .opciones-presentacion > .boton-presentacion:only-child.seleccionada:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+        transform:none !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-v72">
+    /* =========================================================
+       V72 — limpieza de estados + límites de tarjetas + cruces negras
+       ========================================================= */
+
+    /* Quitar el rojo entre tarjetas de V71. */
+    body #productos{
+      background:transparent !important;
+    }
+
+    body #productos::after{
+      display:none !important;
+    }
+
+    /* Límites más claros sin endurecer el diseño. */
+    body #productos .tarjeta-producto,
+    body #productosComparados .tarjeta-producto{
+      border:1px solid rgba(91,84,79,.30) !important;
+      box-shadow:0 2px 5px rgba(45,36,31,.055), 0 8px 20px rgba(45,36,31,.075) !important;
+    }
+
+    @media (min-width:651px) and (hover:hover){
+      body #productos .tarjeta-producto:hover,
+      body #productosComparados .tarjeta-producto:hover{
+        border-color:rgba(91,84,79,.38) !important;
+        box-shadow:0 4px 9px rgba(45,36,31,.075), 0 12px 26px rgba(45,36,31,.10) !important;
+      }
+    }
+
+    /* − 1 +: estado normal neutro. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
     }
 
     body .fila-compra .control-cantidad .boton-cantidad,
     body .fila-compra .control-cantidad .cantidad,
     body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
     body .productos-comparados .fila-compra .control-cantidad .cantidad{
-      color:#1f1f1f !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
       background:var(--color-control) !important;
-      font-weight:700 !important;
+      border-color:rgba(111,103,97,.22) !important;
     }
 
-    body .fila-compra .control-cantidad .cantidad,
-    body .productos-comparados .fila-compra .control-cantidad .cantidad{
-      border-left-color:#1f1f1f !important;
-      border-right-color:#1f1f1f !important;
-    }
-
-    /* PC: hover = letras rojas, fondo cálido y borde rojo. */
-    @media (min-width:651px) and (hover:hover) and (pointer:fine){
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover{
-        border-color:var(--color-principal) !important;
-        background:var(--color-control) !important;
-      }
-
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .boton-cantidad,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .boton-cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .cantidad{
-        color:var(--color-principal) !important;
-        background:var(--color-control) !important;
-        font-weight:700 !important;
-      }
-
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):not(.cantidad-hover-bloqueado):hover .cantidad{
-        border-left-color:var(--color-principal) !important;
-        border-right-color:var(--color-principal) !important;
-      }
-
-      /* Tras soltar el clic, se fuerza reposo hasta que el mouse salga. */
-      body .fila-compra .control-cantidad.cantidad-hover-bloqueado,
-      body .productos-comparados .fila-compra .control-cantidad.cantidad-hover-bloqueado{
-        border-color:#1f1f1f !important;
-        background:var(--color-control) !important;
-      }
-
-      body .fila-compra .control-cantidad.cantidad-hover-bloqueado .boton-cantidad,
-      body .fila-compra .control-cantidad.cantidad-hover-bloqueado .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad.cantidad-hover-bloqueado .boton-cantidad,
-      body .productos-comparados .fila-compra .control-cantidad.cantidad-hover-bloqueado .cantidad{
-        color:#1f1f1f !important;
-        background:var(--color-control) !important;
-        font-weight:700 !important;
-      }
-
-      body .fila-compra .control-cantidad.cantidad-hover-bloqueado .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad.cantidad-hover-bloqueado .cantidad{
-        border-left-color:#1f1f1f !important;
-        border-right-color:#1f1f1f !important;
-      }
-    }
-
-    /* PC + móvil: SOLO mientras el dedo/botón está físicamente presionando − o +. */
-    body .fila-compra .control-cantidad.cantidad-presionada,
-    body .productos-comparados .fila-compra .control-cantidad.cantidad-presionada{
-      border-color:var(--color-principal) !important;
-      background:var(--color-principal) !important;
-    }
-
-    body .fila-compra .control-cantidad.cantidad-presionada .boton-cantidad,
-    body .fila-compra .control-cantidad.cantidad-presionada .cantidad,
-    body .productos-comparados .fila-compra .control-cantidad.cantidad-presionada .boton-cantidad,
-    body .productos-comparados .fila-compra .control-cantidad.cantidad-presionada .cantidad{
+    /* Estado persistente tras usar − o +: igual que Presentaciones. */
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
       color:#fff !important;
       background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+    body .fila-compra .control-cantidad.seleccionado .cantidad,
+    body .fila-compra .control-cantidad.seleccionado .boton-cantidad:hover,
+    body .fila-compra .control-cantidad.seleccionado .boton-cantidad:focus,
+    body .fila-compra .control-cantidad.seleccionado .boton-cantidad:active,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .boton-cantidad:hover,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .boton-cantidad:focus,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:rgba(255,255,255,.48) !important;
+    }
+
+    body .fila-compra .control-cantidad.seleccionado .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .cantidad{
+      border-left-color:rgba(255,255,255,.48) !important;
+      border-right-color:rgba(255,255,255,.48) !important;
+    }
+
+    /* X del zoom: negro sobre blanco cálido; al pulsar, rojo/blanco. */
+    body .cerrar-zoom-imagen,
+    body .cerrar-zoom-imagen:hover,
+    body .cerrar-zoom-imagen:focus-visible{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.32) !important;
+    }
+
+    body .cerrar-zoom-imagen:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* X nativa del buscador negra en escritorio y móvil. */
+    body #buscador::-webkit-search-cancel-button{
+      background-color:#171717 !important;
+    }
+  </style>
+
+
+
+  <style id="ajustes-v73">
+    /* =========================================================
+       V73 — cantidad por botón + centrado exacto de acciones móvil
+       ========================================================= */
+
+    /* Anula el estado persistente aplicado anteriormente al contenedor. */
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+    }
+
+    body .fila-compra .control-cantidad.seleccionado .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-left-color:rgba(111,103,97,.22) !important;
+      border-right-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* Reposo: cada segmento conserva el aspecto neutro. */
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+    }
+
+    /* Sólo − o + puede quedar seleccionado. */
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:hover,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:focus,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:hover,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:focus,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* El valor central nunca hereda el rojo del botón seleccionado. */
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+    }
+
+    @media (max-width:650px){
+      /* Centro geométrico de la columna Compartir/Comparar respecto de
+         la foto de 150 px. Se usa el centro del bloque completo. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        top:130px !important; /* 55 px de cabecera + 75 px hasta el centro de la foto */
+        right:0 !important;
+        height:69px !important;
+        transform:translateY(-50%) !important;
+        justify-content:center !important;
+      }
+
+      /* Los títulos móviles de tres líneas tienen una cabecera 19 px más alta. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        top:149px !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajustes-v74">
+    /* =========================================================
+       V74 — código limpio + cantidad momentánea + compartir + centrado real
+       ========================================================= */
+
+    /* − y +: nunca conservan selección después del clic. */
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* El efecto invertido existe sólo mientras se está pulsando. */
+    body .fila-compra .control-cantidad .boton-cantidad:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Compartir recibe el mismo feedback rojo/blanco al pulsar. */
+    body .compartir-producto:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto:active svg{
+      fill:currentColor !important;
+      stroke:currentColor !important;
+    }
+
+    @media (max-width:650px){
+      /* La posición vertical la calcula JS usando el centro real de la foto. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto,
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        right:0 !important;
+        transform:none !important;
+        justify-content:flex-start !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajustes-v75">
+    /* V75 — presentaciones deseleccionables + feedback fiable de Compartir. */
+
+    /* La presentación seleccionada conserva el estado rojo/blanco. */
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .boton-presentacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Al deseleccionarla vuelve exactamente al estado neutro. */
+    body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* Compartir: feedback rojo + icono blanco al pulsar,
+       incluso si se abre enseguida el diálogo nativo de compartir. */
+    body .compartir-producto:active,
+    body .compartir-producto.compartir-presionado{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto:active svg,
+    body .compartir-producto.compartir-presionado svg{
+      fill:#fff !important;
+      stroke:#fff !important;
+      color:#fff !important;
+    }
+  </style>
+
+
+  <style id="ajuste-foto-movil-v76">
+    /* V76 — foto móvil más centrada visualmente respecto de la tarjeta. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:4px !important;
+        margin-right:34px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:62% 50% !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajuste-espaciado-titulo-codigo-movil-v77">
+    /* V77 — móvil: título -> código con aire equivalente al interlineado,
+       compensando al máximo antes de la foto para casi no alargar la tarjeta. */
+    @media (max-width:650px){
+      /* Separación visual entre la última línea del título y el código. */
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* Tarjetas de 1–2 líneas: sólo 2 px extra reales de altura.
+         39 px de título + 4 px de separación + 14 px de código = 57 px. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:57px !important;
+        height:57px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+        row-gap:0 !important;
+      }
+
+      /* En títulos de 3 líneas ya existía el aire necesario;
+         conservamos su altura para no estirar la tarjeta. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        min-height:74px !important;
+        height:74px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* Código -> foto: sin margen adicional; queda al mínimo seguro. */
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
+      }
+    }
+  </style>
+
+  <style id="ajuste-foto-movil-v79">
+    /* V79 — móvil: desplaza la foto hacia la derecha para equilibrar
+       el espacio foto ↔ acciones con acciones ↔ borde derecho. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:8px !important;
+        margin-right:30px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:64% 50% !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajuste-equilibrio-foto-movil-v80">
+    /* V80 — móvil: la foto se acerca un poco más a la columna de acciones.
+       Se conserva el tamaño y la columna Compartir/Comparar no se mueve. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:14px !important;
+        margin-right:24px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:70% 50% !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajustes-v81">
+    /* =========================================================
+       V81 — jerarquía sticky + estados PC + zoom + carrito + fondo
+       ========================================================= */
+
+    /* Fondo de los canales entre tarjetas apenas más oscuro.
+       background-clip evita teñir el padding inferior de la grilla. */
+    body .productos{
+      background:#f1ece8 !important;
+      background-clip:content-box !important;
+    }
+
+    /* El texto flotante del carrito queda en una sola línea y gana presencia
+       sin modificar la altura actual del botón ni de su cápsula interna. */
+    body .texto-finalizar-carrito{
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:center !important;
+      min-width:0 !important;
+      line-height:1 !important;
+      white-space:nowrap !important;
+    }
+
+    body .texto-finalizar-carrito span,
+    body .texto-finalizar-carrito span:first-child,
+    body .texto-finalizar-carrito span:last-child{
+      display:inline !important;
+      font-size:15px !important;
       font-weight:700 !important;
+      line-height:1 !important;
+      white-space:nowrap !important;
     }
 
-    body .fila-compra .control-cantidad.cantidad-presionada .cantidad,
-    body .productos-comparados .fila-compra .control-cantidad.cantidad-presionada .cantidad{
-      border-left-color:rgba(255,255,255,.55) !important;
-      border-right-color:rgba(255,255,255,.55) !important;
+    /* Escritorio: todos los controles comerciales usan la misma lógica.
+       Reposo = neutro; hover = blanco cálido + rojo; seleccionado = rojo + blanco. */
+    @media (min-width:651px){
+      body .boton-presentacion:not(.seleccionada),
+      body .selector-presentacion:not(.seleccionada),
+      body .boton-comparar[aria-pressed="false"],
+      body .fila-compra .agregar-carrito:not(.agregado),
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado){
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .boton-presentacion.seleccionada,
+      body .boton-presentacion[aria-pressed="true"],
+      body .selector-presentacion.seleccionada,
+      body .boton-comparar[aria-pressed="true"],
+      body .fila-compra .agregar-carrito.agregado,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .agregar-carrito.agregado .icono-agregar,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado .icono-agregar,
+      body .fila-compra .agregar-carrito.agregado svg,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado svg{
+        color:#fff !important;
+        fill:currentColor !important;
+        stroke:currentColor !important;
+      }
     }
 
-    /* MÓVIL: neutraliza :hover/:focus pegajosos de Chrome después de tocar. */
-    @media (hover:none), (pointer:coarse){
-      body .fila-compra .control-cantidad:not(.cantidad-presionada),
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):hover,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada):focus-within,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada),
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):hover,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada):focus-within{
-        border-color:#1f1f1f !important;
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada):hover,
+      body .selector-presentacion:not(.seleccionada):hover,
+      body .boton-comparar[aria-pressed="false"]:hover,
+      body .fila-compra .agregar-carrito:not(.agregado):hover,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        box-shadow:none !important;
+      }
+
+      body .fila-compra .agregar-carrito:not(.agregado):hover .icono-agregar,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover .icono-agregar,
+      body .fila-compra .agregar-carrito:not(.agregado):hover svg,
+      body .productos-comparados .fila-compra .agregar-carrito:not(.agregado):hover svg{
+        color:var(--color-principal) !important;
+        fill:currentColor !important;
+        stroke:currentColor !important;
+      }
+
+      /* Un control ya seleccionado no cambia al señalarlo. */
+      body .boton-presentacion.seleccionada:hover,
+      body .boton-presentacion[aria-pressed="true"]:hover,
+      body .selector-presentacion.seleccionada:hover,
+      body .boton-comparar[aria-pressed="true"]:hover,
+      body .fila-compra .agregar-carrito.agregado:hover,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado:hover{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Zoom PC: la lupa conserva el mismo tamaño grande en ambos niveles.
+       Se mantiene blanco/negro, pero con trazos más finos. */
+    @media (min-width:651px){
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+      body .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='1.35'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M13.5 10v7M10 13.5h7' stroke='%23161616' stroke-width='1.35' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay.nivel-2 .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='1.35'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='1.9' stroke-linecap='round'/%3E%3Cpath d='M10 13.5h7' stroke='%23161616' stroke-width='1.35' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-out !important;
+      }
+    }
+
+    /* Móvil: marca sticky al mismo tamaño que los títulos de producto. */
+    @media (max-width:650px){
+      body .marca-sticky-catalogo,
+      body .marca-sticky-catalogo strong,
+      body .marca-sticky-catalogo > span{
+        font-size:17.27px !important;
+        line-height:1.05 !important;
+      }
+
+      body .marca-sticky-catalogo{
+        gap:4px !important;
+      }
+
+      body .marca-sticky-catalogo strong{
+        color:var(--color-principal) !important;
+      }
+
+      body .marca-sticky-catalogo > span:last-child{
+        color:#2d2926 !important;
+        font-weight:500 !important;
+      }
+
+      body.marca-scroll-activa .marca-sticky-catalogo{
+        max-height:22px !important;
+      }
+
+      body .texto-finalizar-carrito span,
+      body .texto-finalizar-carrito span:first-child,
+      body .texto-finalizar-carrito span:last-child{
+        font-size:14px !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajustes-v82">
+    /* =========================================================
+       V82 — hover PC + carrito + comparación + estados móvil
+       ========================================================= */
+
+    /* Finalizar mi pedido: una sola línea, sin modificar la altura del botón. */
+    body .texto-finalizar-carrito,
+    body .texto-finalizar-carrito span{
+      white-space:nowrap !important;
+    }
+
+    /* PC: Presentaciones conservan negrita en hover y suman borde/texto rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada):hover,
+      body .selector-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+        box-shadow:none !important;
+      }
+
+      /* − 1 +: mismo hover que Más info.; el control completo queda blanco/rojo. */
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
         background:var(--color-control) !important;
       }
 
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:hover,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:focus,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:active,
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:hover,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:focus,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .boton-cantidad:active,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .cantidad{
-        color:#1f1f1f !important;
-        background:var(--color-control) !important;
+      /* Al presionar − o +, sólo ese segmento se invierte. */
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Estado seleccionado real: rojo + blanco y no cambia al hacer hover. */
+    @media (min-width:651px){
+      body .boton-presentacion.seleccionada,
+      body .boton-presentacion[aria-pressed="true"],
+      body .boton-comparar[aria-pressed="true"],
+      body .boton-comparar.seleccionado,
+      body .agregar-carrito.agregado{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Quitar todos desaparece definitivamente de la vista de comparación. */
+    body .limpiar-comparacion-vista{
+      display:none !important;
+    }
+
+    body .seccion-comparacion{
+      position:relative !important;
+    }
+
+    /* PC: Volver al catálogo arriba, a la derecha. */
+    @media (min-width:651px){
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        position:absolute !important;
+        top:10px !important;
+        right:10px !important;
+        left:auto !important;
+        z-index:3 !important;
+        display:flex !important;
+        justify-content:flex-end !important;
+        width:auto !important;
+        margin:0 !important;
+      }
+
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        text-align:center !important;
+      }
+
+      body .volver-catalogo{
+        min-height:31px !important;
+        height:31px !important;
+        padding:0 10px !important;
+        font-size:.75rem !important;
+      }
+    }
+
+    /* Volver al catálogo: normal rojo/blanco cálido; invertido sólo al pulsar. */
+    body .volver-catalogo{
+      color:var(--color-principal) !important;
+      -webkit-text-fill-color:var(--color-principal) !important;
+      background:var(--color-control) !important;
+      border:1px solid var(--color-principal) !important;
+      border-radius:10px !important;
+      box-shadow:none !important;
+    }
+
+    body .volver-catalogo:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    @media (max-width:650px){
+      /* Texto del carrito exactamente del mismo tamaño que $ 0. */
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:.98rem !important;
+        line-height:1 !important;
+      }
+
+      body .texto-finalizar-carrito span{
         font-weight:700 !important;
       }
 
-      body .fila-compra .control-cantidad:not(.cantidad-presionada) .cantidad,
-      body .productos-comparados .fila-compra .control-cantidad:not(.cantidad-presionada) .cantidad{
-        border-left-color:#1f1f1f !important;
-        border-right-color:#1f1f1f !important;
+      /* − 1 + nunca queda rojo después de soltar. */
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad,
+      body .fila-compra .control-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+        color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
       }
 
-      /* Compartir: mientras el panel nativo está abierto queda rojo; al cerrarlo vuelve sí o sí. */
-      body .compartir-producto.compartiendo{
+      body .fila-compra .control-cantidad .boton-cantidad,
+      body .fila-compra .control-cantidad .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .cantidad,
+      body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .fila-compra .control-cantidad .boton-cantidad:focus:not(:active),
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus:not(:active){
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      /* Compartir queda marcado rojo/blanco después de usarlo. */
+      body .compartir-producto.compartir-presionado,
+      body .compartir-producto.compartir-presionado:focus,
+      body .compartir-producto.compartir-presionado:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .compartir-producto.compartir-presionado svg{
+        color:#fff !important;
+        fill:#fff !important;
+        stroke:#fff !important;
+      }
+
+      /* Más info. deseleccionado vuelve a neutro. */
+      body .ver-detalles[aria-expanded="false"],
+      body .ver-detalles[aria-expanded="false"]:focus,
+      body .ver-detalles[aria-expanded="false"]:active{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .ver-detalles[aria-expanded="true"]{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      /* Comparación móvil: el encabezado sólo conserva el título. */
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+        margin-bottom:8px !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:1 !important;
+        text-align:center !important;
+      }
+
+      /* Volver al catálogo queda después de las tarjetas, a la derecha,
+         y por encima visualmente de la barra fija del carrito. */
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        position:static !important;
+        display:flex !important;
+        justify-content:flex-end !important;
+        align-items:center !important;
+        width:100% !important;
+        margin:8px 0 72px !important;
+      }
+
+      body .volver-catalogo{
+        width:calc((100% - 4px) / 2 - 8px) !important;
+        min-width:0 !important;
+        height:30px !important;
+        min-height:30px !important;
+        padding:0 8px !important;
+        font-size:15.5px !important;
+        font-weight:600 !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajuste-carrito-movil-v84">
+    /* V84 — carrito móvil: texto y total a 20 px, sin cambiar la altura. */
+    @media (max-width:650px){
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+
+  <style id="correcciones-estados-v85">
+    /* =========================================================
+       V85 — estados coherentes de cantidad y presentaciones
+       ========================================================= */
+
+    /* PRESENTACIONES — estado inicial */
+    body .boton-presentacion,
+    body .boton-presentacion:not(.seleccionada),
+    body .boton-presentacion[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      font-weight:700 !important;
+      box-shadow:none !important;
+    }
+
+    /* PRESENTACIONES — seleccionada: rojo + blanco y negrita. */
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion[aria-pressed="true"],
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion[aria-pressed="true"]:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .boton-presentacion[aria-pressed="true"]:focus,
+    body .boton-presentacion.seleccionada:active,
+    body .boton-presentacion[aria-pressed="true"]:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+      box-shadow:none !important;
+    }
+
+    /* PC — hover de presentación sin perder negrita. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]:hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+      }
+    }
+
+    /* − 1 + — nunca conserva estado seleccionado. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .fila-compra .control-cantidad .boton-cantidad:focus:not(:active),
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus:not(:active){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    /* Mientras se pulsa − o +, sólo ese segmento se invierte. */
+    body .fila-compra .control-cantidad .boton-cantidad:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* PC — hover del control igual a Más info.: blanco, texto/borde rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    /* Mantener el mensaje del carrito definido en V84. */
+    @media (max-width:650px){
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajustes-finales-v86">
+    /* =========================================================
+       V86 — cantidad definitiva + carrito móvil + comparación
+       ========================================================= */
+
+    /* − 1 +: nunca conserva un estado seleccionado. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad,
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .boton-cantidad{
+      -webkit-tap-highlight-color:transparent !important;
+      touch-action:manipulation;
+    }
+
+    /* PC: hover igual a Más info. — blanco cálido, texto y borde rojos. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    /* Móvil: neutraliza :hover/:focus pegado tras un toque. */
+    @media (max-width:650px), (hover:none), (pointer:coarse){
+      body .fila-compra .control-cantidad:hover,
+      body .fila-compra .control-cantidad:focus,
+      body .productos-comparados .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:focus{
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:hover,
+      body .fila-compra .control-cantidad .boton-cantidad:focus,
+      body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .cantidad{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+    }
+
+    /* Escritorio: presentación mantiene negrita y hover rojo, sin fondo rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]:hover,
+      body .selector-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+      }
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+    }
+
+    /* Marca inferior móvil. */
+    body .marca-inferior-movil{
+      display:none;
+    }
+
+    body .marca-comparacion-movil{
+      display:none;
+    }
+
+    @media (max-width:650px){
+      /* Carrito simplificado: Ver + carrito + total. */
+      body .abrir-carrito .logo-carrito{
+        display:none !important;
+      }
+
+      body .texto-carrito-pc{
+        display:none !important;
+      }
+
+      body .texto-carrito-movil{
+        display:inline !important;
+        font-size:20px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+      }
+
+      body #valorCarrito{
+        font-size:20px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito strong{
+        gap:6px !important;
+        padding-right:9px !important;
+        padding-left:9px !important;
+      }
+
+      /* Franja de marca inferior, debajo de toda la barra de acciones. */
+      body .marca-inferior-movil{
+        position:fixed;
+        right:0;
+        bottom:0;
+        left:0;
+        z-index:32;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:4px;
+        min-height:28px;
+        padding:3px 8px calc(3px + env(safe-area-inset-bottom));
+        color:#2d2926;
+        background:rgba(246,242,238,.985);
+        border-top:1px solid rgba(111,103,97,.16);
+        font-size:17.27px;
+        line-height:1;
+        white-space:nowrap;
+      }
+
+      body .marca-inferior-movil strong{
+        color:var(--color-principal);
+        font-weight:700;
+      }
+
+      body .marca-inferior-movil > span:last-child{
+        color:#2d2926;
+        font-weight:500;
+      }
+
+      body .acciones-flotantes{
+        bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+        padding-bottom:7px !important;
+      }
+
+      body .aviso-copiado{
+        bottom:116px !important;
+      }
+
+      /* Comparación: misma marca sticky que el catálogo normal. */
+      body .marca-comparacion-movil{
+        position:sticky;
+        top:8px;
+        z-index:24;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        gap:4px;
+        min-height:34px;
+        margin-bottom:6px;
+        padding:5px 8px;
+        color:#2d2926;
+        background:rgba(246,242,238,.97);
+        border:1px solid rgba(111,103,97,.16);
+        border-radius:10px;
+        box-shadow:0 3px 10px rgba(70,40,25,.055);
+        backdrop-filter:blur(8px);
+        font-size:17.27px;
+        line-height:1.05;
+        white-space:nowrap;
+      }
+
+      body .marca-comparacion-movil strong{
+        color:var(--color-principal);
+        font-weight:700;
+      }
+
+      body .marca-comparacion-movil > span:last-child{
+        color:#2d2926;
+        font-weight:500;
+      }
+
+      /* Volver al catálogo: mismo ritmo vertical que las filas de tarjetas. */
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        margin-top:6px !important;
+        margin-bottom:106px !important;
+      }
+
+      /* Reflejo discreto cada 3 segundos. */
+      body .volver-catalogo{
+        position:relative !important;
+        overflow:hidden !important;
+      }
+
+      body .volver-catalogo::after{
+        content:"";
+        position:absolute;
+        top:-35%;
+        bottom:-35%;
+        left:-46%;
+        width:30%;
+        background:linear-gradient(110deg, transparent 0%, rgba(255,255,255,.15) 20%, rgba(255,255,255,.72) 50%, rgba(255,255,255,.15) 80%, transparent 100%);
+        transform:skewX(-18deg);
+        pointer-events:none;
+        animation:reflejo-volver-catalogo-v86 3s ease-in-out infinite;
+      }
+
+      body .volver-catalogo:active::after{
+        opacity:0;
+      }
+    }
+
+    @keyframes reflejo-volver-catalogo-v86{
+      0%, 72%{ left:-46%; opacity:0; }
+      76%{ opacity:1; }
+      94%{ left:116%; opacity:1; }
+      100%{ left:116%; opacity:0; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body .volver-catalogo::after{
+        animation:none !important;
+        display:none !important;
+      }
+    }
+  </style>
+
+
+  <style id="carrito-movil-ver-v87">
+    /* V87 — carrito móvil: Ver 🛒 | $ 0, centrado y sin logo CERACECI. */
+    @media (max-width:650px){
+      body .abrir-carrito{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+
+      body .abrir-carrito .logo-carrito,
+      body .abrir-carrito .texto-carrito-pc{
+        display:none !important;
+      }
+
+      body .abrir-carrito .texto-finalizar-carrito{
+        display:inline-flex !important;
+        flex:0 0 auto !important;
+        align-items:center !important;
+        justify-content:center !important;
+        min-width:0 !important;
+        width:auto !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      body .abrir-carrito .texto-carrito-movil{
+        display:inline !important;
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:20px !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+      }
+
+      body .abrir-carrito strong{
+        display:flex !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:32px !important;
+        margin:0 !important;
+        padding:0 8px !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:6px !important;
+        box-sizing:border-box !important;
+        white-space:nowrap !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        display:inline-flex !important;
+        flex:0 0 auto !important;
+        align-items:center !important;
+        justify-content:center !important;
+        margin:0 !important;
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .separador-carrito{
+        display:inline !important;
+        flex:0 0 auto !important;
+        margin:0 1px !important;
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito #valorCarrito{
+        display:inline !important;
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:20px !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+      }
+    }
+  </style>
+
+
+  <style id="carrito-movil-centrado-v88">
+    /* V88 — barra móvil definitiva: Ver 🛒 | $ 0 */
+    @media (max-width:650px){
+      body .abrir-carrito{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        text-align:center !important;
+      }
+
+      body .abrir-carrito .logo-carrito,
+      body .abrir-carrito .texto-carrito-pc{
+        display:none !important;
+        visibility:hidden !important;
+        width:0 !important;
+        height:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        overflow:hidden !important;
+      }
+
+      body .abrir-carrito strong#cantidadCarrito{
+        display:inline-flex !important;
+        width:auto !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        height:32px !important;
+        margin:0 auto !important;
+        padding:0 !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:7px !important;
+        text-align:center !important;
+        white-space:nowrap !important;
+      }
+
+      body .abrir-carrito .texto-finalizar-carrito{
+        display:inline-flex !important;
+        flex:0 0 auto !important;
+        width:auto !important;
+        min-width:0 !important;
+        margin:0 !important;
+        padding:0 !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+
+      /* 22 px para igualar ópticamente el peso visual del total en 20 px. */
+      body .abrir-carrito .texto-carrito-movil{
+        display:inline-block !important;
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:22px !important;
+        font-weight:600 !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+      }
+
+      body .abrir-carrito .icono-carrito{
+        display:inline-flex !important;
+        flex:0 0 auto !important;
+        align-items:center !important;
+        justify-content:center !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:21px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito .separador-carrito{
+        display:inline-block !important;
+        flex:0 0 auto !important;
+        margin:0 1px !important;
+        padding:0 !important;
+        font-size:20px !important;
+        line-height:1 !important;
+      }
+
+      body .abrir-carrito #valorCarrito{
+        display:inline-block !important;
+        flex:0 0 auto !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:20px !important;
+        font-weight:600 !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+      }
+    }
+  </style>
+
+
+  <style id="carrito-borde-v89">
+    /* V89 — restaura el marco rojo grueso del botón inferior del carrito en móvil. */
+    @media (max-width:650px){
+      body .abrir-carrito{
+        box-sizing:border-box !important;
+        height:44px !important;
+        min-height:44px !important;
+        padding:6px !important;
+        background:var(--color-principal) !important;
+        border:0 !important;
+        border-radius:999px !important;
+      }
+
+      body .abrir-carrito strong#cantidadCarrito{
+        box-sizing:border-box !important;
+        width:100% !important;
+        max-width:none !important;
+        height:32px !important;
+        margin:0 !important;
+        padding:0 7px !important;
+        background:var(--color-control) !important;
+        border-radius:999px !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="carrito-y-marca-superior-v92">
+    /* V92 — carrito compacto y centrado en PC y móvil. */
+
+    /* Se mantiene eliminada la marca CERACECI fija superior. */
+    body .marca-sticky-catalogo,
+    body .marca-comparacion-movil{
+      display:none !important;
+    }
+
+    body .busqueda{
+      grid-template-areas:"buscar categoria ordenar" !important;
+    }
+
+    body.marca-scroll-activa .busqueda{
+      row-gap:6px !important;
+    }
+
+    /* Carrito: Ver 🛒 | $ 0 en PC y móvil. */
+    body .abrir-carrito{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      box-sizing:border-box !important;
+      height:38px !important;
+      min-height:38px !important;
+      max-height:38px !important;
+      padding:0 10px !important;
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid #1c1c1c !important;
+      border-radius:999px !important;
+      box-shadow:0 4px 14px rgba(0,0,0,.055) !important;
+      overflow:hidden !important;
+    }
+
+    body .abrir-carrito .logo-carrito{
+      display:none !important;
+    }
+
+    body .abrir-carrito strong#cantidadCarrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:auto !important;
+      min-width:0 !important;
+      max-width:100% !important;
+      height:36px !important;
+      min-height:0 !important;
+      margin:0 auto !important;
+      padding:0 !important;
+      gap:7px !important;
+      color:#171717 !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+      white-space:nowrap !important;
+      line-height:1 !important;
+    }
+
+    body .abrir-carrito .texto-finalizar-carrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:auto !important;
+      min-width:0 !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito .texto-carrito-pc,
+    body .abrir-carrito .texto-carrito-movil{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:20px !important;
+      font-weight:700 !important;
+      line-height:.9 !important;
+      white-space:nowrap !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito .icono-carrito{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:21px !important;
+      line-height:1 !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito .separador-carrito{
+      display:inline-block !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:20px !important;
+      font-weight:400 !important;
+      line-height:1 !important;
+      margin:0 1px !important;
+      padding:0 !important;
+    }
+
+    body .abrir-carrito #valorCarrito{
+      display:inline-block !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:20px !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+      margin:0 !important;
+      padding:0 !important;
+      white-space:nowrap !important;
+    }
+
+    @media (min-width:651px){
+      body .abrir-carrito{
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
+      }
+
+      body .abrir-carrito .texto-finalizar-carrito{
+        display:inline-flex !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-pc{
+        display:inline-block !important;
+        font-size:20px !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-movil{
+        display:none !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .busqueda{
+        grid-template-areas:
+          "buscarorden"
+          "categoria" !important;
+        grid-template-columns:minmax(0,1fr) !important;
+      }
+
+      body .abrir-carrito{
+        width:100% !important;
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
+        padding:0 8px !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-pc{
+        display:none !important;
+      }
+
+      html body .abrir-carrito .texto-finalizar-carrito > .texto-carrito-movil{
+        display:inline-block !important;
+        font-size:20px !important;
+      }
+    }
+  </style>
+
+  <style id="estado-cantidad-v97">
+    /* =========================================================
+       V97 — estados definitivos de − 1 + en PC y móvil
+       ========================================================= */
+
+    /* PC: hover blanco cálido, texto rojo y borde rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos .fila-compra .control-cantidad:hover,
+      html body #productosComparados .fila-compra .control-cantidad:hover{
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad:hover .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad:hover .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      /* Al pulsar − o +, sólo el segmento pulsado se invierte. */
+      html body #productos .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      html body #productosComparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Reposo móvil, incluso si el navegador conserva :hover o :focus. */
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado),
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado){
+        color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .cantidad{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      /* Selección móvil persistente hasta agregar al carrito. */
+      html body #productos .fila-compra .control-cantidad.seleccionado,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado{
         color:#fff !important;
         background:var(--color-principal) !important;
         border-color:var(--color-principal) !important;
       }
 
-      body .compartir-producto:not(.compartiendo),
-      body .compartir-producto:not(.compartiendo):hover,
-      body .compartir-producto:not(.compartiendo):focus,
-      body .compartir-producto:not(.compartiendo):active{
-        color:#49413d !important;
-        background:var(--color-control) !important;
-        border-color:rgba(111,103,97,.28) !important;
+      html body #productos .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad.seleccionado .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .cantidad{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:rgba(255,255,255,.48) !important;
       }
     }
   </style>
@@ -4052,11 +6527,6 @@
     </section>
 
     <section class="busqueda">
-      <div class="marca-sticky-catalogo" aria-hidden="true">
-        <strong>CERACECI</strong>
-        <span>·</span>
-        <span>Insumos para cerámica</span>
-      </div>
       <form
         class="fila-busqueda-orden"
         id="formBusqueda"
@@ -4136,25 +6606,8 @@
       class="seccion-comparacion"
       hidden
     >
+
       <div class="encabezado-comparacion">
-        <div class="acciones-encabezado-comparacion">
-          <button
-            type="button"
-            id="volverCatalogo"
-            class="volver-catalogo"
-          >
-            ← Volver al catálogo
-          </button>
-
-          <button
-            type="button"
-            id="limpiarComparacionVista"
-            class="limpiar-comparacion-vista"
-          >
-            Quitar todos
-          </button>
-        </div>
-
         <div class="titulo-encabezado-comparacion">
           <h1>Comparar productos</h1>
         </div>
@@ -4165,6 +6618,16 @@
         class="productos"
         data-cantidad="0"
       ></div>
+
+      <div class="acciones-encabezado-comparacion">
+        <button
+          type="button"
+          id="volverCatalogo"
+          class="volver-catalogo"
+        >
+          ← Volver al catálogo
+        </button>
+      </div>
     </section>
 
     <p id="estado">
@@ -4221,8 +6684,8 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Finaliza aquí</span>
-          <span>tu pedido</span>
+          <span class="texto-carrito-pc">Ver</span>
+          <span class="texto-carrito-movil">Ver</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>
@@ -4231,6 +6694,12 @@
       </strong>
     </button>
 
+  </div>
+
+  <div class="marca-inferior-movil" aria-hidden="true">
+    <strong>CERACECI</strong>
+    <span>·</span>
+    <span>Insumos para cerámica</span>
   </div>
 
   <div id="fondoCarrito" class="fondo-carrito"></div>
@@ -4302,23 +6771,18 @@
     </div>
   </div>
 
-
-
-
-  <script id="zoom-productos-pc-v62">
+  <script id="zoom-productos-v67">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
-      const escenario = overlay?.querySelector(".zoom-imagen-escenario");
       const imagenAmpliada = document.getElementById("zoomImagenAmpliada");
       const botonCerrar = document.getElementById("cerrarZoomImagen");
 
-      if (!overlay || !escenario || !imagenAmpliada || !botonCerrar) return;
+      if (!overlay || !imagenAmpliada || !botonCerrar) return;
 
       let botonAnterior = null;
 
       function abrirZoom(imagenOrigen) {
-        if (!mediaPC.matches) return;
         if (imagenOrigen.classList.contains("foto-placeholder")) return;
 
         const src = imagenOrigen.currentSrc || imagenOrigen.src;
@@ -4333,9 +6797,12 @@
         overlay.classList.add("abierto");
         overlay.setAttribute("aria-hidden", "false");
         document.body.classList.add("zoom-imagen-abierto");
-        requestAnimationFrame(() => {
-          botonCerrar.focus({ preventScroll: true });
-        });
+
+        if (mediaPC.matches) {
+          requestAnimationFrame(() => {
+            botonCerrar.focus({ preventScroll: true });
+          });
+        }
       }
 
       function cerrarZoom() {
@@ -4345,23 +6812,20 @@
         imagenAmpliada.style.width = "";
         imagenAmpliada.style.height = "";
         imagenAmpliada.src = "";
-        if (botonAnterior instanceof HTMLElement) {
+
+        if (mediaPC.matches && botonAnterior instanceof HTMLElement) {
           botonAnterior.focus({ preventScroll: true });
         }
         botonAnterior = null;
       }
 
       function ajustarSegundoZoom() {
-        if (!overlay.classList.contains("nivel-2")) return;
+        if (!mediaPC.matches || !overlay.classList.contains("nivel-2")) return;
 
         const anchoNatural = imagenAmpliada.naturalWidth;
         const altoNatural = imagenAmpliada.naturalHeight;
         if (!anchoNatural || !altoNatural) return;
 
-        // Deja un margen pequeño para la X y garantiza que la imagen completa
-        // siempre entre en la pantalla, sin barras ni recortes.
-        // Reserva espacio lateral para que la X quede por fuera de la foto
-        // sin empujarla fuera de la pantalla.
         const anchoDisponible = Math.max(220, window.innerWidth - 120);
         const altoDisponible = Math.max(180, window.innerHeight - 56);
         const escala = Math.min(
@@ -4374,7 +6838,7 @@
       }
 
       function alternarSegundoZoom() {
-        if (!overlay.classList.contains("abierto")) return;
+        if (!mediaPC.matches || !overlay.classList.contains("abierto")) return;
 
         if (!overlay.classList.contains("nivel-2")) {
           overlay.classList.add("nivel-2");
@@ -4387,8 +6851,6 @@
       }
 
       document.addEventListener("click", (event) => {
-        if (!mediaPC.matches) return;
-
         const foto = event.target.closest?.(
           ".contenedor-foto-producto .foto-producto:not(.foto-placeholder)"
         );
@@ -4402,14 +6864,21 @@
 
       imagenAmpliada.addEventListener("click", (event) => {
         event.stopPropagation();
-        alternarSegundoZoom();
+        if (mediaPC.matches) {
+          alternarSegundoZoom();
+          return;
+        }
+
+        cerrarZoom();
       });
 
-      botonCerrar.addEventListener("click", cerrarZoom);
+      botonCerrar.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cerrarZoom();
+      });
 
       overlay.addEventListener("click", (event) => {
-        // Cierra al hacer clic en cualquier zona exterior a la imagen.
-        // La imagen conserva su clic para alternar entre los dos niveles de zoom.
+        /* En móvil y PC, tocar/clickear fuera de la imagen cierra el zoom. */
         if (event.target === imagenAmpliada || botonCerrar.contains(event.target)) return;
         cerrarZoom();
       });
@@ -4421,34 +6890,92 @@
       });
 
       window.addEventListener("resize", () => {
-        if (overlay.classList.contains("nivel-2")) ajustarSegundoZoom();
+        if (mediaPC.matches && overlay.classList.contains("nivel-2")) {
+          ajustarSegundoZoom();
+        }
       });
 
-      mediaPC.addEventListener?.("change", (event) => {
-        if (!event.matches && overlay.classList.contains("abierto")) cerrarZoom();
+      mediaPC.addEventListener?.("change", () => {
+        if (overlay.classList.contains("abierto")) cerrarZoom();
       });
     })();
   </script>
 
 
 
-  <script id="marca-sticky-v65">
+  <script id="ajustes-interaccion-v86">
     (() => {
-      const cabecera = document.querySelector(".cabecera");
-      if (!cabecera) return;
+      /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
+      function limpiarCantidad(boton) {
+        if (!boton) return;
+        if (window.matchMedia("(max-width:650px)").matches) return;
+        boton.classList.remove("seleccionado");
+        const control = boton.closest(".control-cantidad");
+        if (control) {
+          control.classList.remove("seleccionado");
+          control.querySelectorAll(".boton-cantidad.seleccionado").forEach((elemento) => {
+            elemento.classList.remove("seleccionado");
+          });
+        }
+        if (typeof boton.blur === "function") boton.blur();
+      }
 
-      const actualizarMarca = () => {
-        const limite = cabecera.getBoundingClientRect().bottom;
-        document.body.classList.toggle("marca-scroll-activa", limite <= 8);
-      };
+      document.addEventListener("pointerup", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, true);
 
-      actualizarMarca();
-      window.addEventListener("scroll", actualizarMarca, { passive: true });
-      window.addEventListener("resize", actualizarMarca, { passive: true });
+      document.addEventListener("pointercancel", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, true);
+
+      document.addEventListener("touchend", (event) => {
+        limpiarCantidad(event.target.closest?.(".boton-cantidad"));
+      }, { capture:true, passive:true });
+
+      /* En móvil, al abrir Comparar se encuadra la vista instantáneamente. */
+      document.addEventListener("click", (event) => {
+        const abrir = event.target.closest?.("#abrirComparacion");
+        if (!abrir || !window.matchMedia("(max-width:650px)").matches) return;
+
+        window.setTimeout(() => {
+          const seccion = document.getElementById("seccionComparacion");
+          if (!seccion || seccion.hidden) return;
+
+          seccion.style.zoom = "";
+
+          const acciones = document.querySelector(".acciones-flotantes");
+          const marcaInferior = document.querySelector(".marca-inferior-movil");
+          const reservadoAbajo =
+            (acciones?.getBoundingClientRect().height || 58) +
+            (marcaInferior?.getBoundingClientRect().height || 28) +
+            8;
+
+          const disponible = Math.max(320, window.innerHeight - reservadoAbajo - 12);
+          const alto = seccion.scrollHeight;
+
+          if (alto > disponible) {
+            const escala = Math.max(.82, Math.min(1, disponible / alto));
+            seccion.style.zoom = String(escala);
+          }
+
+          const marca = seccion.querySelector(".marca-comparacion-movil");
+          const titulo = seccion.querySelector(".encabezado-comparacion");
+          const destino = titulo || seccion;
+          const compensacion = (marca?.getBoundingClientRect().height || 0) + 8;
+          const top = window.scrollY + destino.getBoundingClientRect().top - compensacion;
+          window.scrollTo({ top:Math.max(0, top), behavior:"auto" });
+        }, 80);
+      }, true);
+
+      /* Al volver al catálogo se elimina cualquier escala temporal. */
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest?.("#volverCatalogo")) return;
+        const seccion = document.getElementById("seccionComparacion");
+        if (seccion) seccion.style.zoom = "";
+      }, true);
     })();
   </script>
-
-  <!--
+<!--
     Carga siempre la versión actual de script.js.
     No hace falta volver a cambiar ?v=57, ?v=58, etc.
   -->
