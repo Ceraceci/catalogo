@@ -7560,7 +7560,32 @@
           <span class="texto-carrito-movil">Ver</span>
         </span>
 
-        <span class="icono-carrito" aria-hidden="true">🛒</span>
+        <span id="iconoCarrito" class="icono-carrito" aria-hidden="true">
+          <svg class="carrito-animado" viewBox="0 0 28 24" focusable="false">
+            <defs>
+              <clipPath id="recorteCargaCarrito">
+                <path d="M6.4 6.1h18.2l-1.8 8.2H8.1z"></path>
+              </clipPath>
+            </defs>
+
+            <rect
+              class="carga-carrito"
+              x="5.8"
+              y="5.8"
+              width="19.4"
+              height="9"
+              clip-path="url(#recorteCargaCarrito)"
+            ></rect>
+
+            <path
+              class="contorno-carrito"
+              d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
+            ></path>
+
+            <circle class="rueda-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
+            <circle class="rueda-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
+          </svg>
+        </span>
         <span class="separador-carrito" aria-hidden="true">|</span>
         <span id="valorCarrito">$ 0</span>
       </strong>
@@ -7763,6 +7788,103 @@
 
 
 
+  <style id="animacion-carrito-v125">
+    body .abrir-carrito .icono-carrito{
+      --nivel-carga-carrito:0;
+      position:relative !important;
+      display:inline-flex !important;
+      flex:0 0 23px !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:23px !important;
+      height:22px !important;
+      margin:0 !important;
+      padding:0 !important;
+      overflow:visible !important;
+      transform-origin:50% 70%;
+    }
+
+    body .abrir-carrito .carrito-animado{
+      display:block;
+      width:23px;
+      height:20px;
+      overflow:visible;
+    }
+
+    body .abrir-carrito .contorno-carrito,
+    body .abrir-carrito .rueda-carrito{
+      fill:none;
+      stroke:#171717;
+      stroke-width:1.9;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    body .abrir-carrito .carga-carrito{
+      fill:var(--color-principal);
+      transform:scaleY(var(--nivel-carga-carrito));
+      transform-box:fill-box;
+      transform-origin:center bottom;
+      transition:transform .42s cubic-bezier(.2,.8,.25,1);
+    }
+
+    body .abrir-carrito .icono-carrito.recibiendo-producto{
+      animation:recibir-producto-carrito .52s cubic-bezier(.2,.85,.35,1);
+    }
+
+    .producto-volador-carrito{
+      position:fixed;
+      z-index:10000;
+      display:block;
+      width:17px;
+      height:17px;
+      pointer-events:none;
+      background:var(--color-principal);
+      border:2px solid #fff;
+      border-radius:4px;
+      box-shadow:0 4px 12px rgba(80,24,13,.35);
+      transform-origin:center;
+    }
+
+    .producto-volador-carrito::before,
+    .producto-volador-carrito::after{
+      content:"";
+      position:absolute;
+      background:rgba(255,255,255,.72);
+    }
+
+    .producto-volador-carrito::before{
+      top:6px;
+      right:1px;
+      left:1px;
+      height:2px;
+    }
+
+    .producto-volador-carrito::after{
+      top:1px;
+      bottom:1px;
+      left:7px;
+      width:2px;
+    }
+
+    @keyframes recibir-producto-carrito{
+      0%{transform:scale(1) rotate(0)}
+      35%{transform:scale(1.28) rotate(-9deg)}
+      68%{transform:scale(.92) rotate(5deg)}
+      100%{transform:scale(1) rotate(0)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body .abrir-carrito .carga-carrito{
+        transition:none;
+      }
+
+      body .abrir-carrito .icono-carrito.recibiendo-producto{
+        animation:none;
+      }
+    }
+  </style>
+
   <script id="ajustes-interaccion-v86">
     (() => {
       /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
@@ -7835,6 +7957,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=124"></script>
+  <script src="script.js?v=125"></script>
 </body>
 </html>
