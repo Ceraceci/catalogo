@@ -1389,7 +1389,7 @@ function crearTarjetaProducto(
         aria-expanded="false"
         aria-controls="${idDetalles}"
       >
-        Ver detalles
+        Más info.
       </button>
 
       <div
@@ -1448,8 +1448,8 @@ function alternarDetallesProducto(boton) {
   );
   boton.textContent =
     seAbrira
-      ? "Ocultar detalles"
-      : "Ver detalles";
+      ? "Ocultar info."
+      : "Más info.";
 }
 
 

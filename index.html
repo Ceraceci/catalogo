@@ -3963,6 +3963,357 @@
     }
   </style>
 
+
+  <style id="ajustes-finales-pc-movil-v67">
+    /* =========================================================
+       V67 — última tanda visual PC + móvil
+       ========================================================= */
+
+    /* Cantidad y carrito: lenguaje visual negro/blanco uniforme. */
+    body .fila-compra .control-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad{
+      border:1px solid #1f1f1f !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    }
+
+    body .fila-compra .boton-cantidad,
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .boton-cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:#1f1f1f !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .cantidad,
+    body .productos-comparados .fila-compra .cantidad{
+      border-left:1px solid #1f1f1f !important;
+      border-right:1px solid #1f1f1f !important;
+    }
+
+    body .fila-compra .agregar-carrito,
+    body .fila-compra .agregar-carrito.agregado,
+    body .productos-comparados .fila-compra .agregar-carrito,
+    body .productos-comparados .fila-compra .agregar-carrito.agregado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid #1f1f1f !important;
+      box-shadow:none !important;
+    }
+
+    body .fila-compra .agregar-carrito .icono-agregar,
+    body .fila-compra .agregar-carrito.agregado .icono-agregar{
+      color:#171717 !important;
+    }
+
+    body .fila-compra .agregar-carrito .icono-agregar svg,
+    body .fila-compra .agregar-carrito.agregado .icono-agregar svg{
+      stroke:currentColor !important;
+      fill:none !important;
+    }
+
+    body .fila-compra .boton-cantidad:active,
+    body .productos-comparados .fila-compra .boton-cantidad:active,
+    body .fila-compra .agregar-carrito:active,
+    body .productos-comparados .fila-compra .agregar-carrito:active{
+      color:#fff !important;
+      background:#1f1f1f !important;
+    }
+
+    body .fila-compra .agregar-carrito:active .icono-agregar,
+    body .productos-comparados .fila-compra .agregar-carrito:active .icono-agregar{
+      color:#fff !important;
+    }
+
+    /* ---------- ESCRITORIO ---------- */
+    @media (min-width:651px){
+      /* Título principal al tamaño de la búsqueda; código un escalón menor. */
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        font-size:17.5px !important;
+        line-height:1.16 !important;
+        text-align:center !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:15.5px !important;
+        line-height:1.12 !important;
+        text-align:center !important;
+        color:#817872 !important;
+      }
+
+      /* Compensación simétrica para que título y código queden centrados
+         aunque las acciones estén apiladas a la derecha. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        padding-left:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+        padding-right:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        min-height:41px !important;
+        height:41px !important;
+      }
+
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        display:-webkit-box !important;
+        width:100% !important;
+        min-height:0 !important;
+        max-height:41px !important;
+        -webkit-line-clamp:2 !important;
+        line-clamp:2 !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        min-height:18px !important;
+        height:18px !important;
+        margin:0 !important;
+      }
+
+      /* Cursor lupa intermedio (32 px), blanco y negro. */
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+      body .zoom-imagen-ampliada{
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='13.5' cy='13.5' r='8.25' fill='white' fill-opacity='.96' stroke='%23161616' stroke-width='2'/%3E%3Cpath d='M19.4 19.4L27 27' stroke='%23161616' stroke-width='2.7' stroke-linecap='round'/%3E%3Cpath d='M13.5 10v7M10 13.5h7' stroke='%23161616' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E") 13 13, zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay.nivel-2 .zoom-imagen-ampliada{
+        cursor:zoom-out !important;
+      }
+
+      /* X del zoom: fuera de la foto, alineada arriba, blanco cálido + rojo. */
+      body .cerrar-zoom-imagen{
+        top:0 !important;
+        right:-44px !important;
+        width:36px !important;
+        height:36px !important;
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border:1px solid var(--color-principal) !important;
+        border-radius:50% !important;
+        font:400 28px/1 Arial,sans-serif !important;
+        box-shadow:0 3px 10px rgba(35,26,22,.10) !important;
+      }
+
+      body .cerrar-zoom-imagen:hover,
+      body .cerrar-zoom-imagen:focus-visible{
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        transform:none !important;
+      }
+
+      body .cerrar-zoom-imagen:active{
+        color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* ---------- MÓVIL ---------- */
+    @media (max-width:650px){
+      /* X del buscador: mismo tamaño visual que el icono de filtros. */
+      body #buscador::-webkit-search-cancel-button{
+        -webkit-appearance:none !important;
+        appearance:none !important;
+        width:22px !important;
+        height:22px !important;
+        min-width:22px !important;
+        margin:0 1px 0 7px !important;
+        opacity:1 !important;
+        background-color:var(--color-principal) !important;
+        -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+        -webkit-mask-repeat:no-repeat !important;
+        -webkit-mask-position:center !important;
+        -webkit-mask-size:100% 100% !important;
+        mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+        mask-repeat:no-repeat !important;
+        mask-position:center !important;
+        mask-size:100% 100% !important;
+      }
+
+      /* Icono de Filtros ópticamente centrado. */
+      body .control-orden{
+        display:grid !important;
+        place-items:center !important;
+      }
+
+      body .control-orden .icono-orden{
+        display:grid !important;
+        place-items:center !important;
+        width:100% !important;
+        height:100% !important;
+        margin:0 !important;
+        padding:0 !important;
+        font-size:1.35rem !important;
+        line-height:1 !important;
+        transform:translateY(-1px) !important;
+      }
+
+      /* Cantidad mucho más ancha; carrito sólo conserva el ancho del icono. */
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) 32px !important;
+        column-gap:6px !important;
+      }
+
+      body .fila-compra .selector-cantidad,
+      body .productos-comparados .fila-compra .selector-cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        justify-self:stretch !important;
+      }
+
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        height:30px !important;
+        min-height:30px !important;
+        max-height:30px !important;
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      }
+
+      body .fila-compra .boton-cantidad,
+      body .fila-compra .cantidad,
+      body .productos-comparados .fila-compra .boton-cantidad,
+      body .productos-comparados .fila-compra .cantidad{
+        width:100% !important;
+        min-width:0 !important;
+        height:28px !important;
+        min-height:28px !important;
+        max-height:28px !important;
+        padding:0 !important;
+        text-align:center !important;
+      }
+
+      body .fila-compra .agregar-carrito,
+      body .fila-compra .agregar-carrito.agregado,
+      body .productos-comparados .fila-compra .agregar-carrito,
+      body .productos-comparados .fila-compra .agregar-carrito.agregado{
+        width:32px !important;
+        min-width:32px !important;
+        max-width:32px !important;
+        height:30px !important;
+        min-height:30px !important;
+        max-height:30px !important;
+        padding:0 !important;
+        justify-self:end !important;
+      }
+
+      body .fila-compra .agregar-carrito .icono-agregar svg,
+      body .productos-comparados .fila-compra .agregar-carrito .icono-agregar svg{
+        width:17px !important;
+        height:17px !important;
+      }
+
+      /* Compactación máxima segura entre código e imagen. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:58px !important;
+        height:58px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        min-height:40px !important;
+        height:40px !important;
+        margin:0 !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        min-height:16px !important;
+        height:16px !important;
+        line-height:16px !important;
+        margin:0 !important;
+      }
+
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
+      }
+
+      /* Más info. casi al ras del borde inferior, sin pegarse visualmente. */
+      body #productos .zona-detalles-producto,
+      body #productosComparados .zona-detalles-producto{
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+      }
+
+      body #productos .tarjeta-producto,
+      body #productosComparados .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding-bottom:5px !important;
+      }
+
+      /* Zoom móvil de un solo nivel: imagen completa, proporcional y centrada. */
+      body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+        cursor:zoom-in !important;
+      }
+
+      body .zoom-imagen-overlay{
+        display:none !important;
+      }
+
+      body .zoom-imagen-overlay.abierto{
+        display:block !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-escenario{
+        width:100% !important;
+        height:100% !important;
+        padding:8px !important;
+        overflow:hidden !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-marco{
+        width:auto !important;
+        height:auto !important;
+        max-width:100% !important;
+        max-height:100% !important;
+      }
+
+      body .zoom-imagen-overlay .zoom-imagen-ampliada{
+        display:block !important;
+        width:auto !important;
+        height:auto !important;
+        max-width:calc(100vw - 16px) !important;
+        max-height:calc(100vh - 16px) !important;
+        object-fit:contain !important;
+        background:var(--color-fondo) !important;
+        border-radius:8px !important;
+        cursor:default !important;
+      }
+
+      body .zoom-imagen-overlay .cerrar-zoom-imagen{
+        display:none !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -4249,23 +4600,18 @@
     </div>
   </div>
 
-
-
-
-  <script id="zoom-productos-pc-v62">
+  <script id="zoom-productos-v67">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
-      const escenario = overlay?.querySelector(".zoom-imagen-escenario");
       const imagenAmpliada = document.getElementById("zoomImagenAmpliada");
       const botonCerrar = document.getElementById("cerrarZoomImagen");
 
-      if (!overlay || !escenario || !imagenAmpliada || !botonCerrar) return;
+      if (!overlay || !imagenAmpliada || !botonCerrar) return;
 
       let botonAnterior = null;
 
       function abrirZoom(imagenOrigen) {
-        if (!mediaPC.matches) return;
         if (imagenOrigen.classList.contains("foto-placeholder")) return;
 
         const src = imagenOrigen.currentSrc || imagenOrigen.src;
@@ -4280,9 +4626,12 @@
         overlay.classList.add("abierto");
         overlay.setAttribute("aria-hidden", "false");
         document.body.classList.add("zoom-imagen-abierto");
-        requestAnimationFrame(() => {
-          botonCerrar.focus({ preventScroll: true });
-        });
+
+        if (mediaPC.matches) {
+          requestAnimationFrame(() => {
+            botonCerrar.focus({ preventScroll: true });
+          });
+        }
       }
 
       function cerrarZoom() {
@@ -4292,23 +4641,20 @@
         imagenAmpliada.style.width = "";
         imagenAmpliada.style.height = "";
         imagenAmpliada.src = "";
-        if (botonAnterior instanceof HTMLElement) {
+
+        if (mediaPC.matches && botonAnterior instanceof HTMLElement) {
           botonAnterior.focus({ preventScroll: true });
         }
         botonAnterior = null;
       }
 
       function ajustarSegundoZoom() {
-        if (!overlay.classList.contains("nivel-2")) return;
+        if (!mediaPC.matches || !overlay.classList.contains("nivel-2")) return;
 
         const anchoNatural = imagenAmpliada.naturalWidth;
         const altoNatural = imagenAmpliada.naturalHeight;
         if (!anchoNatural || !altoNatural) return;
 
-        // Deja un margen pequeño para la X y garantiza que la imagen completa
-        // siempre entre en la pantalla, sin barras ni recortes.
-        // Reserva espacio lateral para que la X quede por fuera de la foto
-        // sin empujarla fuera de la pantalla.
         const anchoDisponible = Math.max(220, window.innerWidth - 120);
         const altoDisponible = Math.max(180, window.innerHeight - 56);
         const escala = Math.min(
@@ -4321,7 +4667,7 @@
       }
 
       function alternarSegundoZoom() {
-        if (!overlay.classList.contains("abierto")) return;
+        if (!mediaPC.matches || !overlay.classList.contains("abierto")) return;
 
         if (!overlay.classList.contains("nivel-2")) {
           overlay.classList.add("nivel-2");
@@ -4334,8 +4680,6 @@
       }
 
       document.addEventListener("click", (event) => {
-        if (!mediaPC.matches) return;
-
         const foto = event.target.closest?.(
           ".contenedor-foto-producto .foto-producto:not(.foto-placeholder)"
         );
@@ -4349,14 +4693,16 @@
 
       imagenAmpliada.addEventListener("click", (event) => {
         event.stopPropagation();
-        alternarSegundoZoom();
+        if (mediaPC.matches) alternarSegundoZoom();
       });
 
-      botonCerrar.addEventListener("click", cerrarZoom);
+      botonCerrar.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cerrarZoom();
+      });
 
       overlay.addEventListener("click", (event) => {
-        // Cierra al hacer clic en cualquier zona exterior a la imagen.
-        // La imagen conserva su clic para alternar entre los dos niveles de zoom.
+        /* En móvil y PC, tocar/clickear fuera de la imagen cierra el zoom. */
         if (event.target === imagenAmpliada || botonCerrar.contains(event.target)) return;
         cerrarZoom();
       });
@@ -4368,11 +4714,13 @@
       });
 
       window.addEventListener("resize", () => {
-        if (overlay.classList.contains("nivel-2")) ajustarSegundoZoom();
+        if (mediaPC.matches && overlay.classList.contains("nivel-2")) {
+          ajustarSegundoZoom();
+        }
       });
 
-      mediaPC.addEventListener?.("change", (event) => {
-        if (!event.matches && overlay.classList.contains("abierto")) cerrarZoom();
+      mediaPC.addEventListener?.("change", () => {
+        if (overlay.classList.contains("abierto")) cerrarZoom();
       });
     })();
   </script>
