@@ -5069,6 +5069,57 @@
     }
   </style>
 
+
+
+  <style id="ajustes-v74">
+    /* =========================================================
+       V74 — código limpio + cantidad momentánea + compartir + centrado real
+       ========================================================= */
+
+    /* − y +: nunca conservan selección después del clic. */
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* El efecto invertido existe sólo mientras se está pulsando. */
+    body .fila-compra .control-cantidad .boton-cantidad:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Compartir recibe el mismo feedback rojo/blanco al pulsar. */
+    body .compartir-producto:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto:active svg{
+      fill:currentColor !important;
+      stroke:currentColor !important;
+    }
+
+    @media (max-width:650px){
+      /* La posición vertical la calcula JS usando el centro real de la foto. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto,
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        right:0 !important;
+        transform:none !important;
+        justify-content:flex-start !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>

@@ -864,6 +864,12 @@ function limpiarAjustesMovilesTarjetas() {
     );
 
   document
+    .querySelectorAll(".acciones-producto")
+    .forEach((acciones) =>
+      acciones.style.removeProperty("top")
+    );
+
+  document
     .querySelectorAll(".opciones-presentacion")
     .forEach((contenedor) => {
       contenedor.style.removeProperty("flex-wrap");
@@ -1098,6 +1104,36 @@ function actualizarLineasTituloTarjetaMovil(tarjeta) {
 }
 
 
+function centrarAccionesFotoTarjetaMovil(tarjeta) {
+  const encabezado = tarjeta.querySelector(".encabezado-producto");
+  const foto = tarjeta.querySelector(".contenedor-foto-producto");
+  const acciones = tarjeta.querySelector(".acciones-producto");
+
+  if (!encabezado || !foto || !acciones) {
+    return;
+  }
+
+  const rectEncabezado = encabezado.getBoundingClientRect();
+  const rectFoto = foto.getBoundingClientRect();
+  const rectAcciones = acciones.getBoundingClientRect();
+
+  if (!rectFoto.height || !rectAcciones.height) {
+    return;
+  }
+
+  const centroFoto =
+    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
+
+  const top = centroFoto - rectAcciones.height / 2;
+
+  acciones.style.setProperty(
+    "top",
+    `${Math.round(top * 10) / 10}px`,
+    "important"
+  );
+}
+
+
 function ajustarTarjetasMoviles() {
   if (!consultaMovilTarjetas.matches) {
     limpiarAjustesMovilesTarjetas();
@@ -1112,6 +1148,10 @@ function ajustarTarjetasMoviles() {
       );
 
       ajustarPresentacionesTarjetaMovil(
+        tarjeta
+      );
+
+      centrarAccionesFotoTarjetaMovil(
         tarjeta
       );
     });
@@ -1313,7 +1353,7 @@ function crearTarjetaProducto(
       <p class="codigo-producto">
         ${
           presentacionInicial.codigo
-            ? `Código: ${escaparHTML(presentacionInicial.codigo)}`
+            ? escaparHTML(presentacionInicial.codigo)
           : ""
         }
       </p>
@@ -1776,7 +1816,7 @@ function seleccionarPresentacion(control) {
     ".codigo-producto"
   ).textContent =
     presentacion.codigo
-      ? `Código: ${presentacion.codigo}`
+      ? presentacion.codigo
       : "";
 
   normalizarCantidadTarjeta(tarjeta);
@@ -1807,19 +1847,16 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  /* Estado visual persistente sólo en el botón − o + que se usó.
-     El número central conserva siempre su estado neutro. */
+  /* La cantidad no conserva un estado seleccionado.
+     El efecto rojo/blanco existe únicamente mientras se pulsa − o +. */
   const controlCantidad = tarjeta.querySelector(".control-cantidad");
   if (controlCantidad) {
     controlCantidad.classList.remove("seleccionado");
     controlCantidad
-      .querySelectorAll(".boton-cantidad")
-      .forEach((botonCantidad) => {
-        botonCantidad.classList.toggle(
-          "seleccionado",
-          botonCantidad === boton
-        );
-      });
+      .querySelectorAll(".boton-cantidad.seleccionado")
+      .forEach((botonCantidad) =>
+        botonCantidad.classList.remove("seleccionado")
+      );
   }
 
   normalizarCantidadTarjeta(tarjeta);
@@ -2218,7 +2255,6 @@ function mostrarCarrito() {
             producto.codigo
               ? `
                 <small>
-                  Código:
                   ${escaparHTML(
                     producto.codigo
                   )}
