@@ -120,6 +120,7 @@ let productosSeleccionadosComparacion = [];
 let comparacionAbierta = false;
 let productoCompartidoPendiente =
   new URLSearchParams(window.location.search).get("producto");
+const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
@@ -688,6 +689,313 @@ function actualizarEstadoFiltroCategoria() {
 }
 
 
+function cerrarSelectoresPersonalizadosPC(excepto = null) {
+  selectoresPersonalizadosPC.forEach((control) => {
+    if (control.raiz === excepto) {
+      return;
+    }
+
+    control.raiz.classList.remove("abierto");
+    control.boton.setAttribute("aria-expanded", "false");
+    control.lista.hidden = true;
+  });
+}
+
+
+function cerrarSelectorPersonalizadoPC(control) {
+  if (!control) {
+    return;
+  }
+
+  control.raiz.classList.remove("abierto");
+  control.boton.setAttribute("aria-expanded", "false");
+  control.lista.hidden = true;
+}
+
+
+function abrirSelectorPersonalizadoPC(control) {
+  if (!control) {
+    return;
+  }
+
+  cerrarSelectoresPersonalizadosPC(control.raiz);
+  control.raiz.classList.add("abierto");
+  control.boton.setAttribute("aria-expanded", "true");
+  control.lista.hidden = false;
+
+  const opcionSeleccionada =
+    control.lista.querySelector(".seleccionada");
+
+  if (opcionSeleccionada) {
+    requestAnimationFrame(() => {
+      opcionSeleccionada.scrollIntoView({
+        block: "nearest"
+      });
+    });
+  }
+}
+
+
+function sincronizarSelectorPersonalizadoPC(select) {
+  const control =
+    selectoresPersonalizadosPC.get(select);
+
+  if (!control) {
+    return;
+  }
+
+  const opcionActual =
+    select.options[select.selectedIndex] ||
+    select.options[0];
+
+  control.boton.textContent =
+    opcionActual
+      ? opcionActual.textContent.trim()
+      : "";
+
+  const seleccionActiva =
+    select === filtroCategoria
+      ? select.value !== ""
+      : select.value !== "inicial";
+
+  control.raiz.classList.toggle(
+    "seleccion-activa",
+    seleccionActiva
+  );
+
+  control.lista.replaceChildren();
+
+  Array.from(select.options).forEach((opcion) => {
+    const botonOpcion =
+      document.createElement("button");
+
+    botonOpcion.type = "button";
+    botonOpcion.className =
+      "select-personalizado-opcion-pc";
+    botonOpcion.textContent =
+      opcion.textContent.trim();
+    botonOpcion.dataset.value =
+      opcion.value;
+    botonOpcion.setAttribute("role", "option");
+
+    const seleccionada =
+      opcion.value === select.value;
+
+    botonOpcion.classList.toggle(
+      "seleccionada",
+      seleccionada
+    );
+    botonOpcion.setAttribute(
+      "aria-selected",
+      seleccionada ? "true" : "false"
+    );
+
+    botonOpcion.addEventListener(
+      "click",
+      () => {
+        select.value = opcion.value;
+        select.dispatchEvent(
+          new Event("change", {
+            bubbles: true
+          })
+        );
+        sincronizarSelectorPersonalizadoPC(
+          select
+        );
+        cerrarSelectorPersonalizadoPC(
+          control
+        );
+        control.boton.focus({
+          preventScroll: true
+        });
+      }
+    );
+
+    control.lista.appendChild(
+      botonOpcion
+    );
+  });
+}
+
+
+function crearSelectorPersonalizadoPC(
+  select,
+  clase,
+  referencia
+) {
+  if (
+    !select ||
+    !referencia ||
+    selectoresPersonalizadosPC.has(select)
+  ) {
+    return;
+  }
+
+  const raiz = document.createElement("div");
+  raiz.className =
+    `select-personalizado-pc ${clase}`;
+
+  const boton = document.createElement("button");
+  boton.type = "button";
+  boton.className =
+    "select-personalizado-boton-pc";
+  boton.setAttribute("aria-haspopup", "listbox");
+  boton.setAttribute("aria-expanded", "false");
+
+  const lista = document.createElement("div");
+  lista.className =
+    "select-personalizado-lista-pc";
+  lista.id = `lista-${select.id}-pc`;
+  lista.setAttribute("role", "listbox");
+  lista.hidden = true;
+
+  boton.setAttribute(
+    "aria-controls",
+    lista.id
+  );
+  boton.setAttribute(
+    "aria-label",
+    select.getAttribute("aria-label") ||
+      (select === filtroCategoria
+        ? "Categorías"
+        : "Filtros")
+  );
+
+  raiz.append(boton, lista);
+  referencia.insertAdjacentElement(
+    "afterend",
+    raiz
+  );
+
+  const control = {
+    raiz,
+    boton,
+    lista,
+    select
+  };
+
+  selectoresPersonalizadosPC.set(
+    select,
+    control
+  );
+
+  boton.addEventListener("click", () => {
+    if (raiz.classList.contains("abierto")) {
+      cerrarSelectorPersonalizadoPC(control);
+    } else {
+      abrirSelectorPersonalizadoPC(control);
+    }
+  });
+
+  boton.addEventListener("keydown", (evento) => {
+    if (
+      evento.key === "ArrowDown" ||
+      evento.key === "ArrowUp"
+    ) {
+      evento.preventDefault();
+      abrirSelectorPersonalizadoPC(control);
+
+      const opciones =
+        Array.from(
+          lista.querySelectorAll(
+            ".select-personalizado-opcion-pc"
+          )
+        );
+      const seleccionada =
+        lista.querySelector(".seleccionada");
+      const indiceSeleccionada =
+        Math.max(0, opciones.indexOf(seleccionada));
+      const desplazamiento =
+        evento.key === "ArrowDown" ? 1 : -1;
+      const indice = Math.min(
+        opciones.length - 1,
+        Math.max(
+          0,
+          indiceSeleccionada + desplazamiento
+        )
+      );
+
+      opciones[indice]?.focus();
+    }
+  });
+
+  lista.addEventListener("keydown", (evento) => {
+    const opciones =
+      Array.from(
+        lista.querySelectorAll(
+          ".select-personalizado-opcion-pc"
+        )
+      );
+    const indiceActual =
+      opciones.indexOf(document.activeElement);
+
+    if (
+      evento.key === "ArrowDown" ||
+      evento.key === "ArrowUp"
+    ) {
+      evento.preventDefault();
+      const desplazamiento =
+        evento.key === "ArrowDown" ? 1 : -1;
+      const indice = Math.min(
+        opciones.length - 1,
+        Math.max(0, indiceActual + desplazamiento)
+      );
+      opciones[indice]?.focus();
+    }
+
+    if (evento.key === "Escape") {
+      evento.preventDefault();
+      cerrarSelectorPersonalizadoPC(control);
+      boton.focus({ preventScroll: true });
+    }
+  });
+
+  select.addEventListener("change", () => {
+    sincronizarSelectorPersonalizadoPC(
+      select
+    );
+  });
+
+  sincronizarSelectorPersonalizadoPC(select);
+}
+
+
+function inicializarSelectoresPersonalizadosPC() {
+  crearSelectorPersonalizadoPC(
+    filtroCategoria,
+    "select-personalizado-categoria-pc",
+    filtroCategoria
+  );
+
+  const controlOrdenNativo =
+    ordenarProductos
+      ? ordenarProductos.closest(".control-orden")
+      : null;
+
+  crearSelectorPersonalizadoPC(
+    ordenarProductos,
+    "select-personalizado-orden-pc",
+    controlOrdenNativo
+  );
+
+  document.addEventListener("click", (evento) => {
+    if (
+      !evento.target.closest?.(
+        ".select-personalizado-pc"
+      )
+    ) {
+      cerrarSelectoresPersonalizadosPC();
+    }
+  });
+
+  window
+    .matchMedia("(min-width: 651px)")
+    .addEventListener?.("change", () => {
+      cerrarSelectoresPersonalizadosPC();
+    });
+}
+
+
 function cargarCategorias() {
   const categoriaSeleccionada =
     filtroCategoria.value;
@@ -736,6 +1044,9 @@ function cargarCategorias() {
   }
 
   actualizarEstadoFiltroCategoria();
+  sincronizarSelectorPersonalizadoPC(
+    filtroCategoria
+  );
 }
 
 
@@ -3411,6 +3722,7 @@ document.addEventListener(
 try {
   mostrarCarrito();
   actualizarEstadoComparacion();
+  inicializarSelectoresPersonalizadosPC();
   cargarProductos();
 } catch (error) {
   console.error(

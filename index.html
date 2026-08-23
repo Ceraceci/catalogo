@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="117">
+  <meta name="ceraceci-version" content="118">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=117">
+  <link rel="stylesheet" href="style.css?v=118">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -6741,7 +6741,7 @@
     }
   </style>
 
-  <style id="zoom-unico-v117">
+  <style id="zoom-y-selectores-v118">
     /* PC y móvil: un solo nivel, ocupando el máximo espacio disponible. */
     html body .zoom-imagen-overlay .zoom-imagen-escenario{
       width:100% !important;
@@ -6773,11 +6773,147 @@
     }
 
     @media (min-width:651px){
-      html body .zoom-imagen-overlay .cerrar-zoom-imagen{
-        position:fixed !important;
-        top:12px !important;
-        right:12px !important;
-        display:grid !important;
+      html body .zoom-imagen-overlay .zoom-imagen-escenario{
+        padding:8px 56px 8px 8px !important;
+      }
+
+      html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+        max-width:calc(100vw - 64px) !important;
+      }
+
+      /* Los select nativos se conservan para móvil. En PC se usan
+         listas propias para evitar el resaltado azul del navegador. */
+      html body #filtroCategoria,
+      html body .control-orden{
+        display:none !important;
+      }
+
+      html body .select-personalizado-pc{
+        position:relative;
+        display:block;
+        min-width:0;
+        z-index:11;
+      }
+
+      html body .select-personalizado-categoria-pc{
+        grid-area:categoria;
+      }
+
+      html body .select-personalizado-orden-pc{
+        grid-area:ordenar;
+      }
+
+      html body .select-personalizado-pc.abierto{
+        z-index:40;
+      }
+
+      html body .select-personalizado-boton-pc{
+        box-sizing:border-box;
+        display:block;
+        width:100%;
+        height:44px;
+        min-height:44px;
+        max-height:44px;
+        padding:0 38px 0 13px;
+        overflow:hidden;
+        color:var(--color-texto);
+        -webkit-text-fill-color:var(--color-texto);
+        font-size:17.5px;
+        font-weight:400;
+        line-height:1;
+        text-align:left;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        background-color:var(--color-control);
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%232d2926' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat:no-repeat;
+        background-position:right 13px center;
+        background-size:14px 14px;
+        border:1px solid var(--color-borde);
+        border-radius:11px;
+        outline:none;
+        box-shadow:none;
+        cursor:pointer;
+      }
+
+      html body .select-personalizado-pc.seleccion-activa .select-personalizado-boton-pc{
+        color:#fff;
+        -webkit-text-fill-color:#fff;
+        font-weight:700;
+        background-color:var(--color-principal);
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        border-color:var(--color-principal);
+      }
+
+      html body .select-personalizado-lista-pc{
+        position:absolute;
+        top:calc(100% + 2px);
+        right:0;
+        left:0;
+        z-index:50;
+        max-height:min(60vh,540px);
+        margin:0;
+        padding:0;
+        overflow-y:auto;
+        overscroll-behavior:contain;
+        background:var(--color-control);
+        border:1px solid var(--color-borde);
+        border-radius:0 0 8px 8px;
+        box-shadow:0 10px 24px rgba(45,31,24,.14);
+      }
+
+      html body .select-personalizado-lista-pc[hidden]{
+        display:none !important;
+      }
+
+      html body .select-personalizado-opcion-pc{
+        box-sizing:border-box;
+        display:block;
+        width:100%;
+        min-height:36px;
+        margin:0;
+        padding:6px 12px;
+        color:var(--color-texto);
+        -webkit-text-fill-color:var(--color-texto);
+        font-size:17.5px;
+        font-weight:400;
+        line-height:1.15;
+        text-align:left;
+        background:var(--color-control);
+        border:0;
+        border-radius:0;
+        outline:none;
+        box-shadow:none;
+        cursor:pointer;
+        user-select:none;
+      }
+
+      html body .select-personalizado-opcion-pc:hover,
+      html body .select-personalizado-opcion-pc:focus,
+      html body .select-personalizado-opcion-pc:focus-visible{
+        color:var(--color-texto);
+        -webkit-text-fill-color:var(--color-texto);
+        background:var(--color-control);
+        outline:1px solid var(--color-principal);
+        outline-offset:-2px;
+        box-shadow:none;
+      }
+
+      html body .select-personalizado-opcion-pc.seleccionada,
+      html body .select-personalizado-opcion-pc.seleccionada:hover,
+      html body .select-personalizado-opcion-pc.seleccionada:focus,
+      html body .select-personalizado-opcion-pc.seleccionada:focus-visible{
+        color:#fff;
+        -webkit-text-fill-color:#fff;
+        font-weight:700;
+        background:var(--color-principal);
+        outline:none;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .select-personalizado-pc{
+        display:none !important;
       }
     }
   </style>
@@ -7066,7 +7202,7 @@
     </div>
   </div>
 
-  <script id="zoom-productos-v117">
+  <script id="zoom-productos-v118">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
@@ -7076,6 +7212,33 @@
       if (!overlay || !imagenAmpliada || !botonCerrar) return;
 
       let botonAnterior = null;
+
+      function ajustarZoomPantalla() {
+        if (!overlay.classList.contains("abierto")) return;
+
+        const anchoNatural = imagenAmpliada.naturalWidth;
+        const altoNatural = imagenAmpliada.naturalHeight;
+        if (!anchoNatural || !altoNatural) return;
+
+        const margenHorizontal = mediaPC.matches ? 64 : 16;
+        const anchoDisponible = Math.max(160, window.innerWidth - margenHorizontal);
+        const altoDisponible = Math.max(160, window.innerHeight - 16);
+        const escala = Math.min(
+          anchoDisponible / anchoNatural,
+          altoDisponible / altoNatural
+        );
+
+        imagenAmpliada.style.setProperty(
+          "width",
+          `${Math.floor(anchoNatural * escala)}px`,
+          "important"
+        );
+        imagenAmpliada.style.setProperty(
+          "height",
+          `${Math.floor(altoNatural * escala)}px`,
+          "important"
+        );
+      }
 
       function abrirZoom(imagenOrigen) {
         if (imagenOrigen.classList.contains("foto-placeholder")) return;
@@ -7090,12 +7253,17 @@
         overlay.setAttribute("aria-hidden", "false");
         document.body.classList.add("zoom-imagen-abierto");
 
+        if (imagenAmpliada.complete) {
+          requestAnimationFrame(ajustarZoomPantalla);
+        }
       }
 
       function cerrarZoom() {
         overlay.classList.remove("abierto");
         overlay.setAttribute("aria-hidden", "true");
         document.body.classList.remove("zoom-imagen-abierto");
+        imagenAmpliada.style.removeProperty("width");
+        imagenAmpliada.style.removeProperty("height");
         imagenAmpliada.src = "";
 
         if (mediaPC.matches && botonAnterior instanceof HTMLElement) {
@@ -7121,6 +7289,8 @@
         cerrarZoom();
       });
 
+      imagenAmpliada.addEventListener("load", ajustarZoomPantalla);
+
       botonCerrar.addEventListener("click", (event) => {
         event.stopPropagation();
         cerrarZoom();
@@ -7135,6 +7305,12 @@
       document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && overlay.classList.contains("abierto")) {
           cerrarZoom();
+        }
+      });
+
+      window.addEventListener("resize", () => {
+        if (overlay.classList.contains("abierto")) {
+          ajustarZoomPantalla();
         }
       });
 
@@ -7218,6 +7394,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=117"></script>
+  <script src="script.js?v=118"></script>
 </body>
 </html>
