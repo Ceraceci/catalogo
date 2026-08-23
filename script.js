@@ -1807,10 +1807,19 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  /* Estado visual persistente, igual que una presentación seleccionada. */
+  /* Estado visual persistente sólo en el botón − o + que se usó.
+     El número central conserva siempre su estado neutro. */
   const controlCantidad = tarjeta.querySelector(".control-cantidad");
   if (controlCantidad) {
-    controlCantidad.classList.add("seleccionado");
+    controlCantidad.classList.remove("seleccionado");
+    controlCantidad
+      .querySelectorAll(".boton-cantidad")
+      .forEach((botonCantidad) => {
+        botonCantidad.classList.toggle(
+          "seleccionado",
+          botonCantidad === boton
+        );
+      });
   }
 
   normalizarCantidadTarjeta(tarjeta);

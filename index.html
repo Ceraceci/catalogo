@@ -4994,6 +4994,81 @@
     }
   </style>
 
+
+
+  <style id="ajustes-v73">
+    /* =========================================================
+       V73 — cantidad por botón + centrado exacto de acciones móvil
+       ========================================================= */
+
+    /* Anula el estado persistente aplicado anteriormente al contenedor. */
+    body .fila-compra .control-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+      color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+    }
+
+    body .fila-compra .control-cantidad.seleccionado .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad.seleccionado .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-left-color:rgba(111,103,97,.22) !important;
+      border-right-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* Reposo: cada segmento conserva el aspecto neutro. */
+    body .fila-compra .control-cantidad .boton-cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+    }
+
+    /* Sólo − o + puede quedar seleccionado. */
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:hover,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:focus,
+    body .fila-compra .control-cantidad .boton-cantidad.seleccionado:active,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:hover,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:focus,
+    body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* El valor central nunca hereda el rojo del botón seleccionado. */
+    body .fila-compra .control-cantidad .cantidad,
+    body .productos-comparados .fila-compra .control-cantidad .cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+    }
+
+    @media (max-width:650px){
+      /* Centro geométrico de la columna Compartir/Comparar respecto de
+         la foto de 150 px. Se usa el centro del bloque completo. */
+      body #productos .encabezado-producto .acciones-producto,
+      body #productosComparados .encabezado-producto .acciones-producto{
+        top:130px !important; /* 55 px de cabecera + 75 px hasta el centro de la foto */
+        right:0 !important;
+        height:69px !important;
+        transform:translateY(-50%) !important;
+        justify-content:center !important;
+      }
+
+      /* Los títulos móviles de tres líneas tienen una cabecera 19 px más alta. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        top:149px !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
