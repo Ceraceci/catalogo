@@ -1743,6 +1743,18 @@ function vaciarSeleccionComparacion() {
 }
 
 
+function volverDesdeComparacion() {
+  if (
+    window.matchMedia("(max-width: 650px)").matches
+  ) {
+    vaciarSeleccionComparacion();
+    return;
+  }
+
+  cerrarVistaComparacion();
+}
+
+
 function seleccionarPresentacion(control) {
   const tarjeta =
     control.closest(".tarjeta-producto");
@@ -1857,6 +1869,34 @@ function seleccionarPresentacion(control) {
 }
 
 
+function establecerSeleccionCantidadTarjeta(
+  tarjeta,
+  seleccionada
+) {
+  if (!tarjeta) {
+    return;
+  }
+
+  const controlCantidad =
+    tarjeta.querySelector(".control-cantidad");
+
+  if (!controlCantidad) {
+    return;
+  }
+
+  controlCantidad.classList.toggle(
+    "seleccionado",
+    Boolean(seleccionada)
+  );
+
+  controlCantidad
+    .querySelectorAll(".boton-cantidad.seleccionado")
+    .forEach((botonCantidad) => {
+      botonCantidad.classList.remove("seleccionado");
+    });
+}
+
+
 function cambiarCantidadTarjeta(
   boton,
   variacion
@@ -1879,17 +1919,12 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  /* La cantidad no conserva un estado seleccionado.
-     El efecto rojo/blanco existe únicamente mientras se pulsa − o +. */
-  const controlCantidad = tarjeta.querySelector(".control-cantidad");
-  if (controlCantidad) {
-    controlCantidad.classList.remove("seleccionado");
-    controlCantidad
-      .querySelectorAll(".boton-cantidad.seleccionado")
-      .forEach((botonCantidad) =>
-        botonCantidad.classList.remove("seleccionado")
-      );
-  }
+  /* En móvil, − 1 + queda seleccionado hasta agregar el producto.
+     En PC no conserva selección después del clic. */
+  establecerSeleccionCantidadTarjeta(
+    tarjeta,
+    window.matchMedia("(max-width: 650px)").matches
+  );
 
   /* Evita que el foco conserve estilos de una pulsación anterior. */
   boton.classList.remove("seleccionado");
@@ -2119,6 +2154,11 @@ function agregarProductoAlCarrito(boton) {
   } else {
     carritoCompras.push(producto);
   }
+
+  establecerSeleccionCantidadTarjeta(
+    tarjeta,
+    false
+  );
 
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
@@ -3055,6 +3095,11 @@ function manejarEntradaTarjetaProducto(evento) {
 
     normalizarCantidadTarjeta(tarjeta);
     marcarBotonTarjetaComoPendiente(tarjeta);
+
+    establecerSeleccionCantidadTarjeta(
+      tarjeta,
+      window.matchMedia("(max-width: 650px)").matches
+    );
 }
 
 
@@ -3182,7 +3227,7 @@ if (limpiarComparacion) {
 if (volverCatalogo) {
   volverCatalogo.addEventListener(
     "click",
-    cerrarVistaComparacion
+    volverDesdeComparacion
   );
 }
 

@@ -6421,6 +6421,76 @@
     }
   </style>
 
+  <style id="estado-cantidad-v97">
+    /* =========================================================
+       V97 — estados definitivos de − 1 + en PC y móvil
+       ========================================================= */
+
+    /* PC: hover blanco cálido, texto rojo y borde rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos .fila-compra .control-cantidad:hover,
+      html body #productosComparados .fila-compra .control-cantidad:hover{
+        color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad:hover .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad:hover .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      /* Al pulsar − o +, sólo el segmento pulsado se invierte. */
+      html body #productos .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      html body #productosComparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Reposo móvil, incluso si el navegador conserva :hover o :focus. */
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado),
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado){
+        color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad:not(.seleccionado) .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad:not(.seleccionado) .cantidad{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      /* Selección móvil persistente hasta agregar al carrito. */
+      html body #productos .fila-compra .control-cantidad.seleccionado,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado{
+        color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productos .fila-compra .control-cantidad.seleccionado .cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .boton-cantidad,
+      html body #productosComparados .fila-compra .control-cantidad.seleccionado .cantidad{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:rgba(255,255,255,.48) !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -6794,7 +6864,12 @@
 
       imagenAmpliada.addEventListener("click", (event) => {
         event.stopPropagation();
-        if (mediaPC.matches) alternarSegundoZoom();
+        if (mediaPC.matches) {
+          alternarSegundoZoom();
+          return;
+        }
+
+        cerrarZoom();
       });
 
       botonCerrar.addEventListener("click", (event) => {
@@ -6833,6 +6908,7 @@
       /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
       function limpiarCantidad(boton) {
         if (!boton) return;
+        if (window.matchMedia("(max-width:650px)").matches) return;
         boton.classList.remove("seleccionado");
         const control = boton.closest(".control-cantidad");
         if (control) {
