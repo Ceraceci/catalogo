@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="118">
+  <meta name="ceraceci-version" content="119">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=118">
+  <link rel="stylesheet" href="style.css?v=119">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -6918,6 +6918,151 @@
     }
   </style>
 
+  <style id="volver-catalogo-v119">
+    @media (min-width:651px){
+      /* El botón ocupa exactamente la misma altura que la barra del título. */
+      html body .encabezado-comparacion{
+        box-sizing:border-box !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        padding:0 10px !important;
+      }
+
+      html body .titulo-encabezado-comparacion h1,
+      html body .volver-catalogo{
+        font-size:1.1rem !important;
+      }
+
+      html body .seccion-comparacion > .acciones-encabezado-comparacion{
+        top:0 !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        align-items:stretch !important;
+      }
+
+      html body .volver-catalogo{
+        box-sizing:border-box !important;
+        position:relative !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:5px !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        padding:0 12px !important;
+        overflow:hidden !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+        animation:pulso-volver-catalogo-v119 1.8s ease-in-out infinite;
+      }
+
+      html body .volver-catalogo > span{
+        position:relative;
+        z-index:1;
+      }
+
+      html body .volver-catalogo .flecha-volver-catalogo{
+        display:inline-block;
+        animation:flecha-volver-catalogo-v119 1.15s ease-in-out infinite;
+      }
+
+      html body .volver-catalogo::after{
+        content:"";
+        position:absolute;
+        z-index:0;
+        top:-45%;
+        bottom:-45%;
+        left:-52%;
+        width:38%;
+        background:linear-gradient(110deg, transparent 0%, rgba(152,55,30,.08) 18%, rgba(255,255,255,.96) 50%, rgba(152,55,30,.08) 82%, transparent 100%);
+        transform:skewX(-18deg);
+        pointer-events:none;
+        animation:reflejo-volver-catalogo-v119 2.6s ease-in-out infinite !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* Misma separación vertical que existe entre las tarjetas. */
+      html body .seccion-comparacion > .acciones-encabezado-comparacion{
+        margin:8px 0 106px !important;
+      }
+
+      /* Misma altura y tipografía que el botón fijo del carrito. */
+      html body .volver-catalogo{
+        box-sizing:border-box !important;
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:5px !important;
+        width:auto !important;
+        min-width:230px !important;
+        max-width:100% !important;
+        height:38px !important;
+        min-height:38px !important;
+        max-height:38px !important;
+        padding:0 12px !important;
+        font-size:20px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+        animation:pulso-volver-catalogo-v119 1.8s ease-in-out infinite;
+      }
+
+      html body .volver-catalogo > span{
+        position:relative;
+        z-index:1;
+      }
+
+      html body .volver-catalogo .flecha-volver-catalogo{
+        display:inline-block;
+        animation:flecha-volver-catalogo-v119 1.15s ease-in-out infinite;
+      }
+
+      /* Reflejo más luminoso y frecuente. */
+      html body .volver-catalogo::after{
+        z-index:0;
+        top:-45%;
+        bottom:-45%;
+        left:-52%;
+        width:38%;
+        background:linear-gradient(110deg, transparent 0%, rgba(152,55,30,.08) 18%, rgba(255,255,255,.96) 50%, rgba(152,55,30,.08) 82%, transparent 100%);
+        animation:reflejo-volver-catalogo-v119 2.6s ease-in-out infinite !important;
+      }
+    }
+
+    @keyframes flecha-volver-catalogo-v119{
+      0%, 100%{ transform:translateX(0); }
+      50%{ transform:translateX(-5px); }
+    }
+
+    @keyframes pulso-volver-catalogo-v119{
+      0%, 100%{ filter:drop-shadow(0 0 2px rgba(152,55,30,.28)); }
+      50%{ filter:drop-shadow(0 0 9px rgba(152,55,30,.88)); }
+    }
+
+    @keyframes reflejo-volver-catalogo-v119{
+      0%, 65%{ left:-52%; opacity:0; }
+      70%{ opacity:1; }
+      92%{ left:118%; opacity:1; }
+      100%{ left:118%; opacity:0; }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body .volver-catalogo,
+      html body .volver-catalogo .flecha-volver-catalogo{
+        animation:none !important;
+        filter:none !important;
+      }
+
+      html body .volver-catalogo::after{
+        display:none !important;
+        animation:none !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -7054,7 +7199,8 @@
           id="volverCatalogo"
           class="volver-catalogo"
         >
-          ← Volver al catálogo
+          <span class="flecha-volver-catalogo" aria-hidden="true">←</span>
+          <span>Volver al catálogo</span>
         </button>
       </div>
     </section>
@@ -7394,6 +7540,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=118"></script>
+  <script src="script.js?v=119"></script>
 </body>
 </html>
