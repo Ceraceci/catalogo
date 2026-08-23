@@ -17,7 +17,7 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="61">
+  <meta name="ceraceci-version" content="65">
 
   <!--
     CACHE-BUSTER PERMANENTE:
@@ -3377,8 +3377,8 @@
 
 
 
-  <style id="ajustes-pc-zoom-v60">
-    /* V60: zoom PC centrado, proporcional, sin recorte ni scroll; X junto a la foto. */
+  <style id="ajustes-pc-zoom-v62">
+    /* V62: zoom PC centrado, proporcional y sin scroll; X fuera de la foto. */
     @media (min-width:651px){
       /* Reduce lo suficiente para que “Todas las categorías” se vea completo. */
       body #buscador,
@@ -3393,9 +3393,30 @@
         line-height:.99225 !important;
       }
 
-      /* La propia imagen indica que admite ampliación, sin íconos superpuestos. */
+      /* Cursor de zoom más grande y minimalista, sin íconos sobre la foto. */
       body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
-        cursor:zoom-in !important;
+        cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='17' cy='17' r='10.5' fill='white' fill-opacity='.9' stroke='%2398371e' stroke-width='2.4'/%3E%3Cpath d='M24.5 24.5L34 34' stroke='%2398371e' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M17 12.5v9M12.5 17h9' stroke='%2398371e' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") 17 17, zoom-in !important;
+      }
+
+      /* X nativa del buscador en PC: mismo rojo que el resto de la interfaz. */
+      body #buscador::-webkit-search-cancel-button{
+        -webkit-appearance:none;
+        appearance:none;
+        width:18px;
+        height:18px;
+        min-width:18px;
+        margin:0 1px 0 8px;
+        opacity:1;
+        background-color:var(--color-principal);
+        -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+        -webkit-mask-repeat:no-repeat;
+        -webkit-mask-position:center;
+        -webkit-mask-size:100% 100%;
+        mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6L18 18M18 6L6 18' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+        mask-repeat:no-repeat;
+        mask-position:center;
+        mask-size:100% 100%;
+        cursor:pointer;
       }
     }
 
@@ -3453,7 +3474,7 @@
       border-radius:10px;
       background:#fff;
       box-shadow:0 18px 55px rgba(0,0,0,.28);
-      cursor:zoom-in;
+      cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Ccircle cx='17' cy='17' r='10.5' fill='white' fill-opacity='.9' stroke='%2398371e' stroke-width='2.4'/%3E%3Cpath d='M24.5 24.5L34 34' stroke='%2398371e' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M17 12.5v9M12.5 17h9' stroke='%2398371e' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") 17 17, zoom-in;
       user-select:none;
       -webkit-user-drag:none;
       transition:width .18s ease, height .18s ease, max-width .18s ease, max-height .18s ease;
@@ -3468,8 +3489,8 @@
 
     .cerrar-zoom-imagen{
       position:absolute;
-      top:-12px;
-      right:-12px;
+      top:0;
+      right:-46px;
       z-index:10001;
       display:grid;
       place-items:center;
@@ -3501,8 +3522,8 @@
 
 
 
-  <style id="ajustes-tipografia-v61">
-    /* V61 — tamaños solicitados para títulos/códigos y X del buscador móvil. */
+  <style id="ajustes-tipografia-v62">
+    /* V62 — tipografías + ajustes de X del buscador en móvil/PC. */
 
     @media (min-width:651px){
       body #productos .tarjeta-producto h2,
@@ -3532,9 +3553,9 @@
       body #buscador::-webkit-search-cancel-button{
         -webkit-appearance:none;
         appearance:none;
-        width:28px;
-        height:28px;
-        min-width:28px;
+        width:25px;
+        height:25px;
+        min-width:25px;
         margin:0 1px 0 8px;
         opacity:1;
         background-color:var(--color-principal);
@@ -3550,6 +3571,398 @@
       }
     }
   </style>
+
+
+  <style id="ajuste-codigo-movil-v63">
+    /* V63 — código móvil a 13,5 px con crecimiento vertical mínimo. */
+    @media (max-width:650px){
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        font-size:13.5px !important;
+        line-height:1.12 !important;
+        min-height:16px !important;
+        height:16px !important;
+        margin:0 !important;
+        overflow:visible !important;
+      }
+
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        grid-template-rows:28px 40px 16px !important;
+        min-height:100px !important;
+        height:100px !important;
+      }
+
+      body #productos .fila-titulo-producto,
+      body #productosComparados .fila-titulo-producto{
+        min-height:40px !important;
+        height:40px !important;
+      }
+
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        min-height:40px !important;
+        max-height:40px !important;
+      }
+
+      body #productos .tarjeta-producto{
+        min-height:407px !important;
+      }
+    }
+  </style>
+
+
+  <style id="fondo-fotos-v64">
+    /* V64: el área de las fotos vuelve a compartir exactamente el fondo de la tarjeta. */
+    body .contenedor-foto-producto{
+      background:var(--color-fondo) !important;
+    }
+  </style>
+
+
+  <style id="refinamiento-visual-v65">
+    /* V65 — refinamiento visual general sin mover ni agregar/quitar botones. */
+
+    /* Tarjetas: menos sensación de caja, sin reducir su tamaño. */
+    body .tarjeta-producto{
+      border-color:rgba(111,103,97,.14) !important;
+      box-shadow:0 1px 2px rgba(70,40,25,.025), 0 6px 18px rgba(70,40,25,.04) !important;
+    }
+
+    body .encabezado-producto,
+    body .bloque-presentaciones,
+    body .informacion-precio,
+    body .zona-detalles-producto{
+      border-color:rgba(111,103,97,.14) !important;
+    }
+
+    /* Jerarquía visual: título -> precio -> presentación -> información secundaria. */
+    body #productos .tarjeta-producto h2,
+    body #productosComparados .tarjeta-producto h2{
+      color:#211d1a !important;
+      font-weight:600 !important;
+      letter-spacing:-.006em !important;
+    }
+
+    body #productos .codigo-producto,
+    body #productosComparados .codigo-producto{
+      color:#8d837c !important;
+      font-weight:400 !important;
+      letter-spacing:.012em !important;
+    }
+
+    /* El rojo queda reservado a marca/interacción; el precio se lee fuerte y limpio. */
+    body .fila-compra .precio,
+    body .productos-comparados .fila-compra .precio,
+    body .informacion-precio .precio{
+      color:#211d1a !important;
+      font-weight:700 !important;
+      letter-spacing:-.012em !important;
+      font-variant-numeric:tabular-nums !important;
+    }
+
+    body .categoria{
+      color:#625a55 !important;
+      background:rgba(111,103,97,.08) !important;
+      font-weight:600 !important;
+    }
+
+    /* Fotos homogéneas: misma superficie que la tarjeta y sin marco visual extra. */
+    body .contenedor-foto-producto{
+      background:var(--color-fondo) !important;
+      border-color:transparent !important;
+      box-shadow:none !important;
+    }
+
+    body .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      object-fit:contain !important;
+      background:transparent !important;
+      padding:2px !important;
+    }
+
+    /* Presentaciones inactivas: planas y neutras. */
+    body .boton-presentacion:not(.seleccionada){
+      color:#49433f !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.24) !important;
+      box-shadow:none !important;
+      font-weight:500 !important;
+    }
+
+    body .boton-presentacion.seleccionada,
+    body .selector-presentacion{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Acciones secundarias comparten el mismo lenguaje visual. */
+    body .compartir-producto,
+    body .boton-comparar[aria-pressed="false"],
+    body .ver-detalles[aria-expanded="false"]{
+      color:#49413d !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.28) !important;
+      box-shadow:none !important;
+    }
+
+    body .compartir-producto,
+    body .boton-comparar,
+    body .ver-detalles,
+    body .agregar-carrito,
+    body .boton-presentacion,
+    body .selector-presentacion,
+    body .boton-cantidad{
+      transition:color .14s ease, background-color .14s ease, border-color .14s ease, box-shadow .14s ease, transform .14s ease !important;
+    }
+
+    body .boton-comparar[aria-pressed="true"],
+    body .ver-detalles[aria-expanded="true"],
+    body .agregar-carrito{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Cantidad: menos ruido visual en reposo. */
+    body .control-cantidad{
+      border-color:rgba(111,103,97,.28) !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .control-cantidad .cantidad{
+      color:#4b4540 !important;
+      border-left-color:rgba(111,103,97,.22) !important;
+      border-right-color:rgba(111,103,97,.22) !important;
+      background:var(--color-control) !important;
+    }
+
+    body .control-cantidad .boton-cantidad{
+      color:#5d5550 !important;
+      background:var(--color-control) !important;
+    }
+
+    /* Ritmo de 4/8/12 px, sin estirar innecesariamente las tarjetas. */
+    body .encabezado-producto{row-gap:8px !important;}
+    body .opciones-presentacion{gap:4px !important;}
+    body .bloque-presentaciones,
+    body .informacion-precio,
+    body .selector-cantidad,
+    body .zona-detalles-producto{
+      padding-top:8px !important;
+      padding-bottom:8px !important;
+    }
+
+    /* Marca persistente: vive dentro de la barra sticky y sólo aparece al dejar atrás el logo. */
+    body .busqueda{
+      grid-template-areas:
+        "marca marca marca"
+        "buscar categoria ordenar" !important;
+      transition:padding .16s ease, row-gap .16s ease, box-shadow .16s ease !important;
+    }
+
+    body .marca-sticky-catalogo{
+      grid-area:marca;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      min-width:0;
+      max-height:0;
+      margin:0 0 -10px;
+      overflow:hidden;
+      opacity:0;
+      color:#766d67;
+      font-size:12px;
+      line-height:1;
+      letter-spacing:.01em;
+      pointer-events:none;
+      transform:translateY(-4px);
+      transition:max-height .16s ease, opacity .14s ease, transform .16s ease, margin .16s ease !important;
+    }
+
+    body .marca-sticky-catalogo strong{
+      color:#2d2926;
+      font-size:12.5px;
+      font-weight:800;
+      letter-spacing:.09em;
+    }
+
+    body.marca-scroll-activa .marca-sticky-catalogo{
+      max-height:20px;
+      margin-bottom:0;
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    body.marca-scroll-activa .busqueda{
+      row-gap:8px !important;
+      box-shadow:0 4px 16px rgba(70,40,25,.07) !important;
+    }
+
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .compartir-producto:hover,
+      body .boton-comparar[aria-pressed="false"]:hover,
+      body .ver-detalles[aria-expanded="false"]:hover,
+      body .boton-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        border-color:rgba(152,55,30,.72) !important;
+        background:#fff !important;
+      }
+
+      body .control-cantidad .boton-cantidad:hover{
+        color:#fff !important;
+        background:var(--color-principal) !important;
+      }
+
+      body .tarjeta-producto{
+        transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease !important;
+      }
+
+      body .tarjeta-producto:hover{
+        transform:translateY(-2px) !important;
+        border-color:rgba(111,103,97,.22) !important;
+        box-shadow:0 3px 8px rgba(70,40,25,.04), 0 10px 24px rgba(70,40,25,.065) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      body .busqueda{
+        grid-template-areas:
+          "marca"
+          "buscarorden"
+          "categoria" !important;
+        grid-template-columns:minmax(0,1fr) !important;
+      }
+
+      body .marca-sticky-catalogo{
+        margin-bottom:-7px;
+        font-size:11px;
+      }
+
+      body.marca-scroll-activa .marca-sticky-catalogo{
+        margin-bottom:0;
+      }
+
+      body .marca-sticky-catalogo strong{
+        font-size:11.5px;
+      }
+
+      /* Conserva la legibilidad móvil ya alcanzada, sin compactar de más. */
+      body #productos .tarjeta-producto h2,
+      body #productosComparados .tarjeta-producto h2{
+        line-height:1.16 !important;
+      }
+
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        line-height:1.14 !important;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      body .marca-sticky-catalogo,
+      body .busqueda,
+      body .tarjeta-producto,
+      body button{transition:none !important;}
+    }
+  </style>
+
+
+  <style id="anchos-uniformes-controles-v66">
+    /* V66 — anchos uniformes de controles */
+    body .bloque-presentaciones,
+    body .fila-compra,
+    body .zona-detalles-producto{
+      width:100% !important;
+      box-sizing:border-box !important;
+    }
+
+    body .opciones-presentacion,
+    body .productos-comparados .opciones-presentacion{
+      display:grid !important;
+      grid-template-columns:repeat(auto-fit,minmax(0,1fr)) !important;
+      gap:5px !important;
+      width:100% !important;
+    }
+
+    body .boton-presentacion,
+    body .selector-presentacion{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra{
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+      width:100% !important;
+      column-gap:8px !important;
+    }
+
+    body .fila-compra .selector-cantidad,
+    body .fila-compra .agregar-carrito{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      justify-self:stretch !important;
+      box-sizing:border-box !important;
+    }
+
+    body .fila-compra .control-cantidad{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .control-cantidad{
+      border:1px solid rgba(111,103,97,.28) !important;
+      border-radius:10px !important;
+      background:var(--color-control) !important;
+      box-shadow:none !important;
+    }
+
+    body .ver-detalles{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:100% !important;
+      max-width:none !important;
+      box-sizing:border-box !important;
+    }
+
+    body .ver-detalles,
+    body .control-cantidad,
+    body .agregar-carrito,
+    body .boton-presentacion,
+    body .selector-presentacion{
+      min-height:34px !important;
+    }
+
+    @media (max-width:650px){
+      body .fila-compra,
+      body .productos-comparados .fila-compra{
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+        column-gap:6px !important;
+      }
+
+      body .fila-compra .agregar-carrito,
+      body .productos-comparados .fila-compra .agregar-carrito{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+        height:30px !important;
+      }
+
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad{
+        width:100% !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -3586,6 +3999,11 @@
     </section>
 
     <section class="busqueda">
+      <div class="marca-sticky-catalogo" aria-hidden="true">
+        <strong>CERACECI</strong>
+        <span>·</span>
+        <span>Insumos para cerámica</span>
+      </div>
       <form
         class="fila-busqueda-orden"
         id="formBusqueda"
@@ -3834,7 +4252,7 @@
 
 
 
-  <script id="zoom-productos-pc-v60">
+  <script id="zoom-productos-pc-v62">
     (() => {
       const mediaPC = window.matchMedia("(min-width: 651px)");
       const overlay = document.getElementById("zoomImagenOverlay");
@@ -3889,7 +4307,9 @@
 
         // Deja un margen pequeño para la X y garantiza que la imagen completa
         // siempre entre en la pantalla, sin barras ni recortes.
-        const anchoDisponible = Math.max(220, window.innerWidth - 56);
+        // Reserva espacio lateral para que la X quede por fuera de la foto
+        // sin empujarla fuera de la pantalla.
+        const anchoDisponible = Math.max(220, window.innerWidth - 120);
         const altoDisponible = Math.max(180, window.innerHeight - 56);
         const escala = Math.min(
           anchoDisponible / anchoNatural,
@@ -3957,6 +4377,23 @@
     })();
   </script>
 
+
+
+  <script id="marca-sticky-v65">
+    (() => {
+      const cabecera = document.querySelector(".cabecera");
+      if (!cabecera) return;
+
+      const actualizarMarca = () => {
+        const limite = cabecera.getBoundingClientRect().bottom;
+        document.body.classList.toggle("marca-scroll-activa", limite <= 8);
+      };
+
+      actualizarMarca();
+      window.addEventListener("scroll", actualizarMarca, { passive: true });
+      window.addEventListener("resize", actualizarMarca, { passive: true });
+    })();
+  </script>
 
   <!--
     Carga siempre la versión actual de script.js.
