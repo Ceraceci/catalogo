@@ -5416,6 +5416,240 @@
     }
   </style>
 
+
+
+  <style id="ajustes-v82">
+    /* =========================================================
+       V82 — hover PC + carrito + comparación + estados móvil
+       ========================================================= */
+
+    /* Finalizar mi pedido: una sola línea, sin modificar la altura del botón. */
+    body .texto-finalizar-carrito,
+    body .texto-finalizar-carrito span{
+      white-space:nowrap !important;
+    }
+
+    /* PC: Presentaciones conservan negrita en hover y suman borde/texto rojo. */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      body .boton-presentacion:not(.seleccionada):hover,
+      body .selector-presentacion:not(.seleccionada):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+        font-weight:700 !important;
+        box-shadow:none !important;
+      }
+
+      /* − 1 +: mismo hover que Más info.; el control completo queda blanco/rojo. */
+      body .fila-compra .control-cantidad:hover,
+      body .productos-comparados .fila-compra .control-cantidad:hover{
+        background:var(--color-control) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .fila-compra .control-cantidad:hover .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad:hover .cantidad{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:var(--color-control) !important;
+      }
+
+      /* Al presionar − o +, sólo ese segmento se invierte. */
+      body .fila-compra .control-cantidad:hover .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad:hover .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Estado seleccionado real: rojo + blanco y no cambia al hacer hover. */
+    @media (min-width:651px){
+      body .boton-presentacion.seleccionada,
+      body .boton-presentacion[aria-pressed="true"],
+      body .boton-comparar[aria-pressed="true"],
+      body .boton-comparar.seleccionado,
+      body .agregar-carrito.agregado{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    /* Quitar todos desaparece definitivamente de la vista de comparación. */
+    body .limpiar-comparacion-vista{
+      display:none !important;
+    }
+
+    body .seccion-comparacion{
+      position:relative !important;
+    }
+
+    /* PC: Volver al catálogo arriba, a la derecha. */
+    @media (min-width:651px){
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        position:absolute !important;
+        top:10px !important;
+        right:10px !important;
+        left:auto !important;
+        z-index:3 !important;
+        display:flex !important;
+        justify-content:flex-end !important;
+        width:auto !important;
+        margin:0 !important;
+      }
+
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        text-align:center !important;
+      }
+
+      body .volver-catalogo{
+        min-height:31px !important;
+        height:31px !important;
+        padding:0 10px !important;
+        font-size:.75rem !important;
+      }
+    }
+
+    /* Volver al catálogo: normal rojo/blanco cálido; invertido sólo al pulsar. */
+    body .volver-catalogo{
+      color:var(--color-principal) !important;
+      -webkit-text-fill-color:var(--color-principal) !important;
+      background:var(--color-control) !important;
+      border:1px solid var(--color-principal) !important;
+      border-radius:10px !important;
+      box-shadow:none !important;
+    }
+
+    body .volver-catalogo:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    @media (max-width:650px){
+      /* Texto del carrito exactamente del mismo tamaño que $ 0. */
+      body .texto-finalizar-carrito span,
+      body #valorCarrito{
+        font-size:.98rem !important;
+        line-height:1 !important;
+      }
+
+      body .texto-finalizar-carrito span{
+        font-weight:700 !important;
+      }
+
+      /* − 1 + nunca queda rojo después de soltar. */
+      body .fila-compra .control-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad,
+      body .fila-compra .control-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad.seleccionado{
+        color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad,
+      body .fila-compra .control-cantidad .cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad,
+      body .productos-comparados .fila-compra .control-cantidad .cantidad,
+      body .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad.seleccionado,
+      body .fila-compra .control-cantidad .boton-cantidad:focus:not(:active),
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:focus:not(:active){
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+      }
+
+      body .fila-compra .control-cantidad .boton-cantidad:active,
+      body .productos-comparados .fila-compra .control-cantidad .boton-cantidad:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      /* Compartir queda marcado rojo/blanco después de usarlo. */
+      body .compartir-producto.compartir-presionado,
+      body .compartir-producto.compartir-presionado:focus,
+      body .compartir-producto.compartir-presionado:active{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      body .compartir-producto.compartir-presionado svg{
+        color:#fff !important;
+        fill:#fff !important;
+        stroke:#fff !important;
+      }
+
+      /* Más info. deseleccionado vuelve a neutro. */
+      body .ver-detalles[aria-expanded="false"],
+      body .ver-detalles[aria-expanded="false"]:focus,
+      body .ver-detalles[aria-expanded="false"]:active{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:rgba(111,103,97,.28) !important;
+      }
+
+      body .ver-detalles[aria-expanded="true"]{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      /* Comparación móvil: el encabezado sólo conserva el título. */
+      body .encabezado-comparacion{
+        grid-template-columns:1fr !important;
+        margin-bottom:8px !important;
+      }
+
+      body .titulo-encabezado-comparacion{
+        grid-column:1 !important;
+        grid-row:1 !important;
+        text-align:center !important;
+      }
+
+      /* Volver al catálogo queda después de las tarjetas, a la derecha,
+         y por encima visualmente de la barra fija del carrito. */
+      body .seccion-comparacion > .acciones-encabezado-comparacion{
+        position:static !important;
+        display:flex !important;
+        justify-content:flex-end !important;
+        align-items:center !important;
+        width:100% !important;
+        margin:8px 0 72px !important;
+      }
+
+      body .volver-catalogo{
+        width:calc((100% - 4px) / 2 - 8px) !important;
+        min-width:0 !important;
+        height:30px !important;
+        min-height:30px !important;
+        padding:0 8px !important;
+        font-size:15.5px !important;
+        font-weight:600 !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
 </head>
 
 <body>
@@ -5537,24 +5771,6 @@
       hidden
     >
       <div class="encabezado-comparacion">
-        <div class="acciones-encabezado-comparacion">
-          <button
-            type="button"
-            id="volverCatalogo"
-            class="volver-catalogo"
-          >
-            ← Volver al catálogo
-          </button>
-
-          <button
-            type="button"
-            id="limpiarComparacionVista"
-            class="limpiar-comparacion-vista"
-          >
-            Quitar todos
-          </button>
-        </div>
-
         <div class="titulo-encabezado-comparacion">
           <h1>Comparar productos</h1>
         </div>
@@ -5565,6 +5781,16 @@
         class="productos"
         data-cantidad="0"
       ></div>
+
+      <div class="acciones-encabezado-comparacion">
+        <button
+          type="button"
+          id="volverCatalogo"
+          class="volver-catalogo"
+        >
+          ← Volver al catálogo
+        </button>
+      </div>
     </section>
 
     <p id="estado">
@@ -5621,7 +5847,7 @@
           aria-hidden="true"
         >
         <span class="texto-finalizar-carrito">
-          <span>Finalizar pedido</span>
+          <span>Finalizar mi pedido</span>
         </span>
 
         <span class="icono-carrito" aria-hidden="true">🛒</span>

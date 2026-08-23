@@ -1277,6 +1277,9 @@ function crearTarjetaProducto(
     "alambre kanthal a1";
 
   const opcionesSelectorAlambre =
+    `
+      <option value="">Diámetro</option>
+    ` +
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
         <option value="${indicePresentacion}">
@@ -1295,7 +1298,7 @@ function crearTarjetaProducto(
           <select
             class="selector-presentacion selector-presentacion-alambre"
             data-id-producto="${producto.id}"
-            aria-label="Elegir presentación de ${escaparHTML(
+            aria-label="Elegir diámetro de ${escaparHTML(
               producto.nombre
             )}"
           >
@@ -1747,8 +1750,23 @@ function seleccionarPresentacion(control) {
   const idProducto =
     control.dataset.idProducto;
 
+  const esSelectorPresentacion =
+    control.matches(".selector-presentacion");
+
+  /* Alambre: "Diámetro" funciona como estado neutro.
+     Al volver a elegirlo se quita la selección visual,
+     igual que al deseleccionar un botón de presentación. */
+  if (
+    esSelectorPresentacion &&
+    control.value === ""
+  ) {
+    control.classList.remove("seleccionada");
+    programarAjusteTarjetasMoviles();
+    return;
+  }
+
   const indicePresentacion =
-    control.matches(".selector-presentacion")
+    esSelectorPresentacion
       ? Number(control.value)
       : Number(
           control.dataset.indicePresentacion
@@ -2896,8 +2914,8 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
-      /* Mantener visible el feedback rojo/blanco aunque el navegador
-         abra inmediatamente el panel nativo de compartir. */
+      /* En móvil, Compartir conserva el estado rojo/blanco después de pulsarlo.
+         En escritorio mantiene un feedback breve para no quedar marcado. */
       botonCompartir.classList.add(
         "compartir-presionado"
       );
@@ -2906,12 +2924,14 @@ function manejarClickTarjetaProducto(evento) {
         botonCompartir._temporizadorFeedback
       );
 
-      botonCompartir._temporizadorFeedback =
-        window.setTimeout(() => {
-          botonCompartir.classList.remove(
-            "compartir-presionado"
-          );
-        }, 260);
+      if (!window.matchMedia("(max-width: 650px)").matches) {
+        botonCompartir._temporizadorFeedback =
+          window.setTimeout(() => {
+            botonCompartir.classList.remove(
+              "compartir-presionado"
+            );
+          }, 260);
+      }
 
       compartirProducto(
         botonCompartir.dataset.idProducto
