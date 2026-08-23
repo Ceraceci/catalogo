@@ -321,8 +321,8 @@
     /* Logo dentro de la cápsula del carrito */
     .logo-carrito{
       flex:0 0 auto;
-      width:24px;
-      height:24px;
+      width:28px;
+      height:28px;
       object-fit:contain;
       display:block;
     }
@@ -346,8 +346,8 @@
       }
 
       .logo-carrito{
-        width:26px;
-        height:26px;
+        width:30px;
+        height:30px;
       }
     }
 
@@ -363,8 +363,8 @@
       }
 
       .logo-carrito{
-        width:22px;
-        height:22px;
+        width:25px;
+        height:25px;
       }
     }
 
@@ -3783,7 +3783,7 @@
     }
 
     body .marca-sticky-catalogo strong{
-      color:#2d2926;
+      color:var(--color-principal);
       font-size:12.5px;
       font-weight:800;
       letter-spacing:.09em;
@@ -4394,8 +4394,8 @@
     }
 
     body .marca-sticky-catalogo > span:last-child{
-      color:#766d67 !important;
-      font-weight:400 !important;
+      color:#342f2c !important;
+      font-weight:500 !important;
     }
 
     @media (max-width:650px){
@@ -5116,6 +5116,109 @@
         right:0 !important;
         transform:none !important;
         justify-content:flex-start !important;
+      }
+    }
+  </style>
+
+
+
+  <style id="ajustes-v75">
+    /* V75 — presentaciones deseleccionables + feedback fiable de Compartir. */
+
+    /* La presentación seleccionada conserva el estado rojo/blanco. */
+    body .boton-presentacion.seleccionada,
+    body .boton-presentacion.seleccionada:hover,
+    body .boton-presentacion.seleccionada:focus,
+    body .boton-presentacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    /* Al deseleccionarla vuelve exactamente al estado neutro. */
+    body .boton-presentacion:not(.seleccionada)[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border-color:rgba(111,103,97,.22) !important;
+    }
+
+    /* Compartir: feedback rojo + icono blanco al pulsar,
+       incluso si se abre enseguida el diálogo nativo de compartir. */
+    body .compartir-producto:active,
+    body .compartir-producto.compartir-presionado{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    body .compartir-producto:active svg,
+    body .compartir-producto.compartir-presionado svg{
+      fill:#fff !important;
+      stroke:#fff !important;
+      color:#fff !important;
+    }
+  </style>
+
+
+  <style id="ajuste-foto-movil-v76">
+    /* V76 — foto móvil más centrada visualmente respecto de la tarjeta. */
+    @media (max-width:650px){
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        width:calc(100% - 38px) !important;
+        margin-left:4px !important;
+        margin-right:34px !important;
+      }
+
+      body #productos .contenedor-foto-producto .foto-producto,
+      body #productosComparados .contenedor-foto-producto .foto-producto{
+        object-position:62% 50% !important;
+      }
+    }
+  </style>
+
+
+  <style id="ajuste-espaciado-titulo-codigo-movil-v77">
+    /* V77 — móvil: título -> código con aire equivalente al interlineado,
+       compensando al máximo antes de la foto para casi no alargar la tarjeta. */
+    @media (max-width:650px){
+      /* Separación visual entre la última línea del título y el código. */
+      body #productos .codigo-producto,
+      body #productosComparados .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* Tarjetas de 1–2 líneas: sólo 2 px extra reales de altura.
+         39 px de título + 4 px de separación + 14 px de código = 57 px. */
+      body #productos .encabezado-producto,
+      body #productosComparados .encabezado-producto{
+        min-height:57px !important;
+        height:57px !important;
+        padding-bottom:0 !important;
+        margin-bottom:0 !important;
+        row-gap:0 !important;
+      }
+
+      /* En títulos de 3 líneas ya existía el aire necesario;
+         conservamos su altura para no estirar la tarjeta. */
+      body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        min-height:74px !important;
+        height:74px !important;
+      }
+
+      body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto,
+      body #productosComparados .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        margin-top:4px !important;
+      }
+
+      /* Código -> foto: sin margen adicional; queda al mínimo seguro. */
+      body #productos .contenedor-foto-producto,
+      body #productosComparados .contenedor-foto-producto{
+        margin-top:0 !important;
       }
     }
   </style>

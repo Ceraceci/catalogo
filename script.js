@@ -1261,6 +1261,7 @@ function crearTarjetaProducto(
           class="boton-presentacion"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
+          aria-pressed="false"
         >
           <span>${escaparHTML(
             formatearEtiquetaPresentacion(
@@ -1773,6 +1774,9 @@ function seleccionarPresentacion(control) {
   }
 
   if (control.matches(".boton-presentacion")) {
+    const yaEstabaSeleccionada =
+      control.classList.contains("seleccionada");
+
     tarjeta
       .querySelectorAll(
         ".boton-presentacion"
@@ -1781,11 +1785,21 @@ function seleccionarPresentacion(control) {
         opcion.classList.remove(
           "seleccionada"
         );
+        opcion.setAttribute(
+          "aria-pressed",
+          "false"
+        );
       });
 
-    /* Todas las presentaciones, incluso cuando hay una sola,
-       se pueden seleccionar y muestran el mismo estado activo. */
-    control.classList.add("seleccionada");
+    /* Un segundo toque sobre la misma presentación la deselecciona
+       visualmente. Esto funciona también cuando existe una sola opción. */
+    if (!yaEstabaSeleccionada) {
+      control.classList.add("seleccionada");
+      control.setAttribute(
+        "aria-pressed",
+        "true"
+      );
+    }
   }
 
   if (control.matches(".selector-presentacion")) {
@@ -2882,6 +2896,23 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonCompartir) {
+      /* Mantener visible el feedback rojo/blanco aunque el navegador
+         abra inmediatamente el panel nativo de compartir. */
+      botonCompartir.classList.add(
+        "compartir-presionado"
+      );
+
+      window.clearTimeout(
+        botonCompartir._temporizadorFeedback
+      );
+
+      botonCompartir._temporizadorFeedback =
+        window.setTimeout(() => {
+          botonCompartir.classList.remove(
+            "compartir-presionado"
+          );
+        }, 260);
+
       compartirProducto(
         botonCompartir.dataset.idProducto
       );
