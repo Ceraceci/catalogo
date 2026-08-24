@@ -1215,12 +1215,6 @@ function limpiarAjustesMovilesTarjetas() {
     );
 
   document
-    .querySelectorAll(".fila-titulo-producto h2")
-    .forEach((titulo) =>
-      titulo.style.removeProperty("font-size")
-    );
-
-  document
     .querySelectorAll(".opciones-presentacion")
     .forEach((contenedor) => {
       contenedor.style.removeProperty("flex-wrap");
@@ -1427,75 +1421,61 @@ function ajustarPresentacionesTarjetaMovil(
 }
 
 
-function contarLineasTitulo(titulo) {
-  const altoLinea = parseFloat(
-    getComputedStyle(titulo).lineHeight
-  );
-
-  if (!altoLinea || !Number.isFinite(altoLinea)) {
-    return 1;
-  }
-
-  return Math.max(
-    1,
-    Math.ceil((titulo.scrollHeight - 1) / altoLinea)
-  );
-}
-
-
 function actualizarLineasTituloTarjetaMovil(tarjeta) {
   const titulo = tarjeta.querySelector(".fila-titulo-producto h2");
 
   tarjeta.classList.remove("titulo-tres-lineas");
 
-  if (titulo) {
-    titulo.style.removeProperty("font-size");
-  }
-
   if (!titulo || !consultaMovilTarjetas.matches) {
     return;
   }
 
-  let tamano = parseFloat(
-    getComputedStyle(titulo).fontSize
-  );
-  const tamanoMinimo = 13;
-  let lineasNaturales = contarLineasTitulo(titulo);
+  const estilo = getComputedStyle(titulo);
+  const altoLinea = parseFloat(estilo.lineHeight);
 
-  /* En móvil se conserva cada palabra completa. Si el nombre necesita más
-     de tres líneas, se reduce gradualmente sólo ese título hasta que entre. */
-  while (
-    tamano > tamanoMinimo &&
-    (
-      lineasNaturales > 3 ||
-      titulo.scrollWidth > titulo.clientWidth + 1
-    )
-  ) {
-    tamano = Math.max(tamanoMinimo, tamano - 0.35);
-    titulo.style.setProperty(
-      "font-size",
-      `${tamano.toFixed(2)}px`,
-      "important"
-    );
-    lineasNaturales = contarLineasTitulo(titulo);
+  if (!altoLinea || !Number.isFinite(altoLinea)) {
+    return;
   }
+
+  /* scrollHeight conserva la altura natural del texto aunque esté recortado
+     por line-clamp; así sólo marcamos los títulos que realmente requieren
+     una tercera línea al ancho actual de la tarjeta. */
+  const lineasNaturales = titulo.scrollHeight / altoLinea;
 
   tarjeta.classList.toggle(
     "titulo-tres-lineas",
-    lineasNaturales > 2
+    lineasNaturales > 2.35
   );
 }
 
 
 function centrarAccionesFotoTarjetaMovil(tarjeta) {
+  const encabezado = tarjeta.querySelector(".encabezado-producto");
+  const foto = tarjeta.querySelector(".contenedor-foto-producto");
   const acciones = tarjeta.querySelector(".acciones-producto");
 
-  if (!acciones) {
+  if (!encabezado || !foto || !acciones) {
     return;
   }
 
-  /* Las acciones ahora se posicionan sobre la foto únicamente con CSS. */
-  acciones.style.removeProperty("top");
+  const rectEncabezado = encabezado.getBoundingClientRect();
+  const rectFoto = foto.getBoundingClientRect();
+  const rectAcciones = acciones.getBoundingClientRect();
+
+  if (!rectFoto.height || !rectAcciones.height) {
+    return;
+  }
+
+  const centroFoto =
+    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
+
+  const top = centroFoto - rectAcciones.height / 2;
+
+  acciones.style.setProperty(
+    "top",
+    `${Math.round(top * 10) / 10}px`,
+    "important"
+  );
 }
 
 
@@ -1602,7 +1582,7 @@ function crearTarjetaProducto(
   tarjeta.dataset.codigo = presentacionInicial.codigo || "";
 
   const productoInicialEnCarrito =
-    carritoCompras.find((item) => {
+    carritoCompras.some((item) => {
       return (
         crearClaveCarrito(item) ===
         crearClaveCarrito({
@@ -1612,18 +1592,6 @@ function crearTarjetaProducto(
         })
       );
     });
-
-  tarjeta.classList.toggle(
-    "producto-agregado",
-    Boolean(productoInicialEnCarrito)
-  );
-
-  const cantidadInicial = productoInicialEnCarrito
-    ? Math.max(
-        1,
-        Number(productoInicialEnCarrito.cantidad) || 1
-      )
-    : 1;
 
   const estaSeleccionado =
     productosSeleccionadosComparacion.includes(
@@ -1729,63 +1697,59 @@ function crearTarjetaProducto(
   `;
 
   tarjeta.innerHTML = `
-    <div class="escena-foto-producto">
-      <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
-        <img
-          src="${foto ? escaparHTML(foto) : "img/logo.png"}"
-          alt="${foto ? escaparHTML(producto.nombre) : ""}"
-          class="foto-producto ${foto ? "" : "foto-placeholder"}"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-        >
-      </div>
-    </div>
-
     <div class="encabezado-producto">
       <div class="fila-titulo-producto">
         <h2>${escaparHTML(producto.nombre)}</h2>
       </div>
 
-      <div class="fila-codigo-con-acciones">
-        <p class="codigo-producto">
-          ${
-            presentacionInicial.codigo
-              ? escaparHTML(presentacionInicial.codigo)
-            : ""
-          }
-        </p>
+      <p class="codigo-producto">
+        ${
+          presentacionInicial.codigo
+            ? escaparHTML(presentacionInicial.codigo)
+          : ""
+        }
+      </p>
 
-        <div class="acciones-identificacion-producto">
-          <button
-            type="button"
-            class="compartir-producto"
-            data-id-producto="${producto.id}"
-            aria-label="Compartir ${escaparHTML(producto.nombre)}"
-            title="Compartir producto"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-            </svg>
-          </button>
+      <div class="acciones-producto">
+        <button
+          type="button"
+          class="compartir-producto"
+          data-id-producto="${producto.id}"
+          aria-label="Compartir ${escaparHTML(producto.nombre)}"
+          title="Compartir producto"
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+          </svg>
+        </button>
 
-          <button
-            type="button"
-            class="boton-comparar ${
-              estaSeleccionado ? "seleccionado" : ""
-            }"
-            data-id-producto="${producto.id}"
-            aria-pressed="${estaSeleccionado}"
-            aria-label="${
-              esComparacion ? "Quitar de la comparación" : "Comparar"
-            } ${escaparHTML(producto.nombre)}"
-            title="${
-              esComparacion ? "Quitar de la comparación" : "Comparar producto"
-            }"
-          >
-            <span class="icono-comparar" aria-hidden="true">⇄</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          class="boton-comparar ${
+            estaSeleccionado ? "seleccionado" : ""
+          }"
+          data-id-producto="${producto.id}"
+          aria-pressed="${estaSeleccionado}"
+          aria-label="${
+            esComparacion ? "Quitar de la comparación" : "Comparar"
+          } ${escaparHTML(producto.nombre)}"
+          title="${
+            esComparacion ? "Quitar de la comparación" : "Comparar producto"
+          }"
+        >
+          <span class="icono-comparar" aria-hidden="true">⇄</span>
+        </button>
       </div>
+    </div>
+
+    <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+      <img
+        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
+        alt="${foto ? escaparHTML(producto.nombre) : ""}"
+        class="foto-producto ${foto ? "" : "foto-placeholder"}"
+        loading="lazy"
+        referrerpolicy="no-referrer"
+      >
     </div>
 
     <div class="fila-compra">
@@ -1812,12 +1776,8 @@ function crearTarjetaProducto(
 
           <input
             type="number"
-            class="cantidad ${
-              productoInicialEnCarrito
-                ? "cantidad-agregada"
-                : ""
-            }"
-            value="${cantidadInicial}"
+            class="cantidad"
+            value="1"
             min="1"
             step="1"
           >
@@ -2773,15 +2733,6 @@ function agregarProductoAlCarrito(boton) {
     false
   );
 
-  /* Marca inmediatamente el valor central; la sincronización general del
-     carrito vuelve a confirmar este mismo estado después de guardar. */
-  campoCantidad.classList.add(
-    "cantidad-agregada"
-  );
-  tarjeta.classList.add(
-    "producto-agregado"
-  );
-
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
 
@@ -2817,12 +2768,6 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
   }
 
   boton.classList.remove("agregado");
-  tarjeta.classList.remove(
-    "producto-agregado"
-  );
-  tarjeta
-    .querySelector(".cantidad")
-    ?.classList.remove("cantidad-agregada");
   boton.setAttribute(
     "aria-label",
     "Agregar al carrito"
@@ -2864,41 +2809,18 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
         tarjeta.dataset.codigo || ""
     });
 
-  const productoEnCarrito =
-    carritoCompras.find((producto) => {
+  const estaEnCarrito =
+    carritoCompras.some((producto) => {
       return (
         crearClaveCarrito(producto) ===
         claveTarjeta
       );
     });
 
-  const estaEnCarrito =
-    Boolean(productoEnCarrito);
-
   boton.classList.toggle(
     "agregado",
     estaEnCarrito
   );
-
-  tarjeta.classList.toggle(
-    "producto-agregado",
-    estaEnCarrito
-  );
-
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-
-  campoCantidad?.classList.toggle(
-    "cantidad-agregada",
-    estaEnCarrito
-  );
-
-  if (estaEnCarrito && campoCantidad) {
-    campoCantidad.value = Math.max(
-      1,
-      Number(productoEnCarrito.cantidad) || 1
-    );
-  }
 
   const descripcionBoton = estaEnCarrito
     ? "Producto agregado"
