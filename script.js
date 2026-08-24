@@ -35,6 +35,9 @@ const contenedorProductos =
 const buscador =
   document.getElementById("buscador");
 
+const formBusqueda =
+  document.getElementById("formBusqueda");
+
 const filtroCategoria =
   document.getElementById("filtroCategoria");
 
@@ -3850,6 +3853,17 @@ buscador.addEventListener(
   "input",
   filtrarProductos
 );
+
+
+if (formBusqueda) {
+  formBusqueda.addEventListener(
+    "submit",
+    (evento) => {
+      evento.preventDefault();
+      buscador?.blur();
+    }
+  );
+}
 
 
 filtroCategoria.addEventListener(

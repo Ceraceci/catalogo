@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="147">
+  <meta name="ceraceci-version" content="149">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=147">
+  <link rel="stylesheet" href="style.css?v=149">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -3348,8 +3348,8 @@
     }
 
     body .fila-compra .icono-agregar svg{
-      width:68% !important;
-      height:68% !important;
+      width:84% !important;
+      height:84% !important;
       stroke-width:1.8 !important;
       transform:translateY(-.2px);
     }
@@ -7400,7 +7400,6 @@
         class="fila-busqueda-orden"
         id="formBusqueda"
         role="search"
-        onsubmit="event.preventDefault(); document.getElementById('buscador').blur(); return false;"
       >
         <input
           type="search"
@@ -8367,6 +8366,16 @@
       line-height:1 !important;
     }
 
+    /* Las fotos continúan funcionando como botón de zoom, sin menú nativo
+       ni posibilidad de arrastrarlas accidentalmente. */
+    html body .foto-producto,
+    html body .zoom-imagen-ampliada{
+      -webkit-touch-callout:none !important;
+      -webkit-user-select:none !important;
+      user-select:none !important;
+      -webkit-user-drag:none !important;
+    }
+
     @media (min-width:651px){
       html body .acciones-flotantes{
         bottom:44px !important;
@@ -8573,6 +8582,24 @@
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
 
-  <script src="script.js?v=147"></script>
+  <script id="bloqueo-menu-fotos-v148">
+    (() => {
+      function esFotoProducto(elemento) {
+        return elemento?.closest?.(".foto-producto, .zoom-imagen-ampliada");
+      }
+
+      document.addEventListener("contextmenu", (event) => {
+        if (!esFotoProducto(event.target)) return;
+        event.preventDefault();
+      }, true);
+
+      document.addEventListener("dragstart", (event) => {
+        if (!esFotoProducto(event.target)) return;
+        event.preventDefault();
+      }, true);
+    })();
+  </script>
+
+  <script src="script.js?v=149"></script>
 </body>
 </html>
