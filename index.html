@@ -7885,17 +7885,27 @@
     }
   </style>
 
-  <style id="ajustes-visuales-v127">
+  <style id="ajustes-visuales-v128">
     :root{
-      --color-tarjeta-rojo-suave:#f8e3de;
+      --color-tarjeta-calido:#fffdfb;
+      --color-espacio-tarjetas:#e9d1ca;
     }
 
-    /* Rojo cálido muy suave sólo en las tarjetas y el fondo libre de la foto. */
+    /* Terracota en el espacio entre tarjetas; contenido sobre blanco cálido. */
+    html body{
+      background:var(--color-espacio-tarjetas) !important;
+    }
+
+    html body #productos,
+    html body #productosComparados{
+      background:transparent !important;
+    }
+
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto,
     html body #productos .contenedor-foto-producto,
     html body #productosComparados .contenedor-foto-producto{
-      background:var(--color-tarjeta-rojo-suave) !important;
+      background:var(--color-tarjeta-calido) !important;
     }
 
     /* Botón carrito de producto: compacto, neutro en reposo y rojo al agregar. */
@@ -8064,6 +8074,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=127"></script>
+  <script src="script.js?v=128"></script>
 </body>
 </html>
