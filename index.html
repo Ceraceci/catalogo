@@ -7405,7 +7405,7 @@
         <input
           type="search"
           id="buscador"
-          placeholder="Buscar por nombre, código, categoría o presentación..."
+          placeholder="Buscar por nombre o código"
           autocomplete="off"
           enterkeyhint="search"
         >
@@ -7435,7 +7435,7 @@
 
       <select id="filtroCategoria">
         <option value="">
-          Todas las categorías
+          Todos los productos
         </option>
       </select>
     </section>
@@ -7788,7 +7788,7 @@
 
 
 
-  <style id="animacion-carrito-v125">
+  <style id="animacion-carrito-v126">
     body .abrir-carrito .icono-carrito{
       --nivel-carga-carrito:0;
       position:relative !important;
@@ -7825,23 +7825,23 @@
       transform:scaleY(var(--nivel-carga-carrito));
       transform-box:fill-box;
       transform-origin:center bottom;
-      transition:transform .42s cubic-bezier(.2,.8,.25,1);
+      transition:transform .62s cubic-bezier(.2,.8,.25,1);
     }
 
     body .abrir-carrito .icono-carrito.recibiendo-producto{
-      animation:recibir-producto-carrito .52s cubic-bezier(.2,.85,.35,1);
+      animation:recibir-producto-carrito .66s cubic-bezier(.2,.85,.35,1);
     }
 
     .producto-volador-carrito{
       position:fixed;
       z-index:10000;
       display:block;
-      width:17px;
-      height:17px;
+      width:21px;
+      height:21px;
       pointer-events:none;
       background:var(--color-principal);
       border:2px solid #fff;
-      border-radius:4px;
+      border-radius:5px;
       box-shadow:0 4px 12px rgba(80,24,13,.35);
       transform-origin:center;
     }
@@ -7854,7 +7854,7 @@
     }
 
     .producto-volador-carrito::before{
-      top:6px;
+      top:8px;
       right:1px;
       left:1px;
       height:2px;
@@ -7863,7 +7863,7 @@
     .producto-volador-carrito::after{
       top:1px;
       bottom:1px;
-      left:7px;
+      left:9px;
       width:2px;
     }
 
@@ -7881,6 +7881,108 @@
 
       body .abrir-carrito .icono-carrito.recibiendo-producto{
         animation:none;
+      }
+    }
+  </style>
+
+  <style id="ajustes-visuales-v126">
+    :root{
+      --color-tarjeta-rojo-suave:#fff5f2;
+    }
+
+    /* Rojo cálido muy suave sólo en las tarjetas y el fondo libre de la foto. */
+    html body #productos .tarjeta-producto,
+    html body #productosComparados .tarjeta-producto,
+    html body #productos .contenedor-foto-producto,
+    html body #productosComparados .contenedor-foto-producto{
+      background:var(--color-tarjeta-rojo-suave) !important;
+    }
+
+    /* Botón carrito de producto: compacto, neutro en reposo y rojo al agregar. */
+    html body #productos .fila-compra .agregar-carrito,
+    html body #productosComparados .fila-compra .agregar-carrito{
+      box-sizing:border-box !important;
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      justify-self:end !important;
+      align-self:stretch !important;
+      width:40px !important;
+      min-width:40px !important;
+      max-width:40px !important;
+      height:auto !important;
+      min-height:28px !important;
+      max-height:none !important;
+      padding:0 !important;
+      font-weight:700 !important;
+      line-height:1 !important;
+      box-shadow:none !important;
+    }
+
+    html body #productos .fila-compra .agregar-carrito:not(.agregado),
+    html body #productosComparados .fila-compra .agregar-carrito:not(.agregado){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:var(--color-control) !important;
+      border:1px solid #171717 !important;
+    }
+
+    html body #productos .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados .fila-compra .agregar-carrito.agregado,
+    html body #productos .fila-compra .agregar-carrito.agregado:hover,
+    html body #productosComparados .fila-compra .agregar-carrito.agregado:hover,
+    html body #productos .fila-compra .agregar-carrito.agregado:focus,
+    html body #productosComparados .fila-compra .agregar-carrito.agregado:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border:1px solid var(--color-principal) !important;
+    }
+
+    html body .agregar-carrito .icono-agregar{
+      display:inline-flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:21px !important;
+      height:19px !important;
+      color:inherit !important;
+      -webkit-text-fill-color:currentColor !important;
+    }
+
+    html body .agregar-carrito .icono-agregar svg{
+      display:block !important;
+      width:21px !important;
+      height:19px !important;
+      overflow:visible !important;
+      color:inherit !important;
+      fill:none !important;
+      stroke:none !important;
+    }
+
+    html body .agregar-carrito .contorno-agregar-carrito,
+    html body .agregar-carrito .rueda-agregar-carrito{
+      fill:none !important;
+      stroke:currentColor !important;
+      stroke-width:2.15 !important;
+      stroke-linecap:round !important;
+      stroke-linejoin:round !important;
+    }
+
+    html body #productos .fila-compra .agregar-carrito:not(.agregado):active,
+    html body #productosComparados .fila-compra .agregar-carrito:not(.agregado):active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado):hover{
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        background:var(--color-control) !important;
+        border-color:#171717 !important;
       }
     }
   </style>
@@ -7957,6 +8059,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=125"></script>
+  <script src="script.js?v=126"></script>
 </body>
 </html>

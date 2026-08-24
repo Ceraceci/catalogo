@@ -1041,7 +1041,7 @@ function cargarCategorias() {
 
   filtroCategoria.innerHTML = `
     <option value="">
-      Todas las categorías
+      Todos los productos
     </option>
   `;
 
@@ -1798,9 +1798,16 @@ function crearTarjetaProducto(
         aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
         title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
       >
-        <span class="texto-agregar-carrito">${
-          productoInicialEnCarrito ? "Agregado" : "Agregar"
-        }</span>
+        <span class="icono-agregar" aria-hidden="true">
+          <svg viewBox="0 0 28 24" focusable="false">
+            <path
+              class="contorno-agregar-carrito"
+              d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
+            ></path>
+            <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
+            <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
+          </svg>
+        </span>
       </button>
     </div>
 
@@ -2544,7 +2551,7 @@ function hacerReaccionarCarrito() {
     iconoCarrito.classList.remove(
       "recibiendo-producto"
     );
-  }, 560);
+  }, 700);
 }
 
 
@@ -2584,18 +2591,18 @@ function animarProductoHaciaCarrito(
     "producto-volador-carrito";
 
   const inicioX =
-    origen.left + origen.width / 2 - 8.5;
+    origen.left + origen.width / 2 - 10.5;
 
   const inicioY =
-    origen.top + origen.height / 2 - 8.5;
+    origen.top + origen.height / 2 - 10.5;
 
   const desplazamientoX =
     destino.left + destino.width / 2 -
-    (inicioX + 8.5);
+    (inicioX + 10.5);
 
   const desplazamientoY =
     destino.top + destino.height / 2 -
-    (inicioY + 8.5);
+    (inicioY + 10.5);
 
   productoVolador.style.left =
     `${inicioX}px`;
@@ -2618,7 +2625,7 @@ function animarProductoHaciaCarrito(
   if (typeof productoVolador.animate !== "function") {
     window.setTimeout(
       finalizarAnimacion,
-      620
+      820
     );
     return;
   }
@@ -2633,7 +2640,7 @@ function animarProductoHaciaCarrito(
         },
         {
           transform:
-            `translate(${desplazamientoX * 0.48}px, ${desplazamientoY * 0.48 - 38}px) scale(.92) rotate(150deg)`,
+            `translate(${desplazamientoX * 0.48}px, ${desplazamientoY * 0.48 - 44}px) scale(.94) rotate(150deg)`,
           opacity: 1,
           offset: .52
         },
@@ -2644,7 +2651,7 @@ function animarProductoHaciaCarrito(
         }
       ],
       {
-        duration: 620,
+        duration: 820,
         easing: "cubic-bezier(.25,.75,.2,1)",
         fill: "forwards"
       }
