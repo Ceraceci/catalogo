@@ -8002,7 +8002,7 @@
     }
   </style>
 
-  <style id="foto-protagonista-v130">
+  <style id="foto-protagonista-v131">
     /* La tarjeta deja todo su ancho disponible a la fotografía. */
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto{
@@ -8062,18 +8062,28 @@
       clip-path:none !important;
     }
 
-    /* Compartir y comparar quedan superpuestos sobre la foto. */
-    html body .escena-foto-producto .acciones-producto{
-      position:absolute !important;
-      z-index:6 !important;
-      top:8px !important;
-      right:8px !important;
-      bottom:auto !important;
-      left:auto !important;
-      display:flex !important;
-      flex-direction:column !important;
+    /* Código y acciones comparten una fila debajo del título. */
+    html body .fila-codigo-acciones{
+      box-sizing:border-box !important;
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) auto !important;
       align-items:center !important;
-      gap:7px !important;
+      gap:8px !important;
+      width:100% !important;
+      min-width:0 !important;
+      min-height:34px !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    html body .fila-codigo-acciones .acciones-producto{
+      position:static !important;
+      z-index:auto !important;
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:flex-end !important;
+      gap:6px !important;
       width:auto !important;
       height:auto !important;
       margin:0 !important;
@@ -8081,8 +8091,8 @@
       transform:none !important;
     }
 
-    html body .escena-foto-producto .compartir-producto,
-    html body .escena-foto-producto .boton-comparar{
+    html body .fila-codigo-acciones .compartir-producto,
+    html body .fila-codigo-acciones .boton-comparar{
       box-sizing:border-box !important;
       display:inline-grid !important;
       place-items:center !important;
@@ -8095,31 +8105,31 @@
       margin:0 !important;
       padding:0 !important;
       border-radius:50% !important;
-      box-shadow:0 1px 5px rgba(45,30,24,.14) !important;
+      box-shadow:none !important;
       backdrop-filter:none !important;
     }
 
-    html body .escena-foto-producto .compartir-producto,
-    html body .escena-foto-producto .boton-comparar[aria-pressed="false"]{
+    html body .fila-codigo-acciones .compartir-producto,
+    html body .fila-codigo-acciones .boton-comparar[aria-pressed="false"]{
       color:#2d2926 !important;
       -webkit-text-fill-color:#2d2926 !important;
-      background:rgba(255,253,251,.62) !important;
-      border:1px solid rgba(75,67,62,.42) !important;
+      background:var(--color-control) !important;
+      border:1px solid rgba(111,103,97,.28) !important;
     }
 
-    html body .escena-foto-producto .boton-comparar[aria-pressed="true"]{
+    html body .fila-codigo-acciones .boton-comparar[aria-pressed="true"]{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
-      background:rgba(152,55,30,.82) !important;
-      border-color:rgba(152,55,30,.88) !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
     }
 
-    html body .escena-foto-producto .compartir-producto:active,
-    html body .escena-foto-producto .compartir-producto.compartir-presionado{
+    html body .fila-codigo-acciones .compartir-producto:active,
+    html body .fila-codigo-acciones .compartir-producto.compartir-presionado{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
-      background:rgba(152,55,30,.82) !important;
-      border-color:rgba(152,55,30,.88) !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
     }
 
     /* Título y código ahora se ubican entre la foto y el precio. */
@@ -8161,12 +8171,26 @@
 
     html body #productos .codigo-producto,
     html body #productosComparados .codigo-producto{
-      width:100% !important;
+      width:auto !important;
+      min-width:0 !important;
       min-height:1em !important;
       height:auto !important;
       margin:0 !important;
       padding:0 !important;
-      text-align:center !important;
+      text-align:left !important;
+    }
+
+    /* El número central identifica visualmente un producto ya agregado. */
+    html body .control-cantidad .cantidad.cantidad-agregada,
+    html body .control-cantidad .cantidad.cantidad-agregada:hover,
+    html body .control-cantidad .cantidad.cantidad-agregada:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:700 !important;
+      background:var(--color-principal) !important;
+      border-top-color:var(--color-principal) !important;
+      border-bottom-color:var(--color-principal) !important;
+      opacity:1 !important;
     }
 
     html body #productos .fila-compra,
@@ -8190,14 +8214,13 @@
         aspect-ratio:1 / 1 !important;
       }
 
-      html body .escena-foto-producto .acciones-producto{
-        top:7px !important;
-        right:7px !important;
+      html body .fila-codigo-acciones{
         gap:6px !important;
+        min-height:30px !important;
       }
 
-      html body .escena-foto-producto .compartir-producto,
-      html body .escena-foto-producto .boton-comparar{
+      html body .fila-codigo-acciones .compartir-producto,
+      html body .fila-codigo-acciones .boton-comparar{
         width:32px !important;
         min-width:32px !important;
         max-width:32px !important;
@@ -8296,6 +8319,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=130"></script>
+  <script src="script.js?v=131"></script>
 </body>
 </html>
