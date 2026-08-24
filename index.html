@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=140">
+  <link rel="stylesheet" href="style.css?v=143">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -8022,6 +8022,112 @@
     }
   </style>
 
+  <style id="ajustes-visuales-v141">
+    /* El subtítulo conserva el negro de la v140 y suma la negrita solicitada. */
+    html body .subtitulo-principal,
+    html body .marca-inferior-movil > span:last-child{
+      font-weight:700 !important;
+    }
+
+    /* Recorta el 2 % de cada borde incrustado en las fotos y recupera
+       el tamaño visible para no dejar un marco alrededor del producto. */
+    html body #productos .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+    html body #productosComparados .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      clip-path:inset(2% round 8px) !important;
+      transform:scale(1.042) !important;
+      transform-origin:center center !important;
+    }
+
+    /* Mismo grosor y color de borde que las presentaciones y demás controles. */
+    html body .abrir-carrito{
+      border:1px solid rgba(111,103,97,.28) !important;
+    }
+  </style>
+
+  <style id="ajustes-visuales-v142">
+    /* La separación entre todas las presentaciones pasa a 6 px. */
+    html body #productos .opciones-presentacion,
+    html body #productosComparados .opciones-presentacion{
+      gap:6px !important;
+    }
+
+    @media (min-width:651px){
+      /* La flecha del desplegable de Alambre acompaña la negrita de “Diámetro”. */
+      html body .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+
+      html body .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+
+      /* Compartir queda a la misma distancia superior que el carrito del borde
+         derecho de la tarjeta; ambos botones se separan exactamente 6 px. */
+      html body #productos .encabezado-producto .acciones-producto{
+        top:3.5px !important;
+        gap:6px !important;
+      }
+    }
+  </style>
+
+  <style id="logo-tarjetas-v143">
+    /* Logo CERACECI en la esquina opuesta a Compartir. La ampliación del
+       fondo compensa el margen transparente del PNG sin recortar el diseño. */
+    html body #productos .encabezado-producto::before,
+    html body #productosComparados .encabezado-producto::before{
+      content:"";
+      position:absolute;
+      left:0;
+      z-index:3;
+      display:block;
+      background-image:url("img/logo.png");
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size:132% 132%;
+      pointer-events:none;
+    }
+
+    @media (min-width:651px){
+      html body #productos .encabezado-producto::before,
+      html body #productosComparados .encabezado-producto::before{
+        width:var(--alto-control-tarjeta);
+        height:var(--alto-control-tarjeta);
+      }
+
+      html body #productos .encabezado-producto::before{
+        top:3.5px;
+      }
+
+      html body #productosComparados .encabezado-producto::before{
+        top:0;
+      }
+
+      /* Reserva el mismo espacio a ambos lados y mantiene el título centrado. */
+      html body #productos .encabezado-producto,
+      html body #productosComparados .encabezado-producto{
+        padding-left:calc(var(--alto-control-tarjeta) + 7.2px) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body #productos .encabezado-producto::before,
+      html body #productosComparados .encabezado-producto::before{
+        top:3.5px;
+        width:32px;
+        height:32px;
+      }
+
+      /* El título conserva su centro real entre el logo y un margen simétrico. */
+      html body #productos .fila-titulo-producto,
+      html body #productosComparados .fila-titulo-producto{
+        box-sizing:border-box !important;
+        padding-right:39px !important;
+        padding-left:39px !important;
+      }
+    }
+  </style>
+
   <script id="ajustes-interaccion-v86">
     (() => {
       /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
@@ -8094,6 +8200,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=140"></script>
+  <script src="script.js?v=143"></script>
 </body>
 </html>
