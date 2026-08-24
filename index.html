@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="150">
+  <meta name="ceraceci-version" content="151">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=150">
+  <link rel="stylesheet" href="style.css?v=151">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -8859,6 +8859,58 @@
     }
   </style>
 
+  <style id="ajustes-carrito-v151">
+    /* La miniatura crece dentro del alto que ya determina el contenido. */
+    html body .miniatura-producto-carrito{
+      width:64px !important;
+      height:64px !important;
+      align-self:center !important;
+    }
+
+    html body .producto-carrito{
+      grid-template-columns:64px minmax(0,1fr) !important;
+    }
+
+    /* Los importes se muestran en negro y con mayor presencia. */
+    html body .subtotal-carrito{
+      color:var(--color-texto,#171717) !important;
+      font-size:1.1rem !important;
+    }
+
+    html body .total-carrito,
+    html body .total-carrito strong{
+      color:var(--color-texto,#171717) !important;
+      font-size:1.45rem !important;
+      line-height:1.15 !important;
+    }
+
+    html body .eliminar-producto svg{
+      width:21px !important;
+      height:21px !important;
+      stroke-width:1.9 !important;
+    }
+
+    html body .vaciar-carrito{
+      min-height:38px !important;
+      margin-top:8px !important;
+      color:var(--color-texto-suave,#6f6761) !important;
+      background:var(--color-control,#fff) !important;
+      border:1px solid var(--color-borde) !important;
+      border-radius:9px !important;
+    }
+
+    @media (max-width:650px){
+      html body .miniatura-producto-carrito{
+        width:64px !important;
+        height:64px !important;
+      }
+
+      html body .producto-carrito{
+        grid-template-columns:64px minmax(0,1fr) !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -8881,6 +8933,6 @@
     })();
   </script>
 
-  <script src="script.js?v=150"></script>
+  <script src="script.js?v=151"></script>
 </body>
 </html>
