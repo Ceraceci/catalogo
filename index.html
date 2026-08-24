@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=143">
+  <link rel="stylesheet" href="style.css?v=144">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -8128,6 +8128,97 @@
     }
   </style>
 
+  <style id="uniformidad-tarjetas-v144">
+    /* El logo conserva su caja y alineación, pero reduce cerca de un 9 %
+       su tamaño visual para equilibrarse con Compartir y Comparar. */
+    html body #productos .encabezado-producto::before,
+    html body #productosComparados .encabezado-producto::before{
+      background-size:120% 120%;
+    }
+
+    @media (max-width:650px){
+      /* Todas las tarjetas reservan exactamente el mismo encabezado:
+         tres líneas completas de título, separación y una línea de código. */
+      html body #productos .encabezado-producto,
+      html body #productosComparados .encabezado-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        box-sizing:border-box !important;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) !important;
+        grid-template-rows:60px 16px !important;
+        row-gap:4px !important;
+        width:100% !important;
+        min-height:80px !important;
+        height:80px !important;
+        padding-top:0 !important;
+        padding-right:0 !important;
+        padding-bottom:0 !important;
+        padding-left:0 !important;
+      }
+
+      html body #productos .fila-titulo-producto,
+      html body #productosComparados .fila-titulo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        box-sizing:border-box !important;
+        display:flex !important;
+        grid-row:1 !important;
+        align-items:flex-start !important;
+        justify-content:center !important;
+        width:100% !important;
+        min-height:60px !important;
+        height:60px !important;
+        margin:0 !important;
+        padding-right:35px !important;
+        padding-left:35px !important;
+        overflow:hidden !important;
+      }
+
+      html body #productos .tarjeta-producto h2,
+      html body #productosComparados .tarjeta-producto h2,
+      html body #productos .tarjeta-producto.titulo-tres-lineas h2,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas h2{
+        display:-webkit-box !important;
+        width:100% !important;
+        min-height:0 !important;
+        height:auto !important;
+        max-height:60px !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        font-size:17.27px !important;
+        line-height:20px !important;
+        text-align:center !important;
+        -webkit-box-orient:vertical !important;
+        -webkit-line-clamp:3 !important;
+        line-clamp:3 !important;
+      }
+
+      html body #productos .codigo-producto,
+      html body #productosComparados .codigo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        box-sizing:border-box !important;
+        display:block !important;
+        grid-row:2 !important;
+        width:100% !important;
+        min-height:16px !important;
+        height:16px !important;
+        margin:0 !important;
+        padding:0 !important;
+        line-height:16px !important;
+        text-align:center !important;
+      }
+
+      /* Con el encabezado uniforme, todas las tarjetas cerradas comparten
+         las mismas posiciones internas y dejan de generar huecos desiguales. */
+      html body #productos .tarjeta-producto,
+      html body #productosComparados .tarjeta-producto{
+        align-self:stretch !important;
+      }
+    }
+  </style>
+
   <script id="ajustes-interaccion-v86">
     (() => {
       /* Limpieza definitiva del estado de −/+ al soltar o cancelar. */
@@ -8200,6 +8291,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=143"></script>
+  <script src="script.js?v=144"></script>
 </body>
 </html>
