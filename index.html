@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="146">
+  <meta name="ceraceci-version" content="147">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=146">
+  <link rel="stylesheet" href="style.css?v=147">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -8299,16 +8299,16 @@
 
   <style id="vista-cuatro-tarjetas-v146">
     :root{
-      /* V146: se invierten exactamente los dos colores de la V145. */
-      --color-tarjeta-calido:#cf927d;
-      --color-espacio-tarjetas:#fffdfb;
+      /* Se recupera la combinación de la V145: tarjeta clara y fondo arcilla. */
+      --color-tarjeta-calido:#fffdfb;
+      --color-espacio-tarjetas:#cf927d;
     }
 
     /* Comparar usa ahora un SVG de trazo, con el mismo peso visual que Compartir. */
     html body .boton-comparar .icono-comparar-svg{
       display:block !important;
-      width:52% !important;
-      height:52% !important;
+      width:68% !important;
+      height:68% !important;
       overflow:visible !important;
       color:inherit !important;
       fill:none !important;
@@ -8331,7 +8331,7 @@
       flex-direction:column !important;
       align-items:center !important;
       justify-content:center !important;
-      gap:0 !important;
+      gap:2px !important;
       min-height:32px !important;
       padding:1px 8px calc(1px + env(safe-area-inset-bottom)) !important;
       color:#171717 !important;
@@ -8374,9 +8374,15 @@
     }
 
     @media (max-width:650px){
-      /* La franja completa ocupa menos: 28 px de marca + 42 px de acciones. */
+      /* Logo de las tarjetas apenas más discreto, sin alterar la retícula. */
+      html body #productos .encabezado-producto::before,
+      html body #productosComparados .encabezado-producto::before{
+        background-size:112% 112% !important;
+      }
+
+      /* Pie compacto: 32 px de marca + 42 px de acciones. */
       html body .marca-inferior-movil{
-        min-height:28px !important;
+        min-height:32px !important;
         padding-top:1px !important;
         padding-bottom:calc(1px + env(safe-area-inset-bottom)) !important;
       }
@@ -8392,7 +8398,7 @@
       }
 
       html body .acciones-flotantes{
-        bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+        bottom:calc(32px + env(safe-area-inset-bottom)) !important;
         padding-top:2px !important;
         padding-bottom:2px !important;
       }
@@ -8407,17 +8413,14 @@
         padding-bottom:calc(104px + env(safe-area-inset-bottom)) !important;
       }
 
-      /* La búsqueda deja libre la parte superior durante la navegación.
-         Al desplazarse hacia arriba reaparece sin alterar la grilla. */
-      html body .busqueda{
-        transition:transform .24s ease, opacity .18s ease !important;
-        will-change:transform,opacity;
-      }
-
+      /* Buscar, ordenar y Todos los productos permanecen siempre visibles. */
+      html body .busqueda,
       html body.busqueda-movil-replegada .busqueda{
-        opacity:0 !important;
-        pointer-events:none !important;
-        transform:translateY(calc(-100% - 8px)) !important;
+        opacity:1 !important;
+        pointer-events:auto !important;
+        transform:none !important;
+        transition:none !important;
+        will-change:auto !important;
       }
 
       /* Retícula móvil compacta: conserva tres líneas de título y reduce
@@ -8500,6 +8503,18 @@
       html body #productos .fila-compra .cantidad{
         height:26px !important;
       }
+
+    }
+
+    /* Durante la pulsación o después de agregar, el contorno completo
+       acompaña el fondo rojo en PC y móvil. */
+    html body #productos .fila-compra .control-cantidad:has(.boton-cantidad:active),
+    html body #productos .fila-compra .control-cantidad:has(.boton-cantidad.presionado),
+    html body #productosComparados .fila-compra .control-cantidad:has(.boton-cantidad:active),
+    html body #productosComparados .fila-compra .control-cantidad:has(.boton-cantidad.presionado),
+    html body #productos .fila-compra .control-cantidad:has(.cantidad.cantidad-agregada),
+    html body #productosComparados .fila-compra .control-cantidad:has(.cantidad.cantidad-agregada){
+      border-color:var(--color-principal) !important;
     }
 
     /* Ajuste progresivo para teléfonos con poca altura útil (por ejemplo,
@@ -8554,75 +8569,10 @@
     }
   </style>
 
-  <script id="barra-busqueda-replegable-v146">
-    (() => {
-      const consultaMovil = window.matchMedia("(max-width:650px)");
-      const barra = document.querySelector(".busqueda");
-      const comparacion = document.getElementById("seccionComparacion");
-      if (!barra) return;
-
-      let ultimaPosicion = window.scrollY;
-      let acumulado = 0;
-      let direccion = 0;
-      let pendiente = false;
-
-      function mostrarBarra() {
-        document.body.classList.remove("busqueda-movil-replegada");
-      }
-
-      function actualizarBarra() {
-        pendiente = false;
-
-        if (!consultaMovil.matches) {
-          mostrarBarra();
-          ultimaPosicion = window.scrollY;
-          acumulado = 0;
-          return;
-        }
-
-        const actual = Math.max(0, window.scrollY);
-        const diferencia = actual - ultimaPosicion;
-        const nuevaDireccion = Math.sign(diferencia);
-
-        if (nuevaDireccion && nuevaDireccion !== direccion) {
-          acumulado = 0;
-          direccion = nuevaDireccion;
-        }
-
-        acumulado += diferencia;
-        ultimaPosicion = actual;
-
-        const buscando = barra.contains(document.activeElement);
-        const comparando = comparacion && !comparacion.hidden;
-
-        if (actual < 86 || buscando || comparando) {
-          mostrarBarra();
-          acumulado = 0;
-          return;
-        }
-
-        if (direccion > 0 && acumulado > 18) {
-          document.body.classList.add("busqueda-movil-replegada");
-          acumulado = 0;
-        } else if (direccion < 0 && acumulado < -30) {
-          mostrarBarra();
-          acumulado = 0;
-        }
-      }
-
-      function solicitarActualizacion() {
-        if (pendiente) return;
-        pendiente = true;
-        window.requestAnimationFrame(actualizarBarra);
-      }
-
-      window.addEventListener("scroll", solicitarActualizacion, { passive:true });
-      window.addEventListener("resize", solicitarActualizacion, { passive:true });
-      barra.addEventListener("focusin", mostrarBarra);
-      consultaMovil.addEventListener?.("change", solicitarActualizacion);
-    })();
+  <script id="barra-busqueda-estatica-v147">
+    document.body.classList.remove("busqueda-movil-replegada");
   </script>
 
-  <script src="script.js?v=146"></script>
+  <script src="script.js?v=147"></script>
 </body>
 </html>
