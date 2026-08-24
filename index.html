@@ -8002,12 +8002,14 @@
     }
   </style>
 
-  <style id="foto-protagonista-v135">
+  <style id="foto-protagonista-v136">
     /* Una misma medida ordena los márgenes exteriores de cada tarjeta. */
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto{
       --margen-interior-tarjeta:10px;
       --espacio-identificacion:8px;
+      --ancho-accion-tarjeta:32px;
+      --alto-acciones-tarjeta:70px;
       padding:0 !important;
       overflow:visible !important;
       border-width:1px !important;
@@ -8068,11 +8070,13 @@
     /* Identificación y acciones forman un único bloque compacto bajo la foto. */
     html body .datos-identificacion-producto{
       box-sizing:border-box !important;
-      display:grid !important;
-      grid-template-rows:minmax(0,1fr) auto !important;
+      display:flex !important;
+      grid-column:2 !important;
+      flex-direction:column !important;
       align-items:stretch !important;
-      align-self:stretch !important;
-      row-gap:var(--espacio-identificacion) !important;
+      align-self:end !important;
+      justify-content:flex-end !important;
+      gap:var(--espacio-identificacion) !important;
       width:100% !important;
       min-width:0 !important;
       min-height:0 !important;
@@ -8085,12 +8089,15 @@
       position:static !important;
       z-index:auto !important;
       display:flex !important;
+      grid-column:3 !important;
       flex-direction:column !important;
       align-items:center !important;
+      align-self:end !important;
       justify-content:space-between !important;
+      justify-self:end !important;
       gap:6px !important;
-      width:auto !important;
-      height:70px !important;
+      width:var(--ancho-accion-tarjeta) !important;
+      height:var(--alto-acciones-tarjeta) !important;
       margin:0 !important;
       padding:0 !important;
       transform:none !important;
@@ -8101,12 +8108,12 @@
       box-sizing:border-box !important;
       display:inline-grid !important;
       place-items:center !important;
-      width:32px !important;
-      min-width:32px !important;
-      max-width:32px !important;
-      height:32px !important;
-      min-height:32px !important;
-      max-height:32px !important;
+      width:var(--ancho-accion-tarjeta) !important;
+      min-width:var(--ancho-accion-tarjeta) !important;
+      max-width:var(--ancho-accion-tarjeta) !important;
+      height:var(--ancho-accion-tarjeta) !important;
+      min-height:var(--ancho-accion-tarjeta) !important;
+      max-height:var(--ancho-accion-tarjeta) !important;
       margin:0 !important;
       padding:0 !important;
       border-radius:50% !important;
@@ -8142,12 +8149,12 @@
     html body #productosComparados .encabezado-producto{
       box-sizing:border-box !important;
       display:grid !important;
-      grid-template-columns:minmax(0,1fr) auto !important;
-      align-items:stretch !important;
+      grid-template-columns:var(--ancho-accion-tarjeta) minmax(0,1fr) var(--ancho-accion-tarjeta) !important;
+      align-items:end !important;
       gap:8px !important;
       width:100% !important;
-      min-height:70px !important;
-      height:70px !important;
+      min-height:var(--alto-acciones-tarjeta) !important;
+      height:auto !important;
       margin:0 !important;
       padding:0 var(--margen-interior-tarjeta) !important;
       border:0 !important;
@@ -8222,6 +8229,8 @@
       html body #productos .tarjeta-producto,
       html body #productosComparados .tarjeta-producto{
         --margen-interior-tarjeta:8px;
+        --ancho-accion-tarjeta:30px;
+        --alto-acciones-tarjeta:66px;
       }
 
       html body #productos .contenedor-foto-producto,
@@ -8229,27 +8238,13 @@
         aspect-ratio:1 / 1 !important;
       }
 
-      html body .acciones-identificacion-producto .compartir-producto,
-      html body .acciones-identificacion-producto .boton-comparar{
-        width:30px !important;
-        min-width:30px !important;
-        max-width:30px !important;
-        height:30px !important;
-        min-height:30px !important;
-        max-height:30px !important;
-      }
-
       html body #productos .encabezado-producto,
       html body #productosComparados .encabezado-producto{
-        min-height:66px !important;
-        height:66px !important;
+        min-height:var(--alto-acciones-tarjeta) !important;
+        height:auto !important;
         gap:6px !important;
         margin:0 !important;
         padding:0 var(--margen-interior-tarjeta) !important;
-      }
-
-      html body .acciones-identificacion-producto{
-        height:66px !important;
       }
 
       html body #productos .fila-compra,
@@ -8337,6 +8332,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=135"></script>
+  <script src="script.js?v=136"></script>
 </body>
 </html>
