@@ -8002,11 +8002,12 @@
     }
   </style>
 
-  <style id="foto-protagonista-v132">
+  <style id="foto-protagonista-v134">
     /* Una misma medida ordena los márgenes exteriores de cada tarjeta. */
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto{
       --margen-interior-tarjeta:10px;
+      --espacio-identificacion:8px;
       padding:0 !important;
       overflow:visible !important;
       border-width:1px !important;
@@ -8070,11 +8071,12 @@
       display:flex !important;
       flex-direction:column !important;
       align-items:stretch !important;
-      justify-content:center !important;
-      gap:4px !important;
+      justify-content:flex-end !important;
+      gap:var(--espacio-identificacion) !important;
       width:100% !important;
       min-width:0 !important;
-      min-height:0 !important;
+      min-height:100% !important;
+      height:100% !important;
       margin:0 !important;
       padding:0 !important;
     }
@@ -8085,10 +8087,10 @@
       display:flex !important;
       flex-direction:column !important;
       align-items:center !important;
-      justify-content:flex-end !important;
+      justify-content:space-between !important;
       gap:6px !important;
       width:auto !important;
-      height:auto !important;
+      height:74px !important;
       margin:0 !important;
       padding:0 !important;
       transform:none !important;
@@ -8141,13 +8143,13 @@
       box-sizing:border-box !important;
       display:grid !important;
       grid-template-columns:minmax(0,1fr) auto !important;
-      align-items:center !important;
+      align-items:stretch !important;
       gap:8px !important;
       width:100% !important;
       min-height:74px !important;
-      height:auto !important;
-      margin:0 !important;
-      padding:10px var(--margen-interior-tarjeta) 0 !important;
+      height:74px !important;
+      margin:var(--margen-interior-tarjeta) 0 0 !important;
+      padding:0 var(--margen-interior-tarjeta) !important;
       border:0 !important;
     }
 
@@ -8157,7 +8159,7 @@
       align-items:flex-start !important;
       justify-content:center !important;
       width:100% !important;
-      min-height:2.35em !important;
+      min-height:0 !important;
       height:auto !important;
       margin:0 !important;
       padding:0 !important;
@@ -8176,11 +8178,11 @@
     html body #productosComparados .codigo-producto{
       width:auto !important;
       min-width:0 !important;
-      min-height:1em !important;
+      min-height:1.15em !important;
       height:auto !important;
       margin:0 !important;
-      padding:0 4px 0 0 !important;
-      text-align:right !important;
+      padding:0 !important;
+      text-align:center !important;
     }
 
     /* El número central identifica visualmente un producto ya agregado. */
@@ -8199,7 +8201,12 @@
     html body #productos .fila-compra,
     html body #productosComparados .fila-compra{
       box-sizing:border-box !important;
-      padding:8px 10px 0 !important;
+      padding:var(--espacio-identificacion) 10px 0 !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio,
+    html body #productosComparados .fila-compra > .informacion-precio{
+      transform:none !important;
     }
 
     html body #productos .zona-detalles-producto,
@@ -8235,8 +8242,14 @@
       html body #productos .encabezado-producto,
       html body #productosComparados .encabezado-producto{
         min-height:70px !important;
+        height:70px !important;
         gap:6px !important;
-        padding:8px var(--margen-interior-tarjeta) 0 !important;
+        margin-top:var(--margen-interior-tarjeta) !important;
+        padding:0 var(--margen-interior-tarjeta) !important;
+      }
+
+      html body .acciones-identificacion-producto{
+        height:70px !important;
       }
 
       html body #productos .fila-compra,
@@ -8324,6 +8337,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=132"></script>
+  <script src="script.js?v=134"></script>
 </body>
 </html>
