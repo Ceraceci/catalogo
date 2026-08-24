@@ -1215,6 +1215,12 @@ function limpiarAjustesMovilesTarjetas() {
     );
 
   document
+    .querySelectorAll(".fila-titulo-producto h2")
+    .forEach((titulo) =>
+      titulo.style.removeProperty("font-size")
+    );
+
+  document
     .querySelectorAll(".opciones-presentacion")
     .forEach((contenedor) => {
       contenedor.style.removeProperty("flex-wrap");
@@ -1421,30 +1427,62 @@ function ajustarPresentacionesTarjetaMovil(
 }
 
 
+function contarLineasTitulo(titulo) {
+  const altoLinea = parseFloat(
+    getComputedStyle(titulo).lineHeight
+  );
+
+  if (!altoLinea || !Number.isFinite(altoLinea)) {
+    return 1;
+  }
+
+  return Math.max(
+    1,
+    Math.ceil((titulo.scrollHeight - 1) / altoLinea)
+  );
+}
+
+
 function actualizarLineasTituloTarjetaMovil(tarjeta) {
   const titulo = tarjeta.querySelector(".fila-titulo-producto h2");
 
   tarjeta.classList.remove("titulo-tres-lineas");
 
+  if (titulo) {
+    titulo.style.removeProperty("font-size");
+  }
+
   if (!titulo || !consultaMovilTarjetas.matches) {
     return;
   }
 
-  const estilo = getComputedStyle(titulo);
-  const altoLinea = parseFloat(estilo.lineHeight);
+  let tamano = parseFloat(
+    getComputedStyle(titulo).fontSize
+  );
+  const tamanoMinimo = 13;
+  let lineasNaturales = contarLineasTitulo(titulo);
 
-  if (!altoLinea || !Number.isFinite(altoLinea)) {
-    return;
+  /* En móvil se conserva cada palabra completa. Si el nombre necesita más
+     de tres líneas, se reduce gradualmente sólo ese título hasta que entre. */
+  while (
+    tamano > tamanoMinimo &&
+    (
+      lineasNaturales > 3 ||
+      titulo.scrollWidth > titulo.clientWidth + 1
+    )
+  ) {
+    tamano = Math.max(tamanoMinimo, tamano - 0.35);
+    titulo.style.setProperty(
+      "font-size",
+      `${tamano.toFixed(2)}px`,
+      "important"
+    );
+    lineasNaturales = contarLineasTitulo(titulo);
   }
-
-  /* scrollHeight conserva la altura natural del texto aunque esté recortado
-     por line-clamp; así sólo marcamos los títulos que realmente requieren
-     una tercera línea al ancho actual de la tarjeta. */
-  const lineasNaturales = titulo.scrollHeight / altoLinea;
 
   tarjeta.classList.toggle(
     "titulo-tres-lineas",
-    lineasNaturales > 2.35
+    lineasNaturales > 2
   );
 }
 
@@ -1575,6 +1613,11 @@ function crearTarjetaProducto(
       );
     });
 
+  tarjeta.classList.toggle(
+    "producto-agregado",
+    Boolean(productoInicialEnCarrito)
+  );
+
   const cantidadInicial = productoInicialEnCarrito
     ? Math.max(
         1,
@@ -1699,11 +1742,11 @@ function crearTarjetaProducto(
     </div>
 
     <div class="encabezado-producto">
-      <div class="datos-identificacion-producto">
-        <div class="fila-titulo-producto">
-          <h2>${escaparHTML(producto.nombre)}</h2>
-        </div>
+      <div class="fila-titulo-producto">
+        <h2>${escaparHTML(producto.nombre)}</h2>
+      </div>
 
+      <div class="fila-codigo-con-acciones">
         <p class="codigo-producto">
           ${
             presentacionInicial.codigo
@@ -1711,37 +1754,37 @@ function crearTarjetaProducto(
             : ""
           }
         </p>
-      </div>
 
-      <div class="acciones-identificacion-producto">
-        <button
-          type="button"
-          class="compartir-producto"
-          data-id-producto="${producto.id}"
-          aria-label="Compartir ${escaparHTML(producto.nombre)}"
-          title="Compartir producto"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
-          </svg>
-        </button>
+        <div class="acciones-identificacion-producto">
+          <button
+            type="button"
+            class="compartir-producto"
+            data-id-producto="${producto.id}"
+            aria-label="Compartir ${escaparHTML(producto.nombre)}"
+            title="Compartir producto"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+            </svg>
+          </button>
 
-        <button
-          type="button"
-          class="boton-comparar ${
-            estaSeleccionado ? "seleccionado" : ""
-          }"
-          data-id-producto="${producto.id}"
-          aria-pressed="${estaSeleccionado}"
-          aria-label="${
-            esComparacion ? "Quitar de la comparación" : "Comparar"
-          } ${escaparHTML(producto.nombre)}"
-          title="${
-            esComparacion ? "Quitar de la comparación" : "Comparar producto"
-          }"
-        >
-          <span class="icono-comparar" aria-hidden="true">⇄</span>
-        </button>
+          <button
+            type="button"
+            class="boton-comparar ${
+              estaSeleccionado ? "seleccionado" : ""
+            }"
+            data-id-producto="${producto.id}"
+            aria-pressed="${estaSeleccionado}"
+            aria-label="${
+              esComparacion ? "Quitar de la comparación" : "Comparar"
+            } ${escaparHTML(producto.nombre)}"
+            title="${
+              esComparacion ? "Quitar de la comparación" : "Comparar producto"
+            }"
+          >
+            <span class="icono-comparar" aria-hidden="true">⇄</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -2730,6 +2773,15 @@ function agregarProductoAlCarrito(boton) {
     false
   );
 
+  /* Marca inmediatamente el valor central; la sincronización general del
+     carrito vuelve a confirmar este mismo estado después de guardar. */
+  campoCantidad.classList.add(
+    "cantidad-agregada"
+  );
+  tarjeta.classList.add(
+    "producto-agregado"
+  );
+
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
 
@@ -2765,6 +2817,9 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
   }
 
   boton.classList.remove("agregado");
+  tarjeta.classList.remove(
+    "producto-agregado"
+  );
   tarjeta
     .querySelector(".cantidad")
     ?.classList.remove("cantidad-agregada");
@@ -2822,6 +2877,11 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
 
   boton.classList.toggle(
     "agregado",
+    estaEnCarrito
+  );
+
+  tarjeta.classList.toggle(
+    "producto-agregado",
     estaEnCarrito
   );
 
