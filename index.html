@@ -8002,12 +8002,15 @@
     }
   </style>
 
-  <style id="foto-protagonista-v129">
+  <style id="foto-protagonista-v130">
     /* La tarjeta deja todo su ancho disponible a la fotografía. */
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto{
       padding:0 !important;
       overflow:visible !important;
+      border-width:1px !important;
+      border-style:solid !important;
+      border-color:rgba(111,103,97,.28) !important;
     }
 
     html body .escena-foto-producto{
@@ -8033,18 +8036,30 @@
       overflow:hidden !important;
       background:var(--color-tarjeta-calido) !important;
       border:0 !important;
-      border-radius:var(--radio) var(--radio) 0 0 !important;
+      border-radius:calc(var(--radio) - 1px) calc(var(--radio) - 1px) 0 0 !important;
     }
 
     html body #productos .contenedor-foto-producto .foto-producto,
     html body #productosComparados .contenedor-foto-producto .foto-producto{
       display:block !important;
+      position:static !important;
+      inset:auto !important;
+      top:auto !important;
+      right:auto !important;
+      bottom:auto !important;
+      left:auto !important;
       width:100% !important;
+      min-width:0 !important;
+      max-width:100% !important;
       height:100% !important;
+      min-height:0 !important;
+      max-height:100% !important;
       margin:0 !important;
       padding:0 !important;
       object-fit:contain !important;
       object-position:center !important;
+      transform:none !important;
+      clip-path:none !important;
     }
 
     /* Compartir y comparar quedan superpuestos sobre la foto. */
@@ -8080,31 +8095,31 @@
       margin:0 !important;
       padding:0 !important;
       border-radius:50% !important;
-      box-shadow:0 2px 8px rgba(45,30,24,.16) !important;
-      backdrop-filter:blur(3px);
+      box-shadow:0 1px 5px rgba(45,30,24,.14) !important;
+      backdrop-filter:none !important;
     }
 
     html body .escena-foto-producto .compartir-producto,
     html body .escena-foto-producto .boton-comparar[aria-pressed="false"]{
       color:#2d2926 !important;
       -webkit-text-fill-color:#2d2926 !important;
-      background:rgba(255,253,251,.94) !important;
-      border:1px solid rgba(111,103,97,.30) !important;
+      background:rgba(255,253,251,.62) !important;
+      border:1px solid rgba(75,67,62,.42) !important;
     }
 
     html body .escena-foto-producto .boton-comparar[aria-pressed="true"]{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
-      background:var(--color-principal) !important;
-      border-color:var(--color-principal) !important;
+      background:rgba(152,55,30,.82) !important;
+      border-color:rgba(152,55,30,.88) !important;
     }
 
     html body .escena-foto-producto .compartir-producto:active,
     html body .escena-foto-producto .compartir-producto.compartir-presionado{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
-      background:var(--color-principal) !important;
-      border-color:var(--color-principal) !important;
+      background:rgba(152,55,30,.82) !important;
+      border-color:rgba(152,55,30,.88) !important;
     }
 
     /* Título y código ahora se ubican entre la foto y el precio. */
@@ -8281,6 +8296,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=129"></script>
+  <script src="script.js?v=130"></script>
 </body>
 </html>
