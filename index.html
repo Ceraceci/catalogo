@@ -7885,9 +7885,9 @@
     }
   </style>
 
-  <style id="ajustes-visuales-v126">
+  <style id="ajustes-visuales-v127">
     :root{
-      --color-tarjeta-rojo-suave:#fff5f2;
+      --color-tarjeta-rojo-suave:#f8e3de;
     }
 
     /* Rojo cálido muy suave sólo en las tarjetas y el fondo libre de la foto. */
@@ -7924,7 +7924,7 @@
       color:#171717 !important;
       -webkit-text-fill-color:#171717 !important;
       background:var(--color-control) !important;
-      border:1px solid #171717 !important;
+      border:1px solid rgba(111,103,97,.28) !important;
     }
 
     html body #productos .fila-compra .agregar-carrito.agregado,
@@ -7982,8 +7982,13 @@
         color:#171717 !important;
         -webkit-text-fill-color:#171717 !important;
         background:var(--color-control) !important;
-        border-color:#171717 !important;
+        border-color:rgba(111,103,97,.28) !important;
       }
+    }
+
+    /* Barra inferior del carrito sin contorno exterior. */
+    html body .abrir-carrito{
+      border:0 !important;
     }
   </style>
 
@@ -8059,6 +8064,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=126"></script>
+  <script src="script.js?v=127"></script>
 </body>
 </html>
