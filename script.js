@@ -1450,32 +1450,14 @@ function actualizarLineasTituloTarjetaMovil(tarjeta) {
 
 
 function centrarAccionesFotoTarjetaMovil(tarjeta) {
-  const encabezado = tarjeta.querySelector(".encabezado-producto");
-  const foto = tarjeta.querySelector(".contenedor-foto-producto");
   const acciones = tarjeta.querySelector(".acciones-producto");
 
-  if (!encabezado || !foto || !acciones) {
+  if (!acciones) {
     return;
   }
 
-  const rectEncabezado = encabezado.getBoundingClientRect();
-  const rectFoto = foto.getBoundingClientRect();
-  const rectAcciones = acciones.getBoundingClientRect();
-
-  if (!rectFoto.height || !rectAcciones.height) {
-    return;
-  }
-
-  const centroFoto =
-    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
-
-  const top = centroFoto - rectAcciones.height / 2;
-
-  acciones.style.setProperty(
-    "top",
-    `${Math.round(top * 10) / 10}px`,
-    "important"
-  );
+  /* Las acciones ahora se posicionan sobre la foto únicamente con CSS. */
+  acciones.style.removeProperty("top");
 }
 
 
@@ -1697,18 +1679,16 @@ function crearTarjetaProducto(
   `;
 
   tarjeta.innerHTML = `
-    <div class="encabezado-producto">
-      <div class="fila-titulo-producto">
-        <h2>${escaparHTML(producto.nombre)}</h2>
+    <div class="escena-foto-producto">
+      <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+        <img
+          src="${foto ? escaparHTML(foto) : "img/logo.png"}"
+          alt="${foto ? escaparHTML(producto.nombre) : ""}"
+          class="foto-producto ${foto ? "" : "foto-placeholder"}"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        >
       </div>
-
-      <p class="codigo-producto">
-        ${
-          presentacionInicial.codigo
-            ? escaparHTML(presentacionInicial.codigo)
-          : ""
-        }
-      </p>
 
       <div class="acciones-producto">
         <button
@@ -1742,14 +1722,18 @@ function crearTarjetaProducto(
       </div>
     </div>
 
-    <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
-      <img
-        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
-        alt="${foto ? escaparHTML(producto.nombre) : ""}"
-        class="foto-producto ${foto ? "" : "foto-placeholder"}"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-      >
+    <div class="encabezado-producto">
+      <div class="fila-titulo-producto">
+        <h2>${escaparHTML(producto.nombre)}</h2>
+      </div>
+
+      <p class="codigo-producto">
+        ${
+          presentacionInicial.codigo
+            ? escaparHTML(presentacionInicial.codigo)
+          : ""
+        }
+      </p>
     </div>
 
     <div class="fila-compra">
