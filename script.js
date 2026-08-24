@@ -277,6 +277,12 @@ function procesarCSVProductos(textoCSV) {
       "URL imagen"
     );
 
+  const indiceProductoPlural =
+    buscarIndiceOpcional(
+      "Producto plural",
+      "Nombre plural"
+    );
+
   const indiceDescripcion =
     buscarIndiceOpcional(
       "Descripción breve",
@@ -315,6 +321,11 @@ function procesarCSVProductos(textoCSV) {
 
         nombre:
           limpiarTexto(fila[indiceProducto]),
+
+        nombrePlural:
+          indiceProductoPlural !== -1
+            ? limpiarTexto(fila[indiceProductoPlural])
+            : "",
 
         presentacion:
           limpiarTexto(
@@ -359,7 +370,13 @@ function procesarCSVProductos(textoCSV) {
         ...productoNormalizado,
         nombre: formatearNombreProducto(
           productoNormalizado.nombre
-        )
+        ),
+        nombrePlural:
+          productoNormalizado.nombrePlural
+            ? formatearNombreProducto(
+                productoNormalizado.nombrePlural
+              )
+            : ""
       };
     })
     .filter((producto) => {
@@ -521,6 +538,7 @@ function agruparProductos(filasProductos) {
       agrupados.set(clave, {
         id: crearIdProducto(clave),
         nombre: fila.nombre,
+        nombrePlural: fila.nombrePlural,
         categoria: fila.categoria,
         foto: fila.foto,
         descripcion: fila.descripcion,
@@ -530,6 +548,10 @@ function agruparProductos(filasProductos) {
     }
 
     const producto = agrupados.get(clave);
+
+    if (!producto.nombrePlural && fila.nombrePlural) {
+      producto.nombrePlural = fila.nombrePlural;
+    }
 
     if (!producto.foto && fila.foto) {
       producto.foto = fila.foto;
@@ -1585,6 +1607,7 @@ function crearTarjetaProducto(
 
   tarjeta.dataset.idProducto = producto.id;
   tarjeta.dataset.nombre = producto.nombre;
+  tarjeta.dataset.nombrePlural = producto.nombrePlural || "";
   tarjeta.dataset.categoria = producto.categoria;
   tarjeta.dataset.presentacion = presentacionInicial.nombre;
   tarjeta.dataset.precio = String(presentacionInicial.precio);
@@ -2714,6 +2737,9 @@ function agregarProductoAlCarrito(boton) {
     nombre:
       tarjeta.dataset.nombre,
 
+    nombrePlural:
+      tarjeta.dataset.nombrePlural || "",
+
     categoria:
       tarjeta.dataset.categoria,
 
@@ -3133,7 +3159,13 @@ function cargarCarritoGuardado() {
         ...producto,
         nombre: formatearNombreProducto(
           producto.nombre
-        )
+        ),
+        nombrePlural:
+          producto.nombrePlural
+            ? formatearNombreProducto(
+                producto.nombrePlural
+              )
+            : ""
       }));
   } catch (error) {
     console.error(
@@ -3197,7 +3229,7 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} ${producto.nombre} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
+        `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
         formatearPrecio(producto.precio * producto.cantidad)
     );
 
@@ -3242,12 +3274,38 @@ function finalizarPedidoWhatsApp() {
 }
 
 
+function obtenerNombreProductoParaCantidad(producto) {
+  if (Number(producto.cantidad) < 2) {
+    return producto.nombre;
+  }
+
+  if (limpiarTexto(producto.nombrePlural)) {
+    return producto.nombrePlural;
+  }
+
+  const productoCatalogo =
+    productosAgrupados.find((item) => {
+      return (
+        normalizarTexto(item.nombre) ===
+          normalizarTexto(producto.nombre) &&
+        normalizarTexto(item.categoria) ===
+          normalizarTexto(producto.categoria)
+      );
+    });
+
+  return (
+    productoCatalogo?.nombrePlural ||
+    producto.nombre
+  );
+}
+
+
 function construirDetalleCarritoCompartido() {
   const detalleProductos =
     carritoCompras
       .map(
         (producto) =>
-          `${producto.cantidad} ${producto.nombre} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
+          `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
           formatearPrecio(producto.precio * producto.cantidad)
       )
       .join("\n\n");
