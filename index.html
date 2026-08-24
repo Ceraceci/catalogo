@@ -8002,10 +8002,11 @@
     }
   </style>
 
-  <style id="foto-protagonista-v131">
-    /* La tarjeta deja todo su ancho disponible a la fotografía. */
+  <style id="foto-protagonista-v132">
+    /* Una misma medida ordena los márgenes exteriores de cada tarjeta. */
     html body #productos .tarjeta-producto,
     html body #productosComparados .tarjeta-producto{
+      --margen-interior-tarjeta:10px;
       padding:0 !important;
       overflow:visible !important;
       border-width:1px !important;
@@ -8016,27 +8017,28 @@
     html body .escena-foto-producto{
       position:relative !important;
       display:block !important;
+      box-sizing:border-box !important;
       width:100% !important;
       min-width:0 !important;
       margin:0 !important;
-      padding:0 !important;
+      padding:var(--margen-interior-tarjeta) 0 0 !important;
     }
 
     html body #productos .contenedor-foto-producto,
     html body #productosComparados .contenedor-foto-producto{
       box-sizing:border-box !important;
-      width:100% !important;
-      min-width:100% !important;
-      max-width:100% !important;
+      width:calc(100% - (var(--margen-interior-tarjeta) + var(--margen-interior-tarjeta))) !important;
+      min-width:0 !important;
+      max-width:calc(100% - (var(--margen-interior-tarjeta) + var(--margen-interior-tarjeta))) !important;
       height:auto !important;
       min-height:0 !important;
       aspect-ratio:4 / 3 !important;
-      margin:0 !important;
+      margin:0 var(--margen-interior-tarjeta) !important;
       padding:0 !important;
       overflow:hidden !important;
       background:var(--color-tarjeta-calido) !important;
       border:0 !important;
-      border-radius:calc(var(--radio) - 1px) calc(var(--radio) - 1px) 0 0 !important;
+      border-radius:calc(var(--radio) - 3px) !important;
     }
 
     html body #productos .contenedor-foto-producto .foto-producto,
@@ -8062,25 +8064,26 @@
       clip-path:none !important;
     }
 
-    /* Código y acciones comparten una fila debajo del título. */
-    html body .fila-codigo-acciones{
+    /* Identificación y acciones forman un único bloque compacto bajo la foto. */
+    html body .datos-identificacion-producto{
       box-sizing:border-box !important;
-      display:grid !important;
-      grid-template-columns:minmax(0,1fr) auto !important;
-      align-items:center !important;
-      gap:8px !important;
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:stretch !important;
+      justify-content:center !important;
+      gap:4px !important;
       width:100% !important;
       min-width:0 !important;
-      min-height:34px !important;
+      min-height:0 !important;
       margin:0 !important;
       padding:0 !important;
     }
 
-    html body .fila-codigo-acciones .acciones-producto{
+    html body .acciones-identificacion-producto{
       position:static !important;
       z-index:auto !important;
       display:flex !important;
-      flex-direction:row !important;
+      flex-direction:column !important;
       align-items:center !important;
       justify-content:flex-end !important;
       gap:6px !important;
@@ -8091,8 +8094,8 @@
       transform:none !important;
     }
 
-    html body .fila-codigo-acciones .compartir-producto,
-    html body .fila-codigo-acciones .boton-comparar{
+    html body .acciones-identificacion-producto .compartir-producto,
+    html body .acciones-identificacion-producto .boton-comparar{
       box-sizing:border-box !important;
       display:inline-grid !important;
       place-items:center !important;
@@ -8109,23 +8112,23 @@
       backdrop-filter:none !important;
     }
 
-    html body .fila-codigo-acciones .compartir-producto,
-    html body .fila-codigo-acciones .boton-comparar[aria-pressed="false"]{
+    html body .acciones-identificacion-producto .compartir-producto,
+    html body .acciones-identificacion-producto .boton-comparar[aria-pressed="false"]{
       color:#2d2926 !important;
       -webkit-text-fill-color:#2d2926 !important;
       background:var(--color-control) !important;
       border:1px solid rgba(111,103,97,.28) !important;
     }
 
-    html body .fila-codigo-acciones .boton-comparar[aria-pressed="true"]{
+    html body .acciones-identificacion-producto .boton-comparar[aria-pressed="true"]{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
       background:var(--color-principal) !important;
       border-color:var(--color-principal) !important;
     }
 
-    html body .fila-codigo-acciones .compartir-producto:active,
-    html body .fila-codigo-acciones .compartir-producto.compartir-presionado{
+    html body .acciones-identificacion-producto .compartir-producto:active,
+    html body .acciones-identificacion-producto .compartir-producto.compartir-presionado{
       color:#fff !important;
       -webkit-text-fill-color:#fff !important;
       background:var(--color-principal) !important;
@@ -8136,15 +8139,15 @@
     html body #productos .encabezado-producto,
     html body #productosComparados .encabezado-producto{
       box-sizing:border-box !important;
-      display:flex !important;
-      flex-direction:column !important;
-      align-items:stretch !important;
-      gap:4px !important;
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) auto !important;
+      align-items:center !important;
+      gap:8px !important;
       width:100% !important;
-      min-height:0 !important;
+      min-height:74px !important;
       height:auto !important;
       margin:0 !important;
-      padding:10px 10px 0 !important;
+      padding:10px var(--margen-interior-tarjeta) 0 !important;
       border:0 !important;
     }
 
@@ -8176,8 +8179,8 @@
       min-height:1em !important;
       height:auto !important;
       margin:0 !important;
-      padding:0 !important;
-      text-align:left !important;
+      padding:0 4px 0 0 !important;
+      text-align:right !important;
     }
 
     /* El número central identifica visualmente un producto ya agregado. */
@@ -8209,18 +8212,18 @@
     }
 
     @media (max-width:650px){
+      html body #productos .tarjeta-producto,
+      html body #productosComparados .tarjeta-producto{
+        --margen-interior-tarjeta:8px;
+      }
+
       html body #productos .contenedor-foto-producto,
       html body #productosComparados .contenedor-foto-producto{
         aspect-ratio:1 / 1 !important;
       }
 
-      html body .fila-codigo-acciones{
-        gap:6px !important;
-        min-height:30px !important;
-      }
-
-      html body .fila-codigo-acciones .compartir-producto,
-      html body .fila-codigo-acciones .boton-comparar{
+      html body .acciones-identificacion-producto .compartir-producto,
+      html body .acciones-identificacion-producto .boton-comparar{
         width:32px !important;
         min-width:32px !important;
         max-width:32px !important;
@@ -8231,7 +8234,9 @@
 
       html body #productos .encabezado-producto,
       html body #productosComparados .encabezado-producto{
-        padding:8px 8px 0 !important;
+        min-height:70px !important;
+        gap:6px !important;
+        padding:8px var(--margen-interior-tarjeta) 0 !important;
       }
 
       html body #productos .fila-compra,
@@ -8319,6 +8324,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=131"></script>
+  <script src="script.js?v=132"></script>
 </body>
 </html>
