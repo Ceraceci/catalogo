@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="140">
+  <meta name="ceraceci-version" content="146">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=144">
+  <link rel="stylesheet" href="style.css?v=146">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7594,9 +7594,12 @@
   </div>
 
   <div class="marca-inferior-movil" aria-hidden="true">
-    <strong>CERACECI</strong>
-    <span>·</span>
-    <span>Insumos para cerámica</span>
+    <div class="marca-inferior-linea">
+      <strong>CERACECI</strong>
+      <span>·</span>
+      <span>Insumos para cerámica</span>
+    </div>
+    <span class="firma-catalogo">By Nacho Peralta</span>
   </div>
 
   <div id="fondoCarrito" class="fondo-carrito"></div>
@@ -8113,7 +8116,9 @@
     @media (max-width:650px){
       html body #productos .encabezado-producto::before,
       html body #productosComparados .encabezado-producto::before{
-        top:3.5px;
+        /* El PNG tiene aire transparente arriba: se compensa para que el
+           dibujo visible comience a la altura de la primera letra. */
+        top:-2.5px;
         width:32px;
         height:32px;
       }
@@ -8291,6 +8296,333 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=144"></script>
+
+  <style id="vista-cuatro-tarjetas-v146">
+    :root{
+      /* V146: se invierten exactamente los dos colores de la V145. */
+      --color-tarjeta-calido:#cf927d;
+      --color-espacio-tarjetas:#fffdfb;
+    }
+
+    /* Comparar usa ahora un SVG de trazo, con el mismo peso visual que Compartir. */
+    html body .boton-comparar .icono-comparar-svg{
+      display:block !important;
+      width:52% !important;
+      height:52% !important;
+      overflow:visible !important;
+      color:inherit !important;
+      fill:none !important;
+      stroke:currentColor !important;
+      stroke-width:3.25 !important;
+      stroke-linecap:round !important;
+      stroke-linejoin:round !important;
+      transform:none !important;
+    }
+
+    /* Pie visible en PC y móvil, siempre debajo de las acciones y del carrito. */
+    html body .marca-inferior-movil{
+      position:fixed !important;
+      right:0 !important;
+      bottom:0 !important;
+      left:0 !important;
+      z-index:32 !important;
+      box-sizing:border-box !important;
+      display:flex !important;
+      flex-direction:column !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:0 !important;
+      min-height:32px !important;
+      padding:1px 8px calc(1px + env(safe-area-inset-bottom)) !important;
+      color:#171717 !important;
+      background:rgba(246,242,238,.985) !important;
+      border-top:1px solid rgba(111,103,97,.16) !important;
+      white-space:nowrap !important;
+    }
+
+    html body .marca-inferior-linea{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:4px;
+      color:#171717;
+      font-size:16px;
+      line-height:.92;
+    }
+
+    html body .marca-inferior-linea strong{
+      color:var(--color-principal);
+      font-weight:700;
+    }
+
+    html body .marca-inferior-linea > span:last-child{
+      color:#171717 !important;
+      font-weight:700 !important;
+    }
+
+    html body .marca-inferior-movil .firma-catalogo{
+      color:#171717 !important;
+      font-size:11.2px !important;
+      font-weight:500 !important;
+      line-height:1 !important;
+    }
+
+    @media (min-width:651px){
+      html body .acciones-flotantes{
+        bottom:44px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* La franja completa ocupa menos: 28 px de marca + 42 px de acciones. */
+      html body .marca-inferior-movil{
+        min-height:28px !important;
+        padding-top:1px !important;
+        padding-bottom:calc(1px + env(safe-area-inset-bottom)) !important;
+      }
+
+      html body .marca-inferior-linea{
+        font-size:15.8px !important;
+        line-height:.9 !important;
+      }
+
+      html body .marca-inferior-movil .firma-catalogo{
+        font-size:11.06px !important;
+        line-height:.95 !important;
+      }
+
+      html body .acciones-flotantes{
+        bottom:calc(28px + env(safe-area-inset-bottom)) !important;
+        padding-top:2px !important;
+        padding-bottom:2px !important;
+      }
+
+      html body .instagram-flotante,
+      html body .whatsapp-flotante{
+        width:38px !important;
+        height:38px !important;
+      }
+
+      html body{
+        padding-bottom:calc(104px + env(safe-area-inset-bottom)) !important;
+      }
+
+      /* La búsqueda deja libre la parte superior durante la navegación.
+         Al desplazarse hacia arriba reaparece sin alterar la grilla. */
+      html body .busqueda{
+        transition:transform .24s ease, opacity .18s ease !important;
+        will-change:transform,opacity;
+      }
+
+      html body.busqueda-movil-replegada .busqueda{
+        opacity:0 !important;
+        pointer-events:none !important;
+        transform:translateY(calc(-100% - 8px)) !important;
+      }
+
+      /* Retícula móvil compacta: conserva tres líneas de título y reduce
+         principalmente foto y aire interno, no el tamaño de los controles. */
+      html body #productos{
+        row-gap:6px !important;
+      }
+
+      html body #productos .tarjeta-producto{
+        box-sizing:border-box !important;
+        min-height:0 !important;
+        height:auto !important;
+        padding:6px !important;
+      }
+
+      html body #productos .encabezado-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        grid-template-rows:54px 14px !important;
+        row-gap:4px !important;
+        min-height:72px !important;
+        height:72px !important;
+      }
+
+      html body #productos .fila-titulo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        min-height:54px !important;
+        height:54px !important;
+        padding-right:34px !important;
+        padding-left:34px !important;
+      }
+
+      html body #productos .tarjeta-producto h2,
+      html body #productos .tarjeta-producto.titulo-tres-lineas h2{
+        max-height:54px !important;
+        font-size:15.8px !important;
+        line-height:18px !important;
+      }
+
+      html body #productos .codigo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        min-height:14px !important;
+        height:14px !important;
+        margin:0 !important;
+        line-height:14px !important;
+      }
+
+      html body #productos .contenedor-foto-producto{
+        height:112px !important;
+        min-height:112px !important;
+        max-height:112px !important;
+      }
+
+      html body #productos .tarjeta-producto{
+        --espacio-precio:6px !important;
+        --espacio-cantidad-info:6px !important;
+      }
+
+      html body #productos .fila-compra{
+        padding-top:6px !important;
+      }
+
+      html body #productos .fila-compra > .bloque-presentaciones{
+        padding-top:6px !important;
+        padding-bottom:6px !important;
+      }
+
+      html body #productos .zona-detalles-producto{
+        padding-top:6px !important;
+        padding-bottom:0 !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad,
+      html body #productos .fila-compra .agregar-carrito{
+        min-height:28px !important;
+        height:28px !important;
+        max-height:28px !important;
+      }
+
+      html body #productos .fila-compra .boton-cantidad,
+      html body #productos .fila-compra .cantidad{
+        height:26px !important;
+      }
+    }
+
+    /* Ajuste progresivo para teléfonos con poca altura útil (por ejemplo,
+       cuando el navegador conserva visibles sus barras superior e inferior). */
+    @media (max-width:650px) and (max-height:760px){
+      html body #productos .contenedor-foto-producto{
+        height:104px !important;
+        min-height:104px !important;
+        max-height:104px !important;
+      }
+    }
+
+    @media (max-width:650px) and (max-height:700px){
+      html body #productos .encabezado-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        grid-template-rows:51px 13px !important;
+        min-height:68px !important;
+        height:68px !important;
+      }
+
+      html body #productos .fila-titulo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        min-height:51px !important;
+        height:51px !important;
+      }
+
+      html body #productos .tarjeta-producto h2,
+      html body #productos .tarjeta-producto.titulo-tres-lineas h2{
+        max-height:51px !important;
+        font-size:15px !important;
+        line-height:17px !important;
+      }
+
+      html body #productos .codigo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .codigo-producto{
+        min-height:13px !important;
+        height:13px !important;
+        line-height:13px !important;
+      }
+
+      html body #productos .contenedor-foto-producto{
+        height:96px !important;
+        min-height:96px !important;
+        max-height:96px !important;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body .busqueda{
+        transition:none !important;
+      }
+    }
+  </style>
+
+  <script id="barra-busqueda-replegable-v146">
+    (() => {
+      const consultaMovil = window.matchMedia("(max-width:650px)");
+      const barra = document.querySelector(".busqueda");
+      const comparacion = document.getElementById("seccionComparacion");
+      if (!barra) return;
+
+      let ultimaPosicion = window.scrollY;
+      let acumulado = 0;
+      let direccion = 0;
+      let pendiente = false;
+
+      function mostrarBarra() {
+        document.body.classList.remove("busqueda-movil-replegada");
+      }
+
+      function actualizarBarra() {
+        pendiente = false;
+
+        if (!consultaMovil.matches) {
+          mostrarBarra();
+          ultimaPosicion = window.scrollY;
+          acumulado = 0;
+          return;
+        }
+
+        const actual = Math.max(0, window.scrollY);
+        const diferencia = actual - ultimaPosicion;
+        const nuevaDireccion = Math.sign(diferencia);
+
+        if (nuevaDireccion && nuevaDireccion !== direccion) {
+          acumulado = 0;
+          direccion = nuevaDireccion;
+        }
+
+        acumulado += diferencia;
+        ultimaPosicion = actual;
+
+        const buscando = barra.contains(document.activeElement);
+        const comparando = comparacion && !comparacion.hidden;
+
+        if (actual < 86 || buscando || comparando) {
+          mostrarBarra();
+          acumulado = 0;
+          return;
+        }
+
+        if (direccion > 0 && acumulado > 18) {
+          document.body.classList.add("busqueda-movil-replegada");
+          acumulado = 0;
+        } else if (direccion < 0 && acumulado < -30) {
+          mostrarBarra();
+          acumulado = 0;
+        }
+      }
+
+      function solicitarActualizacion() {
+        if (pendiente) return;
+        pendiente = true;
+        window.requestAnimationFrame(actualizarBarra);
+      }
+
+      window.addEventListener("scroll", solicitarActualizacion, { passive:true });
+      window.addEventListener("resize", solicitarActualizacion, { passive:true });
+      barra.addEventListener("focusin", mostrarBarra);
+      consultaMovil.addEventListener?.("change", solicitarActualizacion);
+    })();
+  </script>
+
+  <script src="script.js?v=146"></script>
 </body>
 </html>

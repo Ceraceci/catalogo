@@ -1737,7 +1737,14 @@ function crearTarjetaProducto(
             esComparacion ? "Quitar de la comparación" : "Comparar producto"
           }"
         >
-          <span class="icono-comparar" aria-hidden="true">⇄</span>
+          <svg
+            class="icono-comparar icono-comparar-svg"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <path d="M5 8h12m0 0-3-3m3 3-3 3M19 16H7m0 0 3-3m-3 3 3 3"></path>
+          </svg>
         </button>
       </div>
     </div>
