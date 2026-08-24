@@ -95,6 +95,9 @@ const vaciarCarrito =
 const finalizarPedido =
   document.getElementById("finalizarPedido");
 
+const compartirCarrito =
+  document.getElementById("compartirCarrito");
+
 const barraComparacion =
   document.getElementById("barraComparacion");
 
@@ -2936,6 +2939,10 @@ function mostrarCarrito() {
     finalizarPedido.disabled = true;
     vaciarCarrito.disabled = true;
 
+    if (compartirCarrito) {
+      compartirCarrito.disabled = true;
+    }
+
     return;
   }
 
@@ -3076,6 +3083,10 @@ function mostrarCarrito() {
 
   finalizarPedido.disabled = false;
   vaciarCarrito.disabled = false;
+
+  if (compartirCarrito) {
+    compartirCarrito.disabled = false;
+  }
 }
 
 
@@ -3228,6 +3239,70 @@ function finalizarPedidoWhatsApp() {
     "_blank",
     "noopener,noreferrer"
   );
+}
+
+
+function construirDetalleCarritoCompartido() {
+  const detalleProductos =
+    carritoCompras
+      .map(
+        (producto) =>
+          `${producto.cantidad} ${producto.nombre} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
+          formatearPrecio(producto.precio * producto.cantidad)
+      )
+      .join("\n\n");
+
+  const precioTotal =
+    carritoCompras.reduce(
+      (total, producto) =>
+        total + producto.precio * producto.cantidad,
+      0
+    );
+
+  return [
+    detalleProductos,
+    "",
+    `Total: ${formatearPrecio(precioTotal)}`
+  ].join("\n");
+}
+
+
+async function compartirCarritoActual() {
+  if (carritoCompras.length === 0) {
+    return;
+  }
+
+  const mensaje =
+    construirDetalleCarritoCompartido();
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        text: mensaje
+      });
+
+      return;
+    } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
+    }
+  }
+
+  try {
+    await navigator.clipboard.writeText(
+      mensaje
+    );
+
+    mostrarAvisoCopiado(
+      "Detalle del carrito copiado"
+    );
+  } catch (error) {
+    window.prompt(
+      "Copiá el detalle del carrito:",
+      mensaje
+    );
+  }
 }
 
 
@@ -4015,6 +4090,14 @@ if (finalizarPedido) {
   finalizarPedido.addEventListener(
     "click",
     finalizarPedidoWhatsApp
+  );
+}
+
+
+if (compartirCarrito) {
+  compartirCarrito.addEventListener(
+    "click",
+    compartirCarritoActual
   );
 }
 
