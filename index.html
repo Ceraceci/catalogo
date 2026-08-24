@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="149">
+  <meta name="ceraceci-version" content="150">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=149">
+  <link rel="stylesheet" href="style.css?v=150">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7605,10 +7605,10 @@
 
   <aside id="carrito" class="carrito" aria-label="Carrito de compras">
     <div class="encabezado-carrito">
-      <div>
-        <p>Tu pedido</p>
-        <h2>Carrito de compras</h2>
-      </div>
+      <h2>
+        Tu pedido
+        <span id="cantidadItemsCarrito" aria-live="polite">(0)</span>
+      </h2>
 
       <button
         type="button"
@@ -7624,12 +7624,12 @@
 
     <div class="pie-carrito">
       <div class="total-carrito">
-        <span>Total estimado</span>
+        <span>Total:</span>
         <strong id="totalCarrito">$ 0</strong>
       </div>
 
       <button type="button" id="finalizarPedido" class="finalizar-pedido">
-        Finalizar pedido por WhatsApp
+        Enviar pedido por WhatsApp
       </button>
 
       <button type="button" id="vaciarCarrito" class="vaciar-carrito">
@@ -8306,8 +8306,8 @@
     /* Comparar usa ahora un SVG de trazo, con el mismo peso visual que Compartir. */
     html body .boton-comparar .icono-comparar-svg{
       display:block !important;
-      width:68% !important;
-      height:68% !important;
+      width:78% !important;
+      height:78% !important;
       overflow:visible !important;
       color:inherit !important;
       fill:none !important;
@@ -8578,6 +8578,287 @@
     }
   </style>
 
+  <style id="carrito-minimalista-v150">
+    /* Carrito minimalista: panel lateral en PC y hoja inferior en móvil. */
+    html body .carrito{
+      grid-template-rows:auto minmax(0,1fr) auto !important;
+      width:min(420px,100%) !important;
+      background:var(--color-tarjeta-calido,#fffdfb) !important;
+    }
+
+    html body .encabezado-carrito{
+      align-items:center !important;
+      gap:14px !important;
+      padding:17px 20px !important;
+      border-bottom:1px solid var(--color-borde) !important;
+    }
+
+    html body .encabezado-carrito h2{
+      margin:0 !important;
+      color:var(--color-texto,#171717) !important;
+      font-size:1.18rem !important;
+      font-weight:700 !important;
+      line-height:1.2 !important;
+    }
+
+    html body #cantidadItemsCarrito{
+      color:var(--color-texto-suave,#8b817c) !important;
+      font-weight:500 !important;
+    }
+
+    html body .cerrar-carrito{
+      display:grid !important;
+      place-items:center !important;
+      width:34px !important;
+      min-width:34px !important;
+      height:34px !important;
+      padding:0 !important;
+      color:var(--color-texto,#171717) !important;
+      font-size:1.55rem !important;
+      line-height:1 !important;
+      background:transparent !important;
+      border:1px solid var(--color-borde) !important;
+    }
+
+    html body .productos-carrito{
+      min-height:0 !important;
+      padding:0 20px !important;
+      overflow-y:auto !important;
+      overscroll-behavior:contain !important;
+    }
+
+    html body .producto-carrito{
+      display:grid !important;
+      grid-template-columns:56px minmax(0,1fr) !important;
+      gap:12px !important;
+      padding:14px 0 !important;
+      border-bottom:1px solid var(--color-borde) !important;
+    }
+
+    html body .miniatura-producto-carrito{
+      width:56px !important;
+      height:56px !important;
+      overflow:hidden !important;
+      align-self:start !important;
+      background:#fff !important;
+      border:1px solid var(--color-borde) !important;
+      border-radius:9px !important;
+    }
+
+    html body .miniatura-producto-carrito img{
+      display:block !important;
+      width:100% !important;
+      height:100% !important;
+      object-fit:contain !important;
+    }
+
+    html body .datos-producto-carrito{
+      display:grid !important;
+      min-width:0 !important;
+    }
+
+    html body .linea-principal-producto-carrito{
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) auto !important;
+      align-items:start !important;
+      gap:8px !important;
+    }
+
+    html body .datos-producto-carrito h3{
+      margin:0 !important;
+      min-width:0 !important;
+      color:var(--color-texto,#171717) !important;
+      font-size:.98rem !important;
+      font-weight:700 !important;
+      line-height:1.2 !important;
+      overflow-wrap:normal !important;
+      word-break:normal !important;
+    }
+
+    html body .subtotal-carrito{
+      color:var(--color-principal) !important;
+      font-size:1rem !important;
+      font-weight:700 !important;
+      line-height:1.2 !important;
+      white-space:nowrap !important;
+    }
+
+    html body .meta-producto-carrito{
+      display:block !important;
+      margin:4px 0 9px !important;
+      color:var(--color-texto-suave,#8b817c) !important;
+      font-size:.82rem !important;
+      line-height:1.2 !important;
+    }
+
+    html body .acciones-producto-carrito{
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:space-between !important;
+      gap:10px !important;
+    }
+
+    html body .control-cantidad-carrito{
+      display:grid !important;
+      grid-template-columns:30px 34px 30px !important;
+      align-items:center !important;
+      overflow:hidden !important;
+      text-align:center !important;
+      background:var(--color-control,#fff) !important;
+      border:1px solid var(--color-borde) !important;
+      border-radius:8px !important;
+    }
+
+    html body .control-cantidad-carrito button,
+    html body .control-cantidad-carrito span{
+      display:grid !important;
+      place-items:center !important;
+      height:30px !important;
+      padding:0 !important;
+      color:var(--color-texto,#171717) !important;
+      font-size:1rem !important;
+      line-height:1 !important;
+      background:transparent !important;
+      border:0 !important;
+    }
+
+    html body .control-cantidad-carrito span{
+      border-right:1px solid var(--color-borde) !important;
+      border-left:1px solid var(--color-borde) !important;
+    }
+
+    html body .eliminar-producto{
+      display:grid !important;
+      place-items:center !important;
+      width:32px !important;
+      height:32px !important;
+      padding:0 !important;
+      color:#9a3434 !important;
+      background:transparent !important;
+      border:0 !important;
+      border-radius:50% !important;
+      text-decoration:none !important;
+    }
+
+    html body .eliminar-producto svg{
+      width:18px !important;
+      height:18px !important;
+      fill:none !important;
+      stroke:currentColor !important;
+      stroke-width:1.8 !important;
+      stroke-linecap:round !important;
+      stroke-linejoin:round !important;
+    }
+
+    html body .carrito-vacio{
+      min-height:100% !important;
+      padding:36px 0 !important;
+    }
+
+    html body .pie-carrito{
+      position:relative !important;
+      z-index:2 !important;
+      padding:14px 20px 18px !important;
+      background:var(--color-tarjeta-calido,#fffdfb) !important;
+      border-top:1px solid var(--color-borde) !important;
+      box-shadow:0 -7px 18px rgba(59,36,28,.05) !important;
+    }
+
+    html body .total-carrito{
+      margin:0 0 12px !important;
+      font-size:1.05rem !important;
+      font-weight:700 !important;
+    }
+
+    html body .total-carrito strong{
+      color:var(--color-principal) !important;
+      font-size:1.45rem !important;
+    }
+
+    html body .finalizar-pedido{
+      min-height:46px !important;
+      border-radius:10px !important;
+    }
+
+    html body .vaciar-carrito{
+      min-height:28px !important;
+      margin:6px 0 0 !important;
+      padding:3px 8px !important;
+      color:var(--color-texto-suave,#8b817c) !important;
+      font-size:.84rem !important;
+      font-weight:600 !important;
+      background:transparent !important;
+      border:0 !important;
+    }
+
+    html body .control-cantidad-carrito button:active,
+    html body .eliminar-producto:active{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+    }
+
+    @media (max-width:650px){
+      html body .carrito{
+        top:auto !important;
+        right:0 !important;
+        bottom:0 !important;
+        left:0 !important;
+        width:100% !important;
+        height:min(88dvh,760px) !important;
+        border-radius:18px 18px 0 0 !important;
+        box-shadow:0 -16px 40px rgba(0,0,0,.2) !important;
+        transform:translateY(105%) !important;
+      }
+
+      html body .carrito.visible{
+        transform:translateY(0) !important;
+      }
+
+      html body .carrito::before{
+        content:"";
+        position:absolute;
+        top:7px;
+        left:50%;
+        z-index:3;
+        width:42px;
+        height:4px;
+        background:#c9c0bb;
+        border-radius:999px;
+        transform:translateX(-50%);
+      }
+
+      html body .encabezado-carrito{
+        padding:20px 16px 12px !important;
+      }
+
+      html body .productos-carrito{
+        padding:0 16px !important;
+      }
+
+      html body .producto-carrito{
+        grid-template-columns:50px minmax(0,1fr) !important;
+        gap:10px !important;
+        padding:12px 0 !important;
+      }
+
+      html body .miniatura-producto-carrito{
+        width:50px !important;
+        height:50px !important;
+      }
+
+      html body .pie-carrito{
+        padding:12px 16px calc(13px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body .carrito{
+        transition:none !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -8600,6 +8881,6 @@
     })();
   </script>
 
-  <script src="script.js?v=149"></script>
+  <script src="script.js?v=150"></script>
 </body>
 </html>

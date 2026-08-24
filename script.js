@@ -86,6 +86,9 @@ const iconoCarrito =
 const totalCarrito =
   document.getElementById("totalCarrito");
 
+const cantidadItemsCarrito =
+  document.getElementById("cantidadItemsCarrito");
+
 const vaciarCarrito =
   document.getElementById("vaciarCarrito");
 
@@ -1746,7 +1749,7 @@ function crearTarjetaProducto(
             aria-hidden="true"
             focusable="false"
           >
-            <path d="M5 8h12m0 0-3-3m3 3-3 3M19 16H7m0 0 3-3m-3 3 3 3"></path>
+            <path d="M2.5 7.5h18m0 0-4-4m4 4-4 4M21.5 16.5h-18m0 0 4-4m-4 4 4 4"></path>
           </svg>
         </button>
       </div>
@@ -2722,6 +2725,9 @@ function agregarProductoAlCarrito(boton) {
     codigo:
       tarjeta.dataset.codigo || "",
 
+    foto:
+      tarjeta.querySelector(".foto-producto")?.src || "",
+
     cantidad
   };
 
@@ -2896,6 +2902,11 @@ function formatearPrecioCarrito(valor) {
 function mostrarCarrito() {
   productosCarrito.innerHTML = "";
 
+  if (cantidadItemsCarrito) {
+    cantidadItemsCarrito.textContent =
+      `(${obtenerCantidadTotalCarrito()})`;
+  }
+
   actualizarCargaVisualCarrito(
     obtenerCantidadTotalCarrito()
   );
@@ -2934,6 +2945,21 @@ function mostrarCarrito() {
         producto.precio *
         producto.cantidad;
 
+      const productoCatalogo =
+        productosAgrupados.find((item) => {
+          return (
+            normalizarTexto(item.nombre) ===
+              normalizarTexto(producto.nombre) &&
+            normalizarTexto(item.categoria) ===
+              normalizarTexto(producto.categoria)
+          );
+        });
+
+      const fotoCarrito =
+        normalizarURLImagen(
+          producto.foto || productoCatalogo?.foto || ""
+        ) || "img/logo.png";
+
       const elemento =
         document.createElement(
           "article"
@@ -2943,75 +2969,69 @@ function mostrarCarrito() {
         "producto-carrito";
 
       elemento.innerHTML = `
-        <div class="datos-producto-carrito">
-          <h3>
-            ${escaparHTML(
-              producto.nombre
-            )}
-          </h3>
-
-          <p>
-            ${escaparHTML(
-              producto.presentacion
-            )}
-          </p>
-
-          ${
-            producto.codigo
-              ? `
-                <small>
-                  ${escaparHTML(
-                    producto.codigo
-                  )}
-                </small>
-              `
-              : ""
-          }
-
-          <strong>
-            ${formatearPrecio(
-              producto.precio
-            )} c/u
-          </strong>
+        <div class="miniatura-producto-carrito">
+          <img
+            src="${escaparHTML(fotoCarrito)}"
+            alt=""
+            loading="lazy"
+            draggable="false"
+          >
         </div>
 
-        <div class="acciones-producto-carrito">
-          <div class="control-cantidad-carrito">
-            <button
-              type="button"
-              data-accion="restar"
-              data-indice="${indice}"
-              aria-label="Restar una unidad"
-            >
-              −
-            </button>
+        <div class="datos-producto-carrito">
+          <div class="linea-principal-producto-carrito">
+            <h3>
+              ${escaparHTML(producto.nombre)}
+            </h3>
 
-            <span>
-              ${producto.cantidad}
-            </span>
-
-            <button
-              type="button"
-              data-accion="sumar"
-              data-indice="${indice}"
-              aria-label="Sumar una unidad"
+            <strong
+              class="subtotal-carrito"
+              aria-label="Subtotal ${escaparHTML(formatearPrecio(subtotal))}"
             >
-              +
-            </button>
+              ${formatearPrecio(subtotal)}
+            </strong>
           </div>
 
-          <strong class="subtotal-carrito">
-            ${formatearPrecio(subtotal)}
-          </strong>
+          <p class="meta-producto-carrito">
+            ${escaparHTML(formatearEtiquetaPresentacion(producto.presentacion))}${
+              producto.codigo
+                ? ` · ${escaparHTML(producto.codigo)}`
+                : ""
+            }
+          </p>
 
-          <button
-            type="button"
-            class="eliminar-producto"
-            data-accion="eliminar"
-            data-indice="${indice}"
-          >
-            Eliminar
-          </button>
+          <div class="acciones-producto-carrito">
+            <div class="control-cantidad-carrito">
+              <button
+                type="button"
+                data-accion="restar"
+                data-indice="${indice}"
+                aria-label="Restar una unidad"
+              >−</button>
+
+              <span>${producto.cantidad}</span>
+
+              <button
+                type="button"
+                data-accion="sumar"
+                data-indice="${indice}"
+                aria-label="Sumar una unidad"
+              >+</button>
+            </div>
+
+            <button
+              type="button"
+              class="eliminar-producto"
+              data-accion="eliminar"
+              data-indice="${indice}"
+              aria-label="Eliminar ${escaparHTML(producto.nombre)} del carrito"
+              title="Eliminar producto"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 10v7m4-7v7"></path>
+              </svg>
+            </button>
+          </div>
         </div>
       `;
 
@@ -3116,6 +3136,8 @@ function cargarCarritoGuardado() {
 
 
 function abrirPanelCarrito() {
+  mostrarCarrito();
+
   carritoElemento.classList.add(
     "visible"
   );
