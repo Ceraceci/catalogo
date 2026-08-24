@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="124">
+  <meta name="ceraceci-version" content="140">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=124">
+  <link rel="stylesheet" href="style.css?v=140">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7885,15 +7885,35 @@
     }
   </style>
 
-  <style id="ajustes-visuales-v128">
+  <style id="ajustes-visuales-v140">
     :root{
       --color-tarjeta-calido:#fffdfb;
-      --color-espacio-tarjetas:#e9d1ca;
+      --color-espacio-tarjetas:#cf927d;
     }
 
-    /* Terracota en el espacio entre tarjetas; contenido sobre blanco cálido. */
+    /* Terracota arcilla en el espacio entre tarjetas; contenido claro. */
     html body{
       background:var(--color-espacio-tarjetas) !important;
+    }
+
+    html body .subtitulo-principal,
+    html body .marca-inferior-movil > span:last-child{
+      color:#171717 !important;
+    }
+
+    /* El valor elegido permanece marcado después de agregar el producto. */
+    html body #productos .fila-compra .control-cantidad .cantidad.cantidad-agregada,
+    html body #productos .fila-compra .control-cantidad .cantidad.cantidad-agregada:hover,
+    html body #productos .fila-compra .control-cantidad .cantidad.cantidad-agregada:focus,
+    html body #productosComparados .fila-compra .control-cantidad .cantidad.cantidad-agregada,
+    html body #productosComparados .fila-compra .control-cantidad .cantidad.cantidad-agregada:hover,
+    html body #productosComparados .fila-compra .control-cantidad .cantidad.cantidad-agregada:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:700 !important;
+      background:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      opacity:1 !important;
     }
 
     html body #productos,
@@ -8074,6 +8094,6 @@
       }, true);
     })();
   </script>
-  <script src="script.js?v=128"></script>
+  <script src="script.js?v=140"></script>
 </body>
 </html>

@@ -1776,7 +1776,11 @@ function crearTarjetaProducto(
 
           <input
             type="number"
-            class="cantidad"
+            class="cantidad ${
+              productoInicialEnCarrito
+                ? "cantidad-agregada"
+                : ""
+            }"
             value="1"
             min="1"
             step="1"
@@ -2733,6 +2737,10 @@ function agregarProductoAlCarrito(boton) {
     false
   );
 
+  campoCantidad.classList.add(
+    "cantidad-agregada"
+  );
+
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
 
@@ -2768,6 +2776,9 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
   }
 
   boton.classList.remove("agregado");
+  tarjeta
+    .querySelector(".cantidad")
+    ?.classList.remove("cantidad-agregada");
   boton.setAttribute(
     "aria-label",
     "Agregar al carrito"
@@ -2821,6 +2832,13 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
     "agregado",
     estaEnCarrito
   );
+
+  tarjeta
+    .querySelector(".cantidad")
+    ?.classList.toggle(
+      "cantidad-agregada",
+      estaEnCarrito
+    );
 
   const descripcionBoton = estaEnCarrito
     ? "Producto agregado"
