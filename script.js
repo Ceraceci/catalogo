@@ -3047,7 +3047,13 @@ function mostrarCarrito() {
   if (carritoCompras.length === 0) {
     productosCarrito.innerHTML = `
       <div class="carrito-vacio">
-        <span>🛒</span>
+        <span class="icono-carrito-vacio" aria-hidden="true">
+          <svg viewBox="0 0 28 24" focusable="false">
+            <path d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"></path>
+            <circle cx="9.2" cy="19.6" r="1.6"></circle>
+            <circle cx="21.4" cy="19.6" r="1.6"></circle>
+          </svg>
+        </span>
 
         <p>
           El carrito está vacío.
