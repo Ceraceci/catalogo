@@ -1711,6 +1711,8 @@ function crearTarjetaProducto(
   const foto =
     normalizarURLImagen(producto.foto);
 
+  tarjeta.dataset.foto = foto;
+
   const idDetalles =
     `detalles-${producto.id}-${
       esComparacion ? "comparacion" : "catalogo"
@@ -2893,8 +2895,7 @@ function agregarProductoAlCarrito(boton) {
     nombre:
       tarjeta.dataset.nombre,
 
-    nombrePlural:
-      tarjeta.dataset.nombrePlural || "",
+    nombrePlural: "",
 
     categoria:
       tarjeta.dataset.categoria,
@@ -2911,7 +2912,7 @@ function agregarProductoAlCarrito(boton) {
       tarjeta.dataset.codigo || "",
 
     foto:
-      tarjeta.querySelector(".foto-producto")?.src || "",
+      tarjeta.dataset.foto || "",
 
     cantidad
   };
@@ -3155,7 +3156,7 @@ function mostrarCarrito() {
 
       const fotoCarrito =
         normalizarURLImagen(
-          producto.foto || productoCatalogo?.foto || ""
+          productoCatalogo?.foto || producto.foto || ""
         ) || "img/logo-minimal.svg";
 
       const elemento =
@@ -3173,6 +3174,7 @@ function mostrarCarrito() {
             alt=""
             loading="lazy"
             draggable="false"
+            referrerpolicy="no-referrer"
           >
         </div>
 
@@ -3232,6 +3234,20 @@ function mostrarCarrito() {
           </div>
         </div>
       `;
+
+      const imagenMiniatura =
+        elemento.querySelector(
+          ".miniatura-producto-carrito img"
+        );
+
+      imagenMiniatura?.addEventListener(
+        "error",
+        () => {
+          imagenMiniatura.src =
+            "img/logo-minimal.svg";
+        },
+        { once: true }
+      );
 
       productosCarrito.appendChild(
         elemento
@@ -3325,12 +3341,7 @@ function cargarCarritoGuardado() {
         nombre: formatearNombreProducto(
           producto.nombre
         ),
-        nombrePlural:
-          producto.nombrePlural
-            ? formatearNombreProducto(
-                producto.nombrePlural
-              )
-            : ""
+        nombrePlural: ""
       }));
   } catch (error) {
     console.error(
@@ -3440,28 +3451,7 @@ function finalizarPedidoWhatsApp() {
 
 
 function obtenerNombreProductoParaCantidad(producto) {
-  if (Number(producto.cantidad) < 2) {
-    return producto.nombre;
-  }
-
-  if (limpiarTexto(producto.nombrePlural)) {
-    return producto.nombrePlural;
-  }
-
-  const productoCatalogo =
-    productosAgrupados.find((item) => {
-      return (
-        normalizarTexto(item.nombre) ===
-          normalizarTexto(producto.nombre) &&
-        normalizarTexto(item.categoria) ===
-          normalizarTexto(producto.categoria)
-      );
-    });
-
-  return (
-    productoCatalogo?.nombrePlural ||
-    producto.nombre
-  );
+  return producto.nombre;
 }
 
 
