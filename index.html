@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=158">
+  <link rel="stylesheet" href="style.css?v=159">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -9909,6 +9909,14 @@
         background-position:right 13px center !important;
       }
 
+      /* Kanthal: una sola flecha también después de elegir un diámetro. */
+      html body .select-personalizado-presentacion-pc .select-personalizado-boton-pc,
+      html body .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc{
+        background-repeat:no-repeat !important;
+        background-position:right 10px center !important;
+        background-size:14px 14px !important;
+      }
+
       /* Controles de las tarjetas: 31 px de alto, sin alterar las letras. */
       html body #productos .boton-presentacion,
       html body #productosComparados .boton-presentacion,
@@ -9989,6 +9997,6 @@
     })();
   </script>
 
-  <script src="script.js?v=158"></script>
+  <script src="script.js?v=159"></script>
 </body>
 </html>

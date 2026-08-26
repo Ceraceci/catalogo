@@ -1613,8 +1613,8 @@ function crearTarjetaProducto(
   tarjeta.dataset.precio = String(presentacionInicial.precio);
   tarjeta.dataset.codigo = presentacionInicial.codigo || "";
 
-  const productoInicialEnCarrito =
-    carritoCompras.some((item) => {
+  const productoInicialCarrito =
+    carritoCompras.find((item) => {
       return (
         crearClaveCarrito(item) ===
         crearClaveCarrito({
@@ -1624,6 +1624,17 @@ function crearTarjetaProducto(
         })
       );
     });
+
+  const productoInicialEnCarrito =
+    Boolean(productoInicialCarrito);
+
+  const cantidadInicialProducto =
+    productoInicialCarrito
+      ? Math.max(
+          1,
+          Number(productoInicialCarrito.cantidad) || 1
+        )
+      : 1;
 
   const estaSeleccionado =
     productosSeleccionadosComparacion.includes(
@@ -1820,7 +1831,7 @@ function crearTarjetaProducto(
                 ? "cantidad-agregada"
                 : ""
             }"
-            value="1"
+            value="${cantidadInicialProducto}"
             min="1"
             step="1"
           >
@@ -2291,7 +2302,7 @@ function seleccionarPresentacion(control) {
       ? presentacion.codigo
       : "";
 
-  normalizarCantidadTarjeta(tarjeta);
+  sincronizarCantidadTarjetaConCarrito(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
   programarAjusteTarjetasMoviles();
 }
@@ -2378,6 +2389,47 @@ function normalizarCantidadTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
+}
+
+
+function sincronizarCantidadTarjetaConCarrito(tarjeta) {
+  const campoCantidad =
+    tarjeta?.querySelector(".cantidad");
+
+  if (!campoCantidad) {
+    return;
+  }
+
+  const claveTarjeta =
+    crearClaveCarrito({
+      nombre:
+        tarjeta.dataset.nombre || "",
+
+      presentacion:
+        tarjeta.dataset.presentacion || "",
+
+      codigo:
+        tarjeta.dataset.codigo || ""
+    });
+
+  const productoEnCarrito =
+    carritoCompras.find((producto) => {
+      return (
+        crearClaveCarrito(producto) ===
+        claveTarjeta
+      );
+    });
+
+  campoCantidad.value = productoEnCarrito
+    ? Math.max(
+        1,
+        Number(productoEnCarrito.cantidad) || 1
+      )
+    : 1;
+
+  campoCantidad.classList.remove(
+    "cantidad-seleccionada"
+  );
 }
 
 
@@ -2969,13 +3021,16 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
         tarjeta.dataset.codigo || ""
     });
 
-  const estaEnCarrito =
-    carritoCompras.some((producto) => {
+  const productoEnCarrito =
+    carritoCompras.find((producto) => {
       return (
         crearClaveCarrito(producto) ===
         claveTarjeta
       );
     });
+
+  const estaEnCarrito =
+    Boolean(productoEnCarrito);
 
   boton.classList.toggle(
     "agregado",
