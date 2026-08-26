@@ -391,6 +391,15 @@ function procesarCSVProductos(textoCSV) {
   productosAgrupados =
     agruparProductos(filasProductos);
 
+  carritoCompras.forEach(
+    recalcularProductoCarrito
+  );
+  localStorage.setItem(
+    "carritoCeraceci",
+    JSON.stringify(carritoCompras)
+  );
+  mostrarCarrito();
+
   productosSeleccionadosComparacion =
     productosSeleccionadosComparacion.filter(
       (idProducto) =>
@@ -704,6 +713,278 @@ function extraerCantidadPresentacion(texto) {
   }
 
   return cantidad;
+}
+
+
+function analizarMedidaPresentacion(textoPresentacion) {
+  const texto = limpiarTexto(textoPresentacion);
+  const expresion = /(\d+(?:[.,]\d+)?)\s*(kg|kilos?|g|grs?|gramos?|ml|cc|l|lts?|litros?|mm|cm|m|metros?|unidad(?:es)?|u)\b/giu;
+  const coincidencias = [
+    ...texto.matchAll(expresion)
+  ];
+
+  if (coincidencias.length === 0) {
+    return null;
+  }
+
+  /* En medidas compuestas, por ejemplo 0,20 mm × 1 m de Kanthal,
+     la cantidad que se multiplica es siempre la última: los metros. */
+  const coincidencia =
+    coincidencias[coincidencias.length - 1];
+  const numeroOriginal = Number(
+    coincidencia[1].replace(",", ".")
+  );
+  const unidadOriginal = coincidencia[2];
+  const unidad = normalizarTexto(unidadOriginal);
+
+  if (!Number.isFinite(numeroOriginal)) {
+    return null;
+  }
+
+  let tipo = "unidades";
+  let factorCanonico = 1;
+
+  if (/^(kg|kilo|kilos)$/.test(unidad)) {
+    tipo = "peso";
+    factorCanonico = 1000;
+  } else if (/^(g|gr|grs|gramo|gramos)$/.test(unidad)) {
+    tipo = "peso";
+  } else if (/^(l|lt|lts|litro|litros)$/.test(unidad)) {
+    tipo = "volumen";
+    factorCanonico = 1000;
+  } else if (/^(ml|cc)$/.test(unidad)) {
+    tipo = "volumen";
+  } else if (unidad === "mm") {
+    tipo = "longitud";
+    factorCanonico = .001;
+  } else if (unidad === "cm") {
+    tipo = "longitud";
+    factorCanonico = .01;
+  } else if (/^(m|metro|metros)$/.test(unidad)) {
+    tipo = "longitud";
+  }
+
+  const inicio = coincidencia.index;
+  const fin = inicio + coincidencia[0].length;
+  const familia = normalizarTexto(
+    `${texto.slice(0, inicio)} ${texto.slice(fin)}`
+  ).replace(/[^a-z0-9]+/g, " ").trim();
+
+  return {
+    texto,
+    inicio,
+    fin,
+    numeroOriginal,
+    unidadOriginal,
+    tipo,
+    factorCanonico,
+    cantidadCanonica:
+      numeroOriginal * factorCanonico,
+    familia
+  };
+}
+
+
+function formatearNumeroCantidad(valor) {
+  return Number(valor).toLocaleString(
+    "es-AR",
+    {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 3
+    }
+  );
+}
+
+
+function formatearPresentacionTotal(
+  presentacionBase,
+  cantidadUnidades
+) {
+  const cantidad = Math.max(
+    1,
+    Number(cantidadUnidades) || 1
+  );
+  const medida =
+    analizarMedidaPresentacion(
+      presentacionBase
+    );
+
+  if (!medida) {
+    return cantidad === 1
+      ? formatearEtiquetaPresentacion(
+          presentacionBase
+        )
+      : `${cantidad} ${formatearEtiquetaPresentacion(
+          presentacionBase
+        )}`;
+  }
+
+  const cantidadMostrada =
+    formatearNumeroCantidad(
+      medida.numeroOriginal * cantidad
+    );
+  const unidadNormalizada =
+    normalizarTexto(
+      medida.unidadOriginal
+    );
+  let unidadMostrada =
+    medida.unidadOriginal;
+
+  if (
+    medida.numeroOriginal * cantidad !== 1
+  ) {
+    if (/^(unidad|u)$/.test(unidadNormalizada)) {
+      unidadMostrada = "UNIDADES";
+    } else if (unidadNormalizada === "metro") {
+      unidadMostrada = "METROS";
+    } else if (unidadNormalizada === "litro") {
+      unidadMostrada = "LITROS";
+    } else if (unidadNormalizada === "kilo") {
+      unidadMostrada = "KILOS";
+    } else if (unidadNormalizada === "gramo") {
+      unidadMostrada = "GRAMOS";
+    }
+  }
+  const presentacionTotal =
+    medida.texto.slice(0, medida.inicio) +
+    cantidadMostrada +
+    " " +
+    unidadMostrada +
+    medida.texto.slice(medida.fin);
+
+  return formatearEtiquetaPresentacion(
+    presentacionTotal
+  );
+}
+
+
+function maximoComunDivisor(a, b) {
+  let mayor = Math.abs(Math.round(a));
+  let menor = Math.abs(Math.round(b));
+
+  while (menor) {
+    const resto = mayor % menor;
+    mayor = menor;
+    menor = resto;
+  }
+
+  return mayor || 1;
+}
+
+
+function calcularPrecioCantidadPresentacion(
+  producto,
+  indicePresentacion,
+  cantidadUnidades
+) {
+  const cantidad = Math.max(
+    1,
+    Number(cantidadUnidades) || 1
+  );
+  const presentacionBase =
+    producto?.presentaciones?.[
+      indicePresentacion
+    ];
+
+  if (!presentacionBase) {
+    return 0;
+  }
+
+  const precioBase =
+    Number(presentacionBase.precio) || 0;
+  const medidaBase =
+    analizarMedidaPresentacion(
+      presentacionBase.nombre
+    );
+
+  if (!medidaBase) {
+    return precioBase * cantidad;
+  }
+
+  const opciones = producto.presentaciones
+    .map((presentacion) => ({
+      presentacion,
+      medida:
+        analizarMedidaPresentacion(
+          presentacion.nombre
+        )
+    }))
+    .filter(({ presentacion, medida }) => {
+      return (
+        medida &&
+        medida.tipo === medidaBase.tipo &&
+        medida.familia === medidaBase.familia &&
+        Number(presentacion.precio) > 0
+      );
+    });
+
+  if (opciones.length === 0) {
+    return precioBase * cantidad;
+  }
+
+  const escala = 1000;
+  const objetivoEntero = Math.round(
+    medidaBase.cantidadCanonica *
+      cantidad *
+      escala
+  );
+  const valoresEnteros = opciones.map(
+    ({ medida }) =>
+      Math.round(
+        medida.cantidadCanonica * escala
+      )
+  );
+  const divisor = valoresEnteros.reduce(
+    (acumulado, valor) =>
+      maximoComunDivisor(acumulado, valor),
+    objetivoEntero
+  );
+  const objetivo =
+    Math.round(objetivoEntero / divisor);
+
+  /* Evita cálculos grandes ante cantidades atípicas. */
+  if (objetivo <= 0 || objetivo > 5000) {
+    return precioBase * cantidad;
+  }
+
+  const opcionesReducidas = opciones.map(
+    ({ presentacion }, indice) => ({
+      cantidad: Math.round(
+        valoresEnteros[indice] / divisor
+      ),
+      precio:
+        Number(presentacion.precio) || 0
+    })
+  );
+  const costos = new Array(
+    objetivo + 1
+  ).fill(Infinity);
+  costos[0] = 0;
+
+  for (
+    let cantidadActual = 1;
+    cantidadActual <= objetivo;
+    cantidadActual++
+  ) {
+    opcionesReducidas.forEach((opcion) => {
+      const anterior =
+        cantidadActual - opcion.cantidad;
+
+      if (
+        anterior >= 0 &&
+        Number.isFinite(costos[anterior])
+      ) {
+        costos[cantidadActual] = Math.min(
+          costos[cantidadActual],
+          costos[anterior] + opcion.precio
+        );
+      }
+    });
+  }
+
+  return Number.isFinite(costos[objetivo])
+    ? costos[objetivo]
+    : precioBase * cantidad;
 }
 
 
@@ -1366,6 +1647,14 @@ function ajustarPresentacionesTarjetaMovil(
     return;
   }
 
+  if (
+    contenedor.querySelector(
+      ".opcion-presentacion-integrada"
+    )
+  ) {
+    return;
+  }
+
   const botones = [
     ...contenedor.querySelectorAll(
       ".boton-presentacion"
@@ -1594,8 +1883,49 @@ function crearTarjetaProducto(
   const esComparacion =
     Boolean(opciones.esComparacion);
 
+  const productoInicialCarrito =
+    carritoCompras.find((item) => {
+      return (
+        normalizarTexto(item.nombre) ===
+          normalizarTexto(producto.nombre) &&
+        normalizarTexto(item.categoria) ===
+          normalizarTexto(producto.categoria) &&
+        producto.presentaciones.some(
+          (presentacion) =>
+            normalizarTexto(
+              presentacion.nombre
+            ) ===
+            normalizarTexto(
+              item.presentacionBase ||
+                item.presentacion
+            )
+        )
+      );
+    });
+
+  const indicePresentacionInicial =
+    Math.max(
+      0,
+      productoInicialCarrito
+        ? producto.presentaciones.findIndex(
+            (presentacion) =>
+              normalizarTexto(
+                presentacion.nombre
+              ) ===
+              normalizarTexto(
+                productoInicialCarrito.presentacionBase ||
+                  productoInicialCarrito.presentacion
+              )
+          )
+        : 0
+    );
   const presentacionInicial =
-    producto.presentaciones[0];
+    producto.presentaciones[
+      indicePresentacionInicial
+    ] || producto.presentaciones[0];
+  const presentacionInicialSeleccionada =
+    producto.presentaciones.length === 1 ||
+    Boolean(productoInicialCarrito);
 
   const tarjeta =
     document.createElement("article");
@@ -1605,6 +1935,12 @@ function crearTarjetaProducto(
       ? "tarjeta-producto tarjeta-en-comparacion"
       : "tarjeta-producto";
 
+  if (producto.presentaciones.length === 1) {
+    tarjeta.classList.add(
+      "tarjeta-presentacion-unica"
+    );
+  }
+
   tarjeta.dataset.idProducto = producto.id;
   tarjeta.dataset.nombre = producto.nombre;
   tarjeta.dataset.nombrePlural = producto.nombrePlural || "";
@@ -1612,18 +1948,10 @@ function crearTarjetaProducto(
   tarjeta.dataset.presentacion = presentacionInicial.nombre;
   tarjeta.dataset.precio = String(presentacionInicial.precio);
   tarjeta.dataset.codigo = presentacionInicial.codigo || "";
-
-  const productoInicialCarrito =
-    carritoCompras.find((item) => {
-      return (
-        crearClaveCarrito(item) ===
-        crearClaveCarrito({
-          nombre: producto.nombre,
-          presentacion: presentacionInicial.nombre,
-          codigo: presentacionInicial.codigo || ""
-        })
-      );
-    });
+  tarjeta.dataset.indicePresentacion =
+    String(indicePresentacionInicial);
+  tarjeta.dataset.presentacionSeleccionada =
+    String(presentacionInicialSeleccionada);
 
   const productoInicialEnCarrito =
     Boolean(productoInicialCarrito);
@@ -1636,6 +1964,9 @@ function crearTarjetaProducto(
         )
       : 1;
 
+  tarjeta.dataset.cantidadUnidades =
+    String(cantidadInicialProducto);
+
   const estaSeleccionado =
     productosSeleccionadosComparacion.includes(
       producto.id
@@ -1644,19 +1975,78 @@ function crearTarjetaProducto(
   const botonesPresentaciones =
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
-        <button
-          type="button"
-          class="boton-presentacion"
+        <div
+          class="opcion-presentacion-integrada ${
+            presentacionInicialSeleccionada &&
+            indicePresentacion === indicePresentacionInicial
+              ? `seleccionada ${
+                  producto.presentaciones.length === 1 &&
+                  !productoInicialEnCarrito
+                    ? "seleccion-automatica"
+                    : ""
+                }`
+              : ""
+          }"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
-          aria-pressed="false"
         >
-          <span>${escaparHTML(
-            formatearEtiquetaPresentacion(
-              presentacion.nombre
-            )
-          )}</span>
-        </button>
+          <button
+            type="button"
+            class="boton-ajuste-presentacion restar-presentacion"
+            aria-label="Restar ${escaparHTML(
+              formatearEtiquetaPresentacion(
+                presentacion.nombre
+              )
+            )}"
+            title="Restar"
+          >−</button>
+
+          <button
+            type="button"
+            class="boton-presentacion ${
+              presentacionInicialSeleccionada &&
+              indicePresentacion === indicePresentacionInicial
+                ? "seleccionada"
+                : ""
+            }"
+            data-id-producto="${producto.id}"
+            data-indice-presentacion="${indicePresentacion}"
+            aria-pressed="${
+              presentacionInicialSeleccionada &&
+              indicePresentacion === indicePresentacionInicial
+            }"
+          >
+            <span
+              class="etiqueta-presentacion-integrada"
+              data-etiqueta-base="${escaparHTML(
+                formatearEtiquetaPresentacion(
+                  presentacion.nombre
+                )
+              )}"
+            >${escaparHTML(
+              presentacionInicialSeleccionada &&
+              indicePresentacion === indicePresentacionInicial
+                ? formatearPresentacionTotal(
+                    presentacion.nombre,
+                    cantidadInicialProducto
+                  )
+                : formatearEtiquetaPresentacion(
+                    presentacion.nombre
+                  )
+            )}</span>
+          </button>
+
+          <button
+            type="button"
+            class="boton-ajuste-presentacion sumar-presentacion"
+            aria-label="Sumar ${escaparHTML(
+              formatearEtiquetaPresentacion(
+                presentacion.nombre
+              )
+            )}"
+            title="Sumar"
+          >+</button>
+        </div>
       `)
       .join("");
 
@@ -1666,15 +2056,38 @@ function crearTarjetaProducto(
 
   const opcionesSelectorAlambre =
     `
-      <option value="">Diámetro</option>
+      <option value="" ${
+        presentacionInicialSeleccionada
+          ? ""
+          : "selected"
+      }>Diámetro</option>
     ` +
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
-        <option value="${indicePresentacion}">
-          ${escaparHTML(
+        <option
+          value="${indicePresentacion}"
+          data-etiqueta-base="${escaparHTML(
             formatearEtiquetaPresentacion(
               presentacion.nombre
             )
+          )}"
+          ${
+            presentacionInicialSeleccionada &&
+            indicePresentacion === indicePresentacionInicial
+              ? "selected"
+              : ""
+          }
+        >
+          ${escaparHTML(
+            presentacionInicialSeleccionada &&
+            indicePresentacion === indicePresentacionInicial
+              ? formatearPresentacionTotal(
+                  presentacion.nombre,
+                  cantidadInicialProducto
+                )
+              : formatearEtiquetaPresentacion(
+                  presentacion.nombre
+                )
           )}
         </option>
       `)
@@ -1683,11 +2096,27 @@ function crearTarjetaProducto(
   const controlPresentaciones =
     usarSelectorAlambre
       ? `
+        <div class="control-presentacion-alambre-integrado ${
+          presentacionInicialSeleccionada
+            ? "seleccionada"
+            : ""
+        }">
+          <button
+            type="button"
+            class="boton-ajuste-presentacion restar-presentacion"
+            aria-label="Restar un metro"
+            title="Restar"
+          >−</button>
+
           <select
             id="selector-alambre-${producto.id}-${
               esComparacion ? "comparacion" : "catalogo"
             }"
-            class="selector-presentacion selector-presentacion-alambre"
+            class="selector-presentacion selector-presentacion-alambre ${
+              presentacionInicialSeleccionada
+                ? "seleccionada"
+                : ""
+            }"
             data-id-producto="${producto.id}"
             aria-label="Elegir diámetro de ${escaparHTML(
               producto.nombre
@@ -1695,6 +2124,14 @@ function crearTarjetaProducto(
           >
             ${opcionesSelectorAlambre}
           </select>
+
+          <button
+            type="button"
+            class="boton-ajuste-presentacion sumar-presentacion"
+            aria-label="Sumar un metro"
+            title="Sumar"
+          >+</button>
+        </div>
         `
       : `
           <div
@@ -1816,34 +2253,15 @@ function crearTarjetaProducto(
 
       <div class="bloque-presentaciones">
         ${controlPresentaciones}
-      </div>
-
-      <div class="selector-cantidad">
-        <div class="control-cantidad">
-          <button
-            type="button"
-            class="boton-cantidad restar"
-            aria-label="Disminuir cantidad"
-          >−</button>
-
-          <input
-            type="number"
-            class="cantidad ${
-              productoInicialEnCarrito
-                ? "cantidad-agregada"
-                : ""
-            }"
-            value="${cantidadInicialProducto}"
-            min="1"
-            step="1"
-          >
-
-          <button
-            type="button"
-            class="boton-cantidad sumar"
-            aria-label="Aumentar cantidad"
-          >+</button>
-        </div>
+        <input
+          type="hidden"
+          class="cantidad ${
+            productoInicialEnCarrito
+              ? "cantidad-agregada"
+              : ""
+          }"
+          value="${cantidadInicialProducto}"
+        >
       </div>
 
       <button
@@ -1922,6 +2340,11 @@ function crearTarjetaProducto(
       selectorAlambre
     );
   }
+
+  actualizarControlPresentacionIntegrado(
+    tarjeta
+  );
+  actualizarEstadoBotonTarjeta(tarjeta);
 
   return tarjeta;
 }
@@ -2178,106 +2601,19 @@ function volverDesdeComparacion() {
 }
 
 
-function seleccionarPresentacion(control) {
-  const tarjeta =
-    control.closest(".tarjeta-producto");
+function obtenerProductoDeTarjeta(tarjeta) {
+  return productosAgrupados.find(
+    (producto) =>
+      producto.id ===
+      tarjeta?.dataset.idProducto
+  );
+}
 
-  const idProducto =
-    control.dataset.idProducto;
 
-  const esSelectorPresentacion =
-    control.matches(".selector-presentacion");
-
-  /* Alambre: "Diámetro" funciona como estado neutro.
-     Al volver a elegirlo se quita la selección visual,
-     igual que al deseleccionar un botón de presentación. */
-  if (
-    esSelectorPresentacion &&
-    control.value === ""
-  ) {
-    control.classList.remove("seleccionada");
-    programarAjusteTarjetasMoviles();
+function animarPrecioActualizado(elementoPrecio) {
+  if (!elementoPrecio) {
     return;
   }
-
-  const indicePresentacion =
-    esSelectorPresentacion
-      ? Number(control.value)
-      : Number(
-          control.dataset.indicePresentacion
-        );
-
-  const producto =
-    productosAgrupados.find(
-      (item) =>
-        item.id === idProducto
-    );
-
-  if (!producto) {
-    return;
-  }
-
-  const presentacion =
-    producto.presentaciones[
-      indicePresentacion
-    ];
-
-  if (!presentacion) {
-    return;
-  }
-
-  if (control.matches(".boton-presentacion")) {
-    const yaEstabaSeleccionada =
-      control.classList.contains("seleccionada");
-
-    tarjeta
-      .querySelectorAll(
-        ".boton-presentacion"
-      )
-      .forEach((opcion) => {
-        opcion.classList.remove(
-          "seleccionada"
-        );
-        opcion.setAttribute(
-          "aria-pressed",
-          "false"
-        );
-      });
-
-    /* Un segundo toque sobre la misma presentación la deselecciona
-       visualmente. Esto funciona también cuando existe una sola opción. */
-    if (!yaEstabaSeleccionada) {
-      control.classList.add("seleccionada");
-      control.setAttribute(
-        "aria-pressed",
-        "true"
-      );
-    }
-  }
-
-  if (control.matches(".selector-presentacion")) {
-    control.classList.add("seleccionada");
-  }
-
-  tarjeta.dataset.presentacion =
-    presentacion.nombre;
-
-  tarjeta.dataset.precio =
-    String(presentacion.precio);
-
-  tarjeta.dataset.codigo =
-    presentacion.codigo || "";
-
-  const elementoPrecio =
-    tarjeta.querySelector(".precio");
-
-  elementoPrecio.dataset.precio =
-    String(presentacion.precio);
-
-  elementoPrecio.textContent =
-    formatearPrecio(
-      presentacion.precio
-    );
 
   elementoPrecio.classList.remove(
     "precio-actualizado"
@@ -2296,15 +2632,245 @@ function seleccionarPresentacion(control) {
         "precio-actualizado"
       );
     }, 320);
+}
 
-  tarjeta.querySelector(
-    ".codigo-producto"
-  ).textContent =
-    presentacion.codigo
-      ? presentacion.codigo
+
+function actualizarControlPresentacionIntegrado(
+  tarjeta,
+  animarPrecio = false
+) {
+  const producto =
+    obtenerProductoDeTarjeta(tarjeta);
+
+  if (!producto) {
+    return;
+  }
+
+  const indicePresentacion = Math.max(
+    0,
+    Number(
+      tarjeta.dataset.indicePresentacion
+    ) || 0
+  );
+  const presentacion =
+    producto.presentaciones[
+      indicePresentacion
+    ] || producto.presentaciones[0];
+  const campoCantidad =
+    tarjeta.querySelector(".cantidad");
+  const cantidad = Math.max(
+    1,
+    Number(campoCantidad?.value) ||
+      Number(tarjeta.dataset.cantidadUnidades) ||
+      1
+  );
+  const seleccionada =
+    tarjeta.dataset.presentacionSeleccionada ===
+    "true";
+  const etiquetaTotal =
+    formatearPresentacionTotal(
+      presentacion.nombre,
+      cantidad
+    );
+
+  tarjeta.dataset.indicePresentacion =
+    String(indicePresentacion);
+  tarjeta.dataset.presentacion =
+    presentacion.nombre;
+  tarjeta.dataset.precio =
+    String(presentacion.precio);
+  tarjeta.dataset.codigo =
+    presentacion.codigo || "";
+  tarjeta.dataset.cantidadUnidades =
+    String(cantidad);
+
+  if (campoCantidad) {
+    campoCantidad.value = String(cantidad);
+  }
+
+  tarjeta
+    .querySelectorAll(
+      ".opcion-presentacion-integrada"
+    )
+    .forEach((opcion) => {
+      const botonPresentacion =
+        opcion.querySelector(
+          ".boton-presentacion"
+        );
+      const etiqueta =
+        opcion.querySelector(
+          ".etiqueta-presentacion-integrada"
+        );
+      const indiceOpcion = Number(
+        opcion.dataset.indicePresentacion
+      );
+      const esActual =
+        seleccionada &&
+        indiceOpcion === indicePresentacion;
+
+      opcion.classList.toggle(
+        "seleccionada",
+        esActual
+      );
+      botonPresentacion?.classList.toggle(
+        "seleccionada",
+        esActual
+      );
+      botonPresentacion?.setAttribute(
+        "aria-pressed",
+        esActual ? "true" : "false"
+      );
+
+      if (etiqueta) {
+        etiqueta.textContent = esActual
+          ? etiquetaTotal
+          : etiqueta.dataset.etiquetaBase || "";
+      }
+    });
+
+  const selectorAlambre =
+    tarjeta.querySelector(
+      ".selector-presentacion-alambre"
+    );
+
+  if (selectorAlambre) {
+    Array.from(selectorAlambre.options)
+      .forEach((opcion) => {
+        if (
+          opcion.dataset.etiquetaBase
+        ) {
+          opcion.textContent =
+            opcion.dataset.etiquetaBase;
+        }
+      });
+
+    selectorAlambre.value = seleccionada
+      ? String(indicePresentacion)
       : "";
+    selectorAlambre.classList.toggle(
+      "seleccionada",
+      seleccionada
+    );
+    selectorAlambre
+      .closest(
+        ".control-presentacion-alambre-integrado"
+      )
+      ?.classList.toggle(
+        "seleccionada",
+        seleccionada
+      );
+
+    if (
+      seleccionada &&
+      selectorAlambre.options[
+        selectorAlambre.selectedIndex
+      ]
+    ) {
+      selectorAlambre.options[
+        selectorAlambre.selectedIndex
+      ].textContent = etiquetaTotal;
+    }
+
+    sincronizarSelectorPersonalizadoPC(
+      selectorAlambre
+    );
+  }
+
+  const precioTotal =
+    calcularPrecioCantidadPresentacion(
+      producto,
+      indicePresentacion,
+      cantidad
+    );
+  const elementoPrecio =
+    tarjeta.querySelector(".precio");
+
+  tarjeta.dataset.precioTotal =
+    String(precioTotal);
+  tarjeta.dataset.presentacionTotal =
+    etiquetaTotal;
+
+  if (elementoPrecio) {
+    elementoPrecio.dataset.precio =
+      String(precioTotal);
+    elementoPrecio.textContent =
+      formatearPrecio(precioTotal);
+
+    if (animarPrecio) {
+      animarPrecioActualizado(
+        elementoPrecio
+      );
+    }
+  }
+
+  const codigo =
+    tarjeta.querySelector(
+      ".codigo-producto"
+    );
+
+  if (codigo) {
+    codigo.textContent =
+      presentacion.codigo || "";
+  }
+}
+
+
+function seleccionarPresentacion(control) {
+  const tarjeta =
+    control.closest(".tarjeta-producto");
+  const producto =
+    obtenerProductoDeTarjeta(tarjeta);
+  const esSelectorPresentacion =
+    control.matches(".selector-presentacion");
+
+  if (!producto) {
+    return;
+  }
+
+  if (
+    esSelectorPresentacion &&
+    control.value === ""
+  ) {
+    tarjeta.dataset.presentacionSeleccionada =
+      "false";
+    tarjeta.querySelector(".cantidad").value = "1";
+    actualizarControlPresentacionIntegrado(
+      tarjeta,
+      true
+    );
+    actualizarEstadoBotonTarjeta(tarjeta);
+    programarAjusteTarjetasMoviles();
+    return;
+  }
+
+  const indicePresentacion =
+    esSelectorPresentacion
+      ? Number(control.value)
+      : Number(
+          control.dataset.indicePresentacion
+        );
+  const yaEstabaSeleccionada =
+    tarjeta.dataset.presentacionSeleccionada ===
+      "true" &&
+    Number(
+      tarjeta.dataset.indicePresentacion
+    ) === indicePresentacion;
+  const seDeselecciona =
+    !esSelectorPresentacion &&
+    yaEstabaSeleccionada &&
+    producto.presentaciones.length > 1;
+
+  tarjeta.dataset.indicePresentacion =
+    String(indicePresentacion);
+  tarjeta.dataset.presentacionSeleccionada =
+    String(!seDeselecciona);
+  tarjeta.querySelector(".cantidad").value = "1";
 
   sincronizarCantidadTarjetaConCarrito(tarjeta);
+  actualizarControlPresentacionIntegrado(
+    tarjeta,
+    true
+  );
   actualizarEstadoBotonTarjeta(tarjeta);
   programarAjusteTarjetasMoviles();
 }
@@ -2354,11 +2920,23 @@ function cambiarCantidadTarjeta(
       Number(campoCantidad.value) || 1
     );
 
+  const cantidadNueva = Math.max(
+    1,
+    cantidadActual + variacion
+  );
+
+  if (cantidadNueva === cantidadActual) {
+    boton.blur?.();
+    return;
+  }
+
   campoCantidad.value =
-    Math.max(
-      1,
-      cantidadActual + variacion
-    );
+    cantidadNueva;
+
+  tarjeta.dataset.cantidadUnidades =
+    campoCantidad.value;
+  tarjeta.dataset.presentacionSeleccionada =
+    "true";
 
   /* El contenedor permanece neutro: se marca únicamente el valor central. */
   establecerSeleccionCantidadTarjeta(
@@ -2377,6 +2955,11 @@ function cambiarCantidadTarjeta(
   campoCantidad.classList.add(
     "cantidad-seleccionada"
   );
+
+  actualizarControlPresentacionIntegrado(
+    tarjeta,
+    true
+  );
 }
 
 
@@ -2391,6 +2974,8 @@ function normalizarCantidadTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
+  tarjeta.dataset.cantidadUnidades =
+    String(cantidad);
 }
 
 
@@ -2429,8 +3014,20 @@ function sincronizarCantidadTarjetaConCarrito(tarjeta) {
       )
     : 1;
 
+  tarjeta.dataset.cantidadUnidades =
+    campoCantidad.value;
+
+  if (productoEnCarrito) {
+    tarjeta.dataset.presentacionSeleccionada =
+      "true";
+  }
+
   campoCantidad.classList.remove(
     "cantidad-seleccionada"
+  );
+
+  actualizarControlPresentacionIntegrado(
+    tarjeta
   );
 }
 
@@ -2452,6 +3049,11 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
               "cantidad-agregada"
             );
           }
+
+          tarjeta.dataset.indicePresentacion =
+            "0";
+          tarjeta.dataset.cantidadUnidades =
+            "1";
 
           tarjeta
             .querySelector(".control-cantidad")
@@ -2499,6 +3101,10 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
             producto?.presentaciones?.[0];
 
           if (presentacionInicial) {
+            tarjeta.dataset.presentacionSeleccionada =
+              String(
+                producto.presentaciones.length === 1
+              );
             tarjeta.dataset.presentacion =
               presentacionInicial.nombre;
             tarjeta.dataset.precio =
@@ -2528,6 +3134,20 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
               codigo.textContent =
                 presentacionInicial.codigo || "";
             }
+
+            tarjeta
+              .querySelectorAll(
+                ".presentacion-agregada"
+              )
+              .forEach((control) =>
+                control.classList.remove(
+                  "presentacion-agregada"
+                )
+              );
+
+            actualizarControlPresentacionIntegrado(
+              tarjeta
+            );
           }
         });
     });
@@ -2875,6 +3495,20 @@ function agregarProductoAlCarrito(boton) {
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
+  if (
+    tarjeta.dataset.presentacionSeleccionada !==
+    "true"
+  ) {
+    mostrarAvisoCopiado(
+      tarjeta.querySelector(
+        ".selector-presentacion-alambre"
+      )
+        ? "Elegí un diámetro"
+        : "Elegí una presentación"
+    );
+    return;
+  }
+
   if (boton.classList.contains("agregado")) {
     return;
   }
@@ -2891,6 +3525,14 @@ function agregarProductoAlCarrito(boton) {
       Number(campoCantidad.value) || 1
     );
 
+  tarjeta.dataset.presentacionSeleccionada =
+    "true";
+  tarjeta.dataset.cantidadUnidades =
+    String(cantidad);
+  actualizarControlPresentacionIntegrado(
+    tarjeta
+  );
+
   const producto = {
     nombre:
       tarjeta.dataset.nombre,
@@ -2903,9 +3545,31 @@ function agregarProductoAlCarrito(boton) {
     presentacion:
       tarjeta.dataset.presentacion,
 
+    presentacionBase:
+      tarjeta.dataset.presentacion,
+
+    presentacionTotal:
+      tarjeta.dataset.presentacionTotal ||
+      formatearPresentacionTotal(
+        tarjeta.dataset.presentacion,
+        cantidad
+      ),
+
     precio:
       Number(
         tarjeta.dataset.precio
+      ) || 0,
+
+    precioTotal:
+      Number(
+        tarjeta.dataset.precioTotal
+      ) ||
+      (Number(tarjeta.dataset.precio) || 0) *
+        cantidad,
+
+    indicePresentacion:
+      Number(
+        tarjeta.dataset.indicePresentacion
       ) || 0,
 
     codigo:
@@ -2930,6 +3594,12 @@ function agregarProductoAlCarrito(boton) {
 
   if (productoExistente) {
     productoExistente.cantidad = cantidad;
+    productoExistente.presentacionTotal =
+      producto.presentacionTotal;
+    productoExistente.precioTotal =
+      producto.precioTotal;
+    productoExistente.indicePresentacion =
+      producto.indicePresentacion;
   } else {
     carritoCompras.push(producto);
   }
@@ -2958,7 +3628,8 @@ function crearClaveCarrito(producto) {
   return [
     normalizarTexto(producto.nombre),
     normalizarTexto(
-      producto.presentacion
+      producto.presentacionBase ||
+        producto.presentacion
     ),
     normalizarTexto(producto.codigo)
   ].join("|");
@@ -2981,6 +3652,15 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
   tarjeta
     .querySelector(".cantidad")
     ?.classList.remove("cantidad-agregada");
+  tarjeta
+    .querySelectorAll(
+      ".presentacion-agregada"
+    )
+    .forEach((control) =>
+      control.classList.remove(
+        "presentacion-agregada"
+      )
+    );
   boton.setAttribute(
     "aria-label",
     "Agregar al carrito"
@@ -3033,6 +3713,28 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
   const estaEnCarrito =
     Boolean(productoEnCarrito);
 
+  if (productoEnCarrito) {
+    const campoCantidad =
+      tarjeta.querySelector(".cantidad");
+    const cantidad = Math.max(
+      1,
+      Number(productoEnCarrito.cantidad) || 1
+    );
+
+    if (campoCantidad) {
+      campoCantidad.value = String(cantidad);
+    }
+
+    tarjeta.dataset.cantidadUnidades =
+      String(cantidad);
+    tarjeta.dataset.presentacionSeleccionada =
+      "true";
+  }
+
+  actualizarControlPresentacionIntegrado(
+    tarjeta
+  );
+
   boton.classList.toggle(
     "agregado",
     estaEnCarrito
@@ -3044,6 +3746,20 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
       "cantidad-agregada",
       estaEnCarrito
     );
+
+  tarjeta
+    .querySelectorAll(
+      ".opcion-presentacion-integrada, .control-presentacion-alambre-integrado"
+    )
+    .forEach((control) => {
+      control.classList.toggle(
+        "presentacion-agregada",
+        estaEnCarrito &&
+          control.classList.contains(
+            "seleccionada"
+          )
+      );
+    });
 
   const descripcionBoton = estaEnCarrito
     ? "Producto agregado"
@@ -3088,12 +3804,119 @@ function formatearPrecioCarrito(valor) {
 }
 
 
+function obtenerPresentacionTotalProducto(producto) {
+  return producto.presentacionTotal ||
+    formatearPresentacionTotal(
+      producto.presentacionBase ||
+        producto.presentacion,
+      producto.cantidad
+    );
+}
+
+
+function obtenerSubtotalProducto(producto) {
+  const precioTotal =
+    Number(producto.precioTotal);
+
+  return Number.isFinite(precioTotal) &&
+    precioTotal >= 0
+      ? precioTotal
+      : (Number(producto.precio) || 0) *
+          Math.max(
+            1,
+            Number(producto.cantidad) || 1
+          );
+}
+
+
+function recalcularProductoCarrito(producto) {
+  const productoCatalogo =
+    productosAgrupados.find((item) => {
+      return (
+        normalizarTexto(item.nombre) ===
+          normalizarTexto(producto.nombre) &&
+        normalizarTexto(item.categoria) ===
+          normalizarTexto(producto.categoria)
+      );
+    });
+
+  if (!productoCatalogo) {
+    producto.presentacionBase =
+      producto.presentacionBase ||
+      producto.presentacion;
+    producto.presentacionTotal =
+      obtenerPresentacionTotalProducto(
+        producto
+      );
+    return producto;
+  }
+
+  const presentacionBase =
+    producto.presentacionBase ||
+    producto.presentacion;
+  let indicePresentacion =
+    productoCatalogo.presentaciones.findIndex(
+      (presentacion) =>
+        normalizarTexto(
+          presentacion.nombre
+        ) ===
+        normalizarTexto(
+          presentacionBase
+        )
+    );
+
+  if (indicePresentacion < 0) {
+    indicePresentacion = Math.max(
+      0,
+      Number(producto.indicePresentacion) || 0
+    );
+  }
+
+  const presentacion =
+    productoCatalogo.presentaciones[
+      indicePresentacion
+    ] || productoCatalogo.presentaciones[0];
+  const cantidad = Math.max(
+    1,
+    Number(producto.cantidad) || 1
+  );
+
+  producto.presentacion =
+    presentacion.nombre;
+  producto.presentacionBase =
+    presentacion.nombre;
+  producto.presentacionTotal =
+    formatearPresentacionTotal(
+      presentacion.nombre,
+      cantidad
+    );
+  producto.indicePresentacion =
+    indicePresentacion;
+  producto.precio =
+    Number(presentacion.precio) || 0;
+  producto.precioTotal =
+    calcularPrecioCantidadPresentacion(
+      productoCatalogo,
+      indicePresentacion,
+      cantidad
+    );
+  producto.codigo =
+    presentacion.codigo ||
+    producto.codigo || "";
+
+  return producto;
+}
+
+
 function mostrarCarrito() {
+  carritoCompras.forEach(
+    recalcularProductoCarrito
+  );
   productosCarrito.innerHTML = "";
 
   if (cantidadItemsCarrito) {
     cantidadItemsCarrito.textContent =
-      `(${obtenerCantidadTotalCarrito()})`;
+      `(${carritoCompras.length})`;
   }
 
   actualizarCargaVisualCarrito(
@@ -3141,8 +3964,13 @@ function mostrarCarrito() {
   carritoCompras.forEach(
     (producto, indice) => {
       const subtotal =
-        producto.precio *
-        producto.cantidad;
+        obtenerSubtotalProducto(
+          producto
+        );
+      const presentacionTotal =
+        obtenerPresentacionTotalProducto(
+          producto
+        );
 
       const productoCatalogo =
         productosAgrupados.find((item) => {
@@ -3193,7 +4021,7 @@ function mostrarCarrito() {
           </div>
 
           <p class="meta-producto-carrito">
-            ${escaparHTML(formatearEtiquetaPresentacion(producto.presentacion))}${
+            ${escaparHTML(presentacionTotal)}${
               producto.codigo
                 ? ` · ${escaparHTML(producto.codigo)}`
                 : ""
@@ -3206,16 +4034,28 @@ function mostrarCarrito() {
                 type="button"
                 data-accion="restar"
                 data-indice="${indice}"
-                aria-label="Restar una unidad"
+                aria-label="Restar ${escaparHTML(
+                  formatearEtiquetaPresentacion(
+                    producto.presentacionBase ||
+                      producto.presentacion
+                  )
+                )}"
               >−</button>
 
-              <span>${producto.cantidad}</span>
+              <span>${escaparHTML(
+                presentacionTotal
+              )}</span>
 
               <button
                 type="button"
                 data-accion="sumar"
                 data-indice="${indice}"
-                aria-label="Sumar una unidad"
+                aria-label="Sumar ${escaparHTML(
+                  formatearEtiquetaPresentacion(
+                    producto.presentacionBase ||
+                      producto.presentacion
+                  )
+                )}"
               >+</button>
             </div>
 
@@ -3270,8 +4110,9 @@ function mostrarCarrito() {
       (total, producto) => {
         return (
           total +
-          producto.precio *
-            producto.cantidad
+          obtenerSubtotalProducto(
+            producto
+          )
         );
       },
       0
@@ -3298,6 +4139,10 @@ function mostrarCarrito() {
 
 
 function guardarYActualizarCarrito() {
+  carritoCompras.forEach(
+    recalcularProductoCarrito
+  );
+
   localStorage.setItem(
     "carritoCeraceci",
     JSON.stringify(carritoCompras)
@@ -3341,7 +4186,17 @@ function cargarCarritoGuardado() {
         nombre: formatearNombreProducto(
           producto.nombre
         ),
-        nombrePlural: ""
+        nombrePlural: "",
+        presentacionBase:
+          producto.presentacionBase ||
+          producto.presentacion,
+        presentacionTotal:
+          producto.presentacionTotal ||
+          formatearPresentacionTotal(
+            producto.presentacionBase ||
+              producto.presentacion,
+            producto.cantidad
+          )
       }));
   } catch (error) {
     console.error(
@@ -3405,8 +4260,10 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} × ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
-        formatearPrecio(producto.precio * producto.cantidad)
+        `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
+        formatearPrecio(
+          obtenerSubtotalProducto(producto)
+        )
     );
 
   const detalleProductos =
@@ -3417,8 +4274,9 @@ function finalizarPedidoWhatsApp() {
       (total, producto) => {
         return (
           total +
-          producto.precio *
-            producto.cantidad
+          obtenerSubtotalProducto(
+            producto
+          )
         );
       },
       0
@@ -3460,15 +4318,17 @@ function construirDetalleCarritoCompartido() {
     carritoCompras
       .map(
         (producto) =>
-          `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} × ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
-          formatearPrecio(producto.precio * producto.cantidad)
+          `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
+          formatearPrecio(
+            obtenerSubtotalProducto(producto)
+          )
       )
       .join("\n\n");
 
   const precioTotal =
     carritoCompras.reduce(
       (total, producto) =>
-        total + producto.precio * producto.cantidad,
+        total + obtenerSubtotalProducto(producto),
       0
     );
 
@@ -3919,6 +4779,34 @@ function manejarClickTarjetaProducto(evento) {
       return;
     }
 
+    const botonSumarPresentacion =
+      evento.target.closest(
+        ".sumar-presentacion"
+      );
+
+    if (botonSumarPresentacion) {
+      cambiarCantidadTarjeta(
+        botonSumarPresentacion,
+        1
+      );
+
+      return;
+    }
+
+    const botonRestarPresentacion =
+      evento.target.closest(
+        ".restar-presentacion"
+      );
+
+    if (botonRestarPresentacion) {
+      cambiarCantidadTarjeta(
+        botonRestarPresentacion,
+        -1
+      );
+
+      return;
+    }
+
     const botonPresentacion =
       evento.target.closest(
         ".boton-presentacion"
@@ -4056,7 +4944,9 @@ function activarPulsacionMovil(evento) {
   }
 
   const botonCantidad =
-    evento.target.closest?.(".boton-cantidad");
+    evento.target.closest?.(
+      ".boton-cantidad, .boton-ajuste-presentacion"
+    );
 
   if (botonCantidad) {
     botonCantidad.classList.add("presionado");
@@ -4067,6 +4957,14 @@ function activarPulsacionMovil(evento) {
 function limpiarPulsacionesMoviles() {
   document
     .querySelectorAll(".boton-cantidad.presionado")
+    .forEach((boton) => {
+      boton.classList.remove("presionado");
+    });
+
+  document
+    .querySelectorAll(
+      ".boton-ajuste-presentacion.presionado"
+    )
     .forEach((boton) => {
       boton.classList.remove("presionado");
     });

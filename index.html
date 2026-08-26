@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=162">
+  <link rel="stylesheet" href="style.css?v=163">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7677,6 +7677,55 @@
           alt=""
           draggable="false"
         >
+        <div class="marca-agua-zoom" aria-hidden="true">
+          <svg class="definicion-marca-agua-zoom" aria-hidden="true">
+            <symbol id="simboloMarcaAguaCeraceci" viewBox="0 0 160 120">
+              <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M46 29c0 8 15 14 34 14s34-6 34-14" stroke="#98371e" stroke-width="7"></path>
+                <ellipse cx="80" cy="28" rx="34" ry="12" stroke="#98371e" stroke-width="7"></ellipse>
+                <path d="M47 31c3 25 15 39 33 39s30-14 33-39" fill="#98371e" stroke="#98371e" stroke-width="3"></path>
+                <path d="M18 54c4 25 20 44 48 54M31 61c10 4 18 13 27 24" stroke="#77716e" stroke-width="9"></path>
+                <path d="M142 54c-4 25-20 44-48 54M129 61c-10 4-18 13-27 24" stroke="#77716e" stroke-width="9"></path>
+              </g>
+            </symbol>
+          </svg>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+          <span class="marca-agua-zoom-item">
+            <svg viewBox="0 0 160 120" aria-hidden="true">
+              <use href="#simboloMarcaAguaCeraceci"></use>
+            </svg>
+            <span>CERACECI</span>
+          </span>
+        </div>
         <button
           type="button"
           id="cerrarZoomImagen"
@@ -10112,6 +10161,356 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v163">
+    /* Contenedor terracota común de las tres barras superiores. */
+    html body .busqueda{
+      padding:10px !important;
+      background:#cf927d !important;
+      background-color:#cf927d !important;
+      border:1px solid #cf927d !important;
+      border-radius:14px !important;
+      box-shadow:0 2px 8px rgba(70,40,25,.10) !important;
+    }
+
+    /* Marca real dentro del zoom: seis repeticiones, sin archivo externo. */
+    html body .zoom-imagen-overlay .zoom-imagen-marco{
+      position:relative !important;
+      isolation:isolate !important;
+      overflow:visible !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-marco::after{
+      display:none !important;
+      content:none !important;
+      background:none !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      position:relative !important;
+      z-index:1 !important;
+    }
+
+    html body .marca-agua-zoom{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-rows:repeat(2,minmax(0,1fr));
+      align-items:center;
+      justify-items:center;
+      overflow:hidden;
+      pointer-events:none;
+    }
+
+    html body .definicion-marca-agua-zoom{
+      position:absolute;
+      width:0;
+      height:0;
+      overflow:hidden;
+    }
+
+    html body .marca-agua-zoom-item{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      width:92%;
+      color:#98371e;
+      opacity:.24;
+      filter:drop-shadow(0 0 1px rgba(255,255,255,.95));
+      transform:rotate(-24deg);
+    }
+
+    html body .marca-agua-zoom-item svg{
+      display:block;
+      width:clamp(52px,6.5vw,86px);
+      height:auto;
+    }
+
+    html body .marca-agua-zoom-item > span{
+      margin-top:-5px;
+      font-size:clamp(12px,1.25vw,18px);
+      font-weight:600;
+      letter-spacing:.08em;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    html body .zoom-imagen-overlay .cerrar-zoom-imagen{
+      z-index:4 !important;
+    }
+
+    /* La cantidad se integra en la presentación; desaparece su fila propia. */
+    html body #productos .fila-compra,
+    html body #productosComparados .fila-compra{
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) !important;
+      column-gap:6px !important;
+      row-gap:6px !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio,
+    html body #productosComparados .fila-compra > .informacion-precio,
+    html body #productos .fila-compra > .bloque-presentaciones,
+    html body #productosComparados .fila-compra > .bloque-presentaciones,
+    html body #productos .fila-compra > .agregar-carrito,
+    html body #productosComparados .fila-compra > .agregar-carrito{
+      grid-column:1 !important;
+      width:100% !important;
+      max-width:none !important;
+    }
+
+    html body .selector-cantidad,
+    html body .control-cantidad,
+    html body .bloque-presentaciones > .cantidad{
+      display:none !important;
+    }
+
+    html body #productos .opciones-presentacion,
+    html body #productosComparados .opciones-presentacion{
+      display:flex !important;
+      flex-wrap:wrap !important;
+      align-items:stretch !important;
+      width:100% !important;
+      gap:6px !important;
+    }
+
+    html body .opcion-presentacion-integrada{
+      display:grid;
+      grid-template-columns:minmax(0,1fr);
+      flex:1 1 58px;
+      min-width:0;
+      height:31px;
+      border-radius:9px;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada{
+      grid-template-columns:31px minmax(0,1fr) 31px;
+      flex:2 1 126px;
+      overflow:hidden;
+      background:var(--color-principal);
+      border:1px solid var(--color-principal);
+      box-shadow:0 2px 4px rgba(70,40,25,.12);
+    }
+
+    html body .boton-ajuste-presentacion{
+      display:none;
+      place-items:center;
+      min-width:0;
+      width:100%;
+      height:29px;
+      padding:0;
+      color:#fff;
+      -webkit-text-fill-color:#fff;
+      background:var(--color-principal);
+      border:0;
+      border-radius:0;
+      box-shadow:none;
+      font-size:18px;
+      font-weight:400;
+      line-height:1;
+      cursor:pointer;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada > .boton-ajuste-presentacion{
+      display:grid !important;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion:first-child,
+    html body .control-presentacion-alambre-integrado.seleccionada > .boton-ajuste-presentacion:first-child{
+      border-right:1px solid rgba(255,255,255,.55) !important;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion:last-child,
+    html body .control-presentacion-alambre-integrado.seleccionada > .boton-ajuste-presentacion:last-child{
+      border-left:1px solid rgba(255,255,255,.55) !important;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion:hover,
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion:focus{
+      min-width:0 !important;
+      width:100% !important;
+      height:29px !important;
+      min-height:29px !important;
+      max-height:29px !important;
+      padding:0 3px !important;
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion:hover *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+    }
+
+    /* Una presentación única permanece neutra hasta agregarla al carrito. */
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada){
+      background:#eee8e6 !important;
+      border-color:rgba(111,103,97,.28) !important;
+    }
+
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada) > .boton-presentacion,
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada) > .boton-ajuste-presentacion{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:#eee8e6 !important;
+    }
+
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada) > .boton-presentacion *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+    }
+
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada) > .boton-ajuste-presentacion:first-child{
+      border-right-color:rgba(111,103,97,.38) !important;
+    }
+
+    html body .tarjeta-presentacion-unica .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada) > .boton-ajuste-presentacion:last-child{
+      border-left-color:rgba(111,103,97,.38) !important;
+    }
+
+    /* Kanthal conserva el diámetro y suma/resta metros en el mismo control. */
+    html body .control-presentacion-alambre-integrado{
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) !important;
+      width:100% !important;
+      height:31px !important;
+      min-height:31px !important;
+      border-radius:9px !important;
+    }
+
+    html body .control-presentacion-alambre-integrado.seleccionada{
+      grid-template-columns:31px minmax(0,1fr) 31px !important;
+      overflow:visible !important;
+      background:var(--color-principal) !important;
+      border:1px solid var(--color-principal) !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+    }
+
+    html body .control-presentacion-alambre-integrado .selector-presentacion,
+    html body .control-presentacion-alambre-integrado .select-personalizado-presentacion-pc{
+      grid-column:1 !important;
+      grid-row:1 !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+    }
+
+    html body .control-presentacion-alambre-integrado.seleccionada .selector-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada .select-personalizado-presentacion-pc{
+      grid-column:2 !important;
+    }
+
+    html body .control-presentacion-alambre-integrado.seleccionada .selector-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+      height:29px !important;
+      min-height:29px !important;
+      max-height:29px !important;
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background-color:var(--color-principal) !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+    }
+
+    /* Ningún botón bajo la foto usa negrita, tampoco al seleccionarse. */
+    html body #productos .fila-compra button,
+    html body #productos .fila-compra button *,
+    html body #productos .fila-compra select,
+    html body #productosComparados .fila-compra button,
+    html body #productosComparados .fila-compra button *,
+    html body #productosComparados .fila-compra select,
+    html body #productos .zona-detalles-producto button,
+    html body #productos .zona-detalles-producto button *,
+    html body #productosComparados .zona-detalles-producto button,
+    html body #productosComparados .zona-detalles-producto button *{
+      font-weight:400 !important;
+    }
+
+    html body #productos .agregar-carrito.agregado,
+    html body #productos .agregar-carrito.agregado *,
+    html body #productosComparados .agregar-carrito.agregado,
+    html body #productosComparados .agregar-carrito.agregado *,
+    html body #productos .ver-detalles[aria-expanded="true"],
+    html body #productosComparados .ver-detalles[aria-expanded="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    html body .control-cantidad-carrito{
+      grid-template-columns:34px minmax(74px,auto) 34px !important;
+      width:max-content !important;
+      max-width:100% !important;
+    }
+
+    html body .control-cantidad-carrito > span{
+      min-width:74px !important;
+      padding:0 7px !important;
+      white-space:nowrap !important;
+    }
+
+    @media (min-width:651px){
+      html body #productos .fila-compra > .agregar-carrito,
+      html body #productosComparados .fila-compra > .agregar-carrito,
+      html body #productos .ver-detalles,
+      html body #productosComparados .ver-detalles{
+        height:31px !important;
+        min-height:31px !important;
+        max-height:31px !important;
+      }
+
+      html body #productos .boton-presentacion:not(.seleccionada):hover,
+      html body #productosComparados .boton-presentacion:not(.seleccionada):hover,
+      html body #productos .agregar-carrito:not(.agregado):hover,
+      html body #productosComparados .agregar-carrito:not(.agregado):hover,
+      html body #productos .ver-detalles[aria-expanded="false"]:hover,
+      html body #productosComparados .ver-detalles[aria-expanded="false"]:hover{
+        font-weight:400 !important;
+      }
+
+      html body .control-presentacion-alambre-integrado .selector-presentacion{
+        display:none !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .busqueda{
+        padding:8px !important;
+      }
+
+      html body .marca-agua-zoom{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-rows:repeat(3,minmax(0,1fr));
+      }
+
+      html body .marca-agua-zoom-item{
+        opacity:.25;
+      }
+
+      html body .marca-agua-zoom-item svg{
+        width:58px;
+      }
+
+      html body .marca-agua-zoom-item > span{
+        font-size:12px;
+      }
+
+      html body .control-presentacion-alambre-integrado .select-personalizado-presentacion-pc{
+        display:none !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10134,6 +10533,6 @@
     })();
   </script>
 
-  <script src="script.js?v=162"></script>
+  <script src="script.js?v=163"></script>
 </body>
 </html>
