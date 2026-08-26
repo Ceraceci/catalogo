@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=161">
+  <link rel="stylesheet" href="style.css?v=162">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -9983,6 +9983,135 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v162">
+    /* Recupera el contenedor cerámico común de las tres barras superiores. */
+    html body .busqueda{
+      box-sizing:border-box !important;
+      padding:10px !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border:1px solid rgba(111,103,97,.30) !important;
+      border-radius:14px !important;
+      box-shadow:0 2px 8px rgba(70,40,25,.08) !important;
+    }
+
+    /* La marca se repite sobre la foto ampliada, no sobre el fondo blanco. */
+    html body .zoom-imagen-overlay .zoom-imagen-marco{
+      position:relative !important;
+      isolation:isolate !important;
+      overflow:hidden !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      position:relative !important;
+      z-index:1 !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-marco::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:2;
+      pointer-events:none;
+      background-image:url("img/marca-agua-ceraceci.svg");
+      background-repeat:repeat;
+      background-position:center;
+      background-size:220px 152px;
+      opacity:.12;
+      mix-blend-mode:multiply;
+    }
+
+    html body .zoom-imagen-overlay .cerrar-zoom-imagen{
+      z-index:4 !important;
+    }
+
+    /* Si solo existe una presentación, queda marcada junto con la cantidad
+       y el carrito desde el momento en que el producto fue agregado. */
+    html body #productos .tarjeta-producto:has(.opciones-presentacion .boton-presentacion:only-child):has(.agregar-carrito.agregado) .boton-presentacion,
+    html body #productosComparados .tarjeta-producto:has(.opciones-presentacion .boton-presentacion:only-child):has(.agregar-carrito.agregado) .boton-presentacion{
+      color:#fff !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+      font-weight:700 !important;
+    }
+
+    html body #productos .tarjeta-producto:has(.opciones-presentacion .boton-presentacion:only-child):has(.agregar-carrito.agregado) .boton-presentacion *,
+    html body #productosComparados .tarjeta-producto:has(.opciones-presentacion .boton-presentacion:only-child):has(.agregar-carrito.agregado) .boton-presentacion *{
+      color:#fff !important;
+      font-weight:700 !important;
+    }
+
+    @media (min-width:651px){
+      /* Peso medio en reposo; la negrita queda reservada al estado elegido. */
+      html body #productos .boton-presentacion:not(.seleccionada),
+      html body #productos .boton-presentacion:not(.seleccionada) *,
+      html body #productosComparados .boton-presentacion:not(.seleccionada),
+      html body #productosComparados .boton-presentacion:not(.seleccionada) *,
+      html body #productos .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc,
+      html body #productos .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc *,
+      html body #productosComparados .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc,
+      html body #productosComparados .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc *,
+      html body #productos .fila-compra .boton-cantidad,
+      html body #productosComparados .fila-compra .boton-cantidad,
+      html body #productos .fila-compra .cantidad:not(.cantidad-seleccionada):not(.cantidad-agregada),
+      html body #productosComparados .fila-compra .cantidad:not(.cantidad-seleccionada):not(.cantidad-agregada),
+      html body #productos .fila-compra .agregar-carrito:not(.agregado),
+      html body #productos .fila-compra .agregar-carrito:not(.agregado) *,
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado),
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado) *,
+      html body #productos .ver-detalles[aria-expanded="false"],
+      html body #productos .ver-detalles[aria-expanded="false"] *,
+      html body #productosComparados .ver-detalles[aria-expanded="false"],
+      html body #productosComparados .ver-detalles[aria-expanded="false"] *{
+        font-weight:500 !important;
+      }
+
+      html body #productos .boton-presentacion:not(.seleccionada):hover,
+      html body #productosComparados .boton-presentacion:not(.seleccionada):hover,
+      html body #productos .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc:hover,
+      html body #productosComparados .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc:hover,
+      html body #productos .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productos .fila-compra .agregar-carrito:not(.agregado):hover *,
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado):hover *,
+      html body #productos .ver-detalles[aria-expanded="false"]:hover,
+      html body #productosComparados .ver-detalles[aria-expanded="false"]:hover{
+        font-weight:500 !important;
+      }
+
+      html body #productos .boton-presentacion.seleccionada,
+      html body #productos .boton-presentacion.seleccionada *,
+      html body #productosComparados .boton-presentacion.seleccionada,
+      html body #productosComparados .boton-presentacion.seleccionada *,
+      html body #productos .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc,
+      html body #productosComparados .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc,
+      html body #productos .fila-compra .cantidad.cantidad-seleccionada,
+      html body #productos .fila-compra .cantidad.cantidad-agregada,
+      html body #productosComparados .fila-compra .cantidad.cantidad-seleccionada,
+      html body #productosComparados .fila-compra .cantidad.cantidad-agregada,
+      html body #productos .fila-compra .agregar-carrito.agregado,
+      html body #productos .fila-compra .agregar-carrito.agregado *,
+      html body #productosComparados .fila-compra .agregar-carrito.agregado,
+      html body #productosComparados .fila-compra .agregar-carrito.agregado *,
+      html body #productos .ver-detalles[aria-expanded="true"],
+      html body #productosComparados .ver-detalles[aria-expanded="true"]{
+        font-weight:700 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .busqueda{
+        padding:8px !important;
+      }
+
+      html body .zoom-imagen-overlay .zoom-imagen-marco::after{
+        background-size:176px 122px;
+        opacity:.12;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10005,6 +10134,6 @@
     })();
   </script>
 
-  <script src="script.js?v=161"></script>
+  <script src="script.js?v=162"></script>
 </body>
 </html>
