@@ -1783,7 +1783,7 @@ function crearTarjetaProducto(
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
       <img
-        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
+        src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? "" : "foto-placeholder"}"
         loading="lazy"
@@ -1851,6 +1851,9 @@ function crearTarjetaProducto(
             <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
           </svg>
         </span>
+        <span class="texto-agregar-carrito">
+          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+        </span>
       </button>
     </div>
 
@@ -1881,7 +1884,7 @@ function crearTarjetaProducto(
     imagenProducto.addEventListener(
       "error",
       () => {
-        imagenProducto.src = "img/logo.png";
+        imagenProducto.src = "img/logo-minimal.svg";
         imagenProducto.alt = "";
         imagenProducto.classList.add(
           "foto-placeholder"
@@ -2344,8 +2347,7 @@ function cambiarCantidadTarjeta(
       cantidadActual + variacion
     );
 
-  /* La pulsación se representa únicamente con :active en − o +.
-     El control completo nunca conserva una selección. */
+  /* El contenedor permanece neutro: se marca únicamente el valor central. */
   establecerSeleccionCantidadTarjeta(
     tarjeta,
     false
@@ -2359,6 +2361,9 @@ function cambiarCantidadTarjeta(
 
   normalizarCantidadTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
+  campoCantidad.classList.add(
+    "cantidad-seleccionada"
+  );
 }
 
 
@@ -2373,6 +2378,105 @@ function normalizarCantidadTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
+}
+
+
+function restablecerSeleccionesTarjetasDespuesDeVaciar() {
+  [contenedorProductos, productosComparados]
+    .filter(Boolean)
+    .forEach((contenedor) => {
+      contenedor
+        .querySelectorAll(".tarjeta-producto")
+        .forEach((tarjeta) => {
+          const campoCantidad =
+            tarjeta.querySelector(".cantidad");
+
+          if (campoCantidad) {
+            campoCantidad.value = 1;
+            campoCantidad.classList.remove(
+              "cantidad-seleccionada",
+              "cantidad-agregada"
+            );
+          }
+
+          tarjeta
+            .querySelector(".control-cantidad")
+            ?.classList.remove("seleccionado");
+
+          tarjeta
+            .querySelectorAll(
+              ".boton-cantidad.seleccionado"
+            )
+            .forEach((boton) => {
+              boton.classList.remove("seleccionado");
+            });
+
+          tarjeta
+            .querySelectorAll(
+              ".boton-presentacion.seleccionada"
+            )
+            .forEach((boton) => {
+              boton.classList.remove("seleccionada");
+              boton.setAttribute("aria-pressed", "false");
+            });
+
+          const selectorPresentacion =
+            tarjeta.querySelector(
+              ".selector-presentacion"
+            );
+
+          if (selectorPresentacion) {
+            selectorPresentacion.value = "";
+            selectorPresentacion.classList.remove(
+              "seleccionada"
+            );
+            sincronizarSelectorPersonalizadoPC(
+              selectorPresentacion
+            );
+          }
+
+          const producto =
+            productosAgrupados.find(
+              (item) =>
+                item.id === tarjeta.dataset.idProducto
+            );
+
+          const presentacionInicial =
+            producto?.presentaciones?.[0];
+
+          if (presentacionInicial) {
+            tarjeta.dataset.presentacion =
+              presentacionInicial.nombre;
+            tarjeta.dataset.precio =
+              String(presentacionInicial.precio);
+            tarjeta.dataset.codigo =
+              presentacionInicial.codigo || "";
+
+            const precio =
+              tarjeta.querySelector(".precio");
+            if (precio) {
+              precio.dataset.precio =
+                String(presentacionInicial.precio);
+              precio.textContent =
+                formatearPrecio(
+                  presentacionInicial.precio
+                );
+              precio.classList.remove(
+                "precio-actualizado"
+              );
+            }
+
+            const codigo =
+              tarjeta.querySelector(
+                ".codigo-producto"
+              );
+            if (codigo) {
+              codigo.textContent =
+                presentacionInicial.codigo || "";
+            }
+          }
+        });
+    });
 }
 
 
@@ -2991,7 +3095,7 @@ function mostrarCarrito() {
       const fotoCarrito =
         normalizarURLImagen(
           producto.foto || productoCatalogo?.foto || ""
-        ) || "img/logo.png";
+        ) || "img/logo-minimal.svg";
 
       const elemento =
         document.createElement(
@@ -3229,7 +3333,7 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
+        `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} × ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
         formatearPrecio(producto.precio * producto.cantidad)
     );
 
@@ -3305,7 +3409,7 @@ function construirDetalleCarritoCompartido() {
     carritoCompras
       .map(
         (producto) =>
-          `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} x ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
+          `${producto.cantidad} ${obtenerNombreProductoParaCantidad(producto)} × ${formatearEtiquetaPresentacion(producto.presentacion)} : ` +
           formatearPrecio(producto.precio * producto.cantidad)
       )
       .join("\n\n");
@@ -4128,15 +4232,7 @@ vaciarCarrito.addEventListener(
 
     carritoCompras = [];
 
-    [contenedorProductos, productosComparados]
-      .filter(Boolean)
-      .forEach((contenedor) => {
-        contenedor
-          .querySelectorAll(".cantidad")
-          .forEach((campoCantidad) => {
-            campoCantidad.value = 1;
-          });
-      });
+    restablecerSeleccionesTarjetasDespuesDeVaciar();
 
     guardarYActualizarCarrito();
     cerrarPanelCarrito();
