@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="155">
+  <meta name="ceraceci-version" content="156">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=155">
+  <link rel="stylesheet" href="style.css?v=156">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -9464,6 +9464,293 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v156">
+    /* El contenedor exterior de las tres barras deja de dibujarse.
+       Cada control queda separado directamente sobre el fondo arcilla. */
+    html body .busqueda{
+      padding:0 !important;
+      background:transparent !important;
+      background-color:transparent !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+
+    /* La franja común de las acciones flotantes también desaparece.
+       Se conservan intactos el carrito y los círculos de las redes. */
+    html body .acciones-flotantes{
+      background:transparent !important;
+      background-color:transparent !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+
+    html body .acciones-flotantes::before,
+    html body .acciones-flotantes::after{
+      display:none !important;
+      content:none !important;
+    }
+
+    /* El número central conserva un único contorno, sin el segundo borde
+       generado anteriormente mediante una sombra interior. */
+    html body #productos .fila-compra .control-cantidad .cantidad.cantidad-seleccionada,
+    html body #productosComparados .fila-compra .control-cantidad .cantidad.cantidad-seleccionada,
+    html body #productos .fila-compra .control-cantidad .cantidad.cantidad-agregada,
+    html body #productosComparados .fila-compra .control-cantidad .cantidad.cantidad-agregada{
+      border-right:1px solid var(--color-principal) !important;
+      border-left:1px solid var(--color-principal) !important;
+      outline:0 !important;
+      box-shadow:none !important;
+    }
+
+    /* Precio verdaderamente equidistante: mismo aire por encima y debajo. */
+    html body #productos .fila-compra,
+    html body #productosComparados .fila-compra{
+      padding-top:0 !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio,
+    html body #productosComparados .fila-compra > .informacion-precio{
+      display:grid !important;
+      place-items:center !important;
+      min-height:0 !important;
+      margin:0 !important;
+      padding:6px 0 !important;
+      border-bottom:0 !important;
+      transform:none !important;
+    }
+
+    html body #productos .fila-compra > .bloque-presentaciones,
+    html body #productosComparados .fila-compra > .bloque-presentaciones{
+      padding-top:0 !important;
+    }
+
+    /* Flecha fiable en Todos los productos de móvil, incluida la variante
+       blanca cuando existe una categoría activa. */
+    html body #filtroCategoria{
+      -webkit-appearance:none !important;
+      appearance:none !important;
+      padding-right:42px !important;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:right 13px center !important;
+      background-size:14px 14px !important;
+    }
+
+    html body #filtroCategoria.categoria-activa{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    @media (min-width:651px){
+      /* Las flechas de los desplegables superiores se dibujan como elemento
+         independiente para que ningún fondo histórico pueda ocultarlas. */
+      html body .select-personalizado-categoria-pc .select-personalizado-boton-pc,
+      html body .select-personalizado-orden-pc .select-personalizado-boton-pc{
+        position:relative !important;
+        padding-right:42px !important;
+        background-image:none !important;
+      }
+
+      html body .select-personalizado-categoria-pc .select-personalizado-boton-pc::after,
+      html body .select-personalizado-orden-pc .select-personalizado-boton-pc::after{
+        position:absolute !important;
+        top:50% !important;
+        right:13px !important;
+        width:14px !important;
+        height:14px !important;
+        content:"" !important;
+        pointer-events:none !important;
+        background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px 14px no-repeat !important;
+        transform:translateY(-50%) !important;
+      }
+
+      html body .select-personalizado-categoria-pc.seleccion-activa .select-personalizado-boton-pc::after,
+      html body .select-personalizado-orden-pc.seleccion-activa .select-personalizado-boton-pc::after{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+
+      /* Estados de mouse coherentes y legibles en las tarjetas de PC. */
+      html body #productos .boton-presentacion:not(.seleccionada):hover,
+      html body #productosComparados .boton-presentacion:not(.seleccionada):hover,
+      html body #productos .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc:hover,
+      html body #productosComparados .select-personalizado-presentacion-pc:not(.seleccion-activa) .select-personalizado-boton-pc:hover,
+      html body #productos .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productosComparados .fila-compra .agregar-carrito:not(.agregado):hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        font-weight:700 !important;
+        background-color:#eee8e6 !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      /* El desplegable de categorías conserva el tono cerámico también
+         debajo de la barra de desplazamiento del navegador. */
+      html body .select-personalizado-categoria-pc .select-personalizado-lista-pc{
+        background-color:#eee8e6 !important;
+        scrollbar-color:#b56550 #eee8e6;
+        scrollbar-width:thin;
+      }
+
+      html body .select-personalizado-categoria-pc .select-personalizado-lista-pc::-webkit-scrollbar{
+        width:10px;
+        background:#eee8e6;
+      }
+
+      html body .select-personalizado-categoria-pc .select-personalizado-lista-pc::-webkit-scrollbar-track{
+        background:#eee8e6;
+      }
+
+      html body .select-personalizado-categoria-pc .select-personalizado-lista-pc::-webkit-scrollbar-thumb{
+        background:#b56550;
+        border:2px solid #eee8e6;
+        border-radius:999px;
+      }
+
+      /* En PC cada tarjeta ocupa cerca de un 20 % menos de ancho:
+         cinco columnas grandes, cuatro medianas y tres compactas. */
+      html body #productos{
+        column-gap:11px !important;
+        row-gap:11px !important;
+        align-items:stretch !important;
+      }
+
+      html body #productos::after{
+        display:none !important;
+        content:none !important;
+      }
+
+      /* Reducción vertical equivalente sin achicar la tipografía aprobada. */
+      html body #productos .tarjeta-producto{
+        min-height:0 !important;
+        height:auto !important;
+        padding:8px !important;
+      }
+
+      html body #productos .encabezado-producto{
+        box-sizing:border-box !important;
+        display:grid !important;
+        grid-template-rows:41px 18px !important;
+        row-gap:3px !important;
+        min-height:62px !important;
+        height:62px !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+      }
+
+      html body #productos .contenedor-foto-producto{
+        height:104px !important;
+        min-height:104px !important;
+        max-height:104px !important;
+        margin-top:3px !important;
+      }
+
+      html body #productos .fila-compra > .informacion-precio{
+        box-sizing:border-box !important;
+        min-height:32px !important;
+        height:32px !important;
+        padding:0 !important;
+      }
+
+      html body #productos .fila-compra > .bloque-presentaciones{
+        min-height:0 !important;
+        padding-top:2px !important;
+        padding-bottom:4px !important;
+      }
+
+      html body #productos .boton-presentacion,
+      html body #productos .selector-presentacion,
+      html body #productos .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+        min-height:34px !important;
+        height:34px !important;
+        max-height:34px !important;
+        padding-top:2px !important;
+        padding-bottom:2px !important;
+      }
+
+      /* Agregar iguala la altura y la letra de Más info.; el control
+         de cantidad cede el ancho necesario dentro de la misma fila. */
+      html body #productos .fila-compra{
+        grid-template-columns:minmax(0,.9fr) minmax(96px,1.1fr) !important;
+        column-gap:6px !important;
+      }
+
+      html body #productos .fila-compra .selector-cantidad,
+      html body #productos .fila-compra .control-cantidad,
+      html body #productos .fila-compra .agregar-carrito,
+      html body #productos .ver-detalles{
+        box-sizing:border-box !important;
+        min-height:34px !important;
+        height:34px !important;
+        max-height:34px !important;
+      }
+
+      html body #productos .fila-compra .control-cantidad{
+        grid-template-columns:minmax(23px,1fr) minmax(27px,1.12fr) minmax(23px,1fr) !important;
+      }
+
+      html body #productos .fila-compra .boton-cantidad,
+      html body #productos .fila-compra .cantidad{
+        height:32px !important;
+        min-height:32px !important;
+        max-height:32px !important;
+      }
+
+      html body #productos .fila-compra .agregar-carrito{
+        width:100% !important;
+        min-width:0 !important;
+        max-width:none !important;
+        padding:0 7px !important;
+        font-size:17px !important;
+        line-height:1 !important;
+      }
+
+      html body #productos .ver-detalles{
+        font-size:17px !important;
+        line-height:1 !important;
+      }
+
+      html body #productos .zona-detalles-producto{
+        min-height:39px !important;
+        padding-top:5px !important;
+        padding-bottom:0 !important;
+      }
+    }
+
+    @media (min-width:1101px){
+      html body #productos{
+        grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+      }
+    }
+
+    @media (min-width:801px) and (max-width:1100px){
+      html body #productos{
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+      }
+    }
+
+    @media (min-width:651px) and (max-width:800px){
+      html body #productos{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      }
+    }
+
+    /* PC y móvil: la foto ampliada queda aislada por un marco blanco puro. */
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      box-sizing:border-box !important;
+      background:#fff !important;
+      border:8px solid #fff !important;
+      border-radius:10px !important;
+      box-shadow:0 16px 44px rgba(0,0,0,.42) !important;
+      clip-path:none !important;
+      transform:none !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -9486,6 +9773,6 @@
     })();
   </script>
 
-  <script src="script.js?v=155"></script>
+  <script src="script.js?v=156"></script>
 </body>
 </html>
