@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="156">
+  <meta name="ceraceci-version" content="157">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=156">
+  <link rel="stylesheet" href="style.css?v=157">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7367,7 +7367,7 @@
       <div class="logo-contenedor">
 
         <img
-          src="img/logo-minimal.svg"
+          src="img/logo-minimal.svg?v=157"
           alt="Ceraceci"
           class="logo"
           width="160"
@@ -9751,6 +9751,95 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v157">
+    /* El encabezado indicado conserva exactamente el tono cerámico. */
+    html body .cabecera,
+    html body .logo-contenedor{
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:#eee8e6 !important;
+      box-shadow:none !important;
+    }
+
+    /* Precio centrado de forma independiente a las columnas de compra. */
+    html body #productos .fila-compra > .informacion-precio,
+    html body #productosComparados .fila-compra > .informacion-precio{
+      display:flex !important;
+      grid-column:1 / -1 !important;
+      align-items:center !important;
+      justify-content:center !important;
+      justify-self:stretch !important;
+      width:100% !important;
+      text-align:center !important;
+    }
+
+    html body #productos .fila-compra > .informacion-precio .precio,
+    html body #productosComparados .fila-compra > .informacion-precio .precio{
+      display:block !important;
+      width:100% !important;
+      margin-right:auto !important;
+      margin-left:auto !important;
+      text-align:center !important;
+    }
+
+    /* Todos los espacios entre botones pasan a una retícula uniforme de 6 px. */
+    html body #productos .opciones-presentacion,
+    html body #productosComparados .opciones-presentacion{
+      gap:6px !important;
+    }
+
+    html body #productos .fila-compra,
+    html body #productosComparados .fila-compra{
+      column-gap:6px !important;
+    }
+
+    html body #productos .fila-compra > .bloque-presentaciones,
+    html body #productosComparados .fila-compra > .bloque-presentaciones{
+      padding-bottom:6px !important;
+    }
+
+    html body #productos .zona-detalles-producto,
+    html body #productosComparados .zona-detalles-producto{
+      padding-top:6px !important;
+    }
+
+    html body #productos .encabezado-producto .acciones-producto,
+    html body #productosComparados .encabezado-producto .acciones-producto{
+      gap:6px !important;
+    }
+
+    @media (min-width:651px){
+      /* El marco de zoom de PC pasa de 8 px a 24 px. */
+      html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+        border-width:24px !important;
+      }
+
+      /* Compartir y Comparar quedan siempre por delante de la foto blanca. */
+      html body #productos .tarjeta-producto,
+      html body #productosComparados .tarjeta-producto{
+        position:relative !important;
+      }
+
+      html body #productos .encabezado-producto,
+      html body #productosComparados .encabezado-producto{
+        position:relative !important;
+        z-index:5 !important;
+        overflow:visible !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto{
+        z-index:12 !important;
+      }
+
+      html body #productos .contenedor-foto-producto,
+      html body #productosComparados .contenedor-foto-producto{
+        position:relative !important;
+        z-index:1 !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -9773,6 +9862,6 @@
     })();
   </script>
 
-  <script src="script.js?v=156"></script>
+  <script src="script.js?v=157"></script>
 </body>
 </html>
