@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=165">
+  <link rel="stylesheet" href="style.css?v=166">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -10863,6 +10863,118 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v166">
+    /* Kanthal: todos los diámetros quedan centrados y usan peso regular. */
+    html body #productos .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion,
+    html body #productosComparados .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion{
+      padding-right:34px !important;
+      padding-left:34px !important;
+      text-align:center !important;
+      text-align-last:center !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion option,
+    html body #productosComparados .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion option{
+      text-align:center !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productosComparados .tarjeta-producto .control-presentacion-alambre-integrado .selector-diametro-alambre .select-personalizado-boton-pc{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+      padding-right:34px !important;
+      padding-left:34px !important;
+      text-align:center !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productos .tarjeta-producto .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productosComparados .tarjeta-producto .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productosComparados .tarjeta-producto .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background-color:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    html body #productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc,
+    html body #productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc{
+      text-align:center !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc.seleccionada,
+    html body #productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc.seleccionada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-principal) !important;
+    }
+
+    /* Las tres barras superiores mantienen peso regular en todos sus estados. */
+    html body .busqueda input,
+    html body .busqueda input::placeholder,
+    html body .busqueda select,
+    html body .busqueda select option,
+    html body .busqueda button,
+    html body .busqueda button *,
+    html body .busqueda .select-personalizado-boton-pc,
+    html body .busqueda .select-personalizado-boton-pc *,
+    html body .busqueda .select-personalizado-opcion-pc,
+    html body .busqueda .select-personalizado-opcion-pc *,
+    html body .busqueda .control-orden .icono-orden{
+      font-weight:400 !important;
+    }
+
+    html body .busqueda .select-personalizado-pc.seleccion-activa .select-personalizado-boton-pc,
+    html body .busqueda .select-personalizado-pc.seleccion-activa .select-personalizado-boton-pc *,
+    html body .busqueda .select-personalizado-pc .select-personalizado-opcion-pc.seleccionada,
+    html body .busqueda .control-orden.orden-activo .icono-orden,
+    html body .busqueda #filtroCategoria.categoria-activa,
+    html body .busqueda #ordenarProductos{
+      font-weight:400 !important;
+    }
+
+    /* Flechas y símbolo de ordenamiento con trazo regular. */
+    html body .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    html body .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    html body #filtroCategoria{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    html body #filtroCategoria.categoria-activa{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    html body .control-orden .icono-orden{
+      font-weight:400 !important;
+      text-shadow:none !important;
+    }
+
+    @media (min-width:651px){
+      html body .select-personalizado-categoria-pc .select-personalizado-boton-pc::after,
+      html body .select-personalizado-orden-pc .select-personalizado-boton-pc::after{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+
+      html body .select-personalizado-categoria-pc.seleccion-activa .select-personalizado-boton-pc::after,
+      html body .select-personalizado-orden-pc.seleccion-activa .select-personalizado-boton-pc::after{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10885,6 +10997,6 @@
     })();
   </script>
 
-  <script src="script.js?v=165"></script>
+  <script src="script.js?v=166"></script>
 </body>
 </html>
