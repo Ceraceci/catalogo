@@ -2264,40 +2264,42 @@ function crearTarjetaProducto(
         >
       </div>
 
-      <button
-        type="button"
-        class="agregar-carrito ${
-          productoInicialEnCarrito ? "agregado" : ""
-        }"
-        aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-        title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-      >
-        <span class="icono-agregar" aria-hidden="true">
-          <svg viewBox="0 0 28 24" focusable="false">
-            <path
-              class="contorno-agregar-carrito"
-              d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
-            ></path>
-            <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
-            <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
-          </svg>
-        </span>
-        <span class="texto-agregar-carrito">
-          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-        </span>
-      </button>
+      <div class="fila-acciones-tarjeta">
+        <button
+          type="button"
+          class="ver-detalles"
+          aria-expanded="false"
+          aria-controls="${idDetalles}"
+        >
+          Más info.
+        </button>
+
+        <button
+          type="button"
+          class="agregar-carrito ${
+            productoInicialEnCarrito ? "agregado" : ""
+          }"
+          aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+          title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+        >
+          <span class="icono-agregar" aria-hidden="true">
+            <svg viewBox="0 0 28 24" focusable="false">
+              <path
+                class="contorno-agregar-carrito"
+                d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
+              ></path>
+              <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
+              <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
+            </svg>
+          </span>
+          <span class="texto-agregar-carrito">
+            ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+          </span>
+        </button>
+      </div>
     </div>
 
     <div class="zona-detalles-producto">
-      <button
-        type="button"
-        class="ver-detalles"
-        aria-expanded="false"
-        aria-controls="${idDetalles}"
-      >
-        Más info.
-      </button>
-
       <div
         id="${idDetalles}"
         class="detalles-producto"

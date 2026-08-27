@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=163">
+  <link rel="stylesheet" href="style.css?v=164">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -10511,6 +10511,75 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v164">
+    /* El control integrado se divide en tres sectores idénticos. */
+    html body .opcion-presentacion-integrada.seleccionada,
+    html body .control-presentacion-alambre-integrado.seleccionada{
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    }
+
+    html body .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion,
+    html body .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada > .boton-ajuste-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada > .selector-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada > .select-personalizado-presentacion-pc{
+      min-width:0 !important;
+      width:100% !important;
+      max-width:none !important;
+    }
+
+    html body .etiqueta-presentacion-integrada,
+    html body .control-presentacion-alambre-integrado .selector-presentacion,
+    html body .control-presentacion-alambre-integrado .select-personalizado-boton-pc{
+      overflow:hidden !important;
+      text-overflow:ellipsis !important;
+      white-space:nowrap !important;
+    }
+
+    /* Agregar y Más info. comparten una única fila en mitades iguales. */
+    html body #productos .fila-compra > .fila-acciones-tarjeta,
+    html body #productosComparados .fila-compra > .fila-acciones-tarjeta{
+      box-sizing:border-box !important;
+      display:grid !important;
+      grid-column:1 !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      column-gap:6px !important;
+      width:100% !important;
+      min-width:0 !important;
+    }
+
+    html body #productos .fila-acciones-tarjeta > .agregar-carrito,
+    html body #productos .fila-acciones-tarjeta > .ver-detalles,
+    html body #productosComparados .fila-acciones-tarjeta > .agregar-carrito,
+    html body #productosComparados .fila-acciones-tarjeta > .ver-detalles{
+      box-sizing:border-box !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      height:31px !important;
+      min-height:31px !important;
+      max-height:31px !important;
+      margin:0 !important;
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .zona-detalles-producto,
+    html body #productosComparados .zona-detalles-producto{
+      display:block !important;
+      min-height:0 !important;
+      height:auto !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    html body #productos .zona-detalles-producto .detalles-producto:not([hidden]),
+    html body #productosComparados .zona-detalles-producto .detalles-producto:not([hidden]){
+      margin-top:6px !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10533,6 +10602,6 @@
     })();
   </script>
 
-  <script src="script.js?v=163"></script>
+  <script src="script.js?v=164"></script>
 </body>
 </html>
