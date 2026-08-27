@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=166">
+  <link rel="stylesheet" href="style.css?v=167">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -10975,6 +10975,136 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v167">
+    /* El terracota de la barra continúa en los laterales sin cortes. */
+    html body .busqueda{
+      background:var(--color-espacio-tarjetas) !important;
+      background-color:var(--color-espacio-tarjetas) !important;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+
+    html body .busqueda.busqueda-en-scroll{
+      border:0 !important;
+      box-shadow:
+        inset 0 -1px 0 rgba(116,40,20,.46),
+        0 12px 12px -12px rgba(70,40,25,.42) !important;
+    }
+
+    /* Productos comunes agregados: solo el valor central queda negro. */
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada{
+      overflow:hidden !important;
+      background:#eee8e6 !important;
+      border-color:rgba(111,103,97,.38) !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion:first-child,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion:first-child{
+      border-right-color:rgba(23,23,23,.38) !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion:last-child,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-ajuste-presentacion:last-child{
+      border-left-color:rgba(23,23,23,.38) !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-presentacion,
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-presentacion *,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-presentacion,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada > .boton-presentacion *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:#171717 !important;
+      background-color:#171717 !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado,
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:hover,
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:focus,
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:active,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:hover,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:focus,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:#171717 !important;
+      background-color:#171717 !important;
+      border-color:#171717 !important;
+    }
+
+    html body #productos .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado *,
+    html body #productosComparados .tarjeta-producto:not(.tarjeta-alambre-kanthal) .fila-compra .agregar-carrito.agregado *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* Kanthal agregado: diámetro, metros centrales y carrito permanecen rojos. */
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre{
+      color:#171717 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:rgba(111,103,97,.38) !important;
+    }
+
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre > .boton-ajuste-presentacion,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre > .boton-ajuste-presentacion{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+    }
+
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre > .cantidad-metros-alambre,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.presentacion-agregada .control-metros-alambre > .cantidad-metros-alambre{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border-right-color:var(--color-principal) !important;
+      border-left-color:var(--color-principal) !important;
+    }
+
+    html body #productos .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado,
+    html body #productos .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:hover,
+    html body #productos .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:focus,
+    html body #productos .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:active,
+    html body #productosComparados .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:hover,
+    html body #productosComparados .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:focus,
+    html body #productosComparados .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    html body #productos .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado *,
+    html body #productosComparados .tarjeta-alambre-kanthal .fila-compra .agregar-carrito.agregado *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10997,6 +11127,6 @@
     })();
   </script>
 
-  <script src="script.js?v=166"></script>
+  <script src="script.js?v=167"></script>
 </body>
 </html>

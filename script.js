@@ -1976,6 +1976,16 @@ function crearTarjetaProducto(
       ? "tarjeta-producto tarjeta-en-comparacion"
       : "tarjeta-producto";
 
+  const esAlambreKanthal =
+    normalizarTexto(producto.nombre) ===
+    "alambre kanthal a1";
+
+  if (esAlambreKanthal) {
+    tarjeta.classList.add(
+      "tarjeta-alambre-kanthal"
+    );
+  }
+
   if (producto.presentaciones.length === 1) {
     tarjeta.classList.add(
       "tarjeta-presentacion-unica"
@@ -2092,8 +2102,7 @@ function crearTarjetaProducto(
       .join("");
 
   const usarSelectorAlambre =
-    normalizarTexto(producto.nombre) ===
-    "alambre kanthal a1";
+    esAlambreKanthal;
 
   const opcionesSelectorAlambre =
     `
