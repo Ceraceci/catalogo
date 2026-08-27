@@ -14,7 +14,7 @@ const URL_CSV = "/api/catalogo";
  * al volver a abrir o recargar la página, los productos aparezcan
  * inmediatamente. Después se consulta Cloudflare en segundo plano.
  */
-const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v3";
+const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v4";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -855,6 +855,47 @@ function formatearPresentacionTotal(
   return formatearEtiquetaPresentacion(
     presentacionTotal
   );
+}
+
+
+function formatearDiametroKanthal(
+  presentacionBase
+) {
+  const presentacion =
+    formatearEtiquetaPresentacion(
+      presentacionBase
+    );
+  const coincidencia = presentacion.match(
+    /^(.+?\s*mm)\s*[×x]\s*\d+(?:[.,]\d+)?\s*(?:m|metro|metros)\b/i
+  );
+
+  return coincidencia
+    ? coincidencia[1].trim()
+    : presentacion;
+}
+
+
+function formatearMetrosKanthal(
+  presentacionBase,
+  cantidadUnidades
+) {
+  const cantidad = Math.max(
+    1,
+    Number(cantidadUnidades) || 1
+  );
+  const medida =
+    analizarMedidaPresentacion(
+      presentacionBase
+    );
+
+  if (!medida) {
+    return `${cantidad} m`;
+  }
+
+  const metros =
+    medida.cantidadCanonica * cantidad;
+
+  return `${formatearNumeroCantidad(metros)} m`;
 }
 
 
@@ -2067,7 +2108,7 @@ function crearTarjetaProducto(
         <option
           value="${indicePresentacion}"
           data-etiqueta-base="${escaparHTML(
-            formatearEtiquetaPresentacion(
+            formatearDiametroKanthal(
               presentacion.nombre
             )
           )}"
@@ -2079,15 +2120,9 @@ function crearTarjetaProducto(
           }
         >
           ${escaparHTML(
-            presentacionInicialSeleccionada &&
-            indicePresentacion === indicePresentacionInicial
-              ? formatearPresentacionTotal(
-                  presentacion.nombre,
-                  cantidadInicialProducto
-                )
-              : formatearEtiquetaPresentacion(
-                  presentacion.nombre
-                )
+            formatearDiametroKanthal(
+              presentacion.nombre
+            )
           )}
         </option>
       `)
@@ -2101,36 +2136,50 @@ function crearTarjetaProducto(
             ? "seleccionada"
             : ""
         }">
-          <button
-            type="button"
-            class="boton-ajuste-presentacion restar-presentacion"
-            aria-label="Restar un metro"
-            title="Restar"
-          >−</button>
+          <div class="selector-diametro-alambre">
+            <select
+              id="selector-alambre-${producto.id}-${
+                esComparacion ? "comparacion" : "catalogo"
+              }"
+              class="selector-presentacion selector-presentacion-alambre ${
+                presentacionInicialSeleccionada
+                  ? "seleccionada"
+                  : ""
+              }"
+              data-id-producto="${producto.id}"
+              aria-label="Elegir diámetro de ${escaparHTML(
+                producto.nombre
+              )}"
+            >
+              ${opcionesSelectorAlambre}
+            </select>
+          </div>
 
-          <select
-            id="selector-alambre-${producto.id}-${
-              esComparacion ? "comparacion" : "catalogo"
-            }"
-            class="selector-presentacion selector-presentacion-alambre ${
-              presentacionInicialSeleccionada
-                ? "seleccionada"
-                : ""
-            }"
-            data-id-producto="${producto.id}"
-            aria-label="Elegir diámetro de ${escaparHTML(
-              producto.nombre
-            )}"
-          >
-            ${opcionesSelectorAlambre}
-          </select>
+          <div class="control-metros-alambre">
+            <button
+              type="button"
+              class="boton-ajuste-presentacion restar-presentacion"
+              aria-label="Restar un metro"
+              title="Restar"
+            >−</button>
 
-          <button
-            type="button"
-            class="boton-ajuste-presentacion sumar-presentacion"
-            aria-label="Sumar un metro"
-            title="Sumar"
-          >+</button>
+            <span
+              class="cantidad-metros-alambre"
+              aria-live="polite"
+            >${escaparHTML(
+              formatearMetrosKanthal(
+                presentacionInicial.nombre,
+                cantidadInicialProducto
+              )
+            )}</span>
+
+            <button
+              type="button"
+              class="boton-ajuste-presentacion sumar-presentacion"
+              aria-label="Sumar un metro"
+              title="Sumar"
+            >+</button>
+          </div>
         </div>
         `
       : `
@@ -2314,9 +2363,16 @@ function crearTarjetaProducto(
     tarjeta.querySelector(".foto-producto");
 
   if (imagenProducto && foto) {
-    imagenProducto.addEventListener(
-      "error",
-      () => {
+    const mostrarImagenAlternativa = () => {
+      if (
+        imagenProducto.dataset.imagenAlternativa ===
+        "true"
+      ) {
+        return;
+      }
+
+      imagenProducto.dataset.imagenAlternativa =
+        "true";
         imagenProducto.src = "img/logo-minimal.svg";
         imagenProducto.alt = "";
         imagenProducto.classList.add(
@@ -2325,9 +2381,20 @@ function crearTarjetaProducto(
         imagenProducto
           .closest(".contenedor-foto-producto")
           ?.classList.add("sin-foto");
-      },
+    };
+
+    imagenProducto.addEventListener(
+      "error",
+      mostrarImagenAlternativa,
       { once: true }
     );
+
+    if (
+      imagenProducto.complete &&
+      imagenProducto.naturalWidth === 0
+    ) {
+      mostrarImagenAlternativa();
+    }
   }
 
   const selectorAlambre =
@@ -2762,15 +2829,17 @@ function actualizarControlPresentacionIntegrado(
         seleccionada
       );
 
-    if (
-      seleccionada &&
-      selectorAlambre.options[
-        selectorAlambre.selectedIndex
-      ]
-    ) {
-      selectorAlambre.options[
-        selectorAlambre.selectedIndex
-      ].textContent = etiquetaTotal;
+    const cantidadMetros =
+      tarjeta.querySelector(
+        ".cantidad-metros-alambre"
+      );
+
+    if (cantidadMetros) {
+      cantidadMetros.textContent =
+        formatearMetrosKanthal(
+          presentacion.nombre,
+          cantidad
+        );
     }
 
     sincronizarSelectorPersonalizadoPC(
@@ -2912,6 +2981,20 @@ function cambiarCantidadTarjeta(
 ) {
   const tarjeta =
     boton.closest(".tarjeta-producto");
+
+  if (
+    tarjeta.querySelector(
+      ".selector-presentacion-alambre"
+    ) &&
+    tarjeta.dataset.presentacionSeleccionada !==
+      "true"
+  ) {
+    mostrarAvisoCopiado(
+      "Elegí un diámetro"
+    );
+    boton.blur?.();
+    return;
+  }
 
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
@@ -5221,11 +5304,59 @@ document.addEventListener(
 );
 
 
+function inicializarSeparacionBarraSuperior() {
+  if (!seccionBusqueda) {
+    return;
+  }
+
+  const marcador =
+    document.createElement("span");
+  marcador.className =
+    "marcador-barra-superior";
+  marcador.setAttribute("aria-hidden", "true");
+  seccionBusqueda.insertAdjacentElement(
+    "beforebegin",
+    marcador
+  );
+
+  let actualizacionPendiente = false;
+
+  const actualizar = () => {
+    actualizacionPendiente = false;
+    seccionBusqueda.classList.toggle(
+      "busqueda-en-scroll",
+      marcador.getBoundingClientRect().top <= 10
+    );
+  };
+
+  const programarActualizacion = () => {
+    if (actualizacionPendiente) {
+      return;
+    }
+
+    actualizacionPendiente = true;
+    requestAnimationFrame(actualizar);
+  };
+
+  window.addEventListener(
+    "scroll",
+    programarActualizacion,
+    { passive: true }
+  );
+  window.addEventListener(
+    "resize",
+    programarActualizacion
+  );
+  actualizar();
+}
+
+
 /* =========================================
    INICIO
 ========================================= */
 
 try {
+  inicializarSeparacionBarraSuperior();
   mostrarCarrito();
   actualizarEstadoComparacion();
   inicializarSelectoresPersonalizadosPC();

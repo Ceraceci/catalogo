@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=164">
+  <link rel="stylesheet" href="style.css?v=165">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -10580,6 +10580,289 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v165">
+    /* La barra sticky y la grilla comparten exactamente los mismos límites. */
+    html body .marcador-barra-superior{
+      display:block;
+      width:100%;
+      height:0;
+      pointer-events:none;
+    }
+
+    html body .busqueda,
+    html body #productos{
+      box-sizing:border-box !important;
+      width:100% !important;
+      max-width:none !important;
+      margin-right:0 !important;
+      margin-left:0 !important;
+    }
+
+    html body .busqueda{
+      z-index:30 !important;
+      isolation:isolate;
+      padding:10px !important;
+      background:#cf927d !important;
+      background-color:#cf927d !important;
+      border:1px solid #cf927d !important;
+      border-radius:14px !important;
+      box-shadow:0 2px 8px rgba(70,40,25,.10) !important;
+      backdrop-filter:none !important;
+      transition:box-shadow .16s ease,border-color .16s ease !important;
+    }
+
+    html body .busqueda.busqueda-en-scroll{
+      border-bottom-color:rgba(116,40,20,.55) !important;
+      box-shadow:
+        0 2px 5px rgba(70,40,25,.12),
+        0 10px 18px rgba(70,40,25,.24) !important;
+    }
+
+    /* Presentaciones: negro regular en reposo y blanco regular al seleccionar. */
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada) > .boton-presentacion,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada) > .boton-presentacion{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada) > .boton-presentacion *,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada) > .boton-presentacion *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada{
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada.seleccionada > .boton-ajuste-presentacion{
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada,
+    html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada *,
+    html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada,
+    html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada.presentacion-agregada *{
+      font-weight:400 !important;
+    }
+
+    /* Kanthal: el diámetro y la cantidad de metros son controles separados. */
+    html body .control-presentacion-alambre-integrado,
+    html body .control-presentacion-alambre-integrado.seleccionada{
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) !important;
+      gap:6px !important;
+      width:100% !important;
+      height:auto !important;
+      min-height:0 !important;
+      overflow:visible !important;
+      background:transparent !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+    }
+
+    html body .selector-diametro-alambre{
+      position:relative;
+      width:100%;
+      min-width:0;
+      height:31px;
+      overflow:visible;
+    }
+
+    html body .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion,
+    html body .control-presentacion-alambre-integrado .selector-diametro-alambre > .select-personalizado-presentacion-pc,
+    html body .control-presentacion-alambre-integrado .selector-diametro-alambre .select-personalizado-boton-pc{
+      box-sizing:border-box !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      height:31px !important;
+      min-height:31px !important;
+      max-height:31px !important;
+      margin:0 !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background-color:#eee8e6 !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      border-radius:9px !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+    }
+
+    html body .control-presentacion-alambre-integrado .select-personalizado-lista-pc,
+    html body .control-presentacion-alambre-integrado .select-personalizado-opcion-pc{
+      font-weight:400 !important;
+    }
+
+    html body .control-metros-alambre{
+      box-sizing:border-box;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      width:100%;
+      height:31px;
+      min-height:31px;
+      overflow:hidden;
+      color:#171717;
+      background:#eee8e6;
+      border:1px solid rgba(111,103,97,.28);
+      border-radius:9px;
+      box-shadow:0 2px 4px rgba(70,40,25,.12);
+    }
+
+    html body .control-metros-alambre > .boton-ajuste-presentacion,
+    html body .control-metros-alambre > .cantidad-metros-alambre{
+      box-sizing:border-box;
+      display:grid !important;
+      place-items:center;
+      width:100% !important;
+      min-width:0 !important;
+      height:29px !important;
+      min-height:29px !important;
+      max-height:29px !important;
+      margin:0 !important;
+      padding:0 3px !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:inherit;
+      font-weight:400 !important;
+      line-height:1;
+      background:#eee8e6 !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      white-space:nowrap;
+    }
+
+    html body .control-metros-alambre > .cantidad-metros-alambre{
+      border-right:1px solid rgba(111,103,97,.38) !important;
+      border-left:1px solid rgba(111,103,97,.38) !important;
+    }
+
+    html body .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .select-personalizado-presentacion-pc,
+    html body .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre,
+    html body .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .boton-ajuste-presentacion,
+    html body .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    html body .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre{
+      border-right-color:rgba(255,255,255,.55) !important;
+      border-left-color:rgba(255,255,255,.55) !important;
+    }
+
+    /* Más info. y Agregar quedan en la misma fila, sin heredar filas antiguas. */
+    html body #productos .fila-compra > .fila-acciones-tarjeta,
+    html body #productosComparados .fila-compra > .fila-acciones-tarjeta{
+      box-sizing:border-box !important;
+      display:grid !important;
+      grid-column:1 !important;
+      grid-row:auto !important;
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      align-items:stretch !important;
+      column-gap:6px !important;
+      width:100% !important;
+      min-width:0 !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-acciones-tarjeta > .ver-detalles,
+    html body #productosComparados .tarjeta-producto .fila-acciones-tarjeta > .ver-detalles{
+      grid-column:1 !important;
+      grid-row:1 !important;
+      justify-self:stretch !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-acciones-tarjeta > .agregar-carrito,
+    html body #productosComparados .tarjeta-producto .fila-acciones-tarjeta > .agregar-carrito{
+      grid-column:2 !important;
+      grid-row:1 !important;
+      justify-self:stretch !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-acciones-tarjeta > .ver-detalles,
+    html body #productos .tarjeta-producto .fila-acciones-tarjeta > .agregar-carrito,
+    html body #productosComparados .tarjeta-producto .fila-acciones-tarjeta > .ver-detalles,
+    html body #productosComparados .tarjeta-producto .fila-acciones-tarjeta > .agregar-carrito{
+      box-sizing:border-box !important;
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      height:31px !important;
+      min-height:31px !important;
+      max-height:31px !important;
+      margin:0 !important;
+      padding:0 4px !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productos .tarjeta-producto .fila-compra .agregar-carrito.agregado *,
+    html body #productos .tarjeta-producto .fila-compra .ver-detalles[aria-expanded="true"],
+    html body #productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado *,
+    html body #productosComparados .tarjeta-producto .fila-compra .ver-detalles[aria-expanded="true"]{
+      font-weight:400 !important;
+    }
+
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover,
+      html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover,
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover,
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover{
+        background:#eee8e6 !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover > .boton-presentacion,
+      html body #productos .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover > .boton-presentacion *,
+      html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .fila-compra .opcion-presentacion-integrada:not(.seleccionada):hover > .boton-presentacion *,
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-presentacion,
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-presentacion *,
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-ajuste-presentacion,
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-presentacion *,
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .fila-compra .opcion-presentacion-integrada.seleccionada:not(.presentacion-agregada):hover > .boton-ajuste-presentacion,
+      html body #productos .tarjeta-producto .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productos .tarjeta-producto .fila-compra .agregar-carrito:not(.agregado):hover *,
+      html body #productosComparados .tarjeta-producto .fila-compra .agregar-carrito:not(.agregado):hover,
+      html body #productosComparados .tarjeta-producto .fila-compra .agregar-carrito:not(.agregado):hover *,
+      html body #productos .tarjeta-producto .fila-compra .ver-detalles[aria-expanded="false"]:hover,
+      html body #productosComparados .tarjeta-producto .fila-compra .ver-detalles[aria-expanded="false"]:hover,
+      html body .control-presentacion-alambre-integrado:not(.seleccionada) .selector-diametro-alambre:hover > .selector-presentacion,
+      html body .control-presentacion-alambre-integrado:not(.seleccionada) .selector-diametro-alambre:hover .select-personalizado-boton-pc{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        font-weight:400 !important;
+        background:#eee8e6 !important;
+        background-color:#eee8e6 !important;
+        border-color:var(--color-principal) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .busqueda{
+        padding:8px !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -10602,6 +10885,6 @@
     })();
   </script>
 
-  <script src="script.js?v=164"></script>
+  <script src="script.js?v=165"></script>
 </body>
 </html>
