@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=170">
+  <link rel="stylesheet" href="style.css?v=171">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -11862,6 +11862,222 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v171">
+    /* La zona interior de las tres barras conserva sus medidas. El terracota
+       se agrega únicamente como borde superior e inferior del contenedor. */
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      box-sizing:border-box !important;
+      padding-top:0 !important;
+      padding-bottom:0 !important;
+      background:#cf927d !important;
+      background-color:#cf927d !important;
+      border-top:8px solid #cf927d !important;
+      border-right:0 !important;
+      border-bottom:8px solid #cf927d !important;
+      border-left:0 !important;
+    }
+
+    html body .busqueda.busqueda-en-scroll{
+      box-shadow:
+        inset 0 -1px 0 rgba(116,40,20,.46),
+        0 12px 12px -12px rgba(70,40,25,.42) !important;
+    }
+
+    /* El grupo flotante vuelve a tener un fondo común terracota. */
+    html body .acciones-flotantes{
+      box-sizing:border-box !important;
+      gap:6px !important;
+      padding:6px !important;
+      background:#cf927d !important;
+      background-color:#cf927d !important;
+      border:0 !important;
+      border-radius:16px !important;
+      box-shadow:0 4px 12px rgba(70,40,25,.18) !important;
+      backdrop-filter:none !important;
+      -webkit-backdrop-filter:none !important;
+    }
+
+    /* Presentaciones más legibles, sin variar la altura de los controles. */
+    html body #productos .tarjeta-producto .boton-presentacion,
+    html body #productosComparados .tarjeta-producto .boton-presentacion,
+    html body .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion,
+    html body .control-presentacion-alambre-integrado .selector-diametro-alambre .select-personalizado-boton-pc{
+      font-size:18px !important;
+      font-weight:400 !important;
+      font-stretch:normal !important;
+      line-height:1 !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-presentacion *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion *{
+      font-weight:400 !important;
+    }
+
+    /* Los signos de cantidad nunca cambian de grosor. */
+    html body #productos .tarjeta-producto .boton-cantidad,
+    html body #productos .tarjeta-producto .boton-cantidad:hover,
+    html body #productos .tarjeta-producto .boton-cantidad:focus,
+    html body #productos .tarjeta-producto .boton-cantidad:active,
+    html body #productos .tarjeta-producto .boton-cantidad.presionado,
+    html body #productos .tarjeta-producto .boton-cantidad.seleccionado,
+    html body #productosComparados .tarjeta-producto .boton-cantidad,
+    html body #productosComparados .tarjeta-producto .boton-cantidad:hover,
+    html body #productosComparados .tarjeta-producto .boton-cantidad:focus,
+    html body #productosComparados .tarjeta-producto .boton-cantidad:active,
+    html body #productosComparados .tarjeta-producto .boton-cantidad.presionado,
+    html body #productosComparados .tarjeta-producto .boton-cantidad.seleccionado,
+    html body .control-cantidad-carrito > button,
+    html body .control-cantidad-carrito > button:hover,
+    html body .control-cantidad-carrito > button:focus,
+    html body .control-cantidad-carrito > button:active{
+      font-weight:400 !important;
+      text-shadow:none !important;
+    }
+
+    /* Compartir y Comparar conservan el círculo, pero adoptan el fondo,
+       la sombra y el trazo visual regular de las presentaciones. */
+    html body #productos .tarjeta-producto .compartir-producto,
+    html body #productosComparados .tarjeta-producto .compartir-producto,
+    html body #productos .tarjeta-producto .boton-comparar,
+    html body #productosComparados .tarjeta-producto .boton-comparar{
+      font-weight:400 !important;
+      border-radius:50% !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productosComparados .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="false"],
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border:1px solid #171717 !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productosComparados .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="true"],
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border:1px solid var(--color-principal) !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto svg,
+    html body #productosComparados .tarjeta-producto .compartir-producto svg,
+    html body #productos .tarjeta-producto .boton-comparar svg,
+    html body #productosComparados .tarjeta-producto .boton-comparar svg{
+      color:currentColor !important;
+      fill:none !important;
+      stroke:currentColor !important;
+      stroke-width:1.7 !important;
+      stroke-linecap:round !important;
+      stroke-linejoin:round !important;
+    }
+
+    @media (min-width:651px){
+      /* Una presentación automática continúa neutra; al pulsarla, queda
+         explícitamente seleccionada aun antes de agregar al carrito. */
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada.seleccion-manual:not(.presentacion-agregada),
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada.seleccion-manual:not(.presentacion-agregada){
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        font-weight:400 !important;
+        background:var(--color-principal) !important;
+        background-color:var(--color-principal) !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada.seleccion-manual:not(.presentacion-agregada) *,
+      html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada.seleccion-manual:not(.presentacion-agregada) *{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        font-weight:400 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /* En móvil la cantidad aprovecha todo el ancho libre y el carrito
+         conserva solamente los 40 px necesarios para su icono. */
+      html body #productos .tarjeta-producto .fila-compra,
+      html body #productosComparados .tarjeta-producto .fila-compra{
+        grid-template-columns:minmax(0,1fr) 40px !important;
+        column-gap:6px !important;
+        row-gap:6px !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .selector-cantidad,
+      html body #productosComparados .tarjeta-producto .fila-compra > .selector-cantidad{
+        grid-column:1 !important;
+        width:100% !important;
+        min-width:0 !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito{
+        grid-column:2 !important;
+        width:40px !important;
+        min-width:40px !important;
+        max-width:40px !important;
+        padding-right:0 !important;
+        padding-left:0 !important;
+      }
+
+      /* El aire visible es de 6 px a ambos lados del precio. */
+      html body #productos .tarjeta-producto .contenedor-foto-producto,
+      html body #productosComparados .tarjeta-producto .contenedor-foto-producto{
+        margin-bottom:6px !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .informacion-precio,
+      html body #productosComparados .tarjeta-producto .fila-compra > .informacion-precio{
+        min-height:0 !important;
+        height:auto !important;
+        margin:0 !important;
+        padding:0 !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .informacion-precio .precio,
+      html body #productosComparados .tarjeta-producto .fila-compra > .informacion-precio .precio{
+        margin:0 !important;
+        line-height:1 !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .bloque-presentaciones,
+      html body #productosComparados .tarjeta-producto .fila-compra > .bloque-presentaciones{
+        margin:0 !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+      }
+
+      html body #productos .tarjeta-producto .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .boton-presentacion,
+      html body .control-presentacion-alambre-integrado .selector-diametro-alambre > .selector-presentacion{
+        font-size:16px !important;
+      }
+
+      html body #productos .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(3)) > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(3)) > .boton-presentacion{
+        font-size:14px !important;
+      }
+
+      html body #productos .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(4)) > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(4)) > .boton-presentacion{
+        font-size:13px !important;
+      }
+
+      html body .acciones-flotantes{
+        padding:6px max(6px,env(safe-area-inset-right)) calc(6px + env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left)) !important;
+        border-radius:16px 16px 0 0 !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -11884,6 +12100,6 @@
     })();
   </script>
 
-  <script src="script.js?v=170"></script>
+  <script src="script.js?v=171"></script>
 </body>
 </html>

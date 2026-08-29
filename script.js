@@ -2189,7 +2189,10 @@ function crearTarjetaProducto(
           title="Compartir producto"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+            <circle cx="18" cy="5" r="2.25"></circle>
+            <circle cx="6" cy="12" r="2.25"></circle>
+            <circle cx="18" cy="19" r="2.25"></circle>
+            <path d="m8 10.9 7.8-4.55M8 13.1l7.8 4.55"></path>
           </svg>
         </button>
 
@@ -2884,6 +2887,14 @@ function seleccionarPresentacion(control) {
     yaEstabaSeleccionada &&
     producto.presentaciones.length > 1;
 
+  if (
+    !esSelectorPresentacion &&
+    producto.presentaciones.length === 1 &&
+    window.matchMedia("(min-width: 651px)").matches
+  ) {
+    control.classList.add("seleccion-manual");
+  }
+
   tarjeta.dataset.indicePresentacion =
     String(indicePresentacion);
   tarjeta.dataset.presentacionSeleccionada =
@@ -3124,10 +3135,13 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
 
           tarjeta
             .querySelectorAll(
-              ".boton-presentacion.seleccionada"
+              ".boton-presentacion.seleccionada, .boton-presentacion.seleccion-manual"
             )
             .forEach((boton) => {
-              boton.classList.remove("seleccionada");
+              boton.classList.remove(
+                "seleccionada",
+                "seleccion-manual"
+              );
               boton.setAttribute("aria-pressed", "false");
             });
 
@@ -4360,6 +4374,15 @@ function obtenerNombreProductoParaCantidad(producto) {
     Number(producto.cantidad) || 1
   );
 
+  if (
+    normalizarTexto(producto.nombre) ===
+    "apm 112"
+  ) {
+    return cantidad === 1
+      ? "1 Arcilla Apm 112"
+      : `${cantidad} Arcillas Apm 112`;
+  }
+
   return `${cantidad} × ${producto.nombre}`;
 }
 
@@ -4402,6 +4425,16 @@ function obtenerEtiquetaCantidadProducto(producto) {
     1,
     Number(producto.cantidad) || 1
   );
+
+  if (
+    normalizarTexto(producto.nombre) ===
+    "apm 112"
+  ) {
+    return cantidad === 1
+      ? "1 Arcilla Apm 112"
+      : `${cantidad} Arcillas Apm 112`;
+  }
+
   const sustantivo = limpiarTexto(
     producto.nombre
   ).split(/\s+/u)[0] || "producto";
