@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="158">
+  <meta name="ceraceci-version" content="174">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=173">
+  <link rel="stylesheet" href="style.css?v=174">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -12366,6 +12366,86 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v174">
+    /* Presentaciones elegidas y botones de carrito agregados comparten
+       siempre el mismo estado: arcilla, blanco y tipografia regular. */
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:hover,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:focus,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:active,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada:hover,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada:focus,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada:active,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:hover,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:focus,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:active,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada:hover,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada:focus,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada:active,
+    html body #productos .tarjeta-producto .agregar-carrito.agregado,
+    html body #productos .tarjeta-producto .agregar-carrito.agregado:hover,
+    html body #productos .tarjeta-producto .agregar-carrito.agregado:focus,
+    html body #productos .tarjeta-producto .agregar-carrito.agregado:active,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado:hover,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado:focus,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productos .tarjeta-producto .agregar-carrito.agregado *,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos .tarjeta-producto .agregar-carrito.agregado svg,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado svg{
+      color:#fff !important;
+      fill:none !important;
+      stroke:#fff !important;
+    }
+
+    html body #productos .tarjeta-producto .agregar-carrito.agregado svg *,
+    html body #productosComparados .tarjeta-producto .agregar-carrito.agregado svg *{
+      fill:none !important;
+      stroke:#fff !important;
+    }
+
+    /* En Kanthal, el diametro seleccionado usa el mismo estado arcilla. */
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion:hover,
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion:focus,
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc:hover,
+    html body #productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc:focus,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion:hover,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion:focus,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc:hover,
+    html body #productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -12388,6 +12468,6 @@
     })();
   </script>
 
-  <script src="script.js?v=173"></script>
+  <script src="script.js?v=174"></script>
 </body>
 </html>
