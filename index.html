@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="175">
+  <meta name="ceraceci-version" content="176">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=175">
+  <link rel="stylesheet" href="style.css?v=176">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -12627,6 +12627,152 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v176">
+    /* Prioridad definitiva: todas las letras de las tarjetas son negras. */
+    html body #productos#productos .tarjeta-producto button,
+    html body #productos#productos .tarjeta-producto button *,
+    html body #productos#productos .tarjeta-producto select,
+    html body #productos#productos .tarjeta-producto select option,
+    html body #productos#productos .tarjeta-producto .select-personalizado-boton-pc,
+    html body #productos#productos .tarjeta-producto .select-personalizado-boton-pc *,
+    html body #productos#productos .tarjeta-producto .select-personalizado-opcion-pc,
+    html body #productos#productos .tarjeta-producto .select-personalizado-opcion-pc *,
+    html body #productosComparados#productosComparados .tarjeta-producto button,
+    html body #productosComparados#productosComparados .tarjeta-producto button *,
+    html body #productosComparados#productosComparados .tarjeta-producto select,
+    html body #productosComparados#productosComparados .tarjeta-producto select option,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-boton-pc,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-boton-pc *,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-opcion-pc,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-opcion-pc *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos#productos .tarjeta-producto button svg,
+    html body #productos#productos .tarjeta-producto button svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto button svg,
+    html body #productosComparados#productosComparados .tarjeta-producto button svg *{
+      color:#171717 !important;
+      stroke:#171717 !important;
+    }
+
+    /* Seleccionar una presentacion, incluso si es la unica. */
+    html body #productos#productos .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productos#productos .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productos#productos .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion *,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    /* Al agregar: numero central y contorno de cantidad en arcilla. */
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada),
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada),
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada),
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada){
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .control-cantidad > .cantidad.cantidad-seleccionada,
+    html body #productos#productos .tarjeta-producto .control-cantidad > .cantidad.cantidad-agregada,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad > .cantidad.cantidad-seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad > .cantidad.cantidad-agregada{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada) > .boton-cantidad,
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada) > .boton-cantidad,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada) > .boton-cantidad,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada) > .boton-cantidad{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+    }
+
+    /* El boton Agregar/Agregado usa negro sobre arcilla. */
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:hover,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:focus,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:active,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:hover,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:focus,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:active{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado *,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado svg,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado svg,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado svg *{
+      color:#171717 !important;
+      stroke:#171717 !important;
+    }
+
+    /* Kanthal conserva exactamente la misma regla de color. */
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -12649,6 +12795,6 @@
     })();
   </script>
 
-  <script src="script.js?v=175"></script>
+  <script src="script.js?v=176"></script>
 </body>
 </html>
