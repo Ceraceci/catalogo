@@ -2305,7 +2305,7 @@ function crearTarjetaProducto(
           aria-expanded="false"
           aria-controls="${idDetalles}"
         >
-          Más info.
+          Más info
         </button>
       <div
         id="${idDetalles}"
@@ -2400,7 +2400,7 @@ function alternarDetallesProducto(boton) {
   boton.textContent =
     seAbrira
       ? "Ocultar info."
-      : "Más info.";
+      : "Más info";
 }
 
 

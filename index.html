@@ -13048,6 +13048,99 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v179">
+    @media (min-width:651px){
+      /* Separacion vertical uniforme de 6 px entre todas las filas de compra. */
+      html body #productos .tarjeta-producto .fila-compra,
+      html body #productosComparados .tarjeta-producto .fila-compra{
+        row-gap:6px !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .informacion-precio,
+      html body #productosComparados .tarjeta-producto .fila-compra > .informacion-precio,
+      html body #productos .tarjeta-producto .fila-compra > .bloque-presentaciones,
+      html body #productosComparados .tarjeta-producto .fila-compra > .bloque-presentaciones{
+        margin:0 !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+      }
+
+      html body #productos .tarjeta-producto .zona-detalles-producto,
+      html body #productosComparados .tarjeta-producto .zona-detalles-producto{
+        margin:0 !important;
+        padding-top:6px !important;
+      }
+    }
+  </style>
+
+  <style id="ajustes-solicitados-v180">
+    /* La franja inferior conserva el mismo color continuo que la superior.
+       Se mantiene una sombra exterior suave al fijarse durante el desplazamiento. */
+    html body .busqueda.busqueda-en-scroll{
+      border-bottom-color:var(--color-arcilla) !important;
+      box-shadow:0 12px 12px -12px rgba(70,40,25,.42) !important;
+    }
+  </style>
+
+  <style id="ajustes-solicitados-v181">
+    @media (max-width:650px){
+      /* Se elimina la franja negra agregada debajo de la firma. */
+      html body .marca-inferior-movil{
+        min-height:32px !important;
+        padding-bottom:calc(1px + env(safe-area-inset-bottom)) !important;
+      }
+
+      html body .marca-inferior-movil::after{
+        content:none !important;
+        display:none !important;
+      }
+
+      html body .acciones-flotantes{
+        bottom:calc(32px + env(safe-area-inset-bottom)) !important;
+      }
+
+      /* Los títulos aprovechan casi todo el ancho sin reducir la tipografía. */
+      html body #productos .encabezado-producto,
+      html body #productosComparados .encabezado-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto{
+        grid-template-rows:36px 14px !important;
+        row-gap:4px !important;
+        min-height:54px !important;
+        height:54px !important;
+      }
+
+      html body #productos .fila-titulo-producto,
+      html body #productosComparados .fila-titulo-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .fila-titulo-producto{
+        box-sizing:border-box !important;
+        width:100% !important;
+        min-height:36px !important;
+        height:36px !important;
+        padding-right:6px !important;
+        padding-left:6px !important;
+      }
+
+      html body #productos .tarjeta-producto h2,
+      html body #productosComparados .tarjeta-producto h2,
+      html body #productos .tarjeta-producto.titulo-tres-lineas h2,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas h2{
+        display:-webkit-box !important;
+        min-height:0 !important;
+        height:auto !important;
+        max-height:36px !important;
+        margin:0 !important;
+        overflow:hidden !important;
+        font-size:15.8px !important;
+        line-height:18px !important;
+        -webkit-box-orient:vertical !important;
+        -webkit-line-clamp:2 !important;
+        line-clamp:2 !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13070,6 +13163,6 @@
     })();
   </script>
 
-  <script src="script.js?v=178"></script>
+  <script src="script.js?v=181"></script>
 </body>
 </html>
