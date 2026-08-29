@@ -2026,78 +2026,34 @@ function crearTarjetaProducto(
   const botonesPresentaciones =
     producto.presentaciones
       .map((presentacion, indicePresentacion) => `
-        <div
-          class="opcion-presentacion-integrada ${
+        <button
+          type="button"
+          class="boton-presentacion ${
             presentacionInicialSeleccionada &&
             indicePresentacion === indicePresentacionInicial
-              ? `seleccionada ${
-                  producto.presentaciones.length === 1 &&
-                  !productoInicialEnCarrito
-                    ? "seleccion-automatica"
-                    : ""
-                }`
+              ? "seleccionada"
               : ""
           }"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
+          aria-pressed="${
+            presentacionInicialSeleccionada &&
+            indicePresentacion === indicePresentacionInicial
+          }"
         >
-          <button
-            type="button"
-            class="boton-ajuste-presentacion restar-presentacion"
-            aria-label="Restar ${escaparHTML(
+          <span
+            class="etiqueta-presentacion-integrada"
+            data-etiqueta-base="${escaparHTML(
               formatearEtiquetaPresentacion(
                 presentacion.nombre
               )
             )}"
-            title="Restar"
-          >−</button>
-
-          <button
-            type="button"
-            class="boton-presentacion ${
-              presentacionInicialSeleccionada &&
-              indicePresentacion === indicePresentacionInicial
-                ? "seleccionada"
-                : ""
-            }"
-            data-id-producto="${producto.id}"
-            data-indice-presentacion="${indicePresentacion}"
-            aria-pressed="${
-              presentacionInicialSeleccionada &&
-              indicePresentacion === indicePresentacionInicial
-            }"
-          >
-            <span
-              class="etiqueta-presentacion-integrada"
-              data-etiqueta-base="${escaparHTML(
-                formatearEtiquetaPresentacion(
-                  presentacion.nombre
-                )
-              )}"
-            >${escaparHTML(
-              presentacionInicialSeleccionada &&
-              indicePresentacion === indicePresentacionInicial
-                ? formatearPresentacionTotal(
-                    presentacion.nombre,
-                    cantidadInicialProducto
-                  )
-                : formatearEtiquetaPresentacion(
-                    presentacion.nombre
-                  )
-            )}</span>
-          </button>
-
-          <button
-            type="button"
-            class="boton-ajuste-presentacion sumar-presentacion"
-            aria-label="Sumar ${escaparHTML(
+          >${escaparHTML(
               formatearEtiquetaPresentacion(
                 presentacion.nombre
               )
-            )}"
-            title="Sumar"
-          >+</button>
-        </div>
+          )}</span>
+        </button>
       `)
       .join("");
 
@@ -2162,32 +2118,6 @@ function crearTarjetaProducto(
             >
               ${opcionesSelectorAlambre}
             </select>
-          </div>
-
-          <div class="control-metros-alambre">
-            <button
-              type="button"
-              class="boton-ajuste-presentacion restar-presentacion"
-              aria-label="Restar un metro"
-              title="Restar"
-            >−</button>
-
-            <span
-              class="cantidad-metros-alambre"
-              aria-live="polite"
-            >${escaparHTML(
-              formatearMetrosKanthal(
-                presentacionInicial.nombre,
-                cantidadInicialProducto
-              )
-            )}</span>
-
-            <button
-              type="button"
-              class="boton-ajuste-presentacion sumar-presentacion"
-              aria-label="Sumar un metro"
-              title="Sumar"
-            >+</button>
           </div>
         </div>
         `
@@ -2311,18 +2241,62 @@ function crearTarjetaProducto(
 
       <div class="bloque-presentaciones">
         ${controlPresentaciones}
-        <input
-          type="hidden"
-          class="cantidad ${
-            productoInicialEnCarrito
-              ? "cantidad-agregada"
-              : ""
-          }"
-          value="${cantidadInicialProducto}"
-        >
       </div>
 
-      <div class="fila-acciones-tarjeta">
+      <div class="selector-cantidad">
+        <div class="control-cantidad">
+          <button
+            type="button"
+            class="boton-cantidad restar"
+            aria-label="Disminuir cantidad"
+          >−</button>
+
+          <input
+            type="number"
+            class="cantidad ${
+              productoInicialEnCarrito
+                ? "cantidad-agregada"
+                : ""
+            }"
+            value="${cantidadInicialProducto}"
+            min="1"
+            step="1"
+            aria-label="Cantidad"
+          >
+
+          <button
+            type="button"
+            class="boton-cantidad sumar"
+            aria-label="Aumentar cantidad"
+          >+</button>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        class="agregar-carrito ${
+          productoInicialEnCarrito ? "agregado" : ""
+        }"
+        aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+        title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
+      >
+        <span class="icono-agregar" aria-hidden="true">
+          <svg viewBox="0 0 28 24" focusable="false">
+            <path
+              class="contorno-agregar-carrito"
+              d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
+            ></path>
+            <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
+            <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
+          </svg>
+        </span>
+        <span class="texto-agregar-carrito">
+          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+        </span>
+      </button>
+    </div>
+
+    <div class="zona-detalles-producto">
         <button
           type="button"
           class="ver-detalles"
@@ -2331,33 +2305,6 @@ function crearTarjetaProducto(
         >
           Más info.
         </button>
-
-        <button
-          type="button"
-          class="agregar-carrito ${
-            productoInicialEnCarrito ? "agregado" : ""
-          }"
-          aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-          title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-        >
-          <span class="icono-agregar" aria-hidden="true">
-            <svg viewBox="0 0 28 24" focusable="false">
-              <path
-                class="contorno-agregar-carrito"
-                d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
-              ></path>
-              <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
-              <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
-            </svg>
-          </span>
-          <span class="texto-agregar-carrito">
-            ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-          </span>
-        </button>
-      </div>
-    </div>
-
-    <div class="zona-detalles-producto">
       <div
         id="${idDetalles}"
         class="detalles-producto"
@@ -2768,41 +2715,32 @@ function actualizarControlPresentacionIntegrado(
 
   tarjeta
     .querySelectorAll(
-      ".opcion-presentacion-integrada"
+      ".boton-presentacion"
     )
-    .forEach((opcion) => {
-      const botonPresentacion =
-        opcion.querySelector(
-          ".boton-presentacion"
-        );
+    .forEach((botonPresentacion) => {
       const etiqueta =
-        opcion.querySelector(
+        botonPresentacion.querySelector(
           ".etiqueta-presentacion-integrada"
         );
       const indiceOpcion = Number(
-        opcion.dataset.indicePresentacion
+        botonPresentacion.dataset.indicePresentacion
       );
       const esActual =
         seleccionada &&
         indiceOpcion === indicePresentacion;
 
-      opcion.classList.toggle(
+      botonPresentacion.classList.toggle(
         "seleccionada",
         esActual
       );
-      botonPresentacion?.classList.toggle(
-        "seleccionada",
-        esActual
-      );
-      botonPresentacion?.setAttribute(
+      botonPresentacion.setAttribute(
         "aria-pressed",
         esActual ? "true" : "false"
       );
 
       if (etiqueta) {
-        etiqueta.textContent = esActual
-          ? etiquetaTotal
-          : etiqueta.dataset.etiquetaBase || "";
+        etiqueta.textContent =
+          etiqueta.dataset.etiquetaBase || "";
       }
     });
 
@@ -2871,12 +2809,18 @@ function actualizarControlPresentacionIntegrado(
     etiquetaTotal;
 
   if (elementoPrecio) {
-    elementoPrecio.dataset.precio =
-      String(precioTotal);
-    elementoPrecio.textContent =
-      formatearPrecio(precioTotal);
+    const precioVisible =
+      formatearPrecio(
+        Number(presentacion.precio) || 0
+      );
+    const precioCambio =
+      elementoPrecio.textContent !== precioVisible;
 
-    if (animarPrecio) {
+    elementoPrecio.dataset.precio =
+      String(presentacion.precio);
+    elementoPrecio.textContent = precioVisible;
+
+    if (animarPrecio && precioCambio) {
       animarPrecioActualizado(
         elementoPrecio
       );
@@ -3029,10 +2973,8 @@ function cambiarCantidadTarjeta(
 
   tarjeta.dataset.cantidadUnidades =
     campoCantidad.value;
-  tarjeta.dataset.presentacionSeleccionada =
-    "true";
 
-  /* El contenedor permanece neutro: se marca únicamente el valor central. */
+  /* Se marca únicamente el valor central; los signos permanecen neutros. */
   establecerSeleccionCantidadTarjeta(
     tarjeta,
     false
@@ -3843,7 +3785,7 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
 
   tarjeta
     .querySelectorAll(
-      ".opcion-presentacion-integrada, .control-presentacion-alambre-integrado"
+      ".boton-presentacion, .control-presentacion-alambre-integrado"
     )
     .forEach((control) => {
       control.classList.toggle(
