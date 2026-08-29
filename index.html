@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="177">
+  <meta name="ceraceci-version" content="178">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=177">
+  <link rel="stylesheet" href="style.css?v=178">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7378,9 +7378,9 @@
           <title id="logoTitulo">Ceraceci</title>
           <desc id="logoDescripcion">Cuenco de cerámica sostenido por dos manos</desc>
           <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M46 29c0 8 15 14 34 14s34-6 34-14" stroke="#cf927d" stroke-width="7"/>
-            <ellipse cx="80" cy="28" rx="34" ry="12" stroke="#cf927d" stroke-width="7"/>
-            <path d="M47 31c3 25 15 39 33 39s30-14 33-39" fill="#cf927d" stroke="#cf927d" stroke-width="3"/>
+            <path d="M46 29c0 8 15 14 34 14s34-6 34-14" stroke="#98371e" stroke-width="7"/>
+            <ellipse cx="80" cy="28" rx="34" ry="12" stroke="#98371e" stroke-width="7"/>
+            <path d="M47 31c3 25 15 39 33 39s30-14 33-39" fill="#98371e" stroke="#98371e" stroke-width="3"/>
             <path d="M18 54c4 25 20 44 48 54M31 61c10 4 18 13 27 24" stroke="#9b9b9b" stroke-width="9"/>
             <path d="M142 54c-4 25-20 44-48 54M129 61c-10 4-18 13-27 24" stroke="#9b9b9b" stroke-width="9"/>
           </g>
@@ -12996,6 +12996,58 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v178">
+    /* El encabezado deja de ser un bloque: comparte el fondo arcilla continuo. */
+    html body .contenedor,
+    html body .cabecera,
+    html body .logo-contenedor{
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+      outline:0 !important;
+      box-shadow:none !important;
+    }
+
+    /* Agregado replica sin interferencias el estado rojo de los demas controles. */
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:hover,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:focus,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado:active,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:hover,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:focus,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado:active{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border:1px solid var(--color-rojo-terracota) !important;
+      outline:0 !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+      text-shadow:none !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado *,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      outline:0 !important;
+      box-shadow:none !important;
+      text-shadow:none !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado svg,
+    html body #productos#productos .tarjeta-producto .fila-compra .agregar-carrito.agregado svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado svg,
+    html body #productosComparados#productosComparados .tarjeta-producto .fila-compra .agregar-carrito.agregado svg *{
+      color:#fff !important;
+      fill:none !important;
+      stroke:#fff !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13018,6 +13070,6 @@
     })();
   </script>
 
-  <script src="script.js?v=177"></script>
+  <script src="script.js?v=178"></script>
 </body>
 </html>
