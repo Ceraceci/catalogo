@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="176">
+  <meta name="ceraceci-version" content="177">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=176">
+  <link rel="stylesheet" href="style.css?v=177">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -12773,6 +12773,229 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v177">
+    :root{
+      --color-principal:var(--color-rojo-terracota);
+      --color-principal-oscuro:var(--color-rojo-terracota);
+      --color-espacio-tarjetas:var(--color-arcilla);
+    }
+
+    /* El fondo visible entre las tarjetas pasa a color arcilla. */
+    html body{
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos,
+    html body #productosComparados{
+      background:transparent !important;
+      background-color:transparent !important;
+    }
+
+    /* Los contenedores que prolongan el fondo entre tarjetas usan arcilla. */
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-top-color:var(--color-arcilla) !important;
+      border-bottom-color:var(--color-arcilla) !important;
+    }
+
+    html body .select-personalizado-categoria-pc .select-personalizado-lista-pc::-webkit-scrollbar-thumb{
+      background:var(--color-rojo-terracota) !important;
+    }
+
+    /* Presentaciones seleccionadas: rojo terracota y blanco. */
+    html body #productos#productos .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productos#productos .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productos#productos .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productos#productos .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion *,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.seleccionada > .boton-presentacion *,
+    html body #productosComparados#productosComparados .tarjeta-producto .opcion-presentacion-integrada.presentacion-agregada > .boton-presentacion *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* Cantidad seleccionada o agregada. Los signos conservan su estado neutro. */
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada),
+    html body #productos#productos .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada),
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-seleccionada),
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad:has(> .cantidad.cantidad-agregada){
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .control-cantidad > .cantidad.cantidad-seleccionada,
+    html body #productos#productos .tarjeta-producto .control-cantidad > .cantidad.cantidad-agregada,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad > .cantidad.cantidad-seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .control-cantidad > .cantidad.cantidad-agregada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    /* Agregar, Mas info., Compartir y Comparar seleccionados. */
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado,
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado:hover,
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado:focus,
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado:active,
+    html body #productos#productos .tarjeta-producto .ver-detalles[aria-expanded="true"],
+    html body #productos#productos .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productos#productos .tarjeta-producto .boton-comparar[aria-pressed="true"],
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado:hover,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado:focus,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado:active,
+    html body #productosComparados#productosComparados .tarjeta-producto .ver-detalles[aria-expanded="true"],
+    html body #productosComparados#productosComparados .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado *,
+    html body #productos#productos .tarjeta-producto .ver-detalles[aria-expanded="true"] *,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado *,
+    html body #productosComparados#productosComparados .tarjeta-producto .ver-detalles[aria-expanded="true"] *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado svg,
+    html body #productos#productos .tarjeta-producto .agregar-carrito.agregado svg *,
+    html body #productos#productos .tarjeta-producto .compartir-producto.compartir-presionado svg,
+    html body #productos#productos .tarjeta-producto .compartir-producto.compartir-presionado svg *,
+    html body #productos#productos .tarjeta-producto .boton-comparar[aria-pressed="true"] svg,
+    html body #productos#productos .tarjeta-producto .boton-comparar[aria-pressed="true"] svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado svg,
+    html body #productosComparados#productosComparados .tarjeta-producto .agregar-carrito.agregado svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto .compartir-producto.compartir-presionado svg,
+    html body #productosComparados#productosComparados .tarjeta-producto .compartir-producto.compartir-presionado svg *,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"] svg,
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"] svg *{
+      color:#fff !important;
+      stroke:#fff !important;
+    }
+
+    /* Kanthal y sus opciones seleccionadas. */
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre > .selector-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .selector-diametro-alambre .select-personalizado-boton-pc,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada .control-metros-alambre > .cantidad-metros-alambre{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    html body #productos#productos .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada *,
+    html body #productosComparados#productosComparados .tarjeta-alambre-kanthal .control-presentacion-alambre-integrado.seleccionada *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* Selectores personalizados dentro de las tarjetas. */
+    html body #productos#productos .tarjeta-producto .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc,
+    html body #productos#productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-presentacion-pc.seleccion-activa .select-personalizado-boton-pc,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-opcion-pc.seleccionada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    /* Categorias y ordenamiento seleccionados en las barras superiores. */
+    html body .busqueda.busqueda .select-personalizado-pc.seleccion-activa .select-personalizado-boton-pc,
+    html body .busqueda.busqueda .select-personalizado-pc .select-personalizado-opcion-pc.seleccionada,
+    html body .busqueda.busqueda #filtroCategoria.categoria-activa,
+    html body .busqueda.busqueda .control-orden.orden-activo,
+    html body .busqueda.busqueda .control-orden.orden-activo select,
+    html body .busqueda.busqueda .control-orden.orden-activo .icono-orden{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-rojo-terracota) !important;
+      background-color:var(--color-rojo-terracota) !important;
+      border-color:var(--color-rojo-terracota) !important;
+    }
+
+    html body .busqueda.busqueda .select-personalizado-pc.seleccion-activa .select-personalizado-boton-pc *,
+    html body .busqueda.busqueda .select-personalizado-pc .select-personalizado-opcion-pc.seleccionada *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    @media (min-width:651px){
+      html body .busqueda.busqueda .select-personalizado-categoria-pc.seleccion-activa .select-personalizado-boton-pc::after,
+      html body .busqueda.busqueda .select-personalizado-orden-pc.seleccion-activa .select-personalizado-boton-pc::after{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+
+      html body .acciones-flotantes{
+        background:transparent !important;
+        background-color:transparent !important;
+      }
+
+      html body .acciones-flotantes .abrir-carrito{
+        box-shadow:
+          0 0 0 6px var(--color-arcilla),
+          0 4px 12px rgba(70,40,25,.18) !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .acciones-flotantes{
+        background:var(--color-arcilla) !important;
+        background-color:var(--color-arcilla) !important;
+      }
+
+      html body .busqueda.busqueda #filtroCategoria.categoria-activa{
+        background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -12795,6 +13018,6 @@
     })();
   </script>
 
-  <script src="script.js?v=176"></script>
+  <script src="script.js?v=177"></script>
 </body>
 </html>
