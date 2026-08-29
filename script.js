@@ -2283,9 +2283,6 @@ function crearTarjetaProducto(
         aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
         title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
       >
-        <span class="texto-agregar-carrito">
-          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-        </span>
         <span class="icono-agregar" aria-hidden="true">
           <svg viewBox="0 0 28 24" focusable="false">
             <path
@@ -2295,6 +2292,9 @@ function crearTarjetaProducto(
             <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
             <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
           </svg>
+        </span>
+        <span class="texto-agregar-carrito">
+          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
         </span>
       </button>
     </div>
@@ -4035,10 +4035,10 @@ function mostrarCarrito() {
         obtenerPresentacionTotalProducto(
           producto
         );
-      const etiquetaCantidad =
-        obtenerEtiquetaCantidadProducto(
-          producto
-        );
+      const cantidadProducto = Math.max(
+        1,
+        Number(producto.cantidad) || 1
+      );
 
       const productoCatalogo =
         productosAgrupados.find((item) => {
@@ -4107,9 +4107,7 @@ function mostrarCarrito() {
                 )}"
               >−</button>
 
-              <span>${escaparHTML(
-                etiquetaCantidad
-              )}</span>
+              <span>${cantidadProducto}</span>
 
               <button
                 type="button"
