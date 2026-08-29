@@ -1965,7 +1965,6 @@ function crearTarjetaProducto(
       indicePresentacionInicial
     ] || producto.presentaciones[0];
   const presentacionInicialSeleccionada =
-    producto.presentaciones.length === 1 ||
     Boolean(productoInicialCarrito);
 
   const tarjeta =
@@ -2884,16 +2883,7 @@ function seleccionarPresentacion(control) {
     ) === indicePresentacion;
   const seDeselecciona =
     !esSelectorPresentacion &&
-    yaEstabaSeleccionada &&
-    producto.presentaciones.length > 1;
-
-  if (
-    !esSelectorPresentacion &&
-    producto.presentaciones.length === 1 &&
-    window.matchMedia("(min-width: 651px)").matches
-  ) {
-    control.classList.add("seleccion-manual");
-  }
+    yaEstabaSeleccionada;
 
   tarjeta.dataset.indicePresentacion =
     String(indicePresentacion);
@@ -3135,13 +3125,10 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
 
           tarjeta
             .querySelectorAll(
-              ".boton-presentacion.seleccionada, .boton-presentacion.seleccion-manual"
+              ".boton-presentacion.seleccionada"
             )
             .forEach((boton) => {
-              boton.classList.remove(
-                "seleccionada",
-                "seleccion-manual"
-              );
+              boton.classList.remove("seleccionada");
               boton.setAttribute("aria-pressed", "false");
             });
 
@@ -3171,9 +3158,7 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
 
           if (presentacionInicial) {
             tarjeta.dataset.presentacionSeleccionada =
-              String(
-                producto.presentaciones.length === 1
-              );
+              "false";
             tarjeta.dataset.presentacion =
               presentacionInicial.nombre;
             tarjeta.dataset.precio =

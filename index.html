@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=172">
+  <link rel="stylesheet" href="style.css?v=173">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -12251,6 +12251,121 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v173">
+    /* Una o varias presentaciones comparten exactamente el mismo estado. */
+    html body #productos .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada,
+    html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada *,
+    html body #productosComparados .tarjeta-producto.tarjeta-presentacion-unica .boton-presentacion.seleccionada *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* Estado neutro idéntico para óxidos, pastas y cualquier otra categoría. */
+    html body #productos .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada),
+    html body #productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:rgba(111,103,97,.38) !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada) *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada) *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    /* Seleccionada o agregada: arcilla, blanco y tipografía regular. */
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:hover,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:focus,
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada:active,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:hover,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:focus,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada:active,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productos .tarjeta-producto .boton-presentacion.presentacion-agregada *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.seleccionada *,
+    html body #productosComparados .tarjeta-producto .boton-presentacion.presentacion-agregada *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* La cantidad central replica el mismo comportamiento en todas las tarjetas. */
+    html body #productos .tarjeta-producto .cantidad:not(.cantidad-seleccionada):not(.cantidad-agregada),
+    html body #productosComparados .tarjeta-producto .cantidad:not(.cantidad-seleccionada):not(.cantidad-agregada){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:transparent !important;
+      background-color:transparent !important;
+    }
+
+    html body #productos .tarjeta-producto .cantidad.cantidad-seleccionada,
+    html body #productos .tarjeta-producto .cantidad.cantidad-seleccionada:hover,
+    html body #productos .tarjeta-producto .cantidad.cantidad-seleccionada:focus,
+    html body #productos .tarjeta-producto .cantidad.cantidad-agregada,
+    html body #productos .tarjeta-producto .cantidad.cantidad-agregada:hover,
+    html body #productos .tarjeta-producto .cantidad.cantidad-agregada:focus,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-seleccionada,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-seleccionada:hover,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-seleccionada:focus,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-agregada,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-agregada:hover,
+    html body #productosComparados .tarjeta-producto .cantidad.cantidad-agregada:focus{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+      border-color:var(--color-arcilla) !important;
+    }
+
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada):hover,
+      html body #productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada):hover{
+        color:var(--color-arcilla) !important;
+        -webkit-text-fill-color:var(--color-arcilla) !important;
+        font-weight:400 !important;
+        background:#eee8e6 !important;
+        background-color:#eee8e6 !important;
+        border-color:var(--color-arcilla) !important;
+      }
+
+      html body #productos .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada):hover *,
+      html body #productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada):not(.presentacion-agregada):hover *{
+        color:var(--color-arcilla) !important;
+        -webkit-text-fill-color:var(--color-arcilla) !important;
+        font-weight:400 !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -12273,6 +12388,6 @@
     })();
   </script>
 
-  <script src="script.js?v=172"></script>
+  <script src="script.js?v=173"></script>
 </body>
 </html>
