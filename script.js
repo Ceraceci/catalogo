@@ -3549,6 +3549,23 @@ function agregarProductoAlCarrito(boton) {
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
+  /* Si existe una sola presentacion, Agregar la elige automaticamente. */
+  if (
+    tarjeta.dataset.presentacionSeleccionada !==
+      "true" &&
+    tarjeta.classList.contains(
+      "tarjeta-presentacion-unica"
+    )
+  ) {
+    tarjeta.dataset.indicePresentacion = "0";
+    tarjeta.dataset.presentacionSeleccionada =
+      "true";
+    actualizarControlPresentacionIntegrado(
+      tarjeta,
+      true
+    );
+  }
+
   if (
     tarjeta.dataset.presentacionSeleccionada !==
     "true"
