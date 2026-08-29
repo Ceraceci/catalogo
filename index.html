@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=169">
+  <link rel="stylesheet" href="style.css?v=170">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7648,7 +7648,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"></path>
         </svg>
-        <span>Compartir carrito</span>
+        <span>Compartir mi carrito</span>
       </button>
 
       <button type="button" id="vaciarCarrito" class="vaciar-carrito">
@@ -7678,55 +7678,13 @@
           alt=""
           draggable="false"
         >
-        <div class="marca-agua-zoom" aria-hidden="true">
-          <svg class="definicion-marca-agua-zoom" aria-hidden="true">
-            <symbol id="simboloMarcaAguaCeraceci" viewBox="0 0 160 120">
-              <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M46 29c0 8 15 14 34 14s34-6 34-14" stroke="#98371e" stroke-width="7"></path>
-                <ellipse cx="80" cy="28" rx="34" ry="12" stroke="#98371e" stroke-width="7"></ellipse>
-                <path d="M47 31c3 25 15 39 33 39s30-14 33-39" fill="#98371e" stroke="#98371e" stroke-width="3"></path>
-                <path d="M18 54c4 25 20 44 48 54M31 61c10 4 18 13 27 24" stroke="#77716e" stroke-width="9"></path>
-                <path d="M142 54c-4 25-20 44-48 54M129 61c-10 4-18 13-27 24" stroke="#77716e" stroke-width="9"></path>
-              </g>
-            </symbol>
-          </svg>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-          <span class="marca-agua-zoom-item">
-            <svg viewBox="0 0 160 120" aria-hidden="true">
-              <use href="#simboloMarcaAguaCeraceci"></use>
-            </svg>
-            <span>CERACECI</span>
-          </span>
-        </div>
+        <img
+          class="marca-agua-zoom-unica"
+          src="img/logo-minimal.svg"
+          alt=""
+          aria-hidden="true"
+          draggable="false"
+        >
         <button
           type="button"
           id="cerrarZoomImagen"
@@ -11668,6 +11626,242 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v170">
+    /* Todas las presentaciones permanecen en una única fila. */
+    html body #productos .tarjeta-producto .opciones-presentacion,
+    html body #productosComparados .tarjeta-producto .opciones-presentacion{
+      box-sizing:border-box !important;
+      display:grid !important;
+      grid-template-columns:none !important;
+      grid-auto-flow:column !important;
+      grid-auto-columns:minmax(0,1fr) !important;
+      gap:6px !important;
+      width:100% !important;
+      min-width:0 !important;
+      overflow:visible !important;
+    }
+
+    html body #productos .tarjeta-producto .opciones-presentacion > .boton-presentacion,
+    html body #productosComparados .tarjeta-producto .opciones-presentacion > .boton-presentacion{
+      width:100% !important;
+      min-width:0 !important;
+      max-width:none !important;
+      padding-right:3px !important;
+      padding-left:3px !important;
+      overflow:hidden !important;
+      text-overflow:clip !important;
+      white-space:nowrap !important;
+    }
+
+    /* Compartir y Comparar son negros en reposo. */
+    html body #productos .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productosComparados .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active),
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="false"],
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="false"]{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:#171717 !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active) svg,
+    html body #productosComparados .tarjeta-producto .compartir-producto:not(.compartir-presionado):not(:active) svg{
+      color:#171717 !important;
+      fill:currentColor !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="false"] svg,
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="false"] svg{
+      color:#171717 !important;
+      fill:none !important;
+      stroke:currentColor !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productosComparados .tarjeta-producto .compartir-producto.compartir-presionado,
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="true"],
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-principal) !important;
+      background-color:var(--color-principal) !important;
+      border-color:var(--color-principal) !important;
+    }
+
+    html body #productos .tarjeta-producto .compartir-producto.compartir-presionado svg,
+    html body #productosComparados .tarjeta-producto .compartir-producto.compartir-presionado svg{
+      color:#fff !important;
+      fill:currentColor !important;
+    }
+
+    html body #productos .tarjeta-producto .boton-comparar[aria-pressed="true"] svg,
+    html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="true"] svg{
+      color:#fff !important;
+      fill:none !important;
+      stroke:currentColor !important;
+    }
+
+    /* El carrito usa el mismo control minimalista que las tarjetas. */
+    html body .control-cantidad-carrito{
+      box-sizing:border-box !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+      width:min(100%,210px) !important;
+      min-width:0 !important;
+      height:31px !important;
+      min-height:31px !important;
+      max-height:31px !important;
+      overflow:hidden !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border:1px solid rgba(111,103,97,.38) !important;
+      border-radius:9px !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+    }
+
+    html body .control-cantidad-carrito > button,
+    html body .control-cantidad-carrito > span{
+      box-sizing:border-box !important;
+      display:grid !important;
+      place-items:center !important;
+      width:100% !important;
+      min-width:0 !important;
+      height:29px !important;
+      min-height:29px !important;
+      max-height:29px !important;
+      margin:0 !important;
+      padding:0 2px !important;
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-size:clamp(.68rem,2.8vw,.86rem) !important;
+      font-weight:400 !important;
+      line-height:1 !important;
+      text-align:center !important;
+      white-space:nowrap !important;
+      background:transparent !important;
+      background-color:transparent !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+    }
+
+    /* Una sola marca discreta dentro de la foto ampliada. */
+    html body .zoom-imagen-overlay .zoom-imagen-marco::after,
+    html body .marca-agua-zoom{
+      display:none !important;
+      content:none !important;
+      background:none !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-marco{
+      position:relative !important;
+      isolation:isolate !important;
+    }
+
+    html body .zoom-imagen-overlay .marca-agua-zoom-unica{
+      position:absolute !important;
+      top:clamp(9px,1.8vw,18px) !important;
+      left:clamp(9px,1.8vw,18px) !important;
+      z-index:2 !important;
+      display:block !important;
+      width:clamp(46px,7.5vw,78px) !important;
+      height:auto !important;
+      opacity:.32 !important;
+      pointer-events:none !important;
+      user-select:none !important;
+      filter:drop-shadow(0 0 2px rgba(255,255,255,.92)) !important;
+    }
+
+    @media (min-width:651px){
+      /* En PC, Agregar muestra el carrito a la derecha del texto. */
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:7px !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .texto-agregar-carrito,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .texto-agregar-carrito,
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar{
+        display:inline-flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        visibility:visible !important;
+        opacity:1 !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar,
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar svg,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar svg{
+        width:20px !important;
+        height:18px !important;
+        flex:0 0 auto !important;
+      }
+
+      /* Hover de Compartir/Comparar igual al resto de los botones. */
+      html body #productos .tarjeta-producto .compartir-producto:not(.compartir-presionado):hover:not(:active),
+      html body #productosComparados .tarjeta-producto .compartir-producto:not(.compartir-presionado):hover:not(:active),
+      html body #productos .tarjeta-producto .boton-comparar[aria-pressed="false"]:hover,
+      html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="false"]:hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:#eee8e6 !important;
+        background-color:#eee8e6 !important;
+        border-color:var(--color-principal) !important;
+      }
+
+      html body #productos .tarjeta-producto .compartir-producto:not(.compartir-presionado):hover:not(:active) svg,
+      html body #productosComparados .tarjeta-producto .compartir-producto:not(.compartir-presionado):hover:not(:active) svg{
+        color:var(--color-principal) !important;
+        fill:currentColor !important;
+      }
+
+      html body #productos .tarjeta-producto .boton-comparar[aria-pressed="false"]:hover svg,
+      html body #productosComparados .tarjeta-producto .boton-comparar[aria-pressed="false"]:hover svg{
+        color:var(--color-principal) !important;
+        fill:none !important;
+        stroke:currentColor !important;
+      }
+
+      html body .control-cantidad-carrito:has(> button:hover){
+        border-color:var(--color-principal) !important;
+      }
+
+      html body .control-cantidad-carrito > button:hover{
+        color:var(--color-principal) !important;
+        -webkit-text-fill-color:var(--color-principal) !important;
+        background:transparent !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body #productos .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(3)) > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(3)) > .boton-presentacion{
+        font-size:12.5px !important;
+      }
+
+      html body #productos .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(4)) > .boton-presentacion,
+      html body #productosComparados .tarjeta-producto .opciones-presentacion:has(> .boton-presentacion:nth-child(4)) > .boton-presentacion{
+        font-size:11.5px !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .texto-agregar-carrito,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .texto-agregar-carrito{
+        display:none !important;
+      }
+
+      html body #productos .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar,
+      html body #productosComparados .tarjeta-producto .fila-compra > .agregar-carrito .icono-agregar{
+        display:inline-flex !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -11690,6 +11884,6 @@
     })();
   </script>
 
-  <script src="script.js?v=169"></script>
+  <script src="script.js?v=170"></script>
 </body>
 </html>

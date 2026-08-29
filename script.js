@@ -2280,6 +2280,9 @@ function crearTarjetaProducto(
         aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
         title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
       >
+        <span class="texto-agregar-carrito">
+          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+        </span>
         <span class="icono-agregar" aria-hidden="true">
           <svg viewBox="0 0 28 24" focusable="false">
             <path
@@ -2289,9 +2292,6 @@ function crearTarjetaProducto(
             <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
             <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
           </svg>
-        </span>
-        <span class="texto-agregar-carrito">
-          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
         </span>
       </button>
     </div>
@@ -2964,6 +2964,25 @@ function cambiarCantidadTarjeta(
   );
 
   if (cantidadNueva === cantidadActual) {
+    if (
+      tarjeta.classList.contains(
+        "tarjeta-presentacion-unica"
+      ) &&
+      window.matchMedia(
+        "(min-width: 651px)"
+      ).matches
+    ) {
+      marcarBotonTarjetaComoPendiente(
+        tarjeta
+      );
+      campoCantidad.classList.add(
+        "cantidad-seleccionada"
+      );
+      actualizarControlPresentacionIntegrado(
+        tarjeta
+      );
+    }
+
     boton.blur?.();
     return;
   }
@@ -3585,10 +3604,8 @@ function agregarProductoAlCarrito(boton) {
       tarjeta.dataset.presentacion,
 
     presentacionTotal:
-      tarjeta.dataset.presentacionTotal ||
-      formatearPresentacionTotal(
-        tarjeta.dataset.presentacion,
-        cantidad
+      formatearEtiquetaPresentacion(
+        tarjeta.dataset.presentacion
       ),
 
     precio:
@@ -3841,12 +3858,10 @@ function formatearPrecioCarrito(valor) {
 
 
 function obtenerPresentacionTotalProducto(producto) {
-  return producto.presentacionTotal ||
-    formatearPresentacionTotal(
-      producto.presentacionBase ||
-        producto.presentacion,
-      producto.cantidad
-    );
+  return formatearEtiquetaPresentacion(
+    producto.presentacionBase ||
+      producto.presentacion
+  );
 }
 
 
@@ -3922,9 +3937,8 @@ function recalcularProductoCarrito(producto) {
   producto.presentacionBase =
     presentacion.nombre;
   producto.presentacionTotal =
-    formatearPresentacionTotal(
-      presentacion.nombre,
-      cantidad
+    formatearEtiquetaPresentacion(
+      presentacion.nombre
     );
   producto.indicePresentacion =
     indicePresentacion;
@@ -4007,6 +4021,10 @@ function mostrarCarrito() {
         obtenerPresentacionTotalProducto(
           producto
         );
+      const etiquetaCantidad =
+        obtenerEtiquetaCantidadProducto(
+          producto
+        );
 
       const productoCatalogo =
         productosAgrupados.find((item) => {
@@ -4070,27 +4088,21 @@ function mostrarCarrito() {
                 type="button"
                 data-accion="restar"
                 data-indice="${indice}"
-                aria-label="Restar ${escaparHTML(
-                  formatearEtiquetaPresentacion(
-                    producto.presentacionBase ||
-                      producto.presentacion
-                  )
+                aria-label="Restar una unidad de ${escaparHTML(
+                  producto.nombre
                 )}"
               >−</button>
 
               <span>${escaparHTML(
-                presentacionTotal
+                etiquetaCantidad
               )}</span>
 
               <button
                 type="button"
                 data-accion="sumar"
                 data-indice="${indice}"
-                aria-label="Sumar ${escaparHTML(
-                  formatearEtiquetaPresentacion(
-                    producto.presentacionBase ||
-                      producto.presentacion
-                  )
+                aria-label="Sumar una unidad de ${escaparHTML(
+                  producto.nombre
                 )}"
               >+</button>
             </div>
@@ -4227,11 +4239,9 @@ function cargarCarritoGuardado() {
           producto.presentacionBase ||
           producto.presentacion,
         presentacionTotal:
-          producto.presentacionTotal ||
-          formatearPresentacionTotal(
+          formatearEtiquetaPresentacion(
             producto.presentacionBase ||
-              producto.presentacion,
-            producto.cantidad
+              producto.presentacion
           )
       }));
   } catch (error) {
@@ -4345,7 +4355,63 @@ function finalizarPedidoWhatsApp() {
 
 
 function obtenerNombreProductoParaCantidad(producto) {
-  return producto.nombre;
+  const cantidad = Math.max(
+    1,
+    Number(producto.cantidad) || 1
+  );
+
+  return `${cantidad} × ${producto.nombre}`;
+}
+
+
+function pluralizarSustantivoProducto(palabra) {
+  const singular = limpiarTexto(palabra)
+    .toLocaleLowerCase("es-AR");
+
+  if (!singular) {
+    return "productos";
+  }
+
+  const pluralesEspeciales = {
+    set: "sets",
+    spray: "sprays"
+  };
+
+  if (pluralesEspeciales[singular]) {
+    return pluralesEspeciales[singular];
+  }
+
+  if (/z$/u.test(singular)) {
+    return singular.replace(/z$/u, "ces");
+  }
+
+  if (/[aeiouáéíóú]$/u.test(singular)) {
+    return `${singular}s`;
+  }
+
+  if (/[sx]$/u.test(singular)) {
+    return singular;
+  }
+
+  return `${singular}es`;
+}
+
+
+function obtenerEtiquetaCantidadProducto(producto) {
+  const cantidad = Math.max(
+    1,
+    Number(producto.cantidad) || 1
+  );
+  const sustantivo = limpiarTexto(
+    producto.nombre
+  ).split(/\s+/u)[0] || "producto";
+  const nombreCantidad = cantidad === 1
+    ? sustantivo.toLocaleLowerCase("es-AR")
+    : pluralizarSustantivoProducto(
+        sustantivo
+      );
+
+  return `${cantidad} ${nombreCantidad}`;
 }
 
 
