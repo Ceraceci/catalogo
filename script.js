@@ -2693,7 +2693,7 @@ function obtenerEscalasRecorteProducto(nombreProducto) {
   let zoomMovil = movil;
 
   /*
-    v194: los esmaltes traen margen blanco incorporado en sus archivos.
+    v195: los esmaltes traen margen blanco incorporado en sus archivos.
     Se usa una ampliacion uniforme y moderada en tarjeta, carrito y zoom.
     El Silicato de sodio conserva su encuadre en la tarjeta, pero recibe el
     mismo recorte visual al abrir el zoom. Nunca se altera la proporcion.
@@ -2709,8 +2709,13 @@ function obtenerEscalasRecorteProducto(nombreProducto) {
   }
 
   if (esSilicatoDeSodio) {
-    zoomEscritorio = Math.max(zoomEscritorio, 1.28);
-    zoomMovil = Math.max(zoomMovil, 1.28);
+    /*
+      La foto del Silicato necesita escalas distintas por la relacion de
+      aspecto de cada pantalla: moderada en PC para conservar la tapa y mas
+      amplia en movil para retirar el margen blanco que aun quedaba visible.
+    */
+    zoomEscritorio = Math.max(zoomEscritorio, 1.14);
+    zoomMovil = Math.max(zoomMovil, 1.42);
   }
 
   return {
