@@ -136,7 +136,7 @@ const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
-   GALERÍA DE FOTOS - v183
+   GALERÍA DE FOTOS - v184
 
    - Flechas realmente dentro de la foto.
    - Flechas más discretas.
@@ -263,14 +263,19 @@ function asegurarEstilosGaleriaFotos() {
       transform-origin:center center !important;
     }
 
-    /* Borde terracota para todas las presentaciones en estado neutro. */
-    html body #productos#productos .tarjeta-producto .boton-presentacion:not(.seleccionada),
-    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada),
-    html body #productos#productos .tarjeta-producto .selector-presentacion,
-    html body #productosComparados#productosComparados .tarjeta-producto .selector-presentacion,
-    html body #productos#productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc,
-    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
-      border-color:var(--color-principal,#98371e) !important;
+    /*
+      Presentaciones: el borde terracota aparece SOLO al pasar el mouse
+      en PC. En reposo conservan exactamente su borde original.
+    */
+    @media (min-width:651px) and (hover:hover) and (pointer:fine){
+      html body #productos#productos .tarjeta-producto .boton-presentacion:not(.seleccionada):hover,
+      html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada):hover,
+      html body #productos#productos .tarjeta-producto .selector-presentacion:hover,
+      html body #productosComparados#productosComparados .tarjeta-producto .selector-presentacion:hover,
+      html body #productos#productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc:hover,
+      html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc:hover{
+        border-color:var(--color-principal,#98371e) !important;
+      }
     }
 
     /* Navegación del zoom: también vive DENTRO de la propia imagen. */
@@ -2735,6 +2740,37 @@ function crearTarjetaProducto(
           </div>
         `;
 
+  /*
+    v184: algunos archivos de la segunda tanda traen un margen blanco
+    grande DENTRO de la propia imagen aunque el producto tenga una sola foto.
+    Estos productos necesitan el mismo recorte visual que los de varias fotos.
+  */
+  const nombreProductoRecorte = normalizarTexto(producto.nombre)
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+  const patronesRecorteMargenBlanco = [
+    /arena de rutilo/,
+    /bentonita/,
+    /bidon de boca ancha/,
+    /carbonato de bario/,
+    /carbonato de calcio/,
+    /^cuarzo(?:\b|$)/,
+    /harina de rutilo/,
+    /ox(?:ido)?(?: de)? cobre negro/,
+    /ox(?:ido)?(?: de)? hierro amarillo/,
+    /ox(?:ido)?(?: de)? hierro rojo/,
+    /ox(?:ido)?(?: de)? titanio/,
+    /silicato de (?:circonio|zirconio)/,
+    /talco chino/,
+    /feldespato potasico/,
+    /feldespato sodico/
+  ];
+
+  const productoRequiereRecorteMargenBlanco =
+    patronesRecorteMargenBlanco.some((patron) =>
+      patron.test(nombreProductoRecorte)
+    );
+
   const fotos = [];
 
   (
@@ -2754,6 +2790,14 @@ function crearTarjetaProducto(
   });
 
   const foto = fotos[0] || "";
+
+  /*
+    Conservamos el comportamiento anterior para productos con varias fotos
+    y, además, forzamos el recorte para la lista de productos de la segunda
+    tanda que todavía quedaban chicos aunque tengan una sola foto.
+  */
+  const recortarMargenBlanco =
+    fotos.length > 1 || productoRequiereRecorteMargenBlanco;
 
   tarjeta.dataset.foto = foto;
 
@@ -2845,7 +2889,7 @@ function crearTarjetaProducto(
       <img
         src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
-        class="foto-producto ${foto ? (fotos.length > 1 ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
+        class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
         loading="lazy"
         referrerpolicy="no-referrer"
       >
@@ -2976,10 +3020,10 @@ function crearTarjetaProducto(
       JSON.stringify(fotos);
     imagenProducto.dataset.indiceFoto = "0";
     imagenProducto.dataset.recorteMargenBlanco =
-      fotos.length > 1 ? "true" : "false";
+      recortarMargenBlanco ? "true" : "false";
     imagenProducto.classList.toggle(
       "foto-recorte-margen-blanco",
-      fotos.length > 1
+      recortarMargenBlanco
     );
 
     const indicadoresFoto =
