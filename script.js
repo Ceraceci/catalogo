@@ -136,7 +136,7 @@ const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
-   GALERÍA DE FOTOS - v186
+   GALERÍA DE FOTOS - v187
 
    - Flechas realmente dentro de la foto.
    - Flechas más discretas.
@@ -378,6 +378,21 @@ function asegurarEstilosGaleriaFotos() {
 
     @media (max-width:650px){
       /*
+        v187: en móvil usamos una escala propia. La tarjeta es mucho más
+        angosta que en PC, por eso algunos productos todavía se percibían
+        chicos aun cuando el recorte ya funcionaba en escritorio.
+        La escala sigue siendo uniforme en ambos ejes: nunca deforma la foto.
+      */
+      html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco,
+      html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco{
+        transform:scale(var(--ceraceci-escala-foto-movil, var(--ceraceci-escala-foto, 1))) !important;
+      }
+
+      html body .zoom-imagen-overlay .zoom-imagen-ampliada.zoom-recorte-margen-blanco{
+        transform:scale(var(--ceraceci-escala-foto-movil, var(--ceraceci-escala-foto, 1))) !important;
+      }
+
+      /*
         En móvil no mostramos flechas: las fotos se recorren deslizando
         horizontalmente. Los puntos quedan como indicación de que hay más.
       */
@@ -459,6 +474,7 @@ function asegurarNavegacionZoomFotos() {
   let indiceZoom = 0;
   let recortarMargenBlancoZoom = false;
   let escalaRecorteZoom = 1;
+  let escalaRecorteZoomMovil = 1;
   let touchInicioZoom = null;
   let bloquearClickZoomHasta = 0;
 
@@ -544,6 +560,10 @@ function asegurarNavegacionZoomFotos() {
       "--ceraceci-escala-foto",
       String(escalaRecorteZoom || 1)
     );
+    imagenZoom.style.setProperty(
+      "--ceraceci-escala-foto-movil",
+      String(escalaRecorteZoomMovil || escalaRecorteZoom || 1)
+    );
 
     imagenZoom.src = fotosZoom[indiceZoom];
 
@@ -605,6 +625,15 @@ function asegurarNavegacionZoomFotos() {
       Number(fotoOrigen.dataset.escalaRecorte || 1) || 1
     );
 
+    escalaRecorteZoomMovil = Math.max(
+      1,
+      Number(
+        fotoOrigen.dataset.escalaRecorteMovil ||
+        fotoOrigen.dataset.escalaRecorte ||
+        1
+      ) || 1
+    );
+
     imagenZoom.classList.toggle(
       "zoom-recorte-margen-blanco",
       recortarMargenBlancoZoom
@@ -612,6 +641,10 @@ function asegurarNavegacionZoomFotos() {
     imagenZoom.style.setProperty(
       "--ceraceci-escala-foto",
       String(escalaRecorteZoom)
+    );
+    imagenZoom.style.setProperty(
+      "--ceraceci-escala-foto-movil",
+      String(escalaRecorteZoomMovil)
     );
 
     actualizarControlesZoom();
@@ -2825,7 +2858,7 @@ function crearTarjetaProducto(
         `;
 
   /*
-    v186: el recorte deja de depender de que el producto tenga varias fotos.
+    v187: el recorte deja de depender de que el producto tenga varias fotos.
     Ese criterio hacía que algunas bolsas ya bien encuadradas (por ejemplo
     Arcilla APM Rosada y Caolín Sur del Río) quedaran cortadas.
 
@@ -2852,15 +2885,15 @@ function crearTarjetaProducto(
       no requieren el recorte agresivo de versiones anteriores. Las escalas
       son individuales para agrandarlos sin cortar la muestra.
     */
-    [/harina de rutilo/, 1.46],
-    [/ox(?:ido)?(?: de)? cobalto/, 1.38],
-    [/ox(?:ido)?(?: de)? cobre negro/, 1.42],
-    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44],
-    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44],
-    [/ox(?:ido)?(?: de)? manganeso/, 1.40],
-    [/ox(?:ido)?(?: de)? niquel/, 1.40],
-    [/ox(?:ido)?(?: de)? titanio/, 1.40],
-    [/silicato de (?:circonio|zirconio)/, 1.45],
+    [/harina de rutilo/, 1.46, 1.63],
+    [/ox(?:ido)?(?: de)? cobalto/, 1.38, 1.72],
+    [/ox(?:ido)?(?: de)? cobre negro/, 1.42, 1.62],
+    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44, 1.62],
+    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44, 1.62],
+    [/ox(?:ido)?(?: de)? manganeso/, 1.40, 1.72],
+    [/ox(?:ido)?(?: de)? niquel/, 1.40, 1.72],
+    [/ox(?:ido)?(?: de)? titanio/, 1.40, 1.58],
+    [/silicato de (?:circonio|zirconio)/, 1.45, 1.63],
 
     [/talco chino/, 1.30],
     [/feldespato potasico/, 1.28],
@@ -2875,6 +2908,11 @@ function crearTarjetaProducto(
   const escalaRecorteMargenBlanco =
     reglaRecorteMargenBlanco
       ? reglaRecorteMargenBlanco[1]
+      : 1;
+
+  const escalaRecorteMargenBlancoMovil =
+    reglaRecorteMargenBlanco
+      ? (reglaRecorteMargenBlanco[2] || reglaRecorteMargenBlanco[1])
       : 1;
 
   const productoRequiereRecorteMargenBlanco =
@@ -3131,9 +3169,15 @@ function crearTarjetaProducto(
       recortarMargenBlanco ? "true" : "false";
     imagenProducto.dataset.escalaRecorte =
       String(escalaRecorteMargenBlanco || 1);
+    imagenProducto.dataset.escalaRecorteMovil =
+      String(escalaRecorteMargenBlancoMovil || escalaRecorteMargenBlanco || 1);
     imagenProducto.style.setProperty(
       "--ceraceci-escala-foto",
       String(escalaRecorteMargenBlanco || 1)
+    );
+    imagenProducto.style.setProperty(
+      "--ceraceci-escala-foto-movil",
+      String(escalaRecorteMargenBlancoMovil || escalaRecorteMargenBlanco || 1)
     );
     imagenProducto.classList.toggle(
       "foto-recorte-margen-blanco",
