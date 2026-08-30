@@ -378,7 +378,7 @@ function asegurarEstilosGaleriaFotos() {
 
     @media (max-width:650px){
       /*
-        v187: en móvil usamos una escala propia. La tarjeta es mucho más
+        v188: en móvil usamos una escala propia y un ajuste final para que los óxidos tengan un encuadre visual similar al de las acuarelas. La tarjeta es mucho más
         angosta que en PC, por eso algunos productos todavía se percibían
         chicos aun cuando el recorte ya funcionaba en escritorio.
         La escala sigue siendo uniforme en ambos ejes: nunca deforma la foto.
@@ -2858,7 +2858,7 @@ function crearTarjetaProducto(
         `;
 
   /*
-    v187: el recorte deja de depender de que el producto tenga varias fotos.
+    v188: el recorte deja de depender de que el producto tenga varias fotos.
     Ese criterio hacía que algunas bolsas ya bien encuadradas (por ejemplo
     Arcilla APM Rosada y Caolín Sur del Río) quedaran cortadas.
 
@@ -2871,7 +2871,7 @@ function crearTarjetaProducto(
     .trim();
 
   const reglasRecorteMargenBlanco = [
-    [/oxido de cromo verde/, 1.84],
+    [/oxido de cromo verde/, 1.84, 1.95],
     [/bidon(?: de)? boca ancha/, 2.18],
     [/arena de rutilo/, 1.52],
     [/bentonita/, 1.28],
@@ -2885,15 +2885,21 @@ function crearTarjetaProducto(
       no requieren el recorte agresivo de versiones anteriores. Las escalas
       son individuales para agrandarlos sin cortar la muestra.
     */
-    [/harina de rutilo/, 1.46, 1.63],
-    [/ox(?:ido)?(?: de)? cobalto/, 1.38, 1.72],
-    [/ox(?:ido)?(?: de)? cobre negro/, 1.42, 1.62],
-    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44, 1.62],
-    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44, 1.62],
-    [/ox(?:ido)?(?: de)? manganeso/, 1.40, 1.72],
-    [/ox(?:ido)?(?: de)? niquel/, 1.40, 1.72],
-    [/ox(?:ido)?(?: de)? titanio/, 1.40, 1.58],
-    [/silicato de (?:circonio|zirconio)/, 1.45, 1.63],
+    [/harina de rutilo/, 1.46, 1.72],
+    [/ox(?:ido)?(?: de)? cobalto/, 1.38, 1.82],
+    [/ox(?:ido)?(?: de)? cobre negro/, 1.42, 1.73],
+    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44, 1.74],
+    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44, 1.74],
+    [/ox(?:ido)?(?: de)? manganeso/, 1.40, 1.82],
+    [/ox(?:ido)?(?: de)? niquel/, 1.40, 1.82],
+    [/ox(?:ido)?(?: de)? titanio/, 1.40, 1.69],
+    [/silicato de (?:circonio|zirconio)/, 1.45, 1.72],
+
+    /*
+      v188: cualquier otro óxido no enumerado arriba conserva su escala
+      normal en PC, pero en móvil se acerca al encuadre de las acuarelas.
+    */
+    [/^oxido(?: de)? /, 1.00, 1.72],
 
     [/talco chino/, 1.30],
     [/feldespato potasico/, 1.28],
@@ -2916,7 +2922,10 @@ function crearTarjetaProducto(
       : 1;
 
   const productoRequiereRecorteMargenBlanco =
-    escalaRecorteMargenBlanco > 1.001;
+    Math.max(
+      escalaRecorteMargenBlanco,
+      escalaRecorteMargenBlancoMovil
+    ) > 1.001;
 
   const fotos = [];
 
