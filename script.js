@@ -134,17 +134,6 @@ let productoCompartidoPendiente =
   new URLSearchParams(window.location.search).get("producto");
 const selectoresPersonalizadosPC = new Map();
 
-/*
- * V191 — miniaturas con borde blanco uniforme.
- *
- * Las fotos originales tienen cantidades muy distintas de blanco ya
- * incorporado dentro del archivo. Se normalizan una sola vez por URL y se
- * reutiliza el resultado en el catálogo y en el carrito.
- */
-const miniaturasNormalizadasPorURL = new Map();
-const TAMANO_MINIATURA_NORMALIZADA = 420;
-const MARGEN_BLANCO_MINIATURA_PX = 5;
-
 
 /* =========================================
    GALERÍA DE FOTOS - v187
@@ -427,622 +416,6 @@ function asegurarEstilosGaleriaFotos() {
 
   (document.body || document.head).appendChild(estilo);
 }
-
-function asegurarEstilosBordeBlancoUniforme() {
-  if (
-    document.getElementById(
-      "ceraceci-borde-blanco-uniforme"
-    )
-  ) {
-    return;
-  }
-
-  const estilo = document.createElement("style");
-  estilo.id = "ceraceci-borde-blanco-uniforme";
-  estilo.textContent = `
-    /*
-      V191: todas las fotos reales muestran exactamente el mismo marco blanco.
-      La miniatura normalizada ya no necesita las escalas manuales de respaldo.
-    */
-    html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
-    html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
-    html body .miniatura-producto-carrito img:not(.foto-placeholder-carrito){
-      box-sizing:border-box !important;
-      padding:${MARGEN_BLANCO_MINIATURA_PX}px !important;
-      background:#fff !important;
-      object-fit:contain !important;
-      object-position:center center !important;
-    }
-
-    html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-borde-uniforme,
-    html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-borde-uniforme,
-    html body .miniatura-producto-carrito img.foto-borde-uniforme{
-      transform:none !important;
-      clip-path:none !important;
-    }
-
-    html body #productos#productos .tarjeta-producto .contenedor-foto-producto,
-    html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto,
-    html body .miniatura-producto-carrito{
-      background:#fff !important;
-    }
-  `;
-
-  (document.body || document.head).appendChild(estilo);
-}
-
-function obtenerMedianaNumerica(valores) {
-  if (!valores.length) {
-    return 0;
-  }
-
-  valores.sort((a, b) => a - b);
-
-  return valores[
-    Math.floor(valores.length / 2)
-  ];
-}
-
-
-function obtenerCajaContenidoImagen(imagen) {
-  const anchoNatural = imagen.naturalWidth;
-  const altoNatural = imagen.naturalHeight;
-
-  if (!anchoNatural || !altoNatural) {
-    return null;
-  }
-
-  const maximoAnalisis = 260;
-  const escalaAnalisis = Math.min(
-    1,
-    maximoAnalisis /
-      Math.max(anchoNatural, altoNatural)
-  );
-  const ancho = Math.max(
-    1,
-    Math.round(anchoNatural * escalaAnalisis)
-  );
-  const alto = Math.max(
-    1,
-    Math.round(altoNatural * escalaAnalisis)
-  );
-  const lienzo = document.createElement("canvas");
-  lienzo.width = ancho;
-  lienzo.height = alto;
-
-  const contexto = lienzo.getContext(
-    "2d",
-    { willReadFrequently:true }
-  );
-
-  if (!contexto) {
-    return null;
-  }
-
-  contexto.drawImage(imagen, 0, 0, ancho, alto);
-
-  const pixeles = contexto.getImageData(
-    0,
-    0,
-    ancho,
-    alto
-  ).data;
-  const grosorMuestra = Math.max(
-    2,
-    Math.round(Math.min(ancho, alto) * 0.04)
-  );
-  const muestrasR = [];
-  const muestrasG = [];
-  const muestrasB = [];
-  const muestrasA = [];
-  const indicesMuestra = [];
-
-  for (let y = 0; y < alto; y += 1) {
-    for (let x = 0; x < ancho; x += 1) {
-      const estaEnBorde =
-        x < grosorMuestra ||
-        x >= ancho - grosorMuestra ||
-        y < grosorMuestra ||
-        y >= alto - grosorMuestra;
-
-      if (!estaEnBorde || (x + y) % 2 !== 0) {
-        continue;
-      }
-
-      const indice = (y * ancho + x) * 4;
-      indicesMuestra.push(indice);
-      muestrasR.push(pixeles[indice]);
-      muestrasG.push(pixeles[indice + 1]);
-      muestrasB.push(pixeles[indice + 2]);
-      muestrasA.push(pixeles[indice + 3]);
-    }
-  }
-
-  const fondoR = obtenerMedianaNumerica(muestrasR);
-  const fondoG = obtenerMedianaNumerica(muestrasG);
-  const fondoB = obtenerMedianaNumerica(muestrasB);
-  const fondoA = obtenerMedianaNumerica(muestrasA);
-  const fondoTransparente = fondoA < 40;
-  const luminosidadFondo =
-    fondoR * 0.2126 +
-    fondoG * 0.7152 +
-    fondoB * 0.0722;
-  const toleranciaFondo = 24;
-  let muestrasParecidas = 0;
-
-  indicesMuestra.forEach((indice) => {
-    const alfa = pixeles[indice + 3];
-    const diferencia = Math.max(
-      Math.abs(pixeles[indice] - fondoR),
-      Math.abs(pixeles[indice + 1] - fondoG),
-      Math.abs(pixeles[indice + 2] - fondoB)
-    );
-
-    if (
-      fondoTransparente
-        ? alfa < 48
-        : diferencia <= toleranciaFondo
-    ) {
-      muestrasParecidas += 1;
-    }
-  });
-
-  const proporcionFondoUniforme =
-    indicesMuestra.length
-      ? muestrasParecidas / indicesMuestra.length
-      : 0;
-  const bordeRecortable =
-    fondoTransparente ||
-    (
-      luminosidadFondo >= 180 &&
-      proporcionFondoUniforme >= 0.68
-    );
-
-  if (!bordeRecortable) {
-    return {
-      x:0,
-      y:0,
-      ancho:anchoNatural,
-      alto:altoNatural
-    };
-  }
-
-  const columnas = new Uint32Array(ancho);
-  const filas = new Uint32Array(alto);
-  let cantidadContenido = 0;
-
-  for (let y = 0; y < alto; y += 1) {
-    for (let x = 0; x < ancho; x += 1) {
-      const indice = (y * ancho + x) * 4;
-      const alfa = pixeles[indice + 3];
-      const diferencia = Math.max(
-        Math.abs(pixeles[indice] - fondoR),
-        Math.abs(pixeles[indice + 1] - fondoG),
-        Math.abs(pixeles[indice + 2] - fondoB)
-      );
-      const luminosidad =
-        pixeles[indice] * 0.2126 +
-        pixeles[indice + 1] * 0.7152 +
-        pixeles[indice + 2] * 0.0722;
-      const esContenido =
-        fondoTransparente
-          ? alfa >= 48
-          : (
-              alfa >= 24 &&
-              (
-                diferencia > toleranciaFondo ||
-                Math.abs(
-                  luminosidad - luminosidadFondo
-                ) > 17
-              )
-            );
-
-      if (!esContenido) {
-        continue;
-      }
-
-      columnas[x] += 1;
-      filas[y] += 1;
-      cantidadContenido += 1;
-    }
-  }
-
-  if (
-    cantidadContenido <
-      ancho * alto * 0.0025
-  ) {
-    return {
-      x:0,
-      y:0,
-      ancho:anchoNatural,
-      alto:altoNatural
-    };
-  }
-
-  const descarteRuido = Math.max(
-    1,
-    Math.round(cantidadContenido * 0.0025)
-  );
-
-  const buscarLimite = (
-    cantidades,
-    desdeInicio
-  ) => {
-    let acumulado = 0;
-
-    if (desdeInicio) {
-      for (
-        let indice = 0;
-        indice < cantidades.length;
-        indice += 1
-      ) {
-        acumulado += cantidades[indice];
-
-        if (acumulado >= descarteRuido) {
-          return indice;
-        }
-      }
-    } else {
-      for (
-        let indice = cantidades.length - 1;
-        indice >= 0;
-        indice -= 1
-      ) {
-        acumulado += cantidades[indice];
-
-        if (acumulado >= descarteRuido) {
-          return indice;
-        }
-      }
-    }
-
-    return desdeInicio
-      ? 0
-      : cantidades.length - 1;
-  };
-
-  let izquierda = buscarLimite(columnas, true);
-  let derecha = buscarLimite(columnas, false);
-  let arriba = buscarLimite(filas, true);
-  let abajo = buscarLimite(filas, false);
-
-  const anchoContenido = derecha - izquierda + 1;
-  const altoContenido = abajo - arriba + 1;
-
-  if (
-    anchoContenido < ancho * 0.08 ||
-    altoContenido < alto * 0.08
-  ) {
-    return {
-      x:0,
-      y:0,
-      ancho:anchoNatural,
-      alto:altoNatural
-    };
-  }
-
-  const expansion = Math.max(
-    2,
-    Math.round(
-      Math.max(anchoContenido, altoContenido) * 0.025
-    )
-  );
-
-  izquierda = Math.max(0, izquierda - expansion);
-  derecha = Math.min(ancho - 1, derecha + expansion);
-  arriba = Math.max(0, arriba - expansion);
-  abajo = Math.min(alto - 1, abajo + expansion);
-
-  const relacionX = anchoNatural / ancho;
-  const relacionY = altoNatural / alto;
-  const xNatural = Math.max(
-    0,
-    Math.floor(izquierda * relacionX)
-  );
-  const yNatural = Math.max(
-    0,
-    Math.floor(arriba * relacionY)
-  );
-  const derechaNatural = Math.min(
-    anchoNatural,
-    Math.ceil((derecha + 1) * relacionX)
-  );
-  const abajoNatural = Math.min(
-    altoNatural,
-    Math.ceil((abajo + 1) * relacionY)
-  );
-
-  return {
-    x:xNatural,
-    y:yNatural,
-    ancho:Math.max(1, derechaNatural - xNatural),
-    alto:Math.max(1, abajoNatural - yNatural)
-  };
-}
-
-
-function crearMiniaturaNormalizada(urlFoto) {
-  return new Promise((resolver) => {
-    let urlAbsoluta = "";
-
-    try {
-      urlAbsoluta = new URL(
-        urlFoto,
-        window.location.href
-      ).href;
-
-      const urlAnalisis = new URL(urlAbsoluta);
-
-      if (
-        urlAnalisis.hostname === "drive.google.com"
-      ) {
-        const coincidenciaRuta =
-          urlAnalisis.pathname.match(
-            /\/file\/d\/([^/]+)/
-          );
-        const idDrive =
-          coincidenciaRuta?.[1] ||
-          urlAnalisis.searchParams.get("id");
-
-        if (idDrive) {
-          /*
-           * El servidor final de miniaturas admite lectura CORS, necesaria
-           * para detectar el blanco sin modificar los archivos de Drive.
-           */
-          urlAbsoluta =
-            "https://lh3.googleusercontent.com/d/" +
-            encodeURIComponent(idDrive) +
-            "=w1200";
-        }
-      }
-    } catch (error) {
-      resolver(null);
-      return;
-    }
-
-    const imagen = new Image();
-    imagen.crossOrigin = "anonymous";
-    imagen.referrerPolicy = "no-referrer";
-    imagen.decoding = "async";
-
-    imagen.addEventListener(
-      "load",
-      () => {
-        try {
-          const caja =
-            obtenerCajaContenidoImagen(imagen);
-
-          if (!caja) {
-            resolver(null);
-            return;
-          }
-
-          const anchoMinimoCaja =
-            imagen.naturalWidth / 2.35;
-          const altoMinimoCaja =
-            imagen.naturalHeight / 2.35;
-          const centroCajaX =
-            caja.x + caja.ancho / 2;
-          const centroCajaY =
-            caja.y + caja.alto / 2;
-          const anchoCaja = Math.min(
-            imagen.naturalWidth,
-            Math.max(caja.ancho, anchoMinimoCaja)
-          );
-          const altoCaja = Math.min(
-            imagen.naturalHeight,
-            Math.max(caja.alto, altoMinimoCaja)
-          );
-          const cajaAjustada = {
-            x:Math.max(
-              0,
-              Math.min(
-                imagen.naturalWidth - anchoCaja,
-                centroCajaX - anchoCaja / 2
-              )
-            ),
-            y:Math.max(
-              0,
-              Math.min(
-                imagen.naturalHeight - altoCaja,
-                centroCajaY - altoCaja / 2
-              )
-            ),
-            ancho:anchoCaja,
-            alto:altoCaja
-          };
-          const escalaSalida =
-            TAMANO_MINIATURA_NORMALIZADA /
-            Math.max(
-              cajaAjustada.ancho,
-              cajaAjustada.alto
-            );
-          const anchoSalida = Math.max(
-            1,
-            Math.round(
-              cajaAjustada.ancho * escalaSalida
-            )
-          );
-          const altoSalida = Math.max(
-            1,
-            Math.round(
-              cajaAjustada.alto * escalaSalida
-            )
-          );
-          const lienzo =
-            document.createElement("canvas");
-          lienzo.width = anchoSalida;
-          lienzo.height = altoSalida;
-
-          const contexto = lienzo.getContext("2d");
-
-          if (!contexto) {
-            resolver(null);
-            return;
-          }
-
-          contexto.fillStyle = "#ffffff";
-          contexto.fillRect(
-            0,
-            0,
-            anchoSalida,
-            altoSalida
-          );
-          contexto.imageSmoothingEnabled = true;
-          contexto.imageSmoothingQuality = "high";
-
-          contexto.drawImage(
-            imagen,
-            cajaAjustada.x,
-            cajaAjustada.y,
-            cajaAjustada.ancho,
-            cajaAjustada.alto,
-            0,
-            0,
-            anchoSalida,
-            altoSalida
-          );
-
-          resolver(
-            lienzo.toDataURL(
-              "image/webp",
-              0.9
-            )
-          );
-        } catch (error) {
-          /*
-           * Algunas fuentes externas no permiten leer píxeles. En esos
-           * casos se conserva la imagen original y sus reglas de respaldo.
-           */
-          resolver(null);
-        }
-      },
-      { once:true }
-    );
-
-    imagen.addEventListener(
-      "error",
-      () => resolver(null),
-      { once:true }
-    );
-
-    imagen.src = urlAbsoluta;
-  });
-}
-
-
-function obtenerMiniaturaNormalizada(urlFoto) {
-  const urlNormalizada =
-    normalizarURLImagen(urlFoto) || urlFoto;
-
-  if (!urlNormalizada) {
-    return Promise.resolve(null);
-  }
-
-  if (
-    !miniaturasNormalizadasPorURL.has(
-      urlNormalizada
-    )
-  ) {
-    miniaturasNormalizadasPorURL.set(
-      urlNormalizada,
-      crearMiniaturaNormalizada(urlNormalizada)
-    );
-  }
-
-  return miniaturasNormalizadasPorURL.get(
-    urlNormalizada
-  );
-}
-
-
-function cancelarNormalizacionMiniatura(imagen) {
-  if (!imagen) {
-    return;
-  }
-
-  imagen.dataset.normalizacionMiniatura = "";
-  imagen.classList.remove("foto-borde-uniforme");
-}
-
-
-function aplicarBordeBlancoUniforme(
-  imagen,
-  urlFoto
-) {
-  if (!imagen || !urlFoto) {
-    return;
-  }
-
-  const urlNormalizada =
-    normalizarURLImagen(urlFoto) || urlFoto;
-
-  if (
-    !urlNormalizada ||
-    /\/img\/logo-minimal\.svg(?:[?#].*)?$/i.test(
-      urlNormalizada
-    )
-  ) {
-    return;
-  }
-
-  const claveSolicitud = urlNormalizada;
-  imagen.dataset.normalizacionMiniatura =
-    claveSolicitud;
-  imagen.classList.remove("foto-borde-uniforme");
-
-  const normalizarCuandoEsteVisible = async () => {
-    if (
-      imagen.dataset.normalizacionMiniatura !==
-        claveSolicitud ||
-      imagen.classList.contains("foto-placeholder") ||
-      imagen.classList.contains(
-        "foto-placeholder-carrito"
-      )
-    ) {
-      return;
-    }
-
-    const miniatura =
-      await obtenerMiniaturaNormalizada(
-        urlNormalizada
-      );
-
-    if (
-      !miniatura ||
-      imagen.dataset.normalizacionMiniatura !==
-        claveSolicitud ||
-      imagen.classList.contains("foto-placeholder") ||
-      imagen.classList.contains(
-        "foto-placeholder-carrito"
-      )
-    ) {
-      return;
-    }
-
-    imagen.src = miniatura;
-    imagen.classList.add("foto-borde-uniforme");
-  };
-
-  /*
-   * Respeta loading="lazy": solo procesa la foto cuando el navegador ya
-   * decidió cargarla. Así el catálogo no descarga todas las imágenes juntas.
-   */
-  if (
-    imagen.complete &&
-    imagen.naturalWidth > 0
-  ) {
-    normalizarCuandoEsteVisible();
-    return;
-  }
-
-  imagen.addEventListener(
-    "load",
-    normalizarCuandoEsteVisible,
-    { once:true }
-  );
-}
-
 
 function asegurarNavegacionZoomFotos() {
   const overlay = document.getElementById("zoomImagenOverlay");
@@ -1431,7 +804,6 @@ function asegurarNavegacionZoomFotos() {
 }
 
 asegurarEstilosGaleriaFotos();
-asegurarEstilosBordeBlancoUniforme();
 asegurarNavegacionZoomFotos();
 
 
@@ -3858,11 +3230,6 @@ function crearTarjetaProducto(
       imagenProducto.alt = producto.nombre;
       imagenProducto.src = fotos[indiceFotoActual];
 
-      aplicarBordeBlancoUniforme(
-        imagenProducto,
-        fotos[indiceFotoActual]
-      );
-
       actualizarIndicadoresFoto();
 
       if (typeof imagenProducto.animate === "function") {
@@ -3887,9 +3254,6 @@ function crearTarjetaProducto(
         return;
       }
 
-      cancelarNormalizacionMiniatura(
-        imagenProducto
-      );
       imagenProducto.dataset.imagenAlternativa =
         "true";
       imagenProducto.src = "img/logo-minimal.svg";
@@ -3906,11 +3270,6 @@ function crearTarjetaProducto(
     imagenProducto.addEventListener(
       "error",
       mostrarImagenAlternativa
-    );
-
-    aplicarBordeBlancoUniforme(
-      imagenProducto,
-      foto
     );
 
     tarjeta
@@ -5709,12 +5068,10 @@ function mostrarCarrito() {
           );
         });
 
-      const fotoOriginalCarrito =
+      const fotoCarrito =
         normalizarURLImagen(
           productoCatalogo?.foto || producto.foto || ""
-        );
-      const fotoCarrito =
-        fotoOriginalCarrito || "img/logo-minimal.svg";
+        ) || "img/logo-minimal.svg";
 
       const escalaMiniaturaCarrito =
         obtenerEscalasRecorteProducto(
@@ -5722,7 +5079,6 @@ function mostrarCarrito() {
         ).miniatura;
 
       const recortarMiniaturaCarrito =
-        Boolean(fotoOriginalCarrito) &&
         escalaMiniaturaCarrito > 1.001;
 
       const elemento =
@@ -5738,7 +5094,7 @@ function mostrarCarrito() {
           <img
             src="${escaparHTML(fotoCarrito)}"
             alt=""
-            class="${fotoOriginalCarrito ? "" : "foto-placeholder-carrito"} ${recortarMiniaturaCarrito ? "miniatura-recorte-margen-blanco" : ""}"
+            class="${recortarMiniaturaCarrito ? "miniatura-recorte-margen-blanco" : ""}"
             loading="lazy"
             draggable="false"
             referrerpolicy="no-referrer"
@@ -5824,14 +5180,8 @@ function mostrarCarrito() {
       imagenMiniatura?.addEventListener(
         "error",
         () => {
-          cancelarNormalizacionMiniatura(
-            imagenMiniatura
-          );
           imagenMiniatura.classList.remove(
             "miniatura-recorte-margen-blanco"
-          );
-          imagenMiniatura.classList.add(
-            "foto-placeholder-carrito"
           );
           imagenMiniatura.style.removeProperty(
             "--ceraceci-escala-miniatura"
@@ -5841,16 +5191,6 @@ function mostrarCarrito() {
         },
         { once: true }
       );
-
-      if (
-        imagenMiniatura &&
-        fotoOriginalCarrito
-      ) {
-        aplicarBordeBlancoUniforme(
-          imagenMiniatura,
-          fotoOriginalCarrito
-        );
-      }
 
       productosCarrito.appendChild(
         elemento
@@ -6021,10 +5361,7 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-        formatearPrecio(
-          obtenerSubtotalProducto(producto)
-        )
+        construirLineaProductoMensaje(producto)
     );
 
   const detalleProductos =
@@ -6049,7 +5386,7 @@ function finalizarPedidoWhatsApp() {
     "",
     detalleProductos,
     "",
-    `Total: ${formatearPrecio(precioTotal)}`,
+    `Total | ${formatearPrecio(precioTotal)}`,
     "",
     "¿Está todo disponible? ¿Qué formas de pago tienen y cómo coordinamos la entrega?",
     "¡Muchas gracias!"
@@ -6080,11 +5417,22 @@ function obtenerNombreProductoParaCantidad(producto) {
     "apm 112"
   ) {
     return cantidad === 1
-      ? "1 Arcilla Apm 112"
-      : `${cantidad} Arcillas Apm 112`;
+      ? "1 | Arcilla Apm 112"
+      : `${cantidad} | Arcillas Apm 112`;
   }
 
-  return `${cantidad} × ${producto.nombre}`;
+  return `${cantidad} | ${producto.nombre}`;
+}
+
+
+function construirLineaProductoMensaje(producto) {
+  return [
+    obtenerNombreProductoParaCantidad(producto),
+    obtenerPresentacionTotalProducto(producto),
+    formatearPrecio(
+      obtenerSubtotalProducto(producto)
+    )
+  ].join(" | ");
 }
 
 
@@ -6154,10 +5502,7 @@ function construirDetalleCarritoCompartido() {
     carritoCompras
       .map(
         (producto) =>
-          `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-          formatearPrecio(
-            obtenerSubtotalProducto(producto)
-          )
+          construirLineaProductoMensaje(producto)
       )
       .join("\n\n");
 
@@ -6171,7 +5516,7 @@ function construirDetalleCarritoCompartido() {
   return [
     detalleProductos,
     "",
-    `Total: ${formatearPrecio(precioTotal)}`
+    `Total | ${formatearPrecio(precioTotal)}`
   ].join("\n");
 }
 
