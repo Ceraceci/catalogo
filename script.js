@@ -14,7 +14,7 @@ const URL_CSV = "/api/catalogo";
  * al volver a abrir o recargar la página, los productos aparezcan
  * inmediatamente. Después se consulta Cloudflare en segundo plano.
  */
-const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v4";
+const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v3";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -34,9 +34,6 @@ const contenedorProductos =
 
 const buscador =
   document.getElementById("buscador");
-
-const formBusqueda =
-  document.getElementById("formBusqueda");
 
 const filtroCategoria =
   document.getElementById("filtroCategoria");
@@ -80,23 +77,14 @@ const cantidadCarrito =
 const valorCarrito =
   document.getElementById("valorCarrito");
 
-const iconoCarrito =
-  document.getElementById("iconoCarrito");
-
 const totalCarrito =
   document.getElementById("totalCarrito");
-
-const cantidadItemsCarrito =
-  document.getElementById("cantidadItemsCarrito");
 
 const vaciarCarrito =
   document.getElementById("vaciarCarrito");
 
 const finalizarPedido =
   document.getElementById("finalizarPedido");
-
-const compartirCarrito =
-  document.getElementById("compartirCarrito");
 
 const barraComparacion =
   document.getElementById("barraComparacion");
@@ -132,7 +120,401 @@ let productosSeleccionadosComparacion = [];
 let comparacionAbierta = false;
 let productoCompartidoPendiente =
   new URLSearchParams(window.location.search).get("producto");
-const selectoresPersonalizadosPC = new Map();
+
+
+/* =========================================
+   GALERÍA DE FOTOS DE PRODUCTO
+
+   Soporta hasta 4 imágenes por producto:
+   Foto / Foto 1, Foto 2, Foto 3 y Foto 4.
+   La tarjeta conserva una sola imagen visible para mantener
+   compatible el zoom existente de la página.
+========================================= */
+
+function asegurarEstilosGaleriaFotos() {
+  if (
+    document.getElementById(
+      "ceraceci-galeria-fotos-estilos"
+    )
+  ) {
+    return;
+  }
+
+  const estilo =
+    document.createElement("style");
+
+  estilo.id =
+    "ceraceci-galeria-fotos-estilos";
+
+  estilo.textContent = `
+    .contenedor-foto-producto.galeria-fotos{
+      position:relative;
+      overflow:hidden;
+    }
+
+    .contenedor-foto-producto.galeria-fotos .foto-producto{
+      z-index:1;
+    }
+
+    .contenedor-foto-producto.galeria-fotos .foto-producto.foto-cambio{
+      animation:ceraceci-foto-entrada .18s ease;
+    }
+
+    @keyframes ceraceci-foto-entrada{
+      from{opacity:.2}
+      to{opacity:1}
+    }
+
+    .boton-foto-anterior,
+    .boton-foto-siguiente{
+      position:absolute;
+      top:50%;
+      z-index:4;
+      display:grid;
+      place-items:center;
+      width:28px;
+      height:34px;
+      padding:0;
+      transform:translateY(-50%);
+      color:#2b2724;
+      background:rgba(252,251,250,.82);
+      border:1px solid rgba(43,39,36,.18);
+      border-radius:9px;
+      box-shadow:0 2px 8px rgba(0,0,0,.08);
+      font:500 25px/1 Arial,sans-serif;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      backdrop-filter:blur(3px);
+      -webkit-backdrop-filter:blur(3px);
+    }
+
+    .boton-foto-anterior{
+      left:6px;
+    }
+
+    .boton-foto-siguiente{
+      right:6px;
+    }
+
+    .boton-foto-anterior:hover,
+    .boton-foto-siguiente:hover,
+    .boton-foto-anterior:focus-visible,
+    .boton-foto-siguiente:focus-visible{
+      color:var(--color-principal,#98371e);
+      border-color:var(--color-principal,#98371e);
+      outline:none;
+    }
+
+    .indicadores-fotos{
+      position:absolute;
+      left:50%;
+      bottom:7px;
+      z-index:4;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
+      padding:4px 6px;
+      transform:translateX(-50%);
+      background:rgba(252,251,250,.78);
+      border:1px solid rgba(43,39,36,.12);
+      border-radius:999px;
+      backdrop-filter:blur(3px);
+      -webkit-backdrop-filter:blur(3px);
+    }
+
+    .indicador-foto{
+      width:7px;
+      height:7px;
+      min-width:7px;
+      min-height:7px;
+      padding:0;
+      background:rgba(43,39,36,.30);
+      border:0;
+      border-radius:50%;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .indicador-foto.activo{
+      background:var(--color-principal,#98371e);
+    }
+
+    .tarjeta-comparacion .boton-foto-anterior,
+    .tarjeta-comparacion .boton-foto-siguiente{
+      width:22px;
+      height:28px;
+      font-size:20px;
+      border-radius:7px;
+    }
+
+    .tarjeta-comparacion .indicadores-fotos{
+      bottom:4px;
+      gap:4px;
+      padding:3px 5px;
+    }
+
+    .tarjeta-comparacion .indicador-foto{
+      width:5px;
+      height:5px;
+      min-width:5px;
+      min-height:5px;
+    }
+
+    @media (max-width:650px){
+      .boton-foto-anterior,
+      .boton-foto-siguiente{
+        width:24px;
+        height:30px;
+        font-size:21px;
+      }
+
+      .boton-foto-anterior{
+        left:4px;
+      }
+
+      .boton-foto-siguiente{
+        right:4px;
+      }
+
+      .indicadores-fotos{
+        bottom:5px;
+        gap:4px;
+        padding:3px 5px;
+      }
+
+      .indicador-foto{
+        width:6px;
+        height:6px;
+        min-width:6px;
+        min-height:6px;
+      }
+    }
+  `;
+
+  document.head.appendChild(estilo);
+}
+
+
+function obtenerFotosProducto(producto) {
+  const candidatas =
+    Array.isArray(producto?.fotos)
+      ? producto.fotos
+      : producto?.foto
+        ? [producto.foto]
+        : [];
+
+  const fotos = [];
+
+  candidatas.forEach((valor) => {
+    const url =
+      normalizarURLImagen(valor);
+
+    if (
+      url &&
+      !fotos.includes(url) &&
+      fotos.length < 4
+    ) {
+      fotos.push(url);
+    }
+  });
+
+  return fotos;
+}
+
+
+function inicializarGaleriaFotos(
+  tarjeta,
+  fotos,
+  nombreProducto
+) {
+  const contenedor =
+    tarjeta.querySelector(
+      ".contenedor-foto-producto"
+    );
+
+  const imagen =
+    tarjeta.querySelector(
+      ".foto-producto"
+    );
+
+  if (!contenedor || !imagen) {
+    return;
+  }
+
+  const listaFotos =
+    Array.isArray(fotos)
+      ? fotos.filter(Boolean).slice(0, 4)
+      : [];
+
+  if (listaFotos.length === 0) {
+    return;
+  }
+
+  let indiceActual = 0;
+  let usandoFallback = false;
+
+  const botonesIndicador =
+    Array.from(
+      contenedor.querySelectorAll(
+        ".indicador-foto"
+      )
+    );
+
+  const botonAnterior =
+    contenedor.querySelector(
+      ".boton-foto-anterior"
+    );
+
+  const botonSiguiente =
+    contenedor.querySelector(
+      ".boton-foto-siguiente"
+    );
+
+  listaFotos
+    .slice(1)
+    .forEach((url) => {
+      const precarga = new Image();
+      precarga.src = url;
+    });
+
+  const actualizarIndicadores = () => {
+    botonesIndicador.forEach(
+      (boton, indice) => {
+        const activo =
+          indice === indiceActual;
+
+        boton.classList.toggle(
+          "activo",
+          activo
+        );
+
+        boton.setAttribute(
+          "aria-current",
+          activo ? "true" : "false"
+        );
+      }
+    );
+  };
+
+  const mostrarFoto = (
+    nuevoIndice,
+    animar = true
+  ) => {
+    indiceActual =
+      (
+        nuevoIndice +
+        listaFotos.length
+      ) %
+      listaFotos.length;
+
+    usandoFallback = false;
+
+    imagen.classList.remove(
+      "foto-placeholder"
+    );
+
+    contenedor.classList.remove(
+      "sin-foto"
+    );
+
+    imagen.alt =
+      nombreProducto || "";
+
+    imagen.src =
+      listaFotos[indiceActual];
+
+    imagen.dataset.indiceFoto =
+      String(indiceActual);
+
+    if (animar) {
+      imagen.classList.remove(
+        "foto-cambio"
+      );
+
+      void imagen.offsetWidth;
+
+      imagen.classList.add(
+        "foto-cambio"
+      );
+    }
+
+    actualizarIndicadores();
+  };
+
+  imagen.addEventListener(
+    "load",
+    () => {
+      usandoFallback = false;
+    }
+  );
+
+  imagen.addEventListener(
+    "error",
+    () => {
+      if (usandoFallback) {
+        return;
+      }
+
+      usandoFallback = true;
+
+      imagen.classList.add(
+        "foto-placeholder"
+      );
+
+      imagen.alt = "";
+
+      contenedor.classList.add(
+        "sin-foto"
+      );
+
+      imagen.src = "img/logo.png";
+    }
+  );
+
+  botonAnterior?.addEventListener(
+    "click",
+    (evento) => {
+      evento.preventDefault();
+      evento.stopPropagation();
+
+      mostrarFoto(
+        indiceActual - 1
+      );
+    }
+  );
+
+  botonSiguiente?.addEventListener(
+    "click",
+    (evento) => {
+      evento.preventDefault();
+      evento.stopPropagation();
+
+      mostrarFoto(
+        indiceActual + 1
+      );
+    }
+  );
+
+  botonesIndicador.forEach(
+    (boton, indice) => {
+      boton.addEventListener(
+        "click",
+        (evento) => {
+          evento.preventDefault();
+          evento.stopPropagation();
+
+          mostrarFoto(indice);
+        }
+      );
+    }
+  );
+
+  actualizarIndicadores();
+}
+
+
+asegurarEstilosGaleriaFotos();
 
 
 /* =========================================
@@ -269,19 +651,47 @@ function procesarCSVProductos(textoCSV) {
     );
   };
 
-  const indiceFoto =
-    buscarIndiceOpcional(
+  const gruposColumnasFoto = [
+    [
       "Foto",
       "Imagen",
       "URL foto",
-      "URL imagen"
-    );
+      "URL imagen",
+      "Foto 1",
+      "Imagen 1",
+      "URL foto 1",
+      "URL imagen 1"
+    ],
+    [
+      "Foto 2",
+      "Imagen 2",
+      "URL foto 2",
+      "URL imagen 2"
+    ],
+    [
+      "Foto 3",
+      "Imagen 3",
+      "URL foto 3",
+      "URL imagen 3"
+    ],
+    [
+      "Foto 4",
+      "Imagen 4",
+      "URL foto 4",
+      "URL imagen 4"
+    ]
+  ];
 
-  const indiceProductoPlural =
-    buscarIndiceOpcional(
-      "Producto plural",
-      "Nombre plural"
-    );
+  const indicesFotos =
+    gruposColumnasFoto
+      .map((nombres) =>
+        buscarIndiceOpcional(...nombres)
+      )
+      .filter(
+        (indice, posicion, lista) =>
+          indice !== -1 &&
+          lista.indexOf(indice) === posicion
+      );
 
   const indiceDescripcion =
     buscarIndiceOpcional(
@@ -322,11 +732,6 @@ function procesarCSVProductos(textoCSV) {
         nombre:
           limpiarTexto(fila[indiceProducto]),
 
-        nombrePlural:
-          indiceProductoPlural !== -1
-            ? limpiarTexto(fila[indiceProductoPlural])
-            : "",
-
         presentacion:
           limpiarTexto(
             fila[indicePresentacion]
@@ -347,9 +752,16 @@ function procesarCSVProductos(textoCSV) {
             ? limpiarTexto(fila[indiceActivo])
             : "Sí",
 
+        fotos:
+          indicesFotos
+            .map((indiceFoto) =>
+              limpiarTexto(fila[indiceFoto])
+            )
+            .filter(Boolean),
+
         foto:
-          indiceFoto !== -1
-            ? limpiarTexto(fila[indiceFoto])
+          indicesFotos.length > 0
+            ? limpiarTexto(fila[indicesFotos[0]])
             : "",
 
         descripcion:
@@ -363,21 +775,7 @@ function procesarCSVProductos(textoCSV) {
             : ""
       };
 
-      const productoNormalizado =
-        normalizarFilaKanthal(producto);
-
-      return {
-        ...productoNormalizado,
-        nombre: formatearNombreProducto(
-          productoNormalizado.nombre
-        ),
-        nombrePlural:
-          productoNormalizado.nombrePlural
-            ? formatearNombreProducto(
-                productoNormalizado.nombrePlural
-              )
-            : ""
-      };
+      return normalizarFilaKanthal(producto);
     })
     .filter((producto) => {
       return (
@@ -390,15 +788,6 @@ function procesarCSVProductos(textoCSV) {
 
   productosAgrupados =
     agruparProductos(filasProductos);
-
-  carritoCompras.forEach(
-    recalcularProductoCarrito
-  );
-  localStorage.setItem(
-    "carritoCeraceci",
-    JSON.stringify(carritoCompras)
-  );
-  mostrarCarrito();
 
   productosSeleccionadosComparacion =
     productosSeleccionadosComparacion.filter(
@@ -547,9 +936,9 @@ function agruparProductos(filasProductos) {
       agrupados.set(clave, {
         id: crearIdProducto(clave),
         nombre: fila.nombre,
-        nombrePlural: fila.nombrePlural,
         categoria: fila.categoria,
-        foto: fila.foto,
+        fotos: [],
+        foto: "",
         descripcion: fila.descripcion,
         indicaciones: fila.indicaciones,
         presentaciones: []
@@ -558,13 +947,28 @@ function agruparProductos(filasProductos) {
 
     const producto = agrupados.get(clave);
 
-    if (!producto.nombrePlural && fila.nombrePlural) {
-      producto.nombrePlural = fila.nombrePlural;
-    }
+    const fotosFila =
+      Array.isArray(fila.fotos) && fila.fotos.length > 0
+        ? fila.fotos
+        : fila.foto
+          ? [fila.foto]
+          : [];
 
-    if (!producto.foto && fila.foto) {
-      producto.foto = fila.foto;
-    }
+    fotosFila.forEach((fotoFila) => {
+      const fotoLimpia =
+        limpiarTexto(fotoFila);
+
+      if (
+        fotoLimpia &&
+        !producto.fotos.includes(fotoLimpia) &&
+        producto.fotos.length < 4
+      ) {
+        producto.fotos.push(fotoLimpia);
+      }
+    });
+
+    producto.foto =
+      producto.fotos[0] || "";
 
     if (!producto.descripcion && fila.descripcion) {
       producto.descripcion = fila.descripcion;
@@ -716,658 +1120,9 @@ function extraerCantidadPresentacion(texto) {
 }
 
 
-function analizarMedidaPresentacion(textoPresentacion) {
-  const texto = limpiarTexto(textoPresentacion);
-  const expresion = /(\d+(?:[.,]\d+)?)\s*(kg|kilos?|g|grs?|gramos?|ml|cc|l|lts?|litros?|mm|cm|m|metros?|unidad(?:es)?|u)\b/giu;
-  const coincidencias = [
-    ...texto.matchAll(expresion)
-  ];
-
-  if (coincidencias.length === 0) {
-    return null;
-  }
-
-  /* En medidas compuestas, por ejemplo 0,20 mm × 1 m de Kanthal,
-     la cantidad que se multiplica es siempre la última: los metros. */
-  const coincidencia =
-    coincidencias[coincidencias.length - 1];
-  const numeroOriginal = Number(
-    coincidencia[1].replace(",", ".")
-  );
-  const unidadOriginal = coincidencia[2];
-  const unidad = normalizarTexto(unidadOriginal);
-
-  if (!Number.isFinite(numeroOriginal)) {
-    return null;
-  }
-
-  let tipo = "unidades";
-  let factorCanonico = 1;
-
-  if (/^(kg|kilo|kilos)$/.test(unidad)) {
-    tipo = "peso";
-    factorCanonico = 1000;
-  } else if (/^(g|gr|grs|gramo|gramos)$/.test(unidad)) {
-    tipo = "peso";
-  } else if (/^(l|lt|lts|litro|litros)$/.test(unidad)) {
-    tipo = "volumen";
-    factorCanonico = 1000;
-  } else if (/^(ml|cc)$/.test(unidad)) {
-    tipo = "volumen";
-  } else if (unidad === "mm") {
-    tipo = "longitud";
-    factorCanonico = .001;
-  } else if (unidad === "cm") {
-    tipo = "longitud";
-    factorCanonico = .01;
-  } else if (/^(m|metro|metros)$/.test(unidad)) {
-    tipo = "longitud";
-  }
-
-  const inicio = coincidencia.index;
-  const fin = inicio + coincidencia[0].length;
-  const familia = normalizarTexto(
-    `${texto.slice(0, inicio)} ${texto.slice(fin)}`
-  ).replace(/[^a-z0-9]+/g, " ").trim();
-
-  return {
-    texto,
-    inicio,
-    fin,
-    numeroOriginal,
-    unidadOriginal,
-    tipo,
-    factorCanonico,
-    cantidadCanonica:
-      numeroOriginal * factorCanonico,
-    familia
-  };
-}
-
-
-function formatearNumeroCantidad(valor) {
-  return Number(valor).toLocaleString(
-    "es-AR",
-    {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 3
-    }
-  );
-}
-
-
-function formatearPresentacionTotal(
-  presentacionBase,
-  cantidadUnidades
-) {
-  const cantidad = Math.max(
-    1,
-    Number(cantidadUnidades) || 1
-  );
-  const medida =
-    analizarMedidaPresentacion(
-      presentacionBase
-    );
-
-  if (!medida) {
-    return cantidad === 1
-      ? formatearEtiquetaPresentacion(
-          presentacionBase
-        )
-      : `${cantidad} ${formatearEtiquetaPresentacion(
-          presentacionBase
-        )}`;
-  }
-
-  const cantidadMostrada =
-    formatearNumeroCantidad(
-      medida.numeroOriginal * cantidad
-    );
-  const unidadNormalizada =
-    normalizarTexto(
-      medida.unidadOriginal
-    );
-  let unidadMostrada =
-    medida.unidadOriginal;
-
-  if (
-    medida.numeroOriginal * cantidad !== 1
-  ) {
-    if (/^(unidad|u)$/.test(unidadNormalizada)) {
-      unidadMostrada = "UNIDADES";
-    } else if (unidadNormalizada === "metro") {
-      unidadMostrada = "METROS";
-    } else if (unidadNormalizada === "litro") {
-      unidadMostrada = "LITROS";
-    } else if (unidadNormalizada === "kilo") {
-      unidadMostrada = "KILOS";
-    } else if (unidadNormalizada === "gramo") {
-      unidadMostrada = "GRAMOS";
-    }
-  }
-  const presentacionTotal =
-    medida.texto.slice(0, medida.inicio) +
-    cantidadMostrada +
-    " " +
-    unidadMostrada +
-    medida.texto.slice(medida.fin);
-
-  return formatearEtiquetaPresentacion(
-    presentacionTotal
-  );
-}
-
-
-function formatearDiametroKanthal(
-  presentacionBase
-) {
-  const presentacion =
-    formatearEtiquetaPresentacion(
-      presentacionBase
-    );
-  const coincidencia = presentacion.match(
-    /^(.+?\s*mm)\s*[×x]\s*\d+(?:[.,]\d+)?\s*(?:m|metro|metros)\b/i
-  );
-
-  return coincidencia
-    ? coincidencia[1].trim()
-    : presentacion;
-}
-
-
-function formatearMetrosKanthal(
-  presentacionBase,
-  cantidadUnidades
-) {
-  const cantidad = Math.max(
-    1,
-    Number(cantidadUnidades) || 1
-  );
-  const medida =
-    analizarMedidaPresentacion(
-      presentacionBase
-    );
-
-  if (!medida) {
-    return `${cantidad} m`;
-  }
-
-  const metros =
-    medida.cantidadCanonica * cantidad;
-
-  return `${formatearNumeroCantidad(metros)} m`;
-}
-
-
-function maximoComunDivisor(a, b) {
-  let mayor = Math.abs(Math.round(a));
-  let menor = Math.abs(Math.round(b));
-
-  while (menor) {
-    const resto = mayor % menor;
-    mayor = menor;
-    menor = resto;
-  }
-
-  return mayor || 1;
-}
-
-
-function calcularPrecioCantidadPresentacion(
-  producto,
-  indicePresentacion,
-  cantidadUnidades
-) {
-  const cantidad = Math.max(
-    1,
-    Number(cantidadUnidades) || 1
-  );
-  const presentacionBase =
-    producto?.presentaciones?.[
-      indicePresentacion
-    ];
-
-  if (!presentacionBase) {
-    return 0;
-  }
-
-  const precioBase =
-    Number(presentacionBase.precio) || 0;
-  const medidaBase =
-    analizarMedidaPresentacion(
-      presentacionBase.nombre
-    );
-
-  if (!medidaBase) {
-    return precioBase * cantidad;
-  }
-
-  const opciones = producto.presentaciones
-    .map((presentacion) => ({
-      presentacion,
-      medida:
-        analizarMedidaPresentacion(
-          presentacion.nombre
-        )
-    }))
-    .filter(({ presentacion, medida }) => {
-      return (
-        medida &&
-        medida.tipo === medidaBase.tipo &&
-        medida.familia === medidaBase.familia &&
-        Number(presentacion.precio) > 0
-      );
-    });
-
-  if (opciones.length === 0) {
-    return precioBase * cantidad;
-  }
-
-  const escala = 1000;
-  const objetivoEntero = Math.round(
-    medidaBase.cantidadCanonica *
-      cantidad *
-      escala
-  );
-  const valoresEnteros = opciones.map(
-    ({ medida }) =>
-      Math.round(
-        medida.cantidadCanonica * escala
-      )
-  );
-  const divisor = valoresEnteros.reduce(
-    (acumulado, valor) =>
-      maximoComunDivisor(acumulado, valor),
-    objetivoEntero
-  );
-  const objetivo =
-    Math.round(objetivoEntero / divisor);
-
-  /* Evita cálculos grandes ante cantidades atípicas. */
-  if (objetivo <= 0 || objetivo > 5000) {
-    return precioBase * cantidad;
-  }
-
-  const opcionesReducidas = opciones.map(
-    ({ presentacion }, indice) => ({
-      cantidad: Math.round(
-        valoresEnteros[indice] / divisor
-      ),
-      precio:
-        Number(presentacion.precio) || 0
-    })
-  );
-  const costos = new Array(
-    objetivo + 1
-  ).fill(Infinity);
-  costos[0] = 0;
-
-  for (
-    let cantidadActual = 1;
-    cantidadActual <= objetivo;
-    cantidadActual++
-  ) {
-    opcionesReducidas.forEach((opcion) => {
-      const anterior =
-        cantidadActual - opcion.cantidad;
-
-      if (
-        anterior >= 0 &&
-        Number.isFinite(costos[anterior])
-      ) {
-        costos[cantidadActual] = Math.min(
-          costos[cantidadActual],
-          costos[anterior] + opcion.precio
-        );
-      }
-    });
-  }
-
-  return Number.isFinite(costos[objetivo])
-    ? costos[objetivo]
-    : precioBase * cantidad;
-}
-
-
 /* =========================================
    CATEGORÍAS Y FILTROS
 ========================================= */
-
-function actualizarEstadoFiltroCategoria() {
-  if (!filtroCategoria) {
-    return;
-  }
-
-  filtroCategoria.classList.toggle(
-    "categoria-activa",
-    Boolean(filtroCategoria.value)
-  );
-}
-
-
-function cerrarSelectoresPersonalizadosPC(excepto = null) {
-  selectoresPersonalizadosPC.forEach((control, select) => {
-    if (!select.isConnected) {
-      selectoresPersonalizadosPC.delete(select);
-      return;
-    }
-
-    if (control.raiz === excepto) {
-      return;
-    }
-
-    control.raiz.classList.remove("abierto");
-    control.boton.setAttribute("aria-expanded", "false");
-    control.lista.hidden = true;
-    control.raiz
-      .closest(".tarjeta-producto")
-      ?.classList.remove("selector-desplegado");
-  });
-}
-
-
-function cerrarSelectorPersonalizadoPC(control) {
-  if (!control) {
-    return;
-  }
-
-  control.raiz.classList.remove("abierto");
-  control.boton.setAttribute("aria-expanded", "false");
-  control.lista.hidden = true;
-  control.raiz
-    .closest(".tarjeta-producto")
-    ?.classList.remove("selector-desplegado");
-}
-
-
-function abrirSelectorPersonalizadoPC(control) {
-  if (!control) {
-    return;
-  }
-
-  cerrarSelectoresPersonalizadosPC(control.raiz);
-  control.raiz.classList.add("abierto");
-  control.boton.setAttribute("aria-expanded", "true");
-  control.lista.hidden = false;
-  control.raiz
-    .closest(".tarjeta-producto")
-    ?.classList.add("selector-desplegado");
-
-  const opcionSeleccionada =
-    control.lista.querySelector(".seleccionada");
-
-  if (opcionSeleccionada) {
-    requestAnimationFrame(() => {
-      opcionSeleccionada.scrollIntoView({
-        block: "nearest"
-      });
-    });
-  }
-}
-
-
-function sincronizarSelectorPersonalizadoPC(select) {
-  const control =
-    selectoresPersonalizadosPC.get(select);
-
-  if (!control) {
-    return;
-  }
-
-  const opcionActual =
-    select.options[select.selectedIndex] ||
-    select.options[0];
-
-  control.boton.textContent =
-    opcionActual
-      ? opcionActual.textContent.trim()
-      : "";
-
-  const seleccionActiva =
-    select === filtroCategoria ||
-    select.classList.contains(
-      "selector-presentacion-alambre"
-    )
-      ? select.value !== ""
-      : select.value !== "inicial";
-
-  control.raiz.classList.toggle(
-    "seleccion-activa",
-    seleccionActiva
-  );
-
-  control.lista.replaceChildren();
-
-  Array.from(select.options).forEach((opcion) => {
-    const botonOpcion =
-      document.createElement("button");
-
-    botonOpcion.type = "button";
-    botonOpcion.className =
-      "select-personalizado-opcion-pc";
-    botonOpcion.textContent =
-      opcion.textContent.trim();
-    botonOpcion.dataset.value =
-      opcion.value;
-    botonOpcion.setAttribute("role", "option");
-
-    const seleccionada =
-      opcion.value === select.value;
-
-    botonOpcion.classList.toggle(
-      "seleccionada",
-      seleccionada
-    );
-    botonOpcion.setAttribute(
-      "aria-selected",
-      seleccionada ? "true" : "false"
-    );
-
-    botonOpcion.addEventListener(
-      "click",
-      () => {
-        select.value = opcion.value;
-        select.dispatchEvent(
-          new Event("change", {
-            bubbles: true
-          })
-        );
-        sincronizarSelectorPersonalizadoPC(
-          select
-        );
-        cerrarSelectorPersonalizadoPC(
-          control
-        );
-        control.boton.focus({
-          preventScroll: true
-        });
-      }
-    );
-
-    control.lista.appendChild(
-      botonOpcion
-    );
-  });
-}
-
-
-function crearSelectorPersonalizadoPC(
-  select,
-  clase,
-  referencia
-) {
-  if (
-    !select ||
-    !referencia ||
-    selectoresPersonalizadosPC.has(select)
-  ) {
-    return;
-  }
-
-  const raiz = document.createElement("div");
-  raiz.className =
-    `select-personalizado-pc ${clase}`;
-
-  const boton = document.createElement("button");
-  boton.type = "button";
-  boton.className =
-    "select-personalizado-boton-pc";
-  boton.setAttribute("aria-haspopup", "listbox");
-  boton.setAttribute("aria-expanded", "false");
-
-  const lista = document.createElement("div");
-  lista.className =
-    "select-personalizado-lista-pc";
-  lista.id = `lista-${select.id}-pc`;
-  lista.setAttribute("role", "listbox");
-  lista.hidden = true;
-
-  boton.setAttribute(
-    "aria-controls",
-    lista.id
-  );
-  boton.setAttribute(
-    "aria-label",
-    select.getAttribute("aria-label") ||
-      (select === filtroCategoria
-        ? "Categorías"
-        : "Filtros")
-  );
-
-  raiz.append(boton, lista);
-  referencia.insertAdjacentElement(
-    "afterend",
-    raiz
-  );
-
-  const control = {
-    raiz,
-    boton,
-    lista,
-    select
-  };
-
-  selectoresPersonalizadosPC.set(
-    select,
-    control
-  );
-
-  boton.addEventListener("click", () => {
-    if (raiz.classList.contains("abierto")) {
-      cerrarSelectorPersonalizadoPC(control);
-    } else {
-      abrirSelectorPersonalizadoPC(control);
-    }
-  });
-
-  boton.addEventListener("keydown", (evento) => {
-    if (
-      evento.key === "ArrowDown" ||
-      evento.key === "ArrowUp"
-    ) {
-      evento.preventDefault();
-      abrirSelectorPersonalizadoPC(control);
-
-      const opciones =
-        Array.from(
-          lista.querySelectorAll(
-            ".select-personalizado-opcion-pc"
-          )
-        );
-      const seleccionada =
-        lista.querySelector(".seleccionada");
-      const indiceSeleccionada =
-        Math.max(0, opciones.indexOf(seleccionada));
-      const desplazamiento =
-        evento.key === "ArrowDown" ? 1 : -1;
-      const indice = Math.min(
-        opciones.length - 1,
-        Math.max(
-          0,
-          indiceSeleccionada + desplazamiento
-        )
-      );
-
-      opciones[indice]?.focus();
-    }
-  });
-
-  lista.addEventListener("keydown", (evento) => {
-    const opciones =
-      Array.from(
-        lista.querySelectorAll(
-          ".select-personalizado-opcion-pc"
-        )
-      );
-    const indiceActual =
-      opciones.indexOf(document.activeElement);
-
-    if (
-      evento.key === "ArrowDown" ||
-      evento.key === "ArrowUp"
-    ) {
-      evento.preventDefault();
-      const desplazamiento =
-        evento.key === "ArrowDown" ? 1 : -1;
-      const indice = Math.min(
-        opciones.length - 1,
-        Math.max(0, indiceActual + desplazamiento)
-      );
-      opciones[indice]?.focus();
-    }
-
-    if (evento.key === "Escape") {
-      evento.preventDefault();
-      cerrarSelectorPersonalizadoPC(control);
-      boton.focus({ preventScroll: true });
-    }
-  });
-
-  select.addEventListener("change", () => {
-    sincronizarSelectorPersonalizadoPC(
-      select
-    );
-  });
-
-  sincronizarSelectorPersonalizadoPC(select);
-}
-
-
-function inicializarSelectoresPersonalizadosPC() {
-  crearSelectorPersonalizadoPC(
-    filtroCategoria,
-    "select-personalizado-categoria-pc",
-    filtroCategoria
-  );
-
-  const controlOrdenNativo =
-    ordenarProductos
-      ? ordenarProductos.closest(".control-orden")
-      : null;
-
-  crearSelectorPersonalizadoPC(
-    ordenarProductos,
-    "select-personalizado-orden-pc",
-    controlOrdenNativo
-  );
-
-  document.addEventListener("click", (evento) => {
-    if (
-      !evento.target.closest?.(
-        ".select-personalizado-pc"
-      )
-    ) {
-      cerrarSelectoresPersonalizadosPC();
-    }
-  });
-
-  window
-    .matchMedia("(min-width: 651px)")
-    .addEventListener?.("change", () => {
-      cerrarSelectoresPersonalizadosPC();
-    });
-}
-
 
 function cargarCategorias() {
   const categoriaSeleccionada =
@@ -1394,7 +1149,7 @@ function cargarCategorias() {
 
   filtroCategoria.innerHTML = `
     <option value="">
-      Todos los productos
+      Todas las categorías
     </option>
   `;
 
@@ -1415,11 +1170,6 @@ function cargarCategorias() {
     filtroCategoria.value =
       categoriaSeleccionada;
   }
-
-  actualizarEstadoFiltroCategoria();
-  sincronizarSelectorPersonalizadoPC(
-    filtroCategoria
-  );
 }
 
 
@@ -1548,345 +1298,6 @@ function ordenarListaProductos(lista) {
    TARJETAS DE PRODUCTOS
 ========================================= */
 
-const consultaMovilTarjetas =
-  window.matchMedia("(max-width: 650px)");
-
-let ajusteMovilProgramado = 0;
-
-
-function limpiarAjustesMovilesTarjetas() {
-  document
-    .querySelectorAll(".tarjeta-producto.titulo-tres-lineas")
-    .forEach((tarjeta) =>
-      tarjeta.classList.remove("titulo-tres-lineas")
-    );
-
-  document
-    .querySelectorAll(".acciones-producto")
-    .forEach((acciones) =>
-      acciones.style.removeProperty("top")
-    );
-
-  document
-    .querySelectorAll(".opciones-presentacion")
-    .forEach((contenedor) => {
-      contenedor.style.removeProperty("flex-wrap");
-      contenedor.style.removeProperty("gap");
-    });
-
-  document
-    .querySelectorAll(".boton-presentacion")
-    .forEach((boton) => {
-      [
-        "height",
-        "min-height",
-        "max-height",
-        "padding-top",
-        "padding-right",
-        "padding-bottom",
-        "padding-left",
-        "font-size",
-        "line-height",
-        "border-radius",
-        "white-space"
-      ].forEach((propiedad) =>
-        boton.style.removeProperty(propiedad)
-      );
-    });
-}
-
-
-function aplicarEscalaPresentaciones(
-  contenedor,
-  botones,
-  escala,
-  medidasBase
-) {
-  const alto =
-    medidasBase.alto * escala;
-
-  contenedor.style.setProperty(
-    "flex-wrap",
-    "nowrap",
-    "important"
-  );
-  contenedor.style.setProperty(
-    "gap",
-    `${medidasBase.separacion * escala}px`,
-    "important"
-  );
-
-  botones.forEach((boton) => {
-    boton.style.setProperty(
-      "height",
-      `${alto}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "min-height",
-      `${alto}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "max-height",
-      `${alto}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "padding-top",
-      `${medidasBase.paddingVertical * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "padding-right",
-      `${medidasBase.paddingHorizontal * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "padding-bottom",
-      `${medidasBase.paddingVertical * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "padding-left",
-      `${medidasBase.paddingHorizontal * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "font-size",
-      `${medidasBase.fuente * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "line-height",
-      "1",
-      "important"
-    );
-    boton.style.setProperty(
-      "border-radius",
-      `${medidasBase.radio * escala}px`,
-      "important"
-    );
-    boton.style.setProperty(
-      "white-space",
-      "nowrap",
-      "important"
-    );
-  });
-}
-
-
-function ajustarPresentacionesTarjetaMovil(
-  tarjeta
-) {
-  const contenedor =
-    tarjeta.querySelector(
-      ".opciones-presentacion"
-    );
-
-  if (!contenedor) {
-    return;
-  }
-
-  if (
-    contenedor.querySelector(
-      ".opcion-presentacion-integrada"
-    )
-  ) {
-    return;
-  }
-
-  const botones = [
-    ...contenedor.querySelectorAll(
-      ".boton-presentacion"
-    )
-  ];
-
-  if (
-    botones.length === 0 ||
-    contenedor.clientWidth === 0
-  ) {
-    return;
-  }
-
-  contenedor.style.removeProperty("gap");
-
-  botones.forEach((boton) => {
-    [
-      "height",
-      "min-height",
-      "max-height",
-      "padding-top",
-      "padding-right",
-      "padding-bottom",
-      "padding-left",
-      "font-size",
-      "line-height",
-      "border-radius",
-      "white-space"
-    ].forEach((propiedad) =>
-      boton.style.removeProperty(propiedad)
-    );
-  });
-
-  const estiloBoton =
-    getComputedStyle(botones[0]);
-
-  const medidasBase = {
-    alto:
-      botones[0].getBoundingClientRect().height,
-    fuente:
-      parseFloat(estiloBoton.fontSize) || 16,
-    paddingVertical:
-      parseFloat(estiloBoton.paddingTop) || 0,
-    paddingHorizontal:
-      parseFloat(estiloBoton.paddingLeft) || 0,
-    radio:
-      parseFloat(estiloBoton.borderRadius) || 7,
-    separacion:
-      parseFloat(
-        getComputedStyle(contenedor).gap
-      ) || 5
-  };
-
-  let escala = 1;
-
-  while (escala > 0.3) {
-    aplicarEscalaPresentaciones(
-      contenedor,
-      botones,
-      escala,
-      medidasBase
-    );
-
-    const anchoOcupado =
-      botones.reduce(
-        (total, boton) =>
-          total +
-          boton.getBoundingClientRect().width,
-        0
-      ) +
-      medidasBase.separacion *
-        escala *
-        Math.max(0, botones.length - 1);
-
-    if (
-      anchoOcupado <=
-      contenedor.clientWidth + 1
-    ) {
-      break;
-    }
-
-    escala -= 0.03;
-  }
-}
-
-
-function actualizarLineasTituloTarjetaMovil(tarjeta) {
-  const titulo = tarjeta.querySelector(".fila-titulo-producto h2");
-
-  tarjeta.classList.remove("titulo-tres-lineas");
-
-  if (!titulo || !consultaMovilTarjetas.matches) {
-    return;
-  }
-
-  const estilo = getComputedStyle(titulo);
-  const altoLinea = parseFloat(estilo.lineHeight);
-
-  if (!altoLinea || !Number.isFinite(altoLinea)) {
-    return;
-  }
-
-  /* scrollHeight conserva la altura natural del texto aunque esté recortado
-     por line-clamp; así sólo marcamos los títulos que realmente requieren
-     una tercera línea al ancho actual de la tarjeta. */
-  const lineasNaturales = titulo.scrollHeight / altoLinea;
-
-  tarjeta.classList.toggle(
-    "titulo-tres-lineas",
-    lineasNaturales > 2.35
-  );
-}
-
-
-function centrarAccionesFotoTarjetaMovil(tarjeta) {
-  const encabezado = tarjeta.querySelector(".encabezado-producto");
-  const foto = tarjeta.querySelector(".contenedor-foto-producto");
-  const acciones = tarjeta.querySelector(".acciones-producto");
-
-  if (!encabezado || !foto || !acciones) {
-    return;
-  }
-
-  const rectEncabezado = encabezado.getBoundingClientRect();
-  const rectFoto = foto.getBoundingClientRect();
-  const rectAcciones = acciones.getBoundingClientRect();
-
-  if (!rectFoto.height || !rectAcciones.height) {
-    return;
-  }
-
-  const centroFoto =
-    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
-
-  const top = centroFoto - rectAcciones.height / 2;
-
-  acciones.style.setProperty(
-    "top",
-    `${Math.round(top * 10) / 10}px`,
-    "important"
-  );
-}
-
-
-function ajustarTarjetasMoviles() {
-  if (!consultaMovilTarjetas.matches) {
-    limpiarAjustesMovilesTarjetas();
-    return;
-  }
-
-  document
-    .querySelectorAll(".tarjeta-producto")
-    .forEach((tarjeta) => {
-      actualizarLineasTituloTarjetaMovil(
-        tarjeta
-      );
-
-      ajustarPresentacionesTarjetaMovil(
-        tarjeta
-      );
-
-      centrarAccionesFotoTarjetaMovil(
-        tarjeta
-      );
-    });
-}
-
-
-function programarAjusteTarjetasMoviles() {
-  if (ajusteMovilProgramado) {
-    cancelAnimationFrame(
-      ajusteMovilProgramado
-    );
-  }
-
-  ajusteMovilProgramado =
-    requestAnimationFrame(() => {
-      ajusteMovilProgramado =
-        requestAnimationFrame(() => {
-          ajusteMovilProgramado = 0;
-          ajustarTarjetasMoviles();
-        });
-    });
-}
-
-
-window.addEventListener(
-  "resize",
-  programarAjusteTarjetasMoviles
-);
-
 function mostrarProductos(lista) {
   contenedorProductos.innerHTML = "";
 
@@ -1913,7 +1324,6 @@ function mostrarProductos(lista) {
     `${lista.length} productos encontrados`;
 
   sincronizarBotonesComparacion();
-  programarAjusteTarjetasMoviles();
 }
 
 
@@ -1924,103 +1334,53 @@ function crearTarjetaProducto(
   const esComparacion =
     Boolean(opciones.esComparacion);
 
-  const productoInicialCarrito =
-    carritoCompras.find((item) => {
-      return (
-        normalizarTexto(item.nombre) ===
-          normalizarTexto(producto.nombre) &&
-        normalizarTexto(item.categoria) ===
-          normalizarTexto(producto.categoria) &&
-        producto.presentaciones.some(
-          (presentacion) =>
-            normalizarTexto(
-              presentacion.nombre
-            ) ===
-            normalizarTexto(
-              item.presentacionBase ||
-                item.presentacion
-            )
-        )
-      );
-    });
-
-  const indicePresentacionInicial =
-    Math.max(
-      0,
-      productoInicialCarrito
-        ? producto.presentaciones.findIndex(
-            (presentacion) =>
-              normalizarTexto(
-                presentacion.nombre
-              ) ===
-              normalizarTexto(
-                productoInicialCarrito.presentacionBase ||
-                  productoInicialCarrito.presentacion
-              )
-          )
-        : 0
-    );
   const presentacionInicial =
-    producto.presentaciones[
-      indicePresentacionInicial
-    ] || producto.presentaciones[0];
-  const presentacionInicialSeleccionada =
-    Boolean(productoInicialCarrito);
+    producto.presentaciones[0];
 
   const tarjeta =
     document.createElement("article");
 
   tarjeta.className =
     esComparacion
-      ? "tarjeta-producto tarjeta-en-comparacion"
+      ? "tarjeta-producto tarjeta-comparacion"
       : "tarjeta-producto";
-
-  const esAlambreKanthal =
-    normalizarTexto(producto.nombre) ===
-    "alambre kanthal a1";
-
-  if (esAlambreKanthal) {
-    tarjeta.classList.add(
-      "tarjeta-alambre-kanthal"
-    );
-  }
-
-  if (producto.presentaciones.length === 1) {
-    tarjeta.classList.add(
-      "tarjeta-presentacion-unica"
-    );
-  }
 
   tarjeta.dataset.idProducto = producto.id;
   tarjeta.dataset.nombre = producto.nombre;
-  tarjeta.dataset.nombrePlural = producto.nombrePlural || "";
   tarjeta.dataset.categoria = producto.categoria;
   tarjeta.dataset.presentacion = presentacionInicial.nombre;
   tarjeta.dataset.precio = String(presentacionInicial.precio);
   tarjeta.dataset.codigo = presentacionInicial.codigo || "";
-  tarjeta.dataset.indicePresentacion =
-    String(indicePresentacionInicial);
-  tarjeta.dataset.presentacionSeleccionada =
-    String(presentacionInicialSeleccionada);
 
   const productoInicialEnCarrito =
-    Boolean(productoInicialCarrito);
-
-  const cantidadInicialProducto =
-    productoInicialCarrito
-      ? Math.max(
-          1,
-          Number(productoInicialCarrito.cantidad) || 1
-        )
-      : 1;
-
-  tarjeta.dataset.cantidadUnidades =
-    String(cantidadInicialProducto);
+    carritoCompras.some((item) => {
+      return (
+        crearClaveCarrito(item) ===
+        crearClaveCarrito({
+          nombre: producto.nombre,
+          presentacion: presentacionInicial.nombre,
+          codigo: presentacionInicial.codigo || ""
+        })
+      );
+    });
 
   const estaSeleccionado =
     productosSeleccionadosComparacion.includes(
       producto.id
     );
+
+  const usarSelectorDesplegable =
+    esComparacion ||
+    producto.presentaciones.length >= 7;
+
+  const opcionesSelector =
+    producto.presentaciones
+      .map((presentacion, indicePresentacion) => `
+        <option value="${indicePresentacion}">
+          ${escaparHTML(presentacion.nombre)}
+        </option>
+      `)
+      .join("");
 
   const botonesPresentaciones =
     producto.presentaciones
@@ -2028,114 +1388,88 @@ function crearTarjetaProducto(
         <button
           type="button"
           class="boton-presentacion ${
-            presentacionInicialSeleccionada &&
-            indicePresentacion === indicePresentacionInicial
+            indicePresentacion === 0
               ? "seleccionada"
               : ""
           }"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
-          aria-pressed="${
-            presentacionInicialSeleccionada &&
-            indicePresentacion === indicePresentacionInicial
-          }"
         >
-          <span
-            class="etiqueta-presentacion-integrada"
-            data-etiqueta-base="${escaparHTML(
-              formatearEtiquetaPresentacion(
-                presentacion.nombre
-              )
-            )}"
-          >${escaparHTML(
-              formatearEtiquetaPresentacion(
-                presentacion.nombre
-              )
-          )}</span>
+          <span>${escaparHTML(presentacion.nombre)}</span>
         </button>
       `)
       .join("");
 
-  const usarSelectorAlambre =
-    esAlambreKanthal;
-
-  const opcionesSelectorAlambre =
-    `
-      <option value="" ${
-        presentacionInicialSeleccionada
-          ? ""
-          : "selected"
-      }>Diámetro</option>
-    ` +
-    producto.presentaciones
-      .map((presentacion, indicePresentacion) => `
-        <option
-          value="${indicePresentacion}"
-          data-etiqueta-base="${escaparHTML(
-            formatearDiametroKanthal(
-              presentacion.nombre
-            )
-          )}"
-          ${
-            presentacionInicialSeleccionada &&
-            indicePresentacion === indicePresentacionInicial
-              ? "selected"
-              : ""
-          }
-        >
-          ${escaparHTML(
-            formatearDiametroKanthal(
-              presentacion.nombre
-            )
-          )}
-        </option>
-      `)
-      .join("");
-
   const controlPresentaciones =
-    usarSelectorAlambre
+    usarSelectorDesplegable
       ? `
-        <div class="control-presentacion-alambre-integrado ${
-          presentacionInicialSeleccionada
-            ? "seleccionada"
-            : ""
-        }">
-          <div class="selector-diametro-alambre">
-            <select
-              id="selector-alambre-${producto.id}-${
-                esComparacion ? "comparacion" : "catalogo"
-              }"
-              class="selector-presentacion selector-presentacion-alambre ${
-                presentacionInicialSeleccionada
-                  ? "seleccionada"
-                  : ""
-              }"
-              data-id-producto="${producto.id}"
-              aria-label="Elegir diámetro de ${escaparHTML(
-                producto.nombre
-              )}"
-            >
-              ${opcionesSelectorAlambre}
-            </select>
-          </div>
-        </div>
-        `
-      : `
-          <div
-            class="opciones-presentacion"
-            role="group"
-            aria-label="Presentaciones de ${escaparHTML(
+          <select
+            class="selector-presentacion"
+            data-id-producto="${producto.id}"
+            aria-label="Elegir presentación de ${escaparHTML(
               producto.nombre
             )}"
           >
+            ${opcionesSelector}
+          </select>
+        `
+      : `
+          <div class="opciones-presentacion">
             ${botonesPresentaciones}
           </div>
         `;
 
-  const foto =
-    normalizarURLImagen(producto.foto);
+  const fotos =
+    obtenerFotosProducto(producto);
 
-  tarjeta.dataset.foto = foto;
+  const foto =
+    fotos[0] || "";
+
+  const navegacionFotos =
+    fotos.length > 1
+      ? `
+          <button
+            type="button"
+            class="boton-foto-anterior"
+            aria-label="Foto anterior de ${escaparHTML(producto.nombre)}"
+            title="Foto anterior"
+          >‹</button>
+
+          <button
+            type="button"
+            class="boton-foto-siguiente"
+            aria-label="Foto siguiente de ${escaparHTML(producto.nombre)}"
+            title="Foto siguiente"
+          >›</button>
+
+          <div
+            class="indicadores-fotos"
+            role="group"
+            aria-label="${fotos.length} fotos disponibles"
+          >
+            ${fotos
+              .map(
+                (_, indiceFoto) => `
+                  <button
+                    type="button"
+                    class="indicador-foto ${
+                      indiceFoto === 0
+                        ? "activo"
+                        : ""
+                    }"
+                    aria-label="Ver foto ${indiceFoto + 1} de ${fotos.length}"
+                    aria-current="${
+                      indiceFoto === 0
+                        ? "true"
+                        : "false"
+                    }"
+                  ></button>
+                `
+              )
+              .join("")}
+          </div>
+        `
+      : "";
 
   const idDetalles =
     `detalles-${producto.id}-${
@@ -2167,6 +1501,58 @@ function crearTarjetaProducto(
 
   tarjeta.innerHTML = `
     <div class="encabezado-producto">
+      <div class="fila-categoria-producto">
+        <span class="categoria">
+          <img
+            src="img/logo.png"
+            alt=""
+            class="logo-categoria"
+            aria-hidden="true"
+          >
+          <span>${escaparHTML(producto.categoria)}</span>
+        </span>
+
+        <div class="acciones-producto">
+          <button
+            type="button"
+            class="boton-comparar ${
+              estaSeleccionado ? "seleccionado" : ""
+            }"
+            data-id-producto="${producto.id}"
+            aria-pressed="${estaSeleccionado}"
+            aria-label="${
+              esComparacion ? "Quitar de la comparación" : "Comparar"
+            } ${escaparHTML(producto.nombre)}"
+            title="${
+              esComparacion ? "Quitar de la comparación" : "Comparar producto"
+            }"
+          >
+            <span class="icono-comparar" aria-hidden="true">⇄</span>
+            <span class="texto-comparar">
+              ${
+                esComparacion
+                  ? "Quitar"
+                  : estaSeleccionado
+                    ? "Elegido"
+                    : "Comparar"
+              }
+            </span>
+          </button>
+
+          <button
+            type="button"
+            class="compartir-producto"
+            data-id-producto="${producto.id}"
+            aria-label="Compartir ${escaparHTML(producto.nombre)}"
+            title="Compartir producto"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.2 3.2 0 0 0 0-1.39l7.05-4.11A3 3 0 1 0 15 5c0 .23.03.45.08.66L8.03 9.77a3 3 0 1 0 0 4.46l7.12 4.16c-.04.2-.07.4-.07.61a3 3 0 1 0 2.92-2.92Z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
       <div class="fila-titulo-producto">
         <h2>${escaparHTML(producto.nombre)}</h2>
       </div>
@@ -2174,139 +1560,33 @@ function crearTarjetaProducto(
       <p class="codigo-producto">
         ${
           presentacionInicial.codigo
-            ? escaparHTML(presentacionInicial.codigo)
-          : ""
+            ? `Código: ${escaparHTML(presentacionInicial.codigo)}`
+            : ""
         }
       </p>
-
-      <div class="acciones-producto">
-        <button
-          type="button"
-          class="compartir-producto"
-          data-id-producto="${producto.id}"
-          aria-label="Compartir ${escaparHTML(producto.nombre)}"
-          title="Compartir producto"
-        >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="18" cy="5" r="2.25"></circle>
-            <circle cx="6" cy="12" r="2.25"></circle>
-            <circle cx="18" cy="19" r="2.25"></circle>
-            <path d="m8 10.9 7.8-4.55M8 13.1l7.8 4.55"></path>
-          </svg>
-        </button>
-
-        <button
-          type="button"
-          class="boton-comparar ${
-            estaSeleccionado ? "seleccionado" : ""
-          }"
-          data-id-producto="${producto.id}"
-          aria-pressed="${estaSeleccionado}"
-          aria-label="${
-            esComparacion ? "Quitar de la comparación" : "Comparar"
-          } ${escaparHTML(producto.nombre)}"
-          title="${
-            esComparacion ? "Quitar de la comparación" : "Comparar producto"
-          }"
-        >
-          <svg
-            class="icono-comparar icono-comparar-svg"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="M2.5 7.5h18m0 0-4-4m4 4-4 4M21.5 16.5h-18m0 0 4-4m-4 4 4 4"></path>
-          </svg>
-        </button>
-      </div>
     </div>
 
-    <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+    <div class="contenedor-foto-producto galeria-fotos ${foto ? "" : "sin-foto"}">
       <img
-        src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
+        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? "" : "foto-placeholder"}"
         loading="lazy"
-        referrerpolicy="no-referrer"
+        data-indice-foto="0"
       >
-    </div>
-
-    <div class="fila-compra">
-      <div class="informacion-precio">
-        <p
-          class="precio"
-          data-precio="${presentacionInicial.precio}"
-        >
-          ${formatearPrecio(presentacionInicial.precio)}
-        </p>
-      </div>
-
-      <div class="bloque-presentaciones">
-        ${controlPresentaciones}
-      </div>
-
-      <div class="selector-cantidad">
-        <div class="control-cantidad">
-          <button
-            type="button"
-            class="boton-cantidad restar"
-            aria-label="Disminuir cantidad"
-          >−</button>
-
-          <input
-            type="number"
-            class="cantidad ${
-              productoInicialEnCarrito
-                ? "cantidad-agregada"
-                : ""
-            }"
-            value="${cantidadInicialProducto}"
-            min="1"
-            step="1"
-            aria-label="Cantidad"
-          >
-
-          <button
-            type="button"
-            class="boton-cantidad sumar"
-            aria-label="Aumentar cantidad"
-          >+</button>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        class="agregar-carrito ${
-          productoInicialEnCarrito ? "agregado" : ""
-        }"
-        aria-label="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-        title="${productoInicialEnCarrito ? "Producto agregado" : "Agregar al carrito"}"
-      >
-        <span class="icono-agregar" aria-hidden="true">
-          <svg viewBox="0 0 28 24" focusable="false">
-            <path
-              class="contorno-agregar-carrito"
-              d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"
-            ></path>
-            <circle class="rueda-agregar-carrito" cx="9.2" cy="19.6" r="1.6"></circle>
-            <circle class="rueda-agregar-carrito" cx="21.4" cy="19.6" r="1.6"></circle>
-          </svg>
-        </span>
-        <span class="texto-agregar-carrito">
-          ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
-        </span>
-      </button>
+      ${navegacionFotos}
     </div>
 
     <div class="zona-detalles-producto">
-        <button
-          type="button"
-          class="ver-detalles"
-          aria-expanded="false"
-          aria-controls="${idDetalles}"
-        >
-          Más info
-        </button>
+      <button
+        type="button"
+        class="ver-detalles"
+        aria-expanded="false"
+        aria-controls="${idDetalles}"
+      >
+        Ver detalles
+      </button>
+
       <div
         id="${idDetalles}"
         class="detalles-producto"
@@ -2315,63 +1595,67 @@ function crearTarjetaProducto(
         ${contenidoDetalles}
       </div>
     </div>
+
+    <div class="bloque-presentaciones">
+      <p class="titulo-opciones">Presentación</p>
+      ${controlPresentaciones}
+    </div>
+
+    <div class="informacion-precio">
+      <p class="etiqueta-precio">Precio unitario</p>
+      <p
+        class="precio"
+        data-precio="${presentacionInicial.precio}"
+      >
+        ${formatearPrecio(presentacionInicial.precio)}
+      </p>
+    </div>
+
+    <div class="selector-cantidad">
+      <span>Cantidad</span>
+
+      <div class="control-cantidad">
+        <button
+          type="button"
+          class="boton-cantidad restar"
+          aria-label="Disminuir cantidad"
+        >−</button>
+
+        <input
+          type="number"
+          class="cantidad"
+          value="1"
+          min="1"
+          step="1"
+        >
+
+        <button
+          type="button"
+          class="boton-cantidad sumar"
+          aria-label="Aumentar cantidad"
+        >+</button>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="agregar-carrito ${
+        productoInicialEnCarrito ? "agregado" : ""
+      }"
+    >
+      <span class="icono-agregar" aria-hidden="true">🛒</span>
+      <span class="texto-agregar">
+        ${productoInicialEnCarrito ? "Agregado" : "Agregar"}
+      </span>
+    </button>
+
   `;
 
-  const imagenProducto =
-    tarjeta.querySelector(".foto-producto");
-
-  if (imagenProducto && foto) {
-    const mostrarImagenAlternativa = () => {
-      if (
-        imagenProducto.dataset.imagenAlternativa ===
-        "true"
-      ) {
-        return;
-      }
-
-      imagenProducto.dataset.imagenAlternativa =
-        "true";
-        imagenProducto.src = "img/logo-minimal.svg";
-        imagenProducto.alt = "";
-        imagenProducto.classList.add(
-          "foto-placeholder"
-        );
-        imagenProducto
-          .closest(".contenedor-foto-producto")
-          ?.classList.add("sin-foto");
-    };
-
-    imagenProducto.addEventListener(
-      "error",
-      mostrarImagenAlternativa,
-      { once: true }
-    );
-
-    if (
-      imagenProducto.complete &&
-      imagenProducto.naturalWidth === 0
-    ) {
-      mostrarImagenAlternativa();
-    }
-  }
-
-  const selectorAlambre =
-    tarjeta.querySelector(
-      ".selector-presentacion-alambre"
-    );
-
-  if (selectorAlambre) {
-    crearSelectorPersonalizadoPC(
-      selectorAlambre,
-      "select-personalizado-presentacion-pc",
-      selectorAlambre
-    );
-  }
-
-  actualizarControlPresentacionIntegrado(
-    tarjeta
+  inicializarGaleriaFotos(
+    tarjeta,
+    fotos,
+    producto.nombre
   );
-  actualizarEstadoBotonTarjeta(tarjeta);
 
   return tarjeta;
 }
@@ -2399,8 +1683,8 @@ function alternarDetallesProducto(boton) {
   );
   boton.textContent =
     seAbrira
-      ? "Ocultar info."
-      : "Más info";
+      ? "Ocultar detalles"
+      : "Ver detalles";
 }
 
 
@@ -2441,7 +1725,6 @@ function alternarProductoComparacion(idProducto) {
   }
 
   actualizarEstadoComparacion();
-  programarAjusteTarjetasMoviles();
 }
 
 
@@ -2460,7 +1743,7 @@ function sincronizarBotonesComparacion() {
           const esTarjetaComparacion =
             Boolean(
               boton.closest(
-                ".tarjeta-en-comparacion"
+                ".tarjeta-comparacion"
               )
             );
 
@@ -2511,6 +1794,10 @@ function actualizarEstadoComparacion() {
     abrirComparacion.disabled = cantidad < 2;
   }
 
+  if (contadorComparacion) {
+    contadorComparacion.textContent =
+      `${cantidad} productos lado a lado`;
+  }
 
   sincronizarBotonesComparacion();
 }
@@ -2601,7 +1888,6 @@ function cerrarVistaComparacion() {
   );
 
   actualizarEstadoComparacion();
-  programarAjusteTarjetasMoviles();
 }
 
 
@@ -2612,320 +1898,86 @@ function vaciarSeleccionComparacion() {
     cerrarVistaComparacion();
   }
 
-  /* Elimina también las tarjetas de la vista oculta para que al volver
-     al catálogo no quede ningún estado visual anterior en el DOM. */
-  if (productosComparados) {
-    productosComparados.innerHTML = "";
-    productosComparados.dataset.cantidad = "0";
-  }
-
   actualizarEstadoComparacion();
-}
-
-
-function volverDesdeComparacion() {
-  vaciarSeleccionComparacion();
-}
-
-
-function obtenerProductoDeTarjeta(tarjeta) {
-  return productosAgrupados.find(
-    (producto) =>
-      producto.id ===
-      tarjeta?.dataset.idProducto
-  );
-}
-
-
-function animarPrecioActualizado(elementoPrecio) {
-  if (!elementoPrecio) {
-    return;
-  }
-
-  elementoPrecio.classList.remove(
-    "precio-actualizado"
-  );
-  void elementoPrecio.offsetWidth;
-  elementoPrecio.classList.add(
-    "precio-actualizado"
-  );
-
-  window.clearTimeout(
-    elementoPrecio._temporizadorActualizacion
-  );
-  elementoPrecio._temporizadorActualizacion =
-    window.setTimeout(() => {
-      elementoPrecio.classList.remove(
-        "precio-actualizado"
-      );
-    }, 320);
-}
-
-
-function actualizarControlPresentacionIntegrado(
-  tarjeta,
-  animarPrecio = false
-) {
-  const producto =
-    obtenerProductoDeTarjeta(tarjeta);
-
-  if (!producto) {
-    return;
-  }
-
-  const indicePresentacion = Math.max(
-    0,
-    Number(
-      tarjeta.dataset.indicePresentacion
-    ) || 0
-  );
-  const presentacion =
-    producto.presentaciones[
-      indicePresentacion
-    ] || producto.presentaciones[0];
-  const campoCantidad =
-    tarjeta.querySelector(".cantidad");
-  const cantidad = Math.max(
-    1,
-    Number(campoCantidad?.value) ||
-      Number(tarjeta.dataset.cantidadUnidades) ||
-      1
-  );
-  const seleccionada =
-    tarjeta.dataset.presentacionSeleccionada ===
-    "true";
-  const etiquetaTotal =
-    formatearPresentacionTotal(
-      presentacion.nombre,
-      cantidad
-    );
-
-  tarjeta.dataset.indicePresentacion =
-    String(indicePresentacion);
-  tarjeta.dataset.presentacion =
-    presentacion.nombre;
-  tarjeta.dataset.precio =
-    String(presentacion.precio);
-  tarjeta.dataset.codigo =
-    presentacion.codigo || "";
-  tarjeta.dataset.cantidadUnidades =
-    String(cantidad);
-
-  if (campoCantidad) {
-    campoCantidad.value = String(cantidad);
-  }
-
-  tarjeta
-    .querySelectorAll(
-      ".boton-presentacion"
-    )
-    .forEach((botonPresentacion) => {
-      const etiqueta =
-        botonPresentacion.querySelector(
-          ".etiqueta-presentacion-integrada"
-        );
-      const indiceOpcion = Number(
-        botonPresentacion.dataset.indicePresentacion
-      );
-      const esActual =
-        seleccionada &&
-        indiceOpcion === indicePresentacion;
-
-      botonPresentacion.classList.toggle(
-        "seleccionada",
-        esActual
-      );
-      botonPresentacion.setAttribute(
-        "aria-pressed",
-        esActual ? "true" : "false"
-      );
-
-      if (etiqueta) {
-        etiqueta.textContent =
-          etiqueta.dataset.etiquetaBase || "";
-      }
-    });
-
-  const selectorAlambre =
-    tarjeta.querySelector(
-      ".selector-presentacion-alambre"
-    );
-
-  if (selectorAlambre) {
-    Array.from(selectorAlambre.options)
-      .forEach((opcion) => {
-        if (
-          opcion.dataset.etiquetaBase
-        ) {
-          opcion.textContent =
-            opcion.dataset.etiquetaBase;
-        }
-      });
-
-    selectorAlambre.value = seleccionada
-      ? String(indicePresentacion)
-      : "";
-    selectorAlambre.classList.toggle(
-      "seleccionada",
-      seleccionada
-    );
-    selectorAlambre
-      .closest(
-        ".control-presentacion-alambre-integrado"
-      )
-      ?.classList.toggle(
-        "seleccionada",
-        seleccionada
-      );
-
-    const cantidadMetros =
-      tarjeta.querySelector(
-        ".cantidad-metros-alambre"
-      );
-
-    if (cantidadMetros) {
-      cantidadMetros.textContent =
-        formatearMetrosKanthal(
-          presentacion.nombre,
-          cantidad
-        );
-    }
-
-    sincronizarSelectorPersonalizadoPC(
-      selectorAlambre
-    );
-  }
-
-  const precioTotal =
-    calcularPrecioCantidadPresentacion(
-      producto,
-      indicePresentacion,
-      cantidad
-    );
-  const elementoPrecio =
-    tarjeta.querySelector(".precio");
-
-  tarjeta.dataset.precioTotal =
-    String(precioTotal);
-  tarjeta.dataset.presentacionTotal =
-    etiquetaTotal;
-
-  if (elementoPrecio) {
-    const precioVisible =
-      formatearPrecio(
-        Number(presentacion.precio) || 0
-      );
-    const precioCambio =
-      elementoPrecio.textContent !== precioVisible;
-
-    elementoPrecio.dataset.precio =
-      String(presentacion.precio);
-    elementoPrecio.textContent = precioVisible;
-
-    if (animarPrecio && precioCambio) {
-      animarPrecioActualizado(
-        elementoPrecio
-      );
-    }
-  }
-
-  const codigo =
-    tarjeta.querySelector(
-      ".codigo-producto"
-    );
-
-  if (codigo) {
-    codigo.textContent =
-      presentacion.codigo || "";
-  }
 }
 
 
 function seleccionarPresentacion(control) {
   const tarjeta =
     control.closest(".tarjeta-producto");
+
+  const idProducto =
+    control.dataset.idProducto;
+
+  const indicePresentacion =
+    control.matches(".selector-presentacion")
+      ? Number(control.value)
+      : Number(
+          control.dataset.indicePresentacion
+        );
+
   const producto =
-    obtenerProductoDeTarjeta(tarjeta);
-  const esSelectorPresentacion =
-    control.matches(".selector-presentacion");
+    productosAgrupados.find(
+      (item) =>
+        item.id === idProducto
+    );
 
   if (!producto) {
     return;
   }
 
-  if (
-    esSelectorPresentacion &&
-    control.value === ""
-  ) {
-    tarjeta.dataset.presentacionSeleccionada =
-      "false";
-    tarjeta.querySelector(".cantidad").value = "1";
-    actualizarControlPresentacionIntegrado(
-      tarjeta,
-      true
-    );
-    actualizarEstadoBotonTarjeta(tarjeta);
-    programarAjusteTarjetasMoviles();
+  const presentacion =
+    producto.presentaciones[
+      indicePresentacion
+    ];
+
+  if (!presentacion) {
     return;
   }
 
-  const indicePresentacion =
-    esSelectorPresentacion
-      ? Number(control.value)
-      : Number(
-          control.dataset.indicePresentacion
+  if (control.matches(".boton-presentacion")) {
+    tarjeta
+      .querySelectorAll(
+        ".boton-presentacion"
+      )
+      .forEach((opcion) => {
+        opcion.classList.remove(
+          "seleccionada"
         );
-  const yaEstabaSeleccionada =
-    tarjeta.dataset.presentacionSeleccionada ===
-      "true" &&
-    Number(
-      tarjeta.dataset.indicePresentacion
-    ) === indicePresentacion;
-  const seDeselecciona =
-    !esSelectorPresentacion &&
-    yaEstabaSeleccionada;
+      });
 
-  tarjeta.dataset.indicePresentacion =
-    String(indicePresentacion);
-  tarjeta.dataset.presentacionSeleccionada =
-    String(!seDeselecciona);
-  tarjeta.querySelector(".cantidad").value = "1";
+    control.classList.add("seleccionada");
+  }
 
-  sincronizarCantidadTarjetaConCarrito(tarjeta);
-  actualizarControlPresentacionIntegrado(
-    tarjeta,
-    true
-  );
+  tarjeta.dataset.presentacion =
+    presentacion.nombre;
+
+  tarjeta.dataset.precio =
+    String(presentacion.precio);
+
+  tarjeta.dataset.codigo =
+    presentacion.codigo || "";
+
+  const elementoPrecio =
+    tarjeta.querySelector(".precio");
+
+  elementoPrecio.dataset.precio =
+    String(presentacion.precio);
+
+  elementoPrecio.textContent =
+    formatearPrecio(
+      presentacion.precio
+    );
+
+  tarjeta.querySelector(
+    ".codigo-producto"
+  ).textContent =
+    presentacion.codigo
+      ? `Código: ${presentacion.codigo}`
+      : "";
+
+  actualizarTotalTarjeta(tarjeta);
   actualizarEstadoBotonTarjeta(tarjeta);
-  programarAjusteTarjetasMoviles();
-}
-
-
-function establecerSeleccionCantidadTarjeta(
-  tarjeta,
-  seleccionada
-) {
-  if (!tarjeta) {
-    return;
-  }
-
-  const controlCantidad =
-    tarjeta.querySelector(".control-cantidad");
-
-  if (!controlCantidad) {
-    return;
-  }
-
-  controlCantidad.classList.toggle(
-    "seleccionado",
-    Boolean(seleccionada)
-  );
-
-  controlCantidad
-    .querySelectorAll(".boton-cantidad.seleccionado")
-    .forEach((botonCantidad) => {
-      botonCantidad.classList.remove("seleccionado");
-    });
 }
 
 
@@ -2936,20 +1988,6 @@ function cambiarCantidadTarjeta(
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
-  if (
-    tarjeta.querySelector(
-      ".selector-presentacion-alambre"
-    ) &&
-    tarjeta.dataset.presentacionSeleccionada !==
-      "true"
-  ) {
-    mostrarAvisoCopiado(
-      "Elegí un diámetro"
-    );
-    boton.blur?.();
-    return;
-  }
-
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
 
@@ -2959,67 +1997,21 @@ function cambiarCantidadTarjeta(
       Number(campoCantidad.value) || 1
     );
 
-  const cantidadNueva = Math.max(
-    1,
-    cantidadActual + variacion
-  );
-
-  if (cantidadNueva === cantidadActual) {
-    if (
-      tarjeta.classList.contains(
-        "tarjeta-presentacion-unica"
-      ) &&
-      window.matchMedia(
-        "(min-width: 651px)"
-      ).matches
-    ) {
-      marcarBotonTarjetaComoPendiente(
-        tarjeta
-      );
-      campoCantidad.classList.add(
-        "cantidad-seleccionada"
-      );
-      actualizarControlPresentacionIntegrado(
-        tarjeta
-      );
-    }
-
-    boton.blur?.();
-    return;
-  }
-
   campoCantidad.value =
-    cantidadNueva;
+    Math.max(
+      1,
+      cantidadActual + variacion
+    );
 
-  tarjeta.dataset.cantidadUnidades =
-    campoCantidad.value;
-
-  /* Se marca únicamente el valor central; los signos permanecen neutros. */
-  establecerSeleccionCantidadTarjeta(
-    tarjeta,
-    false
-  );
-
-  /* Evita que el foco conserve estilos de una pulsación anterior. */
-  boton.classList.remove("seleccionado");
-  if (typeof boton.blur === "function") {
-    boton.blur();
-  }
-
-  normalizarCantidadTarjeta(tarjeta);
+  actualizarTotalTarjeta(tarjeta);
   marcarBotonTarjetaComoPendiente(tarjeta);
-  campoCantidad.classList.add(
-    "cantidad-seleccionada"
-  );
-
-  actualizarControlPresentacionIntegrado(
-    tarjeta,
-    true
-  );
 }
 
 
-function normalizarCantidadTarjeta(tarjeta) {
+function actualizarTotalTarjeta(tarjeta) {
+  const precio =
+    Number(tarjeta.dataset.precio) || 0;
+
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
 
@@ -3030,181 +2022,18 @@ function normalizarCantidadTarjeta(tarjeta) {
     );
 
   campoCantidad.value = cantidad;
-  tarjeta.dataset.cantidadUnidades =
-    String(cantidad);
-}
 
+  const precioTotal =
+    tarjeta.querySelector(
+      ".precio-total"
+    );
 
-function sincronizarCantidadTarjetaConCarrito(tarjeta) {
-  const campoCantidad =
-    tarjeta?.querySelector(".cantidad");
-
-  if (!campoCantidad) {
-    return;
-  }
-
-  const claveTarjeta =
-    crearClaveCarrito({
-      nombre:
-        tarjeta.dataset.nombre || "",
-
-      presentacion:
-        tarjeta.dataset.presentacion || "",
-
-      codigo:
-        tarjeta.dataset.codigo || ""
-    });
-
-  const productoEnCarrito =
-    carritoCompras.find((producto) => {
-      return (
-        crearClaveCarrito(producto) ===
-        claveTarjeta
+  if (precioTotal) {
+    precioTotal.textContent =
+      formatearPrecio(
+        precio * cantidad
       );
-    });
-
-  campoCantidad.value = productoEnCarrito
-    ? Math.max(
-        1,
-        Number(productoEnCarrito.cantidad) || 1
-      )
-    : 1;
-
-  tarjeta.dataset.cantidadUnidades =
-    campoCantidad.value;
-
-  if (productoEnCarrito) {
-    tarjeta.dataset.presentacionSeleccionada =
-      "true";
   }
-
-  campoCantidad.classList.remove(
-    "cantidad-seleccionada"
-  );
-
-  actualizarControlPresentacionIntegrado(
-    tarjeta
-  );
-}
-
-
-function restablecerSeleccionesTarjetasDespuesDeVaciar() {
-  [contenedorProductos, productosComparados]
-    .filter(Boolean)
-    .forEach((contenedor) => {
-      contenedor
-        .querySelectorAll(".tarjeta-producto")
-        .forEach((tarjeta) => {
-          const campoCantidad =
-            tarjeta.querySelector(".cantidad");
-
-          if (campoCantidad) {
-            campoCantidad.value = 1;
-            campoCantidad.classList.remove(
-              "cantidad-seleccionada",
-              "cantidad-agregada"
-            );
-          }
-
-          tarjeta.dataset.indicePresentacion =
-            "0";
-          tarjeta.dataset.cantidadUnidades =
-            "1";
-
-          tarjeta
-            .querySelector(".control-cantidad")
-            ?.classList.remove("seleccionado");
-
-          tarjeta
-            .querySelectorAll(
-              ".boton-cantidad.seleccionado"
-            )
-            .forEach((boton) => {
-              boton.classList.remove("seleccionado");
-            });
-
-          tarjeta
-            .querySelectorAll(
-              ".boton-presentacion.seleccionada"
-            )
-            .forEach((boton) => {
-              boton.classList.remove("seleccionada");
-              boton.setAttribute("aria-pressed", "false");
-            });
-
-          const selectorPresentacion =
-            tarjeta.querySelector(
-              ".selector-presentacion"
-            );
-
-          if (selectorPresentacion) {
-            selectorPresentacion.value = "";
-            selectorPresentacion.classList.remove(
-              "seleccionada"
-            );
-            sincronizarSelectorPersonalizadoPC(
-              selectorPresentacion
-            );
-          }
-
-          const producto =
-            productosAgrupados.find(
-              (item) =>
-                item.id === tarjeta.dataset.idProducto
-            );
-
-          const presentacionInicial =
-            producto?.presentaciones?.[0];
-
-          if (presentacionInicial) {
-            tarjeta.dataset.presentacionSeleccionada =
-              "false";
-            tarjeta.dataset.presentacion =
-              presentacionInicial.nombre;
-            tarjeta.dataset.precio =
-              String(presentacionInicial.precio);
-            tarjeta.dataset.codigo =
-              presentacionInicial.codigo || "";
-
-            const precio =
-              tarjeta.querySelector(".precio");
-            if (precio) {
-              precio.dataset.precio =
-                String(presentacionInicial.precio);
-              precio.textContent =
-                formatearPrecio(
-                  presentacionInicial.precio
-                );
-              precio.classList.remove(
-                "precio-actualizado"
-              );
-            }
-
-            const codigo =
-              tarjeta.querySelector(
-                ".codigo-producto"
-              );
-            if (codigo) {
-              codigo.textContent =
-                presentacionInicial.codigo || "";
-            }
-
-            tarjeta
-              .querySelectorAll(
-                ".presentacion-agregada"
-              )
-              .forEach((control) =>
-                control.classList.remove(
-                  "presentacion-agregada"
-                )
-              );
-
-            actualizarControlPresentacionIntegrado(
-              tarjeta
-            );
-          }
-        });
-    });
 }
 
 
@@ -3357,235 +2186,13 @@ function mostrarCatalogoCompleto() {
    CARRITO
 ========================================= */
 
-const CANTIDAD_CARRITO_LLENO = 5;
-
-
-function obtenerCantidadTotalCarrito() {
-  return carritoCompras.reduce(
-    (total, producto) => {
-      return total +
-        Math.max(
-          0,
-          Number(producto.cantidad) || 0
-        );
-    },
-    0
-  );
-}
-
-
-function calcularNivelCargaCarrito(cantidad) {
-  if (cantidad <= 0) {
-    return 0;
-  }
-
-  return Math.min(
-    1,
-    0.18 +
-      cantidad *
-        (0.82 / CANTIDAD_CARRITO_LLENO)
-  );
-}
-
-
-function actualizarCargaVisualCarrito(cantidad) {
-  if (!iconoCarrito) {
-    return;
-  }
-
-  const cantidadValida =
-    Number.isFinite(Number(cantidad))
-      ? Math.max(0, Number(cantidad))
-      : obtenerCantidadTotalCarrito();
-
-  iconoCarrito.style.setProperty(
-    "--nivel-carga-carrito",
-    calcularNivelCargaCarrito(
-      cantidadValida
-    ).toFixed(3)
-  );
-}
-
-
-function hacerReaccionarCarrito() {
-  if (!iconoCarrito) {
-    return;
-  }
-
-  iconoCarrito.classList.remove(
-    "recibiendo-producto"
-  );
-
-  void iconoCarrito.offsetWidth;
-
-  iconoCarrito.classList.add(
-    "recibiendo-producto"
-  );
-
-  window.setTimeout(() => {
-    iconoCarrito.classList.remove(
-      "recibiendo-producto"
-    );
-  }, 700);
-}
-
-
-function animarProductoHaciaCarrito(
-  boton,
-  cantidadAnterior,
-  cantidadNueva
-) {
-  actualizarCargaVisualCarrito(
-    cantidadAnterior
-  );
-
-  if (
-    !boton ||
-    !iconoCarrito ||
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches
-  ) {
-    actualizarCargaVisualCarrito(
-      cantidadNueva
-    );
-    hacerReaccionarCarrito();
-    return;
-  }
-
-  const origen =
-    boton.getBoundingClientRect();
-
-  const destino =
-    iconoCarrito.getBoundingClientRect();
-
-  const productoVolador =
-    document.createElement("span");
-
-  productoVolador.className =
-    "producto-volador-carrito";
-
-  const inicioX =
-    origen.left + origen.width / 2 - 10.5;
-
-  const inicioY =
-    origen.top + origen.height / 2 - 10.5;
-
-  const desplazamientoX =
-    destino.left + destino.width / 2 -
-    (inicioX + 10.5);
-
-  const desplazamientoY =
-    destino.top + destino.height / 2 -
-    (inicioY + 10.5);
-
-  productoVolador.style.left =
-    `${inicioX}px`;
-
-  productoVolador.style.top =
-    `${inicioY}px`;
-
-  document.body.appendChild(
-    productoVolador
-  );
-
-  const finalizarAnimacion = () => {
-    productoVolador.remove();
-    actualizarCargaVisualCarrito(
-      cantidadNueva
-    );
-    hacerReaccionarCarrito();
-  };
-
-  if (typeof productoVolador.animate !== "function") {
-    window.setTimeout(
-      finalizarAnimacion,
-      820
-    );
-    return;
-  }
-
-  const animacion =
-    productoVolador.animate(
-      [
-        {
-          transform:
-            "translate(0, 0) scale(1) rotate(0deg)",
-          opacity: 1
-        },
-        {
-          transform:
-            `translate(${desplazamientoX * 0.48}px, ${desplazamientoY * 0.48 - 44}px) scale(.94) rotate(150deg)`,
-          opacity: 1,
-          offset: .52
-        },
-        {
-          transform:
-            `translate(${desplazamientoX}px, ${desplazamientoY}px) scale(.28) rotate(320deg)`,
-          opacity: .15
-        }
-      ],
-      {
-        duration: 820,
-        easing: "cubic-bezier(.25,.75,.2,1)",
-        fill: "forwards"
-      }
-    );
-
-  animacion.addEventListener(
-    "finish",
-    finalizarAnimacion,
-    { once: true }
-  );
-
-  animacion.addEventListener(
-    "cancel",
-    finalizarAnimacion,
-    { once: true }
-  );
-}
-
 function agregarProductoAlCarrito(boton) {
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
-  /* Si existe una sola presentacion, Agregar la elige automaticamente. */
-  if (
-    tarjeta.dataset.presentacionSeleccionada !==
-      "true" &&
-    tarjeta.classList.contains(
-      "tarjeta-presentacion-unica"
-    )
-  ) {
-    tarjeta.dataset.indicePresentacion = "0";
-    tarjeta.dataset.presentacionSeleccionada =
-      "true";
-    actualizarControlPresentacionIntegrado(
-      tarjeta,
-      true
-    );
-  }
-
-  if (
-    tarjeta.dataset.presentacionSeleccionada !==
-    "true"
-  ) {
-    mostrarAvisoCopiado(
-      tarjeta.querySelector(
-        ".selector-presentacion-alambre"
-      )
-        ? "Elegí un diámetro"
-        : "Elegí una presentación"
-    );
-    return;
-  }
-
   if (boton.classList.contains("agregado")) {
     return;
   }
-
-  const cantidadAnterior =
-    obtenerCantidadTotalCarrito();
 
   const campoCantidad =
     tarjeta.querySelector(".cantidad");
@@ -3596,19 +2203,9 @@ function agregarProductoAlCarrito(boton) {
       Number(campoCantidad.value) || 1
     );
 
-  tarjeta.dataset.presentacionSeleccionada =
-    "true";
-  tarjeta.dataset.cantidadUnidades =
-    String(cantidad);
-  actualizarControlPresentacionIntegrado(
-    tarjeta
-  );
-
   const producto = {
     nombre:
       tarjeta.dataset.nombre,
-
-    nombrePlural: "",
 
     categoria:
       tarjeta.dataset.categoria,
@@ -3616,36 +2213,13 @@ function agregarProductoAlCarrito(boton) {
     presentacion:
       tarjeta.dataset.presentacion,
 
-    presentacionBase:
-      tarjeta.dataset.presentacion,
-
-    presentacionTotal:
-      formatearEtiquetaPresentacion(
-        tarjeta.dataset.presentacion
-      ),
-
     precio:
       Number(
         tarjeta.dataset.precio
       ) || 0,
 
-    precioTotal:
-      Number(
-        tarjeta.dataset.precioTotal
-      ) ||
-      (Number(tarjeta.dataset.precio) || 0) *
-        cantidad,
-
-    indicePresentacion:
-      Number(
-        tarjeta.dataset.indicePresentacion
-      ) || 0,
-
     codigo:
       tarjeta.dataset.codigo || "",
-
-    foto:
-      tarjeta.dataset.foto || "",
 
     cantidad
   };
@@ -3663,33 +2237,12 @@ function agregarProductoAlCarrito(boton) {
 
   if (productoExistente) {
     productoExistente.cantidad = cantidad;
-    productoExistente.presentacionTotal =
-      producto.presentacionTotal;
-    productoExistente.precioTotal =
-      producto.precioTotal;
-    productoExistente.indicePresentacion =
-      producto.indicePresentacion;
   } else {
     carritoCompras.push(producto);
   }
 
-  establecerSeleccionCantidadTarjeta(
-    tarjeta,
-    false
-  );
-
-  campoCantidad.classList.add(
-    "cantidad-agregada"
-  );
-
   guardarYActualizarCarrito();
   actualizarEstadoBotonTarjeta(tarjeta);
-
-  animarProductoHaciaCarrito(
-    boton,
-    cantidadAnterior,
-    obtenerCantidadTotalCarrito()
-  );
 }
 
 
@@ -3697,8 +2250,7 @@ function crearClaveCarrito(producto) {
   return [
     normalizarTexto(producto.nombre),
     normalizarTexto(
-      producto.presentacionBase ||
-        producto.presentacion
+      producto.presentacion
     ),
     normalizarTexto(producto.codigo)
   ].join("|");
@@ -3717,31 +2269,14 @@ function marcarBotonTarjetaComoPendiente(tarjeta) {
     return;
   }
 
-  boton.classList.remove("agregado");
-  tarjeta
-    .querySelector(".cantidad")
-    ?.classList.remove("cantidad-agregada");
-  tarjeta
-    .querySelectorAll(
-      ".presentacion-agregada"
-    )
-    .forEach((control) =>
-      control.classList.remove(
-        "presentacion-agregada"
-      )
-    );
-  boton.setAttribute(
-    "aria-label",
-    "Agregar al carrito"
-  );
-  boton.title = "Agregar al carrito";
-
   const textoBoton =
-    boton.querySelector(".texto-agregar-carrito");
+    boton.querySelector(".texto-agregar");
 
   if (textoBoton) {
     textoBoton.textContent = "Agregar";
   }
+
+  boton.classList.remove("agregado");
 }
 
 
@@ -3771,83 +2306,28 @@ function actualizarEstadoBotonTarjeta(tarjeta) {
         tarjeta.dataset.codigo || ""
     });
 
-  const productoEnCarrito =
-    carritoCompras.find((producto) => {
+  const estaEnCarrito =
+    carritoCompras.some((producto) => {
       return (
         crearClaveCarrito(producto) ===
         claveTarjeta
       );
     });
 
-  const estaEnCarrito =
-    Boolean(productoEnCarrito);
+  const textoBoton =
+    boton.querySelector(".texto-agregar");
 
-  if (productoEnCarrito) {
-    const campoCantidad =
-      tarjeta.querySelector(".cantidad");
-    const cantidad = Math.max(
-      1,
-      Number(productoEnCarrito.cantidad) || 1
-    );
-
-    if (campoCantidad) {
-      campoCantidad.value = String(cantidad);
-    }
-
-    tarjeta.dataset.cantidadUnidades =
-      String(cantidad);
-    tarjeta.dataset.presentacionSeleccionada =
-      "true";
+  if (textoBoton) {
+    textoBoton.textContent =
+      estaEnCarrito
+        ? "Agregado"
+        : "Agregar";
   }
-
-  actualizarControlPresentacionIntegrado(
-    tarjeta
-  );
 
   boton.classList.toggle(
     "agregado",
     estaEnCarrito
   );
-
-  tarjeta
-    .querySelector(".cantidad")
-    ?.classList.toggle(
-      "cantidad-agregada",
-      estaEnCarrito
-    );
-
-  tarjeta
-    .querySelectorAll(
-      ".boton-presentacion, .control-presentacion-alambre-integrado"
-    )
-    .forEach((control) => {
-      control.classList.toggle(
-        "presentacion-agregada",
-        estaEnCarrito &&
-          control.classList.contains(
-            "seleccionada"
-          )
-      );
-    });
-
-  const descripcionBoton = estaEnCarrito
-    ? "Producto agregado"
-    : "Agregar al carrito";
-
-  boton.setAttribute(
-    "aria-label",
-    descripcionBoton
-  );
-  boton.title = descripcionBoton;
-
-  const textoBoton =
-    boton.querySelector(".texto-agregar-carrito");
-
-  if (textoBoton) {
-    textoBoton.textContent = estaEnCarrito
-      ? "Agregado"
-      : "Agregar";
-  }
 }
 
 
@@ -3868,137 +2348,13 @@ function actualizarEstadoBotonesCarrito() {
 }
 
 
-function formatearPrecioCarrito(valor) {
-  return formatearPrecio(valor).replace(/^\$/, "$ ");
-}
-
-
-function obtenerPresentacionTotalProducto(producto) {
-  return formatearEtiquetaPresentacion(
-    producto.presentacionBase ||
-      producto.presentacion
-  );
-}
-
-
-function obtenerSubtotalProducto(producto) {
-  const precioTotal =
-    Number(producto.precioTotal);
-
-  return Number.isFinite(precioTotal) &&
-    precioTotal >= 0
-      ? precioTotal
-      : (Number(producto.precio) || 0) *
-          Math.max(
-            1,
-            Number(producto.cantidad) || 1
-          );
-}
-
-
-function recalcularProductoCarrito(producto) {
-  const productoCatalogo =
-    productosAgrupados.find((item) => {
-      return (
-        normalizarTexto(item.nombre) ===
-          normalizarTexto(producto.nombre) &&
-        normalizarTexto(item.categoria) ===
-          normalizarTexto(producto.categoria)
-      );
-    });
-
-  if (!productoCatalogo) {
-    producto.presentacionBase =
-      producto.presentacionBase ||
-      producto.presentacion;
-    producto.presentacionTotal =
-      obtenerPresentacionTotalProducto(
-        producto
-      );
-    return producto;
-  }
-
-  const presentacionBase =
-    producto.presentacionBase ||
-    producto.presentacion;
-  let indicePresentacion =
-    productoCatalogo.presentaciones.findIndex(
-      (presentacion) =>
-        normalizarTexto(
-          presentacion.nombre
-        ) ===
-        normalizarTexto(
-          presentacionBase
-        )
-    );
-
-  if (indicePresentacion < 0) {
-    indicePresentacion = Math.max(
-      0,
-      Number(producto.indicePresentacion) || 0
-    );
-  }
-
-  const presentacion =
-    productoCatalogo.presentaciones[
-      indicePresentacion
-    ] || productoCatalogo.presentaciones[0];
-  const cantidad = Math.max(
-    1,
-    Number(producto.cantidad) || 1
-  );
-
-  producto.presentacion =
-    presentacion.nombre;
-  producto.presentacionBase =
-    presentacion.nombre;
-  producto.presentacionTotal =
-    formatearEtiquetaPresentacion(
-      presentacion.nombre
-    );
-  producto.indicePresentacion =
-    indicePresentacion;
-  producto.precio =
-    Number(presentacion.precio) || 0;
-  producto.precioTotal =
-    calcularPrecioCantidadPresentacion(
-      productoCatalogo,
-      indicePresentacion,
-      cantidad
-    );
-  producto.codigo =
-    presentacion.codigo ||
-    producto.codigo || "";
-
-  return producto;
-}
-
-
 function mostrarCarrito() {
-  carritoCompras.forEach(
-    recalcularProductoCarrito
-  );
   productosCarrito.innerHTML = "";
-
-  if (cantidadItemsCarrito) {
-    cantidadItemsCarrito.textContent =
-      `(${carritoCompras.length})`;
-  }
-
-  actualizarCargaVisualCarrito(
-    obtenerCantidadTotalCarrito()
-  );
 
   if (carritoCompras.length === 0) {
     productosCarrito.innerHTML = `
       <div class="carrito-vacio">
-        <span class="icono-carrito-vacio" aria-hidden="true">
-          <svg viewBox="0 0 28 24" focusable="false">
-            <path d="M1.8 2.6h3.1l2.5 11.7h15.8l2.1-8.2H6.1"></path>
-            <circle cx="9.2" cy="19.6" r="1.6"></circle>
-            <circle cx="21.4" cy="19.6" r="1.6"></circle>
-          </svg>
-        </span>
+        <span>🛒</span>
 
         <p>
           El carrito está vacío.
@@ -4008,21 +2364,17 @@ function mostrarCarrito() {
 
     if (valorCarrito) {
       valorCarrito.textContent =
-        formatearPrecioCarrito(0);
+        formatearPrecio(0);
     } else if (cantidadCarrito) {
       cantidadCarrito.textContent =
-        `🛒 | ${formatearPrecioCarrito(0)}`;
+        `🛒 | ${formatearPrecio(0)}`;
     }
 
     totalCarrito.textContent =
-      formatearPrecioCarrito(0);
+      formatearPrecio(0);
 
     finalizarPedido.disabled = true;
     vaciarCarrito.disabled = true;
-
-    if (compartirCarrito) {
-      compartirCarrito.disabled = true;
-    }
 
     return;
   }
@@ -4030,32 +2382,8 @@ function mostrarCarrito() {
   carritoCompras.forEach(
     (producto, indice) => {
       const subtotal =
-        obtenerSubtotalProducto(
-          producto
-        );
-      const presentacionTotal =
-        obtenerPresentacionTotalProducto(
-          producto
-        );
-      const cantidadProducto = Math.max(
-        1,
-        Number(producto.cantidad) || 1
-      );
-
-      const productoCatalogo =
-        productosAgrupados.find((item) => {
-          return (
-            normalizarTexto(item.nombre) ===
-              normalizarTexto(producto.nombre) &&
-            normalizarTexto(item.categoria) ===
-              normalizarTexto(producto.categoria)
-          );
-        });
-
-      const fotoCarrito =
-        normalizarURLImagen(
-          productoCatalogo?.foto || producto.foto || ""
-        ) || "img/logo-minimal.svg";
+        producto.precio *
+        producto.cantidad;
 
       const elemento =
         document.createElement(
@@ -4066,90 +2394,78 @@ function mostrarCarrito() {
         "producto-carrito";
 
       elemento.innerHTML = `
-        <div class="miniatura-producto-carrito">
-          <img
-            src="${escaparHTML(fotoCarrito)}"
-            alt=""
-            loading="lazy"
-            draggable="false"
-            referrerpolicy="no-referrer"
-          >
-        </div>
-
         <div class="datos-producto-carrito">
-          <div class="linea-principal-producto-carrito">
-            <h3>
-              ${escaparHTML(producto.nombre)}
-            </h3>
+          <h3>
+            ${escaparHTML(
+              producto.nombre
+            )}
+          </h3>
 
-            <strong
-              class="subtotal-carrito"
-              aria-label="Subtotal ${escaparHTML(formatearPrecio(subtotal))}"
-            >
-              ${formatearPrecio(subtotal)}
-            </strong>
-          </div>
-
-          <p class="meta-producto-carrito">
-            ${escaparHTML(presentacionTotal)}${
-              producto.codigo
-                ? ` · ${escaparHTML(producto.codigo)}`
-                : ""
-            }
+          <p>
+            ${escaparHTML(
+              producto.presentacion
+            )}
           </p>
 
-          <div class="acciones-producto-carrito">
-            <div class="control-cantidad-carrito">
-              <button
-                type="button"
-                data-accion="restar"
-                data-indice="${indice}"
-                aria-label="Restar una unidad de ${escaparHTML(
-                  producto.nombre
-                )}"
-              >−</button>
+          ${
+            producto.codigo
+              ? `
+                <small>
+                  Código:
+                  ${escaparHTML(
+                    producto.codigo
+                  )}
+                </small>
+              `
+              : ""
+          }
 
-              <span>${cantidadProducto}</span>
+          <strong>
+            ${formatearPrecio(
+              producto.precio
+            )} c/u
+          </strong>
+        </div>
 
-              <button
-                type="button"
-                data-accion="sumar"
-                data-indice="${indice}"
-                aria-label="Sumar una unidad de ${escaparHTML(
-                  producto.nombre
-                )}"
-              >+</button>
-            </div>
+        <div class="acciones-producto-carrito">
+          <div class="control-cantidad-carrito">
+            <button
+              type="button"
+              data-accion="restar"
+              data-indice="${indice}"
+              aria-label="Restar una unidad"
+            >
+              −
+            </button>
+
+            <span>
+              ${producto.cantidad}
+            </span>
 
             <button
               type="button"
-              class="eliminar-producto"
-              data-accion="eliminar"
+              data-accion="sumar"
               data-indice="${indice}"
-              aria-label="Eliminar ${escaparHTML(producto.nombre)} del carrito"
-              title="Eliminar producto"
+              aria-label="Sumar una unidad"
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M4 7h16M9 7V4h6v3m-8 0 1 13h8l1-13M10 10v7m4-7v7"></path>
-              </svg>
+              +
             </button>
           </div>
+
+          <strong class="subtotal-carrito">
+            ${formatearPrecio(subtotal)}
+          </strong>
+
+          <button
+            type="button"
+            class="eliminar-producto"
+            data-accion="eliminar"
+            data-indice="${indice}"
+          >
+            Eliminar
+          </button>
         </div>
       `;
-
-      const imagenMiniatura =
-        elemento.querySelector(
-          ".miniatura-producto-carrito img"
-        );
-
-      imagenMiniatura?.addEventListener(
-        "error",
-        () => {
-          imagenMiniatura.src =
-            "img/logo-minimal.svg";
-        },
-        { once: true }
-      );
 
       productosCarrito.appendChild(
         elemento
@@ -4172,9 +2488,8 @@ function mostrarCarrito() {
       (total, producto) => {
         return (
           total +
-          obtenerSubtotalProducto(
-            producto
-          )
+          producto.precio *
+            producto.cantidad
         );
       },
       0
@@ -4182,29 +2497,21 @@ function mostrarCarrito() {
 
   if (valorCarrito) {
     valorCarrito.textContent =
-      formatearPrecioCarrito(precioTotal);
+      formatearPrecio(precioTotal);
   } else if (cantidadCarrito) {
     cantidadCarrito.textContent =
-      `🛒 | ${formatearPrecioCarrito(precioTotal)}`;
+      `🛒 | ${formatearPrecio(precioTotal)}`;
   }
 
   totalCarrito.textContent =
-    formatearPrecioCarrito(precioTotal);
+    formatearPrecio(precioTotal);
 
   finalizarPedido.disabled = false;
   vaciarCarrito.disabled = false;
-
-  if (compartirCarrito) {
-    compartirCarrito.disabled = false;
-  }
 }
 
 
 function guardarYActualizarCarrito() {
-  carritoCompras.forEach(
-    recalcularProductoCarrito
-  );
-
   localStorage.setItem(
     "carritoCeraceci",
     JSON.stringify(carritoCompras)
@@ -4233,31 +2540,15 @@ function cargarCarritoGuardado() {
       return [];
     }
 
-    return datos
-      .filter((producto) => {
-        return (
-          producto &&
-          producto.nombre &&
-          producto.presentacion &&
-          Number(producto.precio) > 0 &&
-          Number(producto.cantidad) > 0
-        );
-      })
-      .map((producto) => ({
-        ...producto,
-        nombre: formatearNombreProducto(
-          producto.nombre
-        ),
-        nombrePlural: "",
-        presentacionBase:
-          producto.presentacionBase ||
-          producto.presentacion,
-        presentacionTotal:
-          formatearEtiquetaPresentacion(
-            producto.presentacionBase ||
-              producto.presentacion
-          )
-      }));
+    return datos.filter((producto) => {
+      return (
+        producto &&
+        producto.nombre &&
+        producto.presentacion &&
+        Number(producto.precio) > 0 &&
+        Number(producto.cantidad) > 0
+      );
+    });
   } catch (error) {
     console.error(
       "No se pudo recuperar el carrito.",
@@ -4270,8 +2561,6 @@ function cargarCarritoGuardado() {
 
 
 function abrirPanelCarrito() {
-  mostrarCarrito();
-
   carritoElemento.classList.add(
     "visible"
   );
@@ -4320,37 +2609,32 @@ function finalizarPedidoWhatsApp() {
   const lineasProductos =
     carritoCompras.map(
       (producto) =>
-        `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-        formatearPrecio(
-          obtenerSubtotalProducto(producto)
-        )
+        `${producto.cantidad} × ${producto.nombre} (${producto.presentacion})`
     );
-
-  const detalleProductos =
-    lineasProductos.join("\n\n");
 
   const precioTotal =
     carritoCompras.reduce(
       (total, producto) => {
         return (
           total +
-          obtenerSubtotalProducto(
-            producto
-          )
+          producto.precio *
+            producto.cantidad
         );
       },
       0
     );
 
   const mensaje = [
-    "¡Hola!",
+    "¡Hola! 😊",
+    "",
     "Me gustaría consultar por este pedido:",
     "",
-    detalleProductos,
+    ...lineasProductos,
     "",
-    `Total: ${formatearPrecio(precioTotal)}`,
+    `💰 Total: ${formatearPrecio(precioTotal)}`,
     "",
-    "¿Está todo disponible? ¿Qué formas de pago tienen y cómo coordinamos la entrega?",
+    "¿Podrían confirmarme disponibilidad y coordinar la entrega?",
+    "",
     "¡Muchas gracias!"
   ].join("\n");
 
@@ -4365,152 +2649,6 @@ function finalizarPedidoWhatsApp() {
     "_blank",
     "noopener,noreferrer"
   );
-}
-
-
-function obtenerNombreProductoParaCantidad(producto) {
-  const cantidad = Math.max(
-    1,
-    Number(producto.cantidad) || 1
-  );
-
-  if (
-    normalizarTexto(producto.nombre) ===
-    "apm 112"
-  ) {
-    return cantidad === 1
-      ? "1 Arcilla Apm 112"
-      : `${cantidad} Arcillas Apm 112`;
-  }
-
-  return `${cantidad} × ${producto.nombre}`;
-}
-
-
-function pluralizarSustantivoProducto(palabra) {
-  const singular = limpiarTexto(palabra)
-    .toLocaleLowerCase("es-AR");
-
-  if (!singular) {
-    return "productos";
-  }
-
-  const pluralesEspeciales = {
-    set: "sets",
-    spray: "sprays"
-  };
-
-  if (pluralesEspeciales[singular]) {
-    return pluralesEspeciales[singular];
-  }
-
-  if (/z$/u.test(singular)) {
-    return singular.replace(/z$/u, "ces");
-  }
-
-  if (/[aeiouáéíóú]$/u.test(singular)) {
-    return `${singular}s`;
-  }
-
-  if (/[sx]$/u.test(singular)) {
-    return singular;
-  }
-
-  return `${singular}es`;
-}
-
-
-function obtenerEtiquetaCantidadProducto(producto) {
-  const cantidad = Math.max(
-    1,
-    Number(producto.cantidad) || 1
-  );
-
-  if (
-    normalizarTexto(producto.nombre) ===
-    "apm 112"
-  ) {
-    return cantidad === 1
-      ? "1 Arcilla Apm 112"
-      : `${cantidad} Arcillas Apm 112`;
-  }
-
-  const sustantivo = limpiarTexto(
-    producto.nombre
-  ).split(/\s+/u)[0] || "producto";
-  const nombreCantidad = cantidad === 1
-    ? sustantivo.toLocaleLowerCase("es-AR")
-    : pluralizarSustantivoProducto(
-        sustantivo
-      );
-
-  return `${cantidad} ${nombreCantidad}`;
-}
-
-
-function construirDetalleCarritoCompartido() {
-  const detalleProductos =
-    carritoCompras
-      .map(
-        (producto) =>
-          `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-          formatearPrecio(
-            obtenerSubtotalProducto(producto)
-          )
-      )
-      .join("\n\n");
-
-  const precioTotal =
-    carritoCompras.reduce(
-      (total, producto) =>
-        total + obtenerSubtotalProducto(producto),
-      0
-    );
-
-  return [
-    detalleProductos,
-    "",
-    `Total: ${formatearPrecio(precioTotal)}`
-  ].join("\n");
-}
-
-
-async function compartirCarritoActual() {
-  if (carritoCompras.length === 0) {
-    return;
-  }
-
-  const mensaje =
-    construirDetalleCarritoCompartido();
-
-  if (navigator.share) {
-    try {
-      await navigator.share({
-        text: mensaje
-      });
-
-      return;
-    } catch (error) {
-      if (error?.name === "AbortError") {
-        return;
-      }
-    }
-  }
-
-  try {
-    await navigator.clipboard.writeText(
-      mensaje
-    );
-
-    mostrarAvisoCopiado(
-      "Detalle del carrito copiado"
-    );
-  } catch (error) {
-    window.prompt(
-      "Copiá el detalle del carrito:",
-      mensaje
-    );
-  }
 }
 
 
@@ -4706,9 +2844,7 @@ function formatearPrecio(precio) {
       currency: "ARS",
       maximumFractionDigits: 0
     }
-  )
-    .format(precio)
-    .replace(/\$\s+/u, "$");
+  ).format(precio);
 }
 
 
@@ -4721,58 +2857,6 @@ function limpiarTexto(valor) {
   }
 
   return String(valor).trim();
-}
-
-
-function formatearNombreProducto(valor) {
-  const nombre = limpiarTexto(valor)
-    .toLocaleLowerCase("es-AR");
-
-  if (!nombre) {
-    return "";
-  }
-
-  return nombre
-    .split(/\s+/)
-    .map((palabra) => {
-      if (palabra === "de") {
-        return "de";
-      }
-
-      return palabra.replace(
-        /\p{L}/u,
-        (letra) =>
-          letra.toLocaleUpperCase("es-AR")
-      );
-    })
-    .join(" ");
-}
-
-
-function formatearEtiquetaPresentacion(valor) {
-  const presentacion = limpiarTexto(valor)
-    .toLocaleLowerCase("es-AR");
-
-  if (!presentacion) {
-    return "";
-  }
-
-  const conInicialMayuscula =
-    presentacion.replace(
-      /^(\s*)(\p{L})/u,
-      (_, espacios, letra) =>
-        espacios +
-        letra.toLocaleUpperCase("es-AR")
-    );
-
-  return conInicialMayuscula
-    .replace(/\bml\b/giu, "mL")
-    .replace(/\bl\b/giu, "L")
-    .replace(/°c\b/giu, "°C")
-    .replace(
-      /\b(?:kg|g|cc|mm|cm|m)\b/giu,
-      (unidad) => unidad.toLowerCase()
-    );
 }
 
 
@@ -4822,9 +2906,8 @@ function normalizarURLImagen(valor) {
 
       if (id) {
         return (
-          "https://drive.google.com/thumbnail?id=" +
-          encodeURIComponent(id) +
-          "&sz=w1200"
+          "https://drive.google.com/uc?export=view&id=" +
+          encodeURIComponent(id)
         );
       }
     }
@@ -4868,8 +2951,6 @@ function manejarClickTarjetaProducto(evento) {
         botonComparar.dataset.idProducto
       );
 
-      botonComparar.blur();
-
       return;
     }
 
@@ -4896,8 +2977,6 @@ function manejarClickTarjetaProducto(evento) {
         botonCompartir.dataset.idProducto
       );
 
-      botonCompartir.blur();
-
       return;
     }
 
@@ -4909,34 +2988,6 @@ function manejarClickTarjetaProducto(evento) {
     if (botonAgregar) {
       agregarProductoAlCarrito(
         botonAgregar
-      );
-
-      return;
-    }
-
-    const botonSumarPresentacion =
-      evento.target.closest(
-        ".sumar-presentacion"
-      );
-
-    if (botonSumarPresentacion) {
-      cambiarCantidadTarjeta(
-        botonSumarPresentacion,
-        1
-      );
-
-      return;
-    }
-
-    const botonRestarPresentacion =
-      evento.target.closest(
-        ".restar-presentacion"
-      );
-
-    if (botonRestarPresentacion) {
-      cambiarCantidadTarjeta(
-        botonRestarPresentacion,
-        -1
       );
 
       return;
@@ -5036,13 +3087,8 @@ function manejarEntradaTarjetaProducto(evento) {
         ".tarjeta-producto"
       );
 
-    normalizarCantidadTarjeta(tarjeta);
+    actualizarTotalTarjeta(tarjeta);
     marcarBotonTarjetaComoPendiente(tarjeta);
-
-    establecerSeleccionCantidadTarjeta(
-      tarjeta,
-      false
-    );
 }
 
 
@@ -5058,86 +3104,6 @@ if (productosComparados) {
     manejarEntradaTarjetaProducto
   );
 }
-
-
-/* Compartir refleja el contacto real en PC y móvil. Cantidad necesita
-   esta ayuda únicamente en pantallas táctiles. */
-function activarPulsacionMovil(evento) {
-  const botonCompartir =
-    evento.target.closest?.(".compartir-producto");
-
-  if (botonCompartir) {
-    botonCompartir.classList.add(
-      "compartir-presionado"
-    );
-  }
-
-  if (
-    !window.matchMedia("(max-width: 650px)").matches
-  ) {
-    return;
-  }
-
-  const botonCantidad =
-    evento.target.closest?.(
-      ".boton-cantidad, .boton-ajuste-presentacion"
-    );
-
-  if (botonCantidad) {
-    botonCantidad.classList.add("presionado");
-  }
-}
-
-
-function limpiarPulsacionesMoviles() {
-  document
-    .querySelectorAll(".boton-cantidad.presionado")
-    .forEach((boton) => {
-      boton.classList.remove("presionado");
-    });
-
-  document
-    .querySelectorAll(
-      ".boton-ajuste-presentacion.presionado"
-    )
-    .forEach((boton) => {
-      boton.classList.remove("presionado");
-    });
-
-  document
-    .querySelectorAll(
-      ".compartir-producto.compartir-presionado"
-    )
-    .forEach((boton) => {
-      boton.classList.remove(
-        "compartir-presionado"
-      );
-    });
-}
-
-
-document.addEventListener(
-  "pointerdown",
-  activarPulsacionMovil,
-  true
-);
-
-document.addEventListener(
-  "pointerup",
-  limpiarPulsacionesMoviles,
-  true
-);
-
-document.addEventListener(
-  "pointercancel",
-  limpiarPulsacionesMoviles,
-  true
-);
-
-window.addEventListener(
-  "blur",
-  limpiarPulsacionesMoviles
-);
 
 
 productosCarrito.addEventListener(
@@ -5198,24 +3164,9 @@ buscador.addEventListener(
 );
 
 
-if (formBusqueda) {
-  formBusqueda.addEventListener(
-    "submit",
-    (evento) => {
-      evento.preventDefault();
-      buscador?.blur();
-    }
-  );
-}
-
-
 filtroCategoria.addEventListener(
   "change",
-  () => {
-    actualizarEstadoFiltroCategoria();
-    filtrarProductos();
-    filtroCategoria.blur();
-  }
+  filtrarProductos
 );
 
 
@@ -5233,10 +3184,6 @@ if (ordenarProductos) {
       }
 
       filtrarProductos();
-
-      // V108: evita que el select quede con un estado visual de foco
-      // después de elegir cualquiera de las dos opciones.
-      ordenarProductos.blur();
     }
   );
 }
@@ -5269,7 +3216,7 @@ if (limpiarComparacion) {
 if (volverCatalogo) {
   volverCatalogo.addEventListener(
     "click",
-    volverDesdeComparacion
+    cerrarVistaComparacion
   );
 }
 
@@ -5314,12 +3261,16 @@ vaciarCarrito.addEventListener(
       return;
     }
 
+    const confirmar = window.confirm(
+      "¿Querés vaciar todo el carrito?"
+    );
+
+    if (!confirmar) {
+      return;
+    }
+
     carritoCompras = [];
-
-    restablecerSeleccionesTarjetasDespuesDeVaciar();
-
     guardarYActualizarCarrito();
-    cerrarPanelCarrito();
   }
 );
 }
@@ -5328,14 +3279,6 @@ if (finalizarPedido) {
   finalizarPedido.addEventListener(
     "click",
     finalizarPedidoWhatsApp
-  );
-}
-
-
-if (compartirCarrito) {
-  compartirCarrito.addEventListener(
-    "click",
-    compartirCarritoActual
   );
 }
 
@@ -5354,62 +3297,13 @@ document.addEventListener(
 );
 
 
-function inicializarSeparacionBarraSuperior() {
-  if (!seccionBusqueda) {
-    return;
-  }
-
-  const marcador =
-    document.createElement("span");
-  marcador.className =
-    "marcador-barra-superior";
-  marcador.setAttribute("aria-hidden", "true");
-  seccionBusqueda.insertAdjacentElement(
-    "beforebegin",
-    marcador
-  );
-
-  let actualizacionPendiente = false;
-
-  const actualizar = () => {
-    actualizacionPendiente = false;
-    seccionBusqueda.classList.toggle(
-      "busqueda-en-scroll",
-      marcador.getBoundingClientRect().top <= 10
-    );
-  };
-
-  const programarActualizacion = () => {
-    if (actualizacionPendiente) {
-      return;
-    }
-
-    actualizacionPendiente = true;
-    requestAnimationFrame(actualizar);
-  };
-
-  window.addEventListener(
-    "scroll",
-    programarActualizacion,
-    { passive: true }
-  );
-  window.addEventListener(
-    "resize",
-    programarActualizacion
-  );
-  actualizar();
-}
-
-
 /* =========================================
    INICIO
 ========================================= */
 
 try {
-  inicializarSeparacionBarraSuperior();
   mostrarCarrito();
   actualizarEstadoComparacion();
-  inicializarSelectoresPersonalizadosPC();
   cargarProductos();
 } catch (error) {
   console.error(
