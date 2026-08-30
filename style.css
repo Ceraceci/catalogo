@@ -1,14 +1,19 @@
 /* =========================================
-   CERACECI — STYLE.CSS LIMPIO V36
-   Una sola definición por componente
+   CERACECI — PALETA Y BASE CONSOLIDADAS V197
+   La paleta definitiva se carga antes del primer render.
 ========================================= */
 
 :root {
-  --color-principal: #cf927d;
-  --color-principal-oscuro: #cf927d;
-  --color-fondo: #f6f2ee;
-  --color-tarjeta: #f6f2ee;
-  --color-control: #fcfbfa;
+  --color-rojo-terracota: #98371e;
+  --color-arcilla: #cf927d;
+  --color-principal: var(--color-rojo-terracota);
+  --color-principal-oscuro: var(--color-rojo-terracota);
+  --color-espacio-tarjetas: var(--color-arcilla);
+  --color-fondo: #eee8e6;
+  --color-tarjeta: #eee8e6;
+  --color-tarjeta-calido: #eee8e6;
+  --color-control: #eee8e6;
+  --color-fondo-barras: #eee8e6;
   --color-texto: #2d2926;
   --color-texto-suave: #6f6761;
   --color-borde: #ddd1c8;
@@ -26,7 +31,7 @@ html { scroll-behavior: smooth; }
 body {
   margin: 0;
   color: var(--color-texto);
-  background: var(--color-fondo);
+  background: var(--color-espacio-tarjetas);
   font-family: Arial, Helvetica, sans-serif;
 }
 button, input, select { font: inherit; }
