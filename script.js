@@ -2711,11 +2711,11 @@ function obtenerEscalasRecorteProducto(nombreProducto) {
   if (esSilicatoDeSodio) {
     /*
       La foto del Silicato necesita escalas distintas por la relacion de
-      aspecto de cada pantalla: moderada en PC para conservar la tapa y mas
-      amplia en movil para retirar el margen blanco que aun quedaba visible.
+      aspecto de cada pantalla: en PC se muestra completa para conservar la
+      tapa; en movil se amplia para retirar el margen blanco visible.
     */
-    zoomEscritorio = Math.max(zoomEscritorio, 1.14);
-    zoomMovil = Math.max(zoomMovil, 1.42);
+    zoomEscritorio = 1;
+    zoomMovil = Math.max(zoomMovil, 2.10);
   }
 
   return {
