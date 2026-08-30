@@ -618,16 +618,26 @@ function asegurarNavegacionZoomFotos() {
       );
 
     recortarMargenBlancoZoom =
-      fotoOrigen.dataset.recorteMargenBlanco === "true";
+      fotoOrigen.dataset.recorteMargenBlancoZoom === "true" ||
+      (
+        fotoOrigen.dataset.recorteMargenBlancoZoom == null &&
+        fotoOrigen.dataset.recorteMargenBlanco === "true"
+      );
 
     escalaRecorteZoom = Math.max(
       1,
-      Number(fotoOrigen.dataset.escalaRecorte || 1) || 1
+      Number(
+        fotoOrigen.dataset.escalaRecorteZoom ||
+        fotoOrigen.dataset.escalaRecorte ||
+        1
+      ) || 1
     );
 
     escalaRecorteZoomMovil = Math.max(
       1,
       Number(
+        fotoOrigen.dataset.escalaRecorteZoomMovil ||
+        fotoOrigen.dataset.escalaRecorteZoom ||
         fotoOrigen.dataset.escalaRecorteMovil ||
         fotoOrigen.dataset.escalaRecorte ||
         1
@@ -2674,14 +2684,40 @@ function obtenerEscalasRecorteProducto(nombreProducto) {
     patron.test(nombreNormalizado)
   );
 
-  const escritorio = regla ? regla[1] : 1;
-  const movil = regla
+  let escritorio = regla ? regla[1] : 1;
+  let movil = regla
     ? (regla[2] || regla[1])
     : 1;
+
+  let zoomEscritorio = escritorio;
+  let zoomMovil = movil;
+
+  /*
+    v194: los esmaltes traen margen blanco incorporado en sus archivos.
+    Se usa una ampliacion uniforme y moderada en tarjeta, carrito y zoom.
+    El Silicato de sodio conserva su encuadre en la tarjeta, pero recibe el
+    mismo recorte visual al abrir el zoom. Nunca se altera la proporcion.
+  */
+  const esEsmalte = /^esmalte(?:\b|$)/.test(nombreNormalizado);
+  const esSilicatoDeSodio = /silicato de sodio/.test(nombreNormalizado);
+
+  if (esEsmalte) {
+    escritorio = Math.max(escritorio, 1.28);
+    movil = Math.max(movil, 1.28);
+    zoomEscritorio = Math.max(zoomEscritorio, 1.28);
+    zoomMovil = Math.max(zoomMovil, 1.28);
+  }
+
+  if (esSilicatoDeSodio) {
+    zoomEscritorio = Math.max(zoomEscritorio, 1.28);
+    zoomMovil = Math.max(zoomMovil, 1.28);
+  }
 
   return {
     escritorio,
     movil,
+    zoomEscritorio,
+    zoomMovil,
     miniatura: Math.max(escritorio, movil)
   };
 }
@@ -2921,6 +2957,12 @@ function crearTarjetaProducto(
 
   const escalaRecorteMargenBlancoMovil =
     escalasRecorte.movil;
+
+  const escalaRecorteMargenBlancoZoom =
+    escalasRecorte.zoomEscritorio;
+
+  const escalaRecorteMargenBlancoZoomMovil =
+    escalasRecorte.zoomMovil;
 
   const productoRequiereRecorteMargenBlanco =
     Math.max(
@@ -3181,6 +3223,21 @@ function crearTarjetaProducto(
       String(escalaRecorteMargenBlanco || 1);
     imagenProducto.dataset.escalaRecorteMovil =
       String(escalaRecorteMargenBlancoMovil || escalaRecorteMargenBlanco || 1);
+    imagenProducto.dataset.recorteMargenBlancoZoom =
+      Math.max(
+        escalaRecorteMargenBlancoZoom,
+        escalaRecorteMargenBlancoZoomMovil
+      ) > 1.001
+        ? "true"
+        : "false";
+    imagenProducto.dataset.escalaRecorteZoom =
+      String(escalaRecorteMargenBlancoZoom || 1);
+    imagenProducto.dataset.escalaRecorteZoomMovil =
+      String(
+        escalaRecorteMargenBlancoZoomMovil ||
+        escalaRecorteMargenBlancoZoom ||
+        1
+      );
     imagenProducto.style.setProperty(
       "--ceraceci-escala-foto",
       String(escalaRecorteMargenBlanco || 1)
