@@ -136,7 +136,7 @@ const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
-   GALERÍA DE FOTOS - v185
+   GALERÍA DE FOTOS - v186
 
    - Flechas realmente dentro de la foto.
    - Flechas más discretas.
@@ -2825,7 +2825,7 @@ function crearTarjetaProducto(
         `;
 
   /*
-    v185: el recorte deja de depender de que el producto tenga varias fotos.
+    v186: el recorte deja de depender de que el producto tenga varias fotos.
     Ese criterio hacía que algunas bolsas ya bien encuadradas (por ejemplo
     Arcilla APM Rosada y Caolín Sur del Río) quedaran cortadas.
 
@@ -2845,12 +2845,23 @@ function crearTarjetaProducto(
     [/carbonato de bario/, 1.30],
     [/carbonato de calcio/, 1.30],
     [/^cuarzo(?:\b|$)/, 1.30],
-    [/harina de rutilo/, 1.34],
-    [/ox(?:ido)?(?: de)? cobre negro/, 1.30],
-    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.30],
-    [/ox(?:ido)?(?: de)? hierro rojo/, 1.30],
-    [/ox(?:ido)?(?: de)? titanio/, 1.30],
-    [/silicato de (?:circonio|zirconio)/, 1.30],
+
+    /*
+      v186: ajuste fino a partir de la revisión visual del catálogo móvil.
+      Estos productos todavía conservaban margen blanco de origen, pero ya
+      no requieren el recorte agresivo de versiones anteriores. Las escalas
+      son individuales para agrandarlos sin cortar la muestra.
+    */
+    [/harina de rutilo/, 1.46],
+    [/ox(?:ido)?(?: de)? cobalto/, 1.38],
+    [/ox(?:ido)?(?: de)? cobre negro/, 1.42],
+    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44],
+    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44],
+    [/ox(?:ido)?(?: de)? manganeso/, 1.40],
+    [/ox(?:ido)?(?: de)? niquel/, 1.40],
+    [/ox(?:ido)?(?: de)? titanio/, 1.40],
+    [/silicato de (?:circonio|zirconio)/, 1.45],
+
     [/talco chino/, 1.30],
     [/feldespato potasico/, 1.28],
     [/feldespato sodico/, 1.28]
