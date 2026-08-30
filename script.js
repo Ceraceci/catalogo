@@ -3591,6 +3591,22 @@ function abrirVistaComparacion() {
   mostrarProductosComparados();
   actualizarEstadoComparacion();
 
+  if (volverCatalogo) {
+    volverCatalogo.classList.remove(
+      "volver-catalogo-destacado"
+    );
+    void volverCatalogo.offsetWidth;
+    volverCatalogo.classList.add(
+      "volver-catalogo-destacado"
+    );
+
+    window.setTimeout(() => {
+      volverCatalogo.classList.remove(
+        "volver-catalogo-destacado"
+      );
+    }, 3000);
+  }
+
   window.scrollTo({
     top: 0,
     behavior: "smooth"
@@ -4515,7 +4531,7 @@ function animarProductoHaciaCarrito(
   if (typeof productoVolador.animate !== "function") {
     window.setTimeout(
       finalizarAnimacion,
-      820
+      1200
     );
     return;
   }
@@ -4541,7 +4557,7 @@ function animarProductoHaciaCarrito(
         }
       ],
       {
-        duration: 820,
+        duration: 1200,
         easing: "cubic-bezier(.25,.75,.2,1)",
         fill: "forwards"
       }
@@ -5334,11 +5350,7 @@ function finalizarPedidoWhatsApp() {
 
   const lineasProductos =
     carritoCompras.map(
-      (producto) =>
-        `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-        formatearPrecio(
-          obtenerSubtotalProducto(producto)
-        )
+      construirLineaProductoPedido
     );
 
   const detalleProductos =
@@ -5380,6 +5392,31 @@ function finalizarPedidoWhatsApp() {
     "_blank",
     "noopener,noreferrer"
   );
+}
+
+
+function construirLineaProductoPedido(producto) {
+  const cantidad = Math.max(
+    1,
+    Number(producto.cantidad) || 1
+  );
+
+  let nombre = limpiarTexto(producto.nombre);
+
+  if (normalizarTexto(nombre) === "apm 112") {
+    nombre = cantidad === 1
+      ? "Arcilla Apm 112"
+      : "Arcillas Apm 112";
+  }
+
+  return [
+    cantidad,
+    nombre,
+    obtenerPresentacionTotalProducto(producto),
+    formatearPrecio(
+      obtenerSubtotalProducto(producto)
+    )
+  ].join(" | ");
 }
 
 
@@ -5467,11 +5504,7 @@ function construirDetalleCarritoCompartido() {
   const detalleProductos =
     carritoCompras
       .map(
-        (producto) =>
-          `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
-          formatearPrecio(
-            obtenerSubtotalProducto(producto)
-          )
+        construirLineaProductoPedido
       )
       .join("\n\n");
 
