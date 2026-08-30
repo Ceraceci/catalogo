@@ -2642,6 +2642,51 @@ function mostrarProductos(lista) {
 }
 
 
+function obtenerEscalasRecorteProducto(nombreProducto) {
+  const nombreNormalizado = normalizarTexto(nombreProducto)
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+
+  const reglas = [
+    [/oxido de cromo verde/, 1.84, 1.95],
+    [/bidon(?: de)? boca ancha/, 2.18],
+    [/arena de rutilo/, 1.52],
+    [/bentonita/, 1.28],
+    [/carbonato de bario/, 1.30],
+    [/carbonato de calcio/, 1.30],
+    [/^cuarzo(?:\b|$)/, 1.30],
+    [/harina de rutilo/, 1.46, 1.72],
+    [/ox(?:ido)?(?: de)? cobalto/, 1.38, 1.82],
+    [/ox(?:ido)?(?: de)? cobre negro/, 1.42, 1.73],
+    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44, 1.74],
+    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44, 1.74],
+    [/ox(?:ido)?(?: de)? manganeso/, 1.40, 1.82],
+    [/ox(?:ido)?(?: de)? niquel/, 1.40, 1.82],
+    [/ox(?:ido)?(?: de)? titanio/, 1.40, 1.69],
+    [/silicato de (?:circonio|zirconio)/, 1.45, 1.72],
+    [/^oxido(?: de)? /, 1.00, 1.72],
+    [/talco chino/, 1.30],
+    [/feldespato potasico/, 1.28],
+    [/feldespato sodico/, 1.28]
+  ];
+
+  const regla = reglas.find(([patron]) =>
+    patron.test(nombreNormalizado)
+  );
+
+  const escritorio = regla ? regla[1] : 1;
+  const movil = regla
+    ? (regla[2] || regla[1])
+    : 1;
+
+  return {
+    escritorio,
+    movil,
+    miniatura: Math.max(escritorio, movil)
+  };
+}
+
+
 function crearTarjetaProducto(
   producto,
   opciones = {}
@@ -2866,60 +2911,16 @@ function crearTarjetaProducto(
     blanco incorporado, y cada grupo usa una escala moderada propia.
     Ancho y alto siempre se escalan por igual: nunca se deforma la foto.
   */
-  const nombreProductoRecorte = normalizarTexto(producto.nombre)
-    .replace(/[^a-z0-9]+/g, " ")
-    .trim();
-
-  const reglasRecorteMargenBlanco = [
-    [/oxido de cromo verde/, 1.84, 1.95],
-    [/bidon(?: de)? boca ancha/, 2.18],
-    [/arena de rutilo/, 1.52],
-    [/bentonita/, 1.28],
-    [/carbonato de bario/, 1.30],
-    [/carbonato de calcio/, 1.30],
-    [/^cuarzo(?:\b|$)/, 1.30],
-
-    /*
-      v186: ajuste fino a partir de la revisión visual del catálogo móvil.
-      Estos productos todavía conservaban margen blanco de origen, pero ya
-      no requieren el recorte agresivo de versiones anteriores. Las escalas
-      son individuales para agrandarlos sin cortar la muestra.
-    */
-    [/harina de rutilo/, 1.46, 1.72],
-    [/ox(?:ido)?(?: de)? cobalto/, 1.38, 1.82],
-    [/ox(?:ido)?(?: de)? cobre negro/, 1.42, 1.73],
-    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.44, 1.74],
-    [/ox(?:ido)?(?: de)? hierro rojo/, 1.44, 1.74],
-    [/ox(?:ido)?(?: de)? manganeso/, 1.40, 1.82],
-    [/ox(?:ido)?(?: de)? niquel/, 1.40, 1.82],
-    [/ox(?:ido)?(?: de)? titanio/, 1.40, 1.69],
-    [/silicato de (?:circonio|zirconio)/, 1.45, 1.72],
-
-    /*
-      v188: cualquier otro óxido no enumerado arriba conserva su escala
-      normal en PC, pero en móvil se acerca al encuadre de las acuarelas.
-    */
-    [/^oxido(?: de)? /, 1.00, 1.72],
-
-    [/talco chino/, 1.30],
-    [/feldespato potasico/, 1.28],
-    [/feldespato sodico/, 1.28]
-  ];
-
-  const reglaRecorteMargenBlanco =
-    reglasRecorteMargenBlanco.find(([patron]) =>
-      patron.test(nombreProductoRecorte)
+  const escalasRecorte =
+    obtenerEscalasRecorteProducto(
+      producto.nombre
     );
 
   const escalaRecorteMargenBlanco =
-    reglaRecorteMargenBlanco
-      ? reglaRecorteMargenBlanco[1]
-      : 1;
+    escalasRecorte.escritorio;
 
   const escalaRecorteMargenBlancoMovil =
-    reglaRecorteMargenBlanco
-      ? (reglaRecorteMargenBlanco[2] || reglaRecorteMargenBlanco[1])
-      : 1;
+    escalasRecorte.movil;
 
   const productoRequiereRecorteMargenBlanco =
     Math.max(
@@ -3590,22 +3591,6 @@ function abrirVistaComparacion() {
 
   mostrarProductosComparados();
   actualizarEstadoComparacion();
-
-  if (volverCatalogo) {
-    volverCatalogo.classList.remove(
-      "volver-catalogo-destacado"
-    );
-    void volverCatalogo.offsetWidth;
-    volverCatalogo.classList.add(
-      "volver-catalogo-destacado"
-    );
-
-    window.setTimeout(() => {
-      volverCatalogo.classList.remove(
-        "volver-catalogo-destacado"
-      );
-    }, 3000);
-  }
 
   window.scrollTo({
     top: 0,
@@ -4531,7 +4516,7 @@ function animarProductoHaciaCarrito(
   if (typeof productoVolador.animate !== "function") {
     window.setTimeout(
       finalizarAnimacion,
-      1200
+      820
     );
     return;
   }
@@ -4557,7 +4542,7 @@ function animarProductoHaciaCarrito(
         }
       ],
       {
-        duration: 1200,
+        duration: 820,
         easing: "cubic-bezier(.25,.75,.2,1)",
         fill: "forwards"
       }
@@ -5088,6 +5073,14 @@ function mostrarCarrito() {
           productoCatalogo?.foto || producto.foto || ""
         ) || "img/logo-minimal.svg";
 
+      const escalaMiniaturaCarrito =
+        obtenerEscalasRecorteProducto(
+          productoCatalogo?.nombre || producto.nombre
+        ).miniatura;
+
+      const recortarMiniaturaCarrito =
+        escalaMiniaturaCarrito > 1.001;
+
       const elemento =
         document.createElement(
           "article"
@@ -5101,6 +5094,7 @@ function mostrarCarrito() {
           <img
             src="${escaparHTML(fotoCarrito)}"
             alt=""
+            class="${recortarMiniaturaCarrito ? "miniatura-recorte-margen-blanco" : ""}"
             loading="lazy"
             draggable="false"
             referrerpolicy="no-referrer"
@@ -5173,9 +5167,25 @@ function mostrarCarrito() {
           ".miniatura-producto-carrito img"
         );
 
+      if (
+        imagenMiniatura &&
+        recortarMiniaturaCarrito
+      ) {
+        imagenMiniatura.style.setProperty(
+          "--ceraceci-escala-miniatura",
+          String(escalaMiniaturaCarrito)
+        );
+      }
+
       imagenMiniatura?.addEventListener(
         "error",
         () => {
+          imagenMiniatura.classList.remove(
+            "miniatura-recorte-margen-blanco"
+          );
+          imagenMiniatura.style.removeProperty(
+            "--ceraceci-escala-miniatura"
+          );
           imagenMiniatura.src =
             "img/logo-minimal.svg";
         },
@@ -5350,7 +5360,11 @@ function finalizarPedidoWhatsApp() {
 
   const lineasProductos =
     carritoCompras.map(
-      construirLineaProductoPedido
+      (producto) =>
+        `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
+        formatearPrecio(
+          obtenerSubtotalProducto(producto)
+        )
     );
 
   const detalleProductos =
@@ -5392,31 +5406,6 @@ function finalizarPedidoWhatsApp() {
     "_blank",
     "noopener,noreferrer"
   );
-}
-
-
-function construirLineaProductoPedido(producto) {
-  const cantidad = Math.max(
-    1,
-    Number(producto.cantidad) || 1
-  );
-
-  let nombre = limpiarTexto(producto.nombre);
-
-  if (normalizarTexto(nombre) === "apm 112") {
-    nombre = cantidad === 1
-      ? "Arcilla Apm 112"
-      : "Arcillas Apm 112";
-  }
-
-  return [
-    cantidad,
-    nombre,
-    obtenerPresentacionTotalProducto(producto),
-    formatearPrecio(
-      obtenerSubtotalProducto(producto)
-    )
-  ].join(" | ");
 }
 
 
@@ -5504,7 +5493,11 @@ function construirDetalleCarritoCompartido() {
   const detalleProductos =
     carritoCompras
       .map(
-        construirLineaProductoPedido
+        (producto) =>
+          `${obtenerNombreProductoParaCantidad(producto)} (${obtenerPresentacionTotalProducto(producto)}) : ` +
+          formatearPrecio(
+            obtenerSubtotalProducto(producto)
+          )
       )
       .join("\n\n");
 

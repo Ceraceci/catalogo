@@ -13331,6 +13331,14 @@
     }
   </style>
 
+  <style id="ajustes-solicitados-v190">
+    /* El carrito reutiliza el encuadre ya definido para óxidos y secos. */
+    html body .miniatura-producto-carrito img.miniatura-recorte-margen-blanco{
+      transform:scale(var(--ceraceci-escala-miniatura,1)) !important;
+      transform-origin:center center !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13353,6 +13361,6 @@
     })();
   </script>
 
-  <script src="script.js?v=189"></script>
+  <script src="script.js?v=190"></script>
 </body>
 </html>
