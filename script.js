@@ -5386,7 +5386,7 @@ function finalizarPedidoWhatsApp() {
     "",
     detalleProductos,
     "",
-    `Total | ${formatearPrecio(precioTotal)}`,
+    `Total - ${formatearPrecio(precioTotal)}`,
     "",
     "¿Está todo disponible? ¿Qué formas de pago tienen y cómo coordinamos la entrega?",
     "¡Muchas gracias!"
@@ -5417,11 +5417,11 @@ function obtenerNombreProductoParaCantidad(producto) {
     "apm 112"
   ) {
     return cantidad === 1
-      ? "1 | Arcilla Apm 112"
-      : `${cantidad} | Arcillas Apm 112`;
+      ? "1 - Arcilla Apm 112"
+      : `${cantidad} - Arcillas Apm 112`;
   }
 
-  return `${cantidad} | ${producto.nombre}`;
+  return `${cantidad} - ${producto.nombre}`;
 }
 
 
@@ -5432,7 +5432,7 @@ function construirLineaProductoMensaje(producto) {
     formatearPrecio(
       obtenerSubtotalProducto(producto)
     )
-  ].join(" | ");
+  ].join(" - ");
 }
 
 
@@ -5516,7 +5516,7 @@ function construirDetalleCarritoCompartido() {
   return [
     detalleProductos,
     "",
-    `Total | ${formatearPrecio(precioTotal)}`
+    `Total - ${formatearPrecio(precioTotal)}`
   ].join("\n");
 }
 
