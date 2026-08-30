@@ -136,6 +136,15 @@ const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
+   GALERÍA DE FOTOS - v183
+
+   - Flechas realmente dentro de la foto.
+   - Flechas más discretas.
+   - Recorte visual fuerte de margen blanco para la nueva tanda
+     de productos con varias fotos (incluye Foto 1).
+   - Mismo recorte en zoom, siempre conservando proporción.
+   - Navegación de zoom dentro de la propia imagen.
+
    GALERÍA DE FOTOS
 
    Estos estilos afectan únicamente a los controles que se dibujan
@@ -151,35 +160,55 @@ function asegurarEstilosGaleriaFotos() {
   const estilo = document.createElement("style");
   estilo.id = "ceraceci-galeria-fotos";
   estilo.textContent = `
+    /*
+      El contenedor es la única referencia de posición para flechas y puntos.
+      Esto impide que la galería altere o invada Compartir/Comparar.
+    */
+    .contenedor-foto-producto{
+      position:relative !important;
+    }
+
+    /* Navegación de fotos superpuesta DENTRO de la imagen. */
     .contenedor-foto-producto .foto-navegacion{
       position:absolute;
       top:50%;
-      z-index:5;
+      z-index:8;
       display:grid;
       place-items:center;
-      width:27px;
-      height:34px;
+      width:22px;
+      height:28px;
       padding:0;
       transform:translateY(-50%);
-      color:#2b2724;
-      background:rgba(252,251,250,.82);
-      border:1px solid rgba(43,39,36,.20);
-      border-radius:9px;
-      font:500 23px/1 Arial,sans-serif;
+      color:rgba(152,55,30,.92);
+      background:rgba(252,251,250,.46);
+      border:1px solid rgba(152,55,30,.38);
+      border-radius:999px;
+      box-shadow:0 1px 5px rgba(32,24,20,.08);
+      font:500 19px/1 Arial,sans-serif;
       cursor:pointer;
+      opacity:.58;
+      transition:opacity .14s ease, background-color .14s ease, border-color .14s ease;
       -webkit-tap-highlight-color:transparent;
-      backdrop-filter:blur(3px);
-      -webkit-backdrop-filter:blur(3px);
+      backdrop-filter:blur(2px);
+      -webkit-backdrop-filter:blur(2px);
     }
 
-    .contenedor-foto-producto .foto-anterior{ left:6px; }
-    .contenedor-foto-producto .foto-siguiente{ right:6px; }
+    .contenedor-foto-producto:hover .foto-navegacion,
+    .contenedor-foto-producto .foto-navegacion:focus-visible,
+    .contenedor-foto-producto .foto-navegacion:active{
+      opacity:.95;
+      background:rgba(252,251,250,.78);
+      border-color:rgba(152,55,30,.72);
+    }
+
+    .contenedor-foto-producto .foto-anterior{ left:7px; }
+    .contenedor-foto-producto .foto-siguiente{ right:7px; }
 
     .contenedor-foto-producto .foto-indicadores{
       position:absolute;
       left:50%;
-      bottom:6px;
-      z-index:5;
+      bottom:5px;
+      z-index:8;
       display:flex;
       gap:5px;
       transform:translateX(-50%);
@@ -188,9 +217,9 @@ function asegurarEstilosGaleriaFotos() {
 
     .contenedor-foto-producto .foto-indicador{
       display:block;
-      width:6px;
-      height:6px;
-      background:rgba(43,39,36,.30);
+      width:5px;
+      height:5px;
+      background:rgba(43,39,36,.24);
       border-radius:50%;
       box-shadow:0 0 0 1px rgba(252,251,250,.72);
     }
@@ -199,23 +228,461 @@ function asegurarEstilosGaleriaFotos() {
       background:var(--color-principal,#98371e);
     }
 
+    /*
+      La página ya no agrega 5/7 px de margen alrededor de la foto.
+      La imagen sigue usando contain: jamás se deforma.
+    */
+    html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto:not(.foto-placeholder),
+    html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto:not(.foto-placeholder){
+      top:0 !important;
+      right:0 !important;
+      bottom:0 !important;
+      left:0 !important;
+      width:100% !important;
+      height:100% !important;
+      max-width:none !important;
+      max-height:none !important;
+      padding:0 !important;
+      object-fit:contain !important;
+      object-position:center center !important;
+      clip-path:none !important;
+      transform:none !important;
+    }
+
+    /*
+      La nueva tanda de productos con varias fotos conserva mucho blanco
+      dentro del propio archivo. A esos productos se les aplica un recorte
+      VISUAL uniforme a TODAS sus fotos, incluida Foto 1.
+
+      No se cambia la proporción: ancho y alto se escalan exactamente igual.
+      El contenedor, que ya tiene overflow:hidden, recorta solo el excedente.
+    */
+    html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco,
+    html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco{
+      transform:scale(1.92) !important;
+      transform-origin:center center !important;
+    }
+
+    /* Borde terracota para todas las presentaciones en estado neutro. */
+    html body #productos#productos .tarjeta-producto .boton-presentacion:not(.seleccionada),
+    html body #productosComparados#productosComparados .tarjeta-producto .boton-presentacion:not(.seleccionada),
+    html body #productos#productos .tarjeta-producto .selector-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto .selector-presentacion,
+    html body #productos#productos .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc,
+    html body #productosComparados#productosComparados .tarjeta-producto .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+      border-color:var(--color-principal,#98371e) !important;
+    }
+
+    /* Navegación del zoom: también vive DENTRO de la propia imagen. */
+    .zoom-imagen-overlay .zoom-imagen-marco{
+      position:relative !important;
+    }
+
+    .zoom-imagen-overlay .zoom-foto-navegacion{
+      position:absolute;
+      top:50%;
+      z-index:10020;
+      display:grid;
+      place-items:center;
+      width:30px;
+      height:38px;
+      padding:0;
+      transform:translateY(-50%);
+      color:rgba(152,55,30,.94);
+      background:rgba(252,251,250,.42);
+      border:1px solid rgba(152,55,30,.34);
+      border-radius:999px;
+      box-shadow:0 2px 8px rgba(20,16,14,.10);
+      font:500 25px/1 Arial,sans-serif;
+      cursor:pointer;
+      opacity:.62;
+      transition:opacity .14s ease, background-color .14s ease;
+      -webkit-tap-highlight-color:transparent;
+      backdrop-filter:blur(2px);
+      -webkit-backdrop-filter:blur(2px);
+    }
+
+    .zoom-imagen-overlay .zoom-foto-navegacion:hover,
+    .zoom-imagen-overlay .zoom-foto-navegacion:focus-visible,
+    .zoom-imagen-overlay .zoom-foto-navegacion:active{
+      opacity:.96;
+      background:rgba(252,251,250,.76);
+    }
+
+    .zoom-imagen-overlay .zoom-foto-anterior{ left:8px; }
+    .zoom-imagen-overlay .zoom-foto-siguiente{ right:8px; }
+
+    .zoom-imagen-overlay .zoom-foto-indicadores{
+      position:absolute;
+      left:50%;
+      bottom:8px;
+      z-index:10020;
+      display:flex;
+      gap:6px;
+      transform:translateX(-50%);
+      pointer-events:none;
+    }
+
+    .zoom-imagen-overlay .zoom-foto-indicador{
+      width:7px;
+      height:7px;
+      background:rgba(23,23,23,.28);
+      border:1px solid rgba(255,255,255,.85);
+      border-radius:50%;
+    }
+
+    .zoom-imagen-overlay .zoom-foto-indicador.activo{
+      background:var(--color-principal,#98371e);
+    }
+
+    .zoom-imagen-overlay .zoom-foto-navegacion[hidden],
+    .zoom-imagen-overlay .zoom-foto-indicadores[hidden]{
+      display:none !important;
+    }
+
+    /*
+      Zoom: ocupa el máximo espacio posible sin deformar la imagen.
+      En los productos de la nueva tanda con varias fotos se aplica el mismo
+      recorte visual fuerte que en la tarjeta. La proporción nunca cambia.
+    */
+    html body .zoom-imagen-overlay .zoom-imagen-escenario{
+      padding:0 !important;
+      overflow:hidden !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-marco{
+      max-width:100vw !important;
+      max-height:100vh !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada{
+      max-width:100vw !important;
+      max-height:100vh !important;
+      border:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      object-fit:contain !important;
+      transform:none !important;
+      clip-path:none !important;
+    }
+
+    html body .zoom-imagen-overlay .zoom-imagen-ampliada.zoom-recorte-margen-blanco{
+      transform:scale(1.92) !important;
+      transform-origin:center center !important;
+    }
+
     @media (max-width:650px){
       .contenedor-foto-producto .foto-navegacion{
-        width:24px;
-        height:30px;
-        font-size:20px;
+        width:20px;
+        height:26px;
+        font-size:18px;
+        opacity:.55;
       }
 
-      .contenedor-foto-producto .foto-anterior{ left:4px; }
-      .contenedor-foto-producto .foto-siguiente{ right:4px; }
-      .contenedor-foto-producto .foto-indicadores{ bottom:5px; }
+      .contenedor-foto-producto .foto-anterior{ left:6px; }
+      .contenedor-foto-producto .foto-siguiente{ right:6px; }
+      .contenedor-foto-producto .foto-indicadores{ bottom:4px; }
+
+      .zoom-imagen-overlay .zoom-foto-navegacion{
+        width:28px;
+        height:36px;
+        font-size:23px;
+        opacity:.58;
+      }
+
+      .zoom-imagen-overlay .zoom-foto-anterior{ left:7px; }
+      .zoom-imagen-overlay .zoom-foto-siguiente{ right:7px; }
+      .zoom-imagen-overlay .zoom-foto-indicadores{ bottom:6px; }
     }
   `;
 
-  document.head.appendChild(estilo);
+  (document.body || document.head).appendChild(estilo);
+}
+
+function asegurarNavegacionZoomFotos() {
+  const overlay = document.getElementById("zoomImagenOverlay");
+  const imagenZoom = document.getElementById("zoomImagenAmpliada");
+  const marcoZoom = overlay?.querySelector(".zoom-imagen-marco");
+
+  if (!overlay || !imagenZoom || !marcoZoom) {
+    return;
+  }
+
+  let botonAnteriorZoom =
+    overlay.querySelector(".zoom-foto-anterior");
+  let botonSiguienteZoom =
+    overlay.querySelector(".zoom-foto-siguiente");
+  let indicadoresZoom =
+    overlay.querySelector(".zoom-foto-indicadores");
+
+  if (!botonAnteriorZoom) {
+    botonAnteriorZoom = document.createElement("button");
+    botonAnteriorZoom.type = "button";
+    botonAnteriorZoom.className =
+      "zoom-foto-navegacion zoom-foto-anterior";
+    botonAnteriorZoom.setAttribute(
+      "aria-label",
+      "Foto anterior"
+    );
+    botonAnteriorZoom.textContent = "‹";
+    marcoZoom.appendChild(botonAnteriorZoom);
+  }
+
+  if (!botonSiguienteZoom) {
+    botonSiguienteZoom = document.createElement("button");
+    botonSiguienteZoom.type = "button";
+    botonSiguienteZoom.className =
+      "zoom-foto-navegacion zoom-foto-siguiente";
+    botonSiguienteZoom.setAttribute(
+      "aria-label",
+      "Foto siguiente"
+    );
+    botonSiguienteZoom.textContent = "›";
+    marcoZoom.appendChild(botonSiguienteZoom);
+  }
+
+  if (!indicadoresZoom) {
+    indicadoresZoom = document.createElement("div");
+    indicadoresZoom.className =
+      "zoom-foto-indicadores";
+    indicadoresZoom.setAttribute(
+      "aria-hidden",
+      "true"
+    );
+    marcoZoom.appendChild(indicadoresZoom);
+  }
+
+  let fotosZoom = [];
+  let indiceZoom = 0;
+  let recortarMargenBlancoZoom = false;
+
+  const ajustarZoomMaximo = () => {
+    if (!overlay.classList.contains("abierto")) {
+      return;
+    }
+
+    const anchoNatural = imagenZoom.naturalWidth;
+    const altoNatural = imagenZoom.naturalHeight;
+
+    if (!anchoNatural || !altoNatural) {
+      return;
+    }
+
+    /*
+      Se calcula una única escala para ambos ejes:
+      la proporción original nunca cambia.
+    */
+    const anchoDisponible =
+      Math.max(160, window.innerWidth - 2);
+    const altoDisponible =
+      Math.max(160, window.innerHeight - 2);
+
+    const escala =
+      Math.min(
+        anchoDisponible / anchoNatural,
+        altoDisponible / altoNatural
+      );
+
+    imagenZoom.style.setProperty(
+      "width",
+      `${Math.floor(anchoNatural * escala)}px`,
+      "important"
+    );
+
+    imagenZoom.style.setProperty(
+      "height",
+      `${Math.floor(altoNatural * escala)}px`,
+      "important"
+    );
+  };
+
+  const actualizarControlesZoom = () => {
+    const varias = fotosZoom.length > 1;
+
+    botonAnteriorZoom.hidden = !varias;
+    botonSiguienteZoom.hidden = !varias;
+    indicadoresZoom.hidden = !varias;
+
+    indicadoresZoom.innerHTML =
+      varias
+        ? fotosZoom
+            .map(
+              (_, indice) => `
+                <span
+                  class="zoom-foto-indicador ${
+                    indice === indiceZoom
+                      ? "activo"
+                      : ""
+                  }"
+                ></span>
+              `
+            )
+            .join("")
+        : "";
+  };
+
+  const mostrarFotoZoom = (nuevoIndice) => {
+    if (fotosZoom.length === 0) {
+      return;
+    }
+
+    indiceZoom =
+      (nuevoIndice + fotosZoom.length) %
+      fotosZoom.length;
+
+    imagenZoom.classList.toggle(
+      "zoom-recorte-margen-blanco",
+      recortarMargenBlancoZoom
+    );
+
+    imagenZoom.src = fotosZoom[indiceZoom];
+
+    actualizarControlesZoom();
+
+    if (
+      imagenZoom.complete &&
+      imagenZoom.naturalWidth
+    ) {
+      requestAnimationFrame(
+        ajustarZoomMaximo
+      );
+    }
+  };
+
+  const prepararZoomDesdeFoto = (fotoOrigen) => {
+    let lista = [];
+
+    try {
+      lista =
+        JSON.parse(
+          fotoOrigen.dataset.fotos || "[]"
+        );
+    } catch (_) {
+      lista = [];
+    }
+
+    if (!Array.isArray(lista) || lista.length === 0) {
+      const src =
+        fotoOrigen.currentSrc ||
+        fotoOrigen.src ||
+        "";
+
+      lista = src ? [src] : [];
+    }
+
+    fotosZoom =
+      lista
+        .map((foto) => normalizarURLImagen(foto) || foto)
+        .filter(Boolean)
+        .slice(0, 4);
+
+    indiceZoom =
+      Math.max(
+        0,
+        Math.min(
+          fotosZoom.length - 1,
+          Number(
+            fotoOrigen.dataset.indiceFoto || 0
+          ) || 0
+        )
+      );
+
+    recortarMargenBlancoZoom =
+      fotoOrigen.dataset.recorteMargenBlanco === "true";
+
+    imagenZoom.classList.toggle(
+      "zoom-recorte-margen-blanco",
+      recortarMargenBlancoZoom
+    );
+
+    actualizarControlesZoom();
+
+    /*
+      El zoom original ya abrió la imagen clickeada.
+      Solo recalculamos el tamaño máximo y dejamos lista
+      la navegación a las demás fotos.
+    */
+    requestAnimationFrame(
+      ajustarZoomMaximo
+    );
+  };
+
+  document.addEventListener(
+    "click",
+    (evento) => {
+      const fotoOrigen =
+        evento.target.closest?.(
+          ".contenedor-foto-producto .foto-producto:not(.foto-placeholder)"
+        );
+
+      if (!fotoOrigen) {
+        return;
+      }
+
+      prepararZoomDesdeFoto(fotoOrigen);
+    },
+    true
+  );
+
+  botonAnteriorZoom.addEventListener(
+    "click",
+    (evento) => {
+      evento.preventDefault();
+      evento.stopPropagation();
+      mostrarFotoZoom(indiceZoom - 1);
+    }
+  );
+
+  botonSiguienteZoom.addEventListener(
+    "click",
+    (evento) => {
+      evento.preventDefault();
+      evento.stopPropagation();
+      mostrarFotoZoom(indiceZoom + 1);
+    }
+  );
+
+  imagenZoom.addEventListener(
+    "load",
+    () => {
+      requestAnimationFrame(
+        ajustarZoomMaximo
+      );
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    ajustarZoomMaximo
+  );
+
+  document.addEventListener(
+    "keydown",
+    (evento) => {
+      if (
+        !overlay.classList.contains("abierto") ||
+        fotosZoom.length <= 1
+      ) {
+        return;
+      }
+
+      if (evento.key === "ArrowLeft") {
+        evento.preventDefault();
+        mostrarFotoZoom(indiceZoom - 1);
+      }
+
+      if (evento.key === "ArrowRight") {
+        evento.preventDefault();
+        mostrarFotoZoom(indiceZoom + 1);
+      }
+    }
+  );
+
+  actualizarControlesZoom();
 }
 
 asegurarEstilosGaleriaFotos();
+asegurarNavegacionZoomFotos();
 
 
 /* =========================================
@@ -2378,7 +2845,7 @@ function crearTarjetaProducto(
       <img
         src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
-        class="foto-producto ${foto ? "" : "foto-placeholder"}"
+        class="foto-producto ${foto ? (fotos.length > 1 ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
         loading="lazy"
         referrerpolicy="no-referrer"
       >
@@ -2505,6 +2972,16 @@ function crearTarjetaProducto(
 
     let indiceFotoActual = 0;
 
+    imagenProducto.dataset.fotos =
+      JSON.stringify(fotos);
+    imagenProducto.dataset.indiceFoto = "0";
+    imagenProducto.dataset.recorteMargenBlanco =
+      fotos.length > 1 ? "true" : "false";
+    imagenProducto.classList.toggle(
+      "foto-recorte-margen-blanco",
+      fotos.length > 1
+    );
+
     const indicadoresFoto =
       Array.from(
         tarjeta.querySelectorAll(".foto-indicador")
@@ -2526,6 +3003,14 @@ function crearTarjetaProducto(
 
       indiceFotoActual =
         (nuevoIndice + fotos.length) % fotos.length;
+
+      imagenProducto.dataset.indiceFoto =
+        String(indiceFotoActual);
+
+      imagenProducto.classList.toggle(
+        "foto-recorte-margen-blanco",
+        imagenProducto.dataset.recorteMargenBlanco === "true"
+      );
 
       imagenProducto.dataset.imagenAlternativa = "false";
       imagenProducto.classList.remove("foto-placeholder");
@@ -2563,6 +3048,9 @@ function crearTarjetaProducto(
       imagenProducto.alt = "";
       imagenProducto.classList.add(
         "foto-placeholder"
+      );
+      imagenProducto.classList.remove(
+        "foto-recorte-margen-blanco"
       );
       contenedorFoto?.classList.add("sin-foto");
     };
