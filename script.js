@@ -136,7 +136,7 @@ const selectoresPersonalizadosPC = new Map();
 
 
 /* =========================================
-   GALERÍA DE FOTOS - v184
+   GALERÍA DE FOTOS - v185
 
    - Flechas realmente dentro de la foto.
    - Flechas más discretas.
@@ -259,7 +259,7 @@ function asegurarEstilosGaleriaFotos() {
     */
     html body #productos#productos .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco,
     html body #productosComparados#productosComparados .tarjeta-producto .contenedor-foto-producto .foto-producto.foto-recorte-margen-blanco{
-      transform:scale(1.92) !important;
+      transform:scale(var(--ceraceci-escala-foto, 1)) !important;
       transform-origin:center center !important;
     }
 
@@ -372,31 +372,29 @@ function asegurarEstilosGaleriaFotos() {
     }
 
     html body .zoom-imagen-overlay .zoom-imagen-ampliada.zoom-recorte-margen-blanco{
-      transform:scale(1.92) !important;
+      transform:scale(var(--ceraceci-escala-foto, 1)) !important;
       transform-origin:center center !important;
     }
 
     @media (max-width:650px){
-      .contenedor-foto-producto .foto-navegacion{
-        width:20px;
-        height:26px;
-        font-size:18px;
-        opacity:.55;
-      }
-
-      .contenedor-foto-producto .foto-anterior{ left:6px; }
-      .contenedor-foto-producto .foto-siguiente{ right:6px; }
-      .contenedor-foto-producto .foto-indicadores{ bottom:4px; }
-
+      /*
+        En móvil no mostramos flechas: las fotos se recorren deslizando
+        horizontalmente. Los puntos quedan como indicación de que hay más.
+      */
+      .contenedor-foto-producto .foto-navegacion,
       .zoom-imagen-overlay .zoom-foto-navegacion{
-        width:28px;
-        height:36px;
-        font-size:23px;
-        opacity:.58;
+        display:none !important;
       }
 
-      .zoom-imagen-overlay .zoom-foto-anterior{ left:7px; }
-      .zoom-imagen-overlay .zoom-foto-siguiente{ right:7px; }
+      .contenedor-foto-producto{
+        touch-action:pan-y;
+      }
+
+      .zoom-imagen-overlay .zoom-imagen-marco{
+        touch-action:none;
+      }
+
+      .contenedor-foto-producto .foto-indicadores{ bottom:4px; }
       .zoom-imagen-overlay .zoom-foto-indicadores{ bottom:6px; }
     }
   `;
@@ -460,6 +458,9 @@ function asegurarNavegacionZoomFotos() {
   let fotosZoom = [];
   let indiceZoom = 0;
   let recortarMargenBlancoZoom = false;
+  let escalaRecorteZoom = 1;
+  let touchInicioZoom = null;
+  let bloquearClickZoomHasta = 0;
 
   const ajustarZoomMaximo = () => {
     if (!overlay.classList.contains("abierto")) {
@@ -539,6 +540,10 @@ function asegurarNavegacionZoomFotos() {
       "zoom-recorte-margen-blanco",
       recortarMargenBlancoZoom
     );
+    imagenZoom.style.setProperty(
+      "--ceraceci-escala-foto",
+      String(escalaRecorteZoom || 1)
+    );
 
     imagenZoom.src = fotosZoom[indiceZoom];
 
@@ -595,9 +600,18 @@ function asegurarNavegacionZoomFotos() {
     recortarMargenBlancoZoom =
       fotoOrigen.dataset.recorteMargenBlanco === "true";
 
+    escalaRecorteZoom = Math.max(
+      1,
+      Number(fotoOrigen.dataset.escalaRecorte || 1) || 1
+    );
+
     imagenZoom.classList.toggle(
       "zoom-recorte-margen-blanco",
       recortarMargenBlancoZoom
+    );
+    imagenZoom.style.setProperty(
+      "--ceraceci-escala-foto",
+      String(escalaRecorteZoom)
     );
 
     actualizarControlesZoom();
@@ -645,6 +659,76 @@ function asegurarNavegacionZoomFotos() {
       evento.stopPropagation();
       mostrarFotoZoom(indiceZoom + 1);
     }
+  );
+
+  /* Deslizamiento horizontal en el zoom móvil. */
+  marcoZoom.addEventListener(
+    "touchstart",
+    (evento) => {
+      if (
+        window.innerWidth > 650 ||
+        fotosZoom.length <= 1 ||
+        evento.touches.length !== 1
+      ) {
+        touchInicioZoom = null;
+        return;
+      }
+
+      const toque = evento.touches[0];
+      touchInicioZoom = {
+        x: toque.clientX,
+        y: toque.clientY
+      };
+    },
+    { passive:true }
+  );
+
+  marcoZoom.addEventListener(
+    "touchend",
+    (evento) => {
+      if (
+        !touchInicioZoom ||
+        window.innerWidth > 650 ||
+        fotosZoom.length <= 1 ||
+        evento.changedTouches.length !== 1
+      ) {
+        touchInicioZoom = null;
+        return;
+      }
+
+      const toque = evento.changedTouches[0];
+      const dx = toque.clientX - touchInicioZoom.x;
+      const dy = toque.clientY - touchInicioZoom.y;
+      touchInicioZoom = null;
+
+      if (
+        Math.abs(dx) < 42 ||
+        Math.abs(dx) <= Math.abs(dy) * 1.15
+      ) {
+        return;
+      }
+
+      bloquearClickZoomHasta = Date.now() + 420;
+      mostrarFotoZoom(
+        indiceZoom + (dx < 0 ? 1 : -1)
+      );
+    },
+    { passive:true }
+  );
+
+  /* Evita que el click sintético posterior al swipe cierre el zoom. */
+  overlay.addEventListener(
+    "click",
+    (evento) => {
+      if (Date.now() >= bloquearClickZoomHasta) {
+        return;
+      }
+
+      evento.preventDefault();
+      evento.stopImmediatePropagation();
+      evento.stopPropagation();
+    },
+    true
   );
 
   imagenZoom.addEventListener(
@@ -2741,35 +2825,49 @@ function crearTarjetaProducto(
         `;
 
   /*
-    v184: algunos archivos de la segunda tanda traen un margen blanco
-    grande DENTRO de la propia imagen aunque el producto tenga una sola foto.
-    Estos productos necesitan el mismo recorte visual que los de varias fotos.
+    v185: el recorte deja de depender de que el producto tenga varias fotos.
+    Ese criterio hacía que algunas bolsas ya bien encuadradas (por ejemplo
+    Arcilla APM Rosada y Caolín Sur del Río) quedaran cortadas.
+
+    Ahora solo se amplían los productos cuyo archivo realmente trae mucho
+    blanco incorporado, y cada grupo usa una escala moderada propia.
+    Ancho y alto siempre se escalan por igual: nunca se deforma la foto.
   */
   const nombreProductoRecorte = normalizarTexto(producto.nombre)
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
-  const patronesRecorteMargenBlanco = [
-    /arena de rutilo/,
-    /bentonita/,
-    /bidon de boca ancha/,
-    /carbonato de bario/,
-    /carbonato de calcio/,
-    /^cuarzo(?:\b|$)/,
-    /harina de rutilo/,
-    /ox(?:ido)?(?: de)? cobre negro/,
-    /ox(?:ido)?(?: de)? hierro amarillo/,
-    /ox(?:ido)?(?: de)? hierro rojo/,
-    /ox(?:ido)?(?: de)? titanio/,
-    /silicato de (?:circonio|zirconio)/,
-    /talco chino/,
-    /feldespato potasico/,
-    /feldespato sodico/
+
+  const reglasRecorteMargenBlanco = [
+    [/oxido de cromo verde/, 1.84],
+    [/bidon(?: de)? boca ancha/, 2.18],
+    [/arena de rutilo/, 1.52],
+    [/bentonita/, 1.28],
+    [/carbonato de bario/, 1.30],
+    [/carbonato de calcio/, 1.30],
+    [/^cuarzo(?:\b|$)/, 1.30],
+    [/harina de rutilo/, 1.34],
+    [/ox(?:ido)?(?: de)? cobre negro/, 1.30],
+    [/ox(?:ido)?(?: de)? hierro amarillo/, 1.30],
+    [/ox(?:ido)?(?: de)? hierro rojo/, 1.30],
+    [/ox(?:ido)?(?: de)? titanio/, 1.30],
+    [/silicato de (?:circonio|zirconio)/, 1.30],
+    [/talco chino/, 1.30],
+    [/feldespato potasico/, 1.28],
+    [/feldespato sodico/, 1.28]
   ];
 
-  const productoRequiereRecorteMargenBlanco =
-    patronesRecorteMargenBlanco.some((patron) =>
+  const reglaRecorteMargenBlanco =
+    reglasRecorteMargenBlanco.find(([patron]) =>
       patron.test(nombreProductoRecorte)
     );
+
+  const escalaRecorteMargenBlanco =
+    reglaRecorteMargenBlanco
+      ? reglaRecorteMargenBlanco[1]
+      : 1;
+
+  const productoRequiereRecorteMargenBlanco =
+    escalaRecorteMargenBlanco > 1.001;
 
   const fotos = [];
 
@@ -2792,12 +2890,11 @@ function crearTarjetaProducto(
   const foto = fotos[0] || "";
 
   /*
-    Conservamos el comportamiento anterior para productos con varias fotos
-    y, además, forzamos el recorte para la lista de productos de la segunda
-    tanda que todavía quedaban chicos aunque tengan una sola foto.
+    No se recortan automáticamente los productos por tener 2, 3 o 4 fotos.
+    Solo se aplica la escala definida arriba cuando realmente corresponde.
   */
   const recortarMargenBlanco =
-    fotos.length > 1 || productoRequiereRecorteMargenBlanco;
+    productoRequiereRecorteMargenBlanco;
 
   tarjeta.dataset.foto = foto;
 
@@ -3021,6 +3118,12 @@ function crearTarjetaProducto(
     imagenProducto.dataset.indiceFoto = "0";
     imagenProducto.dataset.recorteMargenBlanco =
       recortarMargenBlanco ? "true" : "false";
+    imagenProducto.dataset.escalaRecorte =
+      String(escalaRecorteMargenBlanco || 1);
+    imagenProducto.style.setProperty(
+      "--ceraceci-escala-foto",
+      String(escalaRecorteMargenBlanco || 1)
+    );
     imagenProducto.classList.toggle(
       "foto-recorte-margen-blanco",
       recortarMargenBlanco
@@ -3119,6 +3222,81 @@ function crearTarjetaProducto(
         evento.stopPropagation();
         mostrarFoto(indiceFotoActual + 1);
       });
+
+    /*
+      En móvil, Foto 1..4 se recorren deslizando horizontalmente.
+      Las flechas están ocultas por CSS, pero los puntos siguen visibles.
+    */
+    let touchInicioFoto = null;
+    let bloquearClickFotoHasta = 0;
+
+    contenedorFoto?.addEventListener(
+      "touchstart",
+      (evento) => {
+        if (
+          window.innerWidth > 650 ||
+          fotos.length <= 1 ||
+          evento.touches.length !== 1
+        ) {
+          touchInicioFoto = null;
+          return;
+        }
+
+        const toque = evento.touches[0];
+        touchInicioFoto = {
+          x: toque.clientX,
+          y: toque.clientY
+        };
+      },
+      { passive:true }
+    );
+
+    contenedorFoto?.addEventListener(
+      "touchend",
+      (evento) => {
+        if (
+          !touchInicioFoto ||
+          window.innerWidth > 650 ||
+          fotos.length <= 1 ||
+          evento.changedTouches.length !== 1
+        ) {
+          touchInicioFoto = null;
+          return;
+        }
+
+        const toque = evento.changedTouches[0];
+        const dx = toque.clientX - touchInicioFoto.x;
+        const dy = toque.clientY - touchInicioFoto.y;
+        touchInicioFoto = null;
+
+        if (
+          Math.abs(dx) < 38 ||
+          Math.abs(dx) <= Math.abs(dy) * 1.15
+        ) {
+          return;
+        }
+
+        bloquearClickFotoHasta = Date.now() + 420;
+        mostrarFoto(
+          indiceFotoActual + (dx < 0 ? 1 : -1)
+        );
+      },
+      { passive:true }
+    );
+
+    imagenProducto.addEventListener(
+      "click",
+      (evento) => {
+        if (Date.now() >= bloquearClickFotoHasta) {
+          return;
+        }
+
+        evento.preventDefault();
+        evento.stopImmediatePropagation();
+        evento.stopPropagation();
+      },
+      true
+    );
 
     if (
       imagenProducto.complete &&
