@@ -991,6 +991,16 @@ function procesarCSVProductos(textoCSV) {
       "Nombre plural"
     );
 
+  const indiceMasInformacion =
+    buscarIndiceOpcional(
+      "Más información",
+      "Mas información",
+      "Más informacion",
+      "Mas informacion",
+      "Información adicional",
+      "Informacion adicional"
+    );
+
   const indiceDescripcion =
     buscarIndiceOpcional(
       "Descripción breve",
@@ -1065,6 +1075,11 @@ function procesarCSVProductos(textoCSV) {
         foto:
           indicesFotos.length > 0
             ? limpiarTexto(fila[indicesFotos[0]])
+            : "",
+
+        masInformacion:
+          indiceMasInformacion !== -1
+            ? limpiarTexto(fila[indiceMasInformacion])
             : "",
 
         descripcion:
@@ -1268,6 +1283,7 @@ function agruparProductos(filasProductos) {
           ? fila.fotos.slice(0, 4)
           : (fila.foto ? [fila.foto] : []),
         foto: fila.foto,
+        masInformacion: fila.masInformacion,
         descripcion: fila.descripcion,
         indicaciones: fila.indicaciones,
         presentaciones: []
@@ -1299,6 +1315,10 @@ function agruparProductos(filasProductos) {
 
     if (!producto.foto && producto.fotos.length) {
       producto.foto = producto.fotos[0];
+    }
+
+    if (!producto.masInformacion && fila.masInformacion) {
+      producto.masInformacion = fila.masInformacion;
     }
 
     if (!producto.descripcion && fila.descripcion) {
@@ -3009,28 +3029,34 @@ function crearTarjetaProducto(
       esComparacion ? "comparacion" : "catalogo"
     }`;
 
-  const contenidoDetalles = [
-    producto.descripcion
-      ? `
-          <div class="grupo-detalle-producto">
-            <strong>Descripción</strong>
-            <p>${escaparHTML(producto.descripcion)}</p>
-          </div>
-        `
-      : "",
-    producto.indicaciones
-      ? `
-          <div class="grupo-detalle-producto">
-            <strong>Indicaciones de uso</strong>
-            <p>${escaparHTML(producto.indicaciones)}</p>
-          </div>
-        `
-      : ""
-  ].join("") || `
-    <p class="detalle-pendiente">
-      Información pendiente de cargar.
-    </p>
-  `;
+  const contenidoDetalles = producto.masInformacion
+    ? `
+        <div class="grupo-detalle-producto">
+          <p>${escaparHTML(producto.masInformacion)}</p>
+        </div>
+      `
+    : ([
+        producto.descripcion
+          ? `
+              <div class="grupo-detalle-producto">
+                <strong>Descripción</strong>
+                <p>${escaparHTML(producto.descripcion)}</p>
+              </div>
+            `
+          : "",
+        producto.indicaciones
+          ? `
+              <div class="grupo-detalle-producto">
+                <strong>Indicaciones de uso</strong>
+                <p>${escaparHTML(producto.indicaciones)}</p>
+              </div>
+            `
+          : ""
+      ].join("") || `
+        <p class="detalle-pendiente">
+          Información pendiente de cargar.
+        </p>
+      `);
 
   tarjeta.innerHTML = `
     <div class="encabezado-producto">
