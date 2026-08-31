@@ -1318,7 +1318,7 @@ function agregarPresentacionesBarbotinas(filasProductos) {
     if (Number(precioBidon) > 0) {
       salida.push({
         ...fila,
-        presentacion: "9 KG CON BIDÓN BOCA ANCHA",
+        presentacion: "9 KG CON BIDÓN",
         precio: Number(fila.precio) + Number(precioBidon)
       });
     }
