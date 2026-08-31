@@ -56,6 +56,20 @@ const verCatalogoCompleto =
 const avisoCopiado =
   document.getElementById("avisoCopiado");
 
+const modalInformacionProducto =
+  document.getElementById("modalInformacionProducto");
+
+const modalInfoTitulo =
+  document.getElementById("modalInfoTitulo");
+
+const modalInfoContenido =
+  document.getElementById("modalInfoContenido");
+
+const cerrarModalInfo =
+  document.getElementById("cerrarModalInfo");
+
+let botonInformacionAnterior = null;
+
 const estado =
   document.getElementById("estado");
 
@@ -3024,39 +3038,7 @@ function crearTarjetaProducto(
 
   tarjeta.dataset.foto = foto;
 
-  const idDetalles =
-    `detalles-${producto.id}-${
-      esComparacion ? "comparacion" : "catalogo"
-    }`;
 
-  const contenidoDetalles = producto.masInformacion
-    ? `
-        <div class="grupo-detalle-producto">
-          <p>${escaparHTML(producto.masInformacion)}</p>
-        </div>
-      `
-    : ([
-        producto.descripcion
-          ? `
-              <div class="grupo-detalle-producto">
-                <strong>Descripción</strong>
-                <p>${escaparHTML(producto.descripcion)}</p>
-              </div>
-            `
-          : "",
-        producto.indicaciones
-          ? `
-              <div class="grupo-detalle-producto">
-                <strong>Indicaciones de uso</strong>
-                <p>${escaparHTML(producto.indicaciones)}</p>
-              </div>
-            `
-          : ""
-      ].join("") || `
-        <p class="detalle-pendiente">
-          Información pendiente de cargar.
-        </p>
-      `);
 
   tarjeta.innerHTML = `
     <div class="encabezado-producto">
@@ -3218,21 +3200,16 @@ function crearTarjetaProducto(
     </div>
 
     <div class="zona-detalles-producto">
-        <button
-          type="button"
-          class="ver-detalles"
-          aria-expanded="false"
-          aria-controls="${idDetalles}"
-        >
-          Más info
-        </button>
-      <div
-        id="${idDetalles}"
-        class="detalles-producto"
-        hidden
+      <button
+        type="button"
+        class="ver-detalles"
+        data-id-producto="${producto.id}"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="modalInformacionProducto"
       >
-        ${contenidoDetalles}
-      </div>
+        Más info
+      </button>
     </div>
   `;
 
@@ -3481,30 +3458,283 @@ function crearTarjetaProducto(
 }
 
 
-function alternarDetallesProducto(boton) {
-  const tarjeta =
-    boton.closest(".tarjeta-producto");
+function obtenerProductoPorId(idProducto) {
+  return productosAgrupados.find(
+    (producto) => producto.id === idProducto
+  ) || null;
+}
 
-  const detalles =
-    tarjeta?.querySelector(
-      ".detalles-producto"
+
+function obtenerTextoInformacionProducto(producto) {
+  if (!producto) {
+    return "";
+  }
+
+  if (producto.masInformacion) {
+    return producto.masInformacion;
+  }
+
+  const partes = [];
+
+  if (producto.descripcion) {
+    partes.push(
+      `DESCRIPCIÓN\n\n${producto.descripcion}`
+    );
+  }
+
+  if (producto.indicaciones) {
+    partes.push(
+      `INDICACIONES DE USO\n\n${producto.indicaciones}`
+    );
+  }
+
+  return partes.join("\n\n");
+}
+
+
+function esEncabezadoFichaTecnica(linea) {
+  const texto = limpiarTexto(linea);
+
+  if (
+    !texto ||
+    texto.length > 90 ||
+    texto.includes(":")
+  ) {
+    return false;
+  }
+
+  const letras = texto.match(/\p{L}/gu) || [];
+
+  if (letras.length < 3) {
+    return false;
+  }
+
+  return texto === texto.toLocaleUpperCase("es-AR");
+}
+
+
+function convertirFichaTecnicaAHTML(texto, nombreProducto = "") {
+  let lineas = String(texto || "")
+    .replace(/\r\n?/g, "\n")
+    .split("\n");
+
+  while (lineas.length && !limpiarTexto(lineas[0])) {
+    lineas.shift();
+  }
+
+  while (
+    lineas.length &&
+    nombreProducto &&
+    normalizarTexto(lineas[0]) === normalizarTexto(nombreProducto)
+  ) {
+    lineas.shift();
+
+    while (lineas.length && !limpiarTexto(lineas[0])) {
+      lineas.shift();
+    }
+  }
+
+  /*
+    Las fichas estandarizadas pueden comenzar con el nombre completo
+    del producto y luego DATOS CLAVE. El título ya se muestra fijo
+    en el encabezado del modal, por eso evitamos repetir esa primera línea.
+  */
+  if (
+    lineas.length > 1 &&
+    esEncabezadoFichaTecnica(lineas[0]) &&
+    normalizarTexto(lineas[0]) !== "datos clave"
+  ) {
+    const indiceSiguienteContenido = lineas.findIndex(
+      (linea, indice) =>
+        indice > 0 && limpiarTexto(linea)
     );
 
-  if (!detalles) {
+    if (
+      indiceSiguienteContenido > 0 &&
+      normalizarTexto(
+        lineas[indiceSiguienteContenido]
+      ) === "datos clave"
+    ) {
+      lineas = lineas.slice(indiceSiguienteContenido);
+    }
+  }
+
+  const partes = [];
+  let listaAbierta = false;
+
+  const cerrarLista = () => {
+    if (!listaAbierta) {
+      return;
+    }
+
+    partes.push("</ul>");
+    listaAbierta = false;
+  };
+
+  lineas.forEach((lineaOriginal) => {
+    const linea = limpiarTexto(lineaOriginal);
+
+    if (!linea) {
+      cerrarLista();
+      return;
+    }
+
+    const coincidenciaVinyeta = linea.match(/^[•·▪◦-]\s*(.+)$/u);
+
+    if (coincidenciaVinyeta) {
+      if (!listaAbierta) {
+        partes.push('<ul class="ficha-lista">');
+        listaAbierta = true;
+      }
+
+      partes.push(
+        `<li>${escaparHTML(coincidenciaVinyeta[1])}</li>`
+      );
+      return;
+    }
+
+    cerrarLista();
+
+    if (esEncabezadoFichaTecnica(linea)) {
+      const claseDatosClave =
+        normalizarTexto(linea) === "datos clave"
+          ? " ficha-datos-clave"
+          : "";
+
+      partes.push(
+        `<h3 class="ficha-seccion${claseDatosClave}">${escaparHTML(linea)}</h3>`
+      );
+      return;
+    }
+
+    const indiceDosPuntos = linea.indexOf(":");
+
+    if (
+      indiceDosPuntos > 0 &&
+      indiceDosPuntos <= 42
+    ) {
+      const etiqueta = linea.slice(0, indiceDosPuntos + 1);
+      const valor = linea.slice(indiceDosPuntos + 1).trim();
+
+      partes.push(
+        `<p class="ficha-linea-clave"><strong>${escaparHTML(etiqueta)}</strong>${valor ? ` ${escaparHTML(valor)}` : ""}</p>`
+      );
+      return;
+    }
+
+    partes.push(
+      `<p>${escaparHTML(linea)}</p>`
+    );
+  });
+
+  cerrarLista();
+
+  return partes.join("");
+}
+
+
+function abrirModalInformacionProducto(boton) {
+  if (
+    !modalInformacionProducto ||
+    !modalInfoTitulo ||
+    !modalInfoContenido ||
+    !cerrarModalInfo
+  ) {
     return;
   }
 
-  const seAbrira = detalles.hidden;
+  const idProducto =
+    boton?.dataset.idProducto ||
+    boton
+      ?.closest(".tarjeta-producto")
+      ?.dataset.idProducto ||
+    "";
 
-  detalles.hidden = !seAbrira;
-  boton.setAttribute(
+  const producto = obtenerProductoPorId(idProducto);
+
+  if (!producto) {
+    return;
+  }
+
+  const texto =
+    obtenerTextoInformacionProducto(producto) ||
+    "Información pendiente de cargar.";
+
+  if (botonInformacionAnterior && botonInformacionAnterior !== boton) {
+    botonInformacionAnterior.setAttribute(
+      "aria-expanded",
+      "false"
+    );
+  }
+
+  botonInformacionAnterior = boton || null;
+  botonInformacionAnterior?.setAttribute(
     "aria-expanded",
-    String(seAbrira)
+    "true"
   );
-  boton.textContent =
-    seAbrira
-      ? "Ocultar info."
-      : "Más info";
+
+  modalInfoTitulo.textContent = producto.nombre;
+  modalInfoContenido.innerHTML =
+    convertirFichaTecnicaAHTML(
+      texto,
+      producto.nombre
+    );
+  modalInfoContenido.scrollTop = 0;
+
+  modalInformacionProducto.classList.add("abierto");
+  modalInformacionProducto.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+  document.body.classList.add(
+    "modal-info-abierto"
+  );
+
+  requestAnimationFrame(() => {
+    cerrarModalInfo.focus({ preventScroll: true });
+  });
+}
+
+
+function cerrarModalInformacionProducto() {
+  if (
+    !modalInformacionProducto ||
+    !modalInformacionProducto.classList.contains("abierto")
+  ) {
+    return false;
+  }
+
+  modalInformacionProducto.classList.remove("abierto");
+  modalInformacionProducto.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+  document.body.classList.remove(
+    "modal-info-abierto"
+  );
+
+  const botonParaRestaurar = botonInformacionAnterior;
+
+  botonInformacionAnterior?.setAttribute(
+    "aria-expanded",
+    "false"
+  );
+  botonInformacionAnterior = null;
+
+  if (modalInfoTitulo) {
+    modalInfoTitulo.textContent = "";
+  }
+
+  if (modalInfoContenido) {
+    modalInfoContenido.innerHTML = "";
+    modalInfoContenido.scrollTop = 0;
+  }
+
+  botonParaRestaurar?.focus?.({
+    preventScroll: true
+  });
+
+  return true;
 }
 
 
@@ -6013,7 +6243,7 @@ function manejarClickTarjetaProducto(evento) {
       );
 
     if (botonDetalles) {
-      alternarDetallesProducto(
+      abrirModalInformacionProducto(
         botonDetalles
       );
 
@@ -6416,6 +6646,26 @@ if (limpiarComparacionVista) {
 }
 
 
+if (cerrarModalInfo) {
+  cerrarModalInfo.addEventListener(
+    "click",
+    cerrarModalInformacionProducto
+  );
+}
+
+
+if (modalInformacionProducto) {
+  modalInformacionProducto.addEventListener(
+    "click",
+    (evento) => {
+      if (evento.target === modalInformacionProducto) {
+        cerrarModalInformacionProducto();
+      }
+    }
+  );
+}
+
+
 if (abrirCarrito) {
   abrirCarrito.addEventListener(
     "click",
@@ -6478,10 +6728,40 @@ document.addEventListener(
   "keydown",
   (evento) => {
     if (evento.key === "Escape") {
+      if (cerrarModalInformacionProducto()) {
+        evento.preventDefault();
+        return;
+      }
+
       cerrarPanelCarrito();
 
       if (comparacionAbierta) {
         cerrarVistaComparacion();
+      }
+    }
+
+    if (
+      evento.key === "Tab" &&
+      modalInformacionProducto?.classList.contains("abierto")
+    ) {
+      const elementosFoco = [
+        cerrarModalInfo,
+        modalInfoContenido
+      ].filter(Boolean);
+
+      if (!elementosFoco.length) {
+        return;
+      }
+
+      const primero = elementosFoco[0];
+      const ultimo = elementosFoco[elementosFoco.length - 1];
+
+      if (evento.shiftKey && document.activeElement === primero) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primero.focus();
       }
     }
   }

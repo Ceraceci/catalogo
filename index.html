@@ -7675,6 +7675,38 @@
   </div>
 
   <div
+    id="modalInformacionProducto"
+    class="modal-info-producto"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalInfoTitulo"
+  >
+    <section class="modal-info-ventana" aria-label="Ficha técnica del producto">
+      <header class="modal-info-encabezado">
+        <div class="modal-info-titulos">
+          <span class="modal-info-etiqueta">Más información</span>
+          <h2 id="modalInfoTitulo" class="modal-info-titulo"></h2>
+        </div>
+
+        <button
+          type="button"
+          id="cerrarModalInfo"
+          class="cerrar-modal-info"
+          aria-label="Cerrar información del producto"
+          title="Cerrar"
+        >×</button>
+      </header>
+
+      <div
+        id="modalInfoContenido"
+        class="modal-info-contenido"
+        tabindex="0"
+      ></div>
+    </section>
+  </div>
+
+  <div
     id="zoomImagenOverlay"
     class="zoom-imagen-overlay"
     aria-hidden="true"
@@ -13326,6 +13358,199 @@
     }
   </style>
 
+  <style id="modal-mas-info-v199">
+    /* Más info. abre una ficha técnica sin alargar la tarjeta. */
+    html body.modal-info-abierto{
+      overflow:hidden !important;
+    }
+
+    html body .modal-info-producto{
+      position:fixed;
+      inset:0;
+      z-index:10030;
+      display:none;
+      box-sizing:border-box;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      background:rgba(24,20,17,.70);
+      backdrop-filter:blur(5px);
+      -webkit-backdrop-filter:blur(5px);
+    }
+
+    html body .modal-info-producto.abierto{
+      display:flex;
+    }
+
+    html body .modal-info-ventana{
+      display:flex;
+      flex-direction:column;
+      width:min(860px,calc(100vw - 48px));
+      max-height:min(88dvh,900px);
+      overflow:hidden;
+      background:var(--color-tarjeta-calido,#fffdfb);
+      border:1px solid rgba(152,55,30,.24);
+      border-radius:18px;
+      box-shadow:0 22px 70px rgba(24,20,17,.34);
+    }
+
+    html body .modal-info-encabezado{
+      display:flex;
+      flex:0 0 auto;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      padding:18px 20px 16px;
+      background:#eee8e6;
+      border-bottom:1px solid var(--color-borde,#d8cbc5);
+    }
+
+    html body .modal-info-titulos{ min-width:0; }
+
+    html body .modal-info-etiqueta{
+      display:block;
+      margin:0 0 4px;
+      color:var(--color-principal,#98371e);
+      font-size:.72rem;
+      font-weight:700;
+      line-height:1.2;
+      letter-spacing:.045em;
+      text-transform:uppercase;
+    }
+
+    html body .modal-info-titulo{
+      margin:0;
+      color:var(--color-texto,#171717);
+      font-size:1.28rem;
+      font-weight:700;
+      line-height:1.22;
+      text-align:left;
+    }
+
+    html body .cerrar-modal-info{
+      display:grid;
+      flex:0 0 36px;
+      place-items:center;
+      width:36px;
+      min-width:36px;
+      height:36px;
+      margin:0;
+      padding:0 0 2px;
+      color:var(--color-principal,#98371e);
+      font:400 1.7rem/1 Arial,sans-serif;
+      background:#fffdfb;
+      border:1px solid rgba(152,55,30,.42);
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    html body .cerrar-modal-info:hover,
+    html body .cerrar-modal-info:focus-visible{
+      color:#fff;
+      background:var(--color-principal,#98371e);
+      border-color:var(--color-principal,#98371e);
+      outline:none;
+    }
+
+    html body .modal-info-contenido{
+      min-height:0;
+      padding:20px 24px 28px;
+      overflow-y:auto;
+      overscroll-behavior:contain;
+      scrollbar-gutter:stable;
+      color:#37312e;
+      font-size:.94rem;
+      line-height:1.55;
+      text-align:left;
+      outline:none;
+    }
+
+    html body .modal-info-contenido:focus-visible{
+      box-shadow:inset 0 0 0 2px rgba(152,55,30,.18);
+    }
+
+    html body .modal-info-contenido .ficha-seccion{
+      margin:24px 0 10px;
+      padding:0 0 7px;
+      color:var(--color-principal,#98371e);
+      font-size:.84rem;
+      font-weight:800;
+      line-height:1.25;
+      letter-spacing:.055em;
+      text-transform:uppercase;
+      border-bottom:1px solid rgba(152,55,30,.23);
+    }
+
+    html body .modal-info-contenido .ficha-seccion:first-child{ margin-top:0; }
+
+    html body .modal-info-contenido .ficha-datos-clave{
+      margin:0 0 12px;
+      padding:10px 12px;
+      background:#f3e5df;
+      border:1px solid rgba(152,55,30,.20);
+      border-radius:10px;
+    }
+
+    html body .modal-info-contenido p{ margin:0 0 8px; }
+    html body .modal-info-contenido .ficha-linea-clave{ margin-bottom:6px; }
+
+    html body .modal-info-contenido .ficha-linea-clave strong{
+      color:var(--color-texto,#171717);
+      font-weight:700;
+    }
+
+    html body .modal-info-contenido .ficha-lista{
+      margin:4px 0 12px;
+      padding-left:1.25rem;
+    }
+
+    html body .modal-info-contenido .ficha-lista li{ padding-left:.12rem; }
+    html body .modal-info-contenido .ficha-lista li + li{ margin-top:4px; }
+
+    @media (max-width:650px){
+      html body .modal-info-producto{
+        align-items:stretch;
+        padding:7px;
+      }
+
+      html body .modal-info-ventana{
+        width:100%;
+        max-width:none;
+        height:calc(100dvh - 14px);
+        max-height:none;
+        border-radius:14px;
+      }
+
+      html body .modal-info-encabezado{
+        gap:12px;
+        padding:14px 14px 12px;
+      }
+
+      html body .modal-info-titulo{
+        font-size:1.08rem;
+        line-height:1.2;
+      }
+
+      html body .modal-info-etiqueta{ font-size:.66rem; }
+
+      html body .cerrar-modal-info{
+        flex-basis:34px;
+        width:34px;
+        min-width:34px;
+        height:34px;
+        border-radius:9px;
+      }
+
+      html body .modal-info-contenido{
+        padding:16px 16px calc(24px + env(safe-area-inset-bottom));
+        font-size:.91rem;
+        line-height:1.5;
+      }
+
+      html body .modal-info-contenido .ficha-seccion{ margin-top:21px; }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13348,6 +13573,6 @@
     })();
   </script>
 
-  <script src="script.js?v=198"></script>
+  <script src="script.js?v=199"></script>
 </body>
 </html>
