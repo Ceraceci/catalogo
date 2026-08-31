@@ -1108,7 +1108,9 @@ function procesarCSVProductos(textoCSV) {
       };
 
       const productoNormalizado =
-        normalizarFilaKanthal(producto);
+        normalizarFilaBarbotina(
+          normalizarFilaKanthal(producto)
+        );
 
       return {
         ...productoNormalizado,
@@ -1274,6 +1276,42 @@ function normalizarFilaKanthal(producto) {
     ...producto,
     nombre: "ALAMBRE KANTHAL A1",
     presentacion: `${diametro} × 1 M`
+  };
+}
+
+
+function normalizarFilaBarbotina(producto) {
+  const nombre = normalizarTexto(producto.nombre);
+
+  const configuraciones = {
+    "barbotina sin bidon": {
+      nombre: "BARBOTINA BAJA TEMPERATURA",
+      presentacion: "9 KG SIN BIDÓN"
+    },
+    "barbotina con bidon de boca ancha": {
+      nombre: "BARBOTINA BAJA TEMPERATURA",
+      presentacion: "9 KG CON BIDÓN BOCA ANCHA"
+    },
+    "barbotina gres sin bidon": {
+      nombre: "BARBOTINA GRES / ALTA TEMPERATURA",
+      presentacion: "9 KG SIN BIDÓN"
+    },
+    "barbotina gres con bidon de boca ancha": {
+      nombre: "BARBOTINA GRES / ALTA TEMPERATURA",
+      presentacion: "9 KG CON BIDÓN BOCA ANCHA"
+    }
+  };
+
+  const configuracion = configuraciones[nombre];
+
+  if (!configuracion) {
+    return producto;
+  }
+
+  return {
+    ...producto,
+    nombre: configuracion.nombre,
+    presentacion: configuracion.presentacion
   };
 }
 
