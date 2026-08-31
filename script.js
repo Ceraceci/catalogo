@@ -1311,14 +1311,14 @@ function agregarPresentacionesBarbotinas(filasProductos) {
     // La fila 9 KG de WEB representa la barbotina SIN bidón.
     salida.push({
       ...fila,
-      presentacion: "9 KG SIN BIDÓN"
+      presentacion: "9 KG S/ BIDÓN"
     });
 
     // Igual que el Apps Script del catálogo PDF: CON BIDÓN = barbotina + BIDÓN BOCA ANCHA / 1 U.
     if (Number(precioBidon) > 0) {
       salida.push({
         ...fila,
-        presentacion: "9 KG CON BIDÓN",
+        presentacion: "9 KG C/ BIDÓN",
         precio: Number(fila.precio) + Number(precioBidon)
       });
     }
@@ -1483,10 +1483,10 @@ function compararPresentaciones(a, b) {
   const textoA = normalizarTexto(a);
   const textoB = normalizarTexto(b);
 
-  const esSinBidonA = textoA.includes("sin bidon");
-  const esSinBidonB = textoB.includes("sin bidon");
-  const esConBidonA = textoA.includes("con bidon");
-  const esConBidonB = textoB.includes("con bidon");
+  const esSinBidonA = textoA.includes("sin bidon") || textoA.includes("s/ bidon");
+  const esSinBidonB = textoB.includes("sin bidon") || textoB.includes("s/ bidon");
+  const esConBidonA = textoA.includes("con bidon") || textoA.includes("c/ bidon");
+  const esConBidonB = textoB.includes("con bidon") || textoB.includes("c/ bidon");
 
   if (esSinBidonA && esConBidonB) return -1;
   if (esConBidonA && esSinBidonB) return 1;
