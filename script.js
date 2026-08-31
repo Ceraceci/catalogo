@@ -14,7 +14,7 @@ const URL_CSV = "/api/catalogo";
  * al volver a abrir o recargar la página, los productos aparezcan
  * inmediatamente. Después se consulta Cloudflare en segundo plano.
  */
-const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v4";
+const CACHE_CATALOGO_LOCAL = "ceraceci_catalogo_csv_v6";
 
 /*
  * Reemplazá este número por el WhatsApp real de Ceraceci.
@@ -1108,9 +1108,7 @@ function procesarCSVProductos(textoCSV) {
       };
 
       const productoNormalizado =
-        normalizarFilaBarbotina(
-          normalizarFilaKanthal(producto)
-        );
+        normalizarFilaKanthal(producto);
 
       return {
         ...productoNormalizado,
@@ -1134,8 +1132,11 @@ function procesarCSVProductos(textoCSV) {
       );
     });
 
+  const filasProductosConBarbotinas =
+    agregarPresentacionesBarbotinas(filasProductos);
+
   productosAgrupados =
-    agruparProductos(filasProductos);
+    agruparProductos(filasProductosConBarbotinas);
 
   carritoCompras.forEach(
     recalcularProductoCarrito
@@ -1280,39 +1281,50 @@ function normalizarFilaKanthal(producto) {
 }
 
 
-function normalizarFilaBarbotina(producto) {
-  const nombre = normalizarTexto(producto.nombre);
 
-  const configuraciones = {
-    "barbotina sin bidon": {
-      nombre: "BARBOTINA BAJA TEMPERATURA",
-      presentacion: "9 KG SIN BIDÓN"
-    },
-    "barbotina con bidon de boca ancha": {
-      nombre: "BARBOTINA BAJA TEMPERATURA",
-      presentacion: "9 KG CON BIDÓN BOCA ANCHA"
-    },
-    "barbotina gres sin bidon": {
-      nombre: "BARBOTINA GRES / ALTA TEMPERATURA",
-      presentacion: "9 KG SIN BIDÓN"
-    },
-    "barbotina gres con bidon de boca ancha": {
-      nombre: "BARBOTINA GRES / ALTA TEMPERATURA",
-      presentacion: "9 KG CON BIDÓN BOCA ANCHA"
+function agregarPresentacionesBarbotinas(filasProductos) {
+  const precioBidon = filasProductos
+    .filter((fila) => {
+      return (
+        normalizarTexto(fila.nombre) === "bidon boca ancha" &&
+        (/^1\s*u\.?$/.test(normalizarTexto(fila.presentacion))) &&
+        Number(fila.precio) > 0
+      );
+    })
+    .map((fila) => Number(fila.precio))[0];
+
+  const salida = [];
+
+  filasProductos.forEach((fila) => {
+    const nombre = normalizarTexto(fila.nombre);
+    const presentacion = normalizarTexto(fila.presentacion);
+
+    const esBarbotina =
+      nombre === "barbotina baja temperatura" ||
+      nombre === "barbotina gres";
+
+    if (!esBarbotina || !/^9\s*kg\.?$/.test(presentacion)) {
+      salida.push(fila);
+      return;
     }
-  };
 
-  const configuracion = configuraciones[nombre];
+    // La fila 9 KG de WEB representa la barbotina SIN bidón.
+    salida.push({
+      ...fila,
+      presentacion: "9 KG SIN BIDÓN"
+    });
 
-  if (!configuracion) {
-    return producto;
-  }
+    // Igual que el Apps Script del catálogo PDF: CON BIDÓN = barbotina + BIDÓN BOCA ANCHA / 1 U.
+    if (Number(precioBidon) > 0) {
+      salida.push({
+        ...fila,
+        presentacion: "9 KG CON BIDÓN BOCA ANCHA",
+        precio: Number(fila.precio) + Number(precioBidon)
+      });
+    }
+  });
 
-  return {
-    ...producto,
-    nombre: configuracion.nombre,
-    presentacion: configuracion.presentacion
-  };
+  return salida;
 }
 
 
@@ -1467,6 +1479,17 @@ function compararPresentaciones(a, b) {
   ) {
     return cantidadA - cantidadB;
   }
+
+  const textoA = normalizarTexto(a);
+  const textoB = normalizarTexto(b);
+
+  const esSinBidonA = textoA.includes("sin bidon");
+  const esSinBidonB = textoB.includes("sin bidon");
+  const esConBidonA = textoA.includes("con bidon");
+  const esConBidonB = textoB.includes("con bidon");
+
+  if (esSinBidonA && esConBidonB) return -1;
+  if (esConBidonA && esSinBidonB) return 1;
 
   return a.localeCompare(
     b,
