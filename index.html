@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="198">
+  <meta name="ceraceci-version" content="206">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=198">
+  <link rel="stylesheet" href="style.css?v=206">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7444,11 +7444,29 @@
         </label>
       </form>
 
-      <select id="filtroCategoria">
-        <option value="">
-          Todos los productos
-        </option>
-      </select>
+      <button
+        type="button"
+        class="activar-modo-comparacion activar-modo-comparacion-pc"
+        aria-pressed="false"
+      >
+        Comparar productos
+      </button>
+
+      <div class="fila-categoria-comparacion">
+        <select id="filtroCategoria" aria-label="Filtrar por categoría">
+          <option value="">
+            Todos los productos
+          </option>
+        </select>
+
+        <button
+          type="button"
+          class="activar-modo-comparacion activar-modo-comparacion-movil"
+          aria-pressed="false"
+        >
+          Comparar productos
+        </button>
+      </div>
     </section>
 
     <section
@@ -7458,7 +7476,7 @@
       hidden
     >
       <p id="resumenComparacion">
-        0 de 4 productos seleccionados
+        0 elegidos · seleccioná de 2 a 4
       </p>
 
       <div class="acciones-barra-comparacion">
@@ -7467,7 +7485,7 @@
           id="limpiarComparacion"
           class="limpiar-comparacion"
         >
-          Limpiar
+          Cancelar
         </button>
 
         <button
@@ -7476,7 +7494,7 @@
           class="abrir-comparacion"
           disabled
         >
-          Comparar productos
+          Comparar
         </button>
       </div>
     </section>
@@ -13551,6 +13569,275 @@
     }
   </style>
 
+  <style id="comparar-productos-v206">
+    /* Acceso explícito al nuevo modo de selección. */
+    html body .busqueda .activar-modo-comparacion{
+      box-sizing:border-box;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      margin:0;
+      padding:0 14px;
+      color:var(--color-rojo-terracota,#98371e) !important;
+      -webkit-text-fill-color:var(--color-rojo-terracota,#98371e) !important;
+      font-size:.86rem;
+      font-weight:700 !important;
+      line-height:1.1;
+      white-space:nowrap;
+      background:#eee8e6 !important;
+      border:1px solid var(--color-rojo-terracota,#98371e) !important;
+      border-radius:10px;
+      box-shadow:0 2px 5px rgba(70,40,25,.10);
+      cursor:pointer;
+    }
+
+    html body .busqueda .activar-modo-comparacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-rojo-terracota,#98371e) !important;
+      border-color:var(--color-rojo-terracota,#98371e) !important;
+    }
+
+    html body .fila-categoria-comparacion{
+      min-width:0;
+    }
+
+    html body .selector-comparacion{
+      position:absolute;
+      top:8px;
+      left:8px;
+      z-index:8;
+      display:none;
+      align-items:center;
+      gap:6px;
+      min-height:34px;
+      margin:0;
+      padding:4px 9px 4px 5px;
+      color:#2d2926;
+      -webkit-text-fill-color:#2d2926;
+      font-size:.76rem;
+      font-weight:700;
+      line-height:1;
+      background:rgba(255,255,255,.96);
+      border:1px solid rgba(152,55,30,.48);
+      border-radius:999px;
+      box-shadow:0 3px 10px rgba(47,25,18,.18);
+    }
+
+    html body .casilla-comparacion{
+      display:grid;
+      flex:0 0 23px;
+      place-items:center;
+      width:23px;
+      height:23px;
+      color:#fff;
+      -webkit-text-fill-color:#fff;
+      font-size:.9rem;
+      font-weight:800;
+      background:#fff;
+      border:2px solid var(--color-rojo-terracota,#98371e);
+      border-radius:6px;
+    }
+
+    html body .selector-comparacion.seleccionado{
+      color:#fff;
+      -webkit-text-fill-color:#fff;
+      background:var(--color-rojo-terracota,#98371e);
+      border-color:var(--color-rojo-terracota,#98371e);
+    }
+
+    html body .selector-comparacion.seleccionado .casilla-comparacion{
+      color:var(--color-rojo-terracota,#98371e);
+      -webkit-text-fill-color:var(--color-rojo-terracota,#98371e);
+      background:#fff;
+      border-color:#fff;
+    }
+
+    html body.modo-comparacion #productos .selector-comparacion{
+      display:flex;
+    }
+
+    html body.modo-comparacion #productos .tarjeta-producto{
+      cursor:pointer;
+      user-select:none;
+      -webkit-user-select:none;
+      transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease,transform .12s ease;
+    }
+
+    html body.modo-comparacion #productos .tarjeta-producto *{
+      pointer-events:none !important;
+    }
+
+    html body.modo-comparacion #productos .tarjeta-producto:focus-visible{
+      outline:3px solid rgba(152,55,30,.42) !important;
+      outline-offset:2px;
+    }
+
+    html body.modo-comparacion #productos .tarjeta-producto.seleccionado-comparacion{
+      background:#f5ddd5 !important;
+      border-color:var(--color-rojo-terracota,#98371e) !important;
+      box-shadow:0 0 0 3px var(--color-rojo-terracota,#98371e),0 7px 18px rgba(81,29,15,.24) !important;
+      transform:translateY(-1px);
+    }
+
+    html body .barra-comparacion{
+      z-index:92 !important;
+      border-color:rgba(152,55,30,.42) !important;
+      box-shadow:0 8px 24px rgba(70,40,25,.22) !important;
+    }
+
+    html body .barra-comparacion p{
+      color:#2d2926 !important;
+      font-weight:700 !important;
+    }
+
+    html body .barra-comparacion .limpiar-comparacion,
+    html body .barra-comparacion .abrir-comparacion{
+      min-height:38px !important;
+      font-weight:700 !important;
+    }
+
+    html body .barra-comparacion .abrir-comparacion:not(:disabled){
+      box-shadow:0 3px 9px rgba(81,29,15,.24);
+    }
+
+    @media (min-width:651px){
+      html body .busqueda{
+        grid-template-areas:"buscar categoria ordenar comparar" !important;
+        grid-template-columns:minmax(0,1fr) minmax(190px,240px) minmax(180px,220px) auto !important;
+      }
+
+      html body .fila-categoria-comparacion{
+        display:contents;
+      }
+
+      html body .fila-categoria-comparacion > #filtroCategoria,
+      html body .fila-categoria-comparacion > .select-personalizado-categoria-pc{
+        grid-area:categoria;
+      }
+
+      html body .activar-modo-comparacion-pc{
+        grid-area:comparar;
+        display:flex;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        display:none;
+      }
+
+      html body .barra-comparacion{
+        position:sticky !important;
+        top:72px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .busqueda{
+        grid-template-areas:"buscarorden" "categoria" !important;
+        grid-template-columns:minmax(0,1fr) !important;
+      }
+
+      html body .activar-modo-comparacion-pc{
+        display:none;
+      }
+
+      html body .fila-categoria-comparacion{
+        grid-area:categoria;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) minmax(142px,auto);
+        gap:7px;
+        width:100%;
+      }
+
+      html body .fila-categoria-comparacion > #filtroCategoria{
+        grid-area:auto !important;
+        min-width:0 !important;
+        width:100% !important;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        display:flex;
+        min-width:142px;
+        min-height:40px;
+        height:40px;
+        padding:0 9px;
+        font-size:.78rem;
+      }
+
+      html body.modo-comparacion{
+        padding-bottom:164px !important;
+      }
+
+      html body .selector-comparacion{
+        top:6px;
+        left:6px;
+        min-height:30px;
+        gap:4px;
+        padding:3px 7px 3px 4px;
+        font-size:.68rem;
+      }
+
+      html body .casilla-comparacion{
+        flex-basis:21px;
+        width:21px;
+        height:21px;
+        border-radius:5px;
+      }
+
+      html body .barra-comparacion{
+        position:fixed !important;
+        top:auto !important;
+        right:9px !important;
+        bottom:calc(89px + env(safe-area-inset-bottom)) !important;
+        left:9px !important;
+        display:grid !important;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:8px !important;
+        width:auto !important;
+        margin:0 !important;
+        padding:8px !important;
+        background:rgba(238,232,230,.98) !important;
+        border:1px solid rgba(152,55,30,.42) !important;
+        border-radius:13px !important;
+        backdrop-filter:blur(9px);
+        -webkit-backdrop-filter:blur(9px);
+      }
+
+      html body .barra-comparacion p{
+        font-size:.72rem !important;
+        line-height:1.15;
+      }
+
+      html body .acciones-barra-comparacion{
+        gap:5px !important;
+      }
+
+      html body .barra-comparacion .limpiar-comparacion,
+      html body .barra-comparacion .abrir-comparacion{
+        min-height:36px !important;
+        padding:5px 8px !important;
+        font-size:.72rem !important;
+      }
+    }
+
+    @media (max-width:360px){
+      html body .fila-categoria-comparacion{
+        grid-template-columns:minmax(0,1fr) 136px;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        min-width:136px;
+        padding-right:6px;
+        padding-left:6px;
+        font-size:.73rem;
+      }
+
+      html body .barra-comparacion p{
+        font-size:.67rem !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13573,6 +13860,6 @@
     })();
   </script>
 
-  <script src="script.js?v=205"></script>
+  <script src="script.js?v=206"></script>
 </body>
 </html>

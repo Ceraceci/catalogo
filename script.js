@@ -124,6 +124,13 @@ const abrirComparacion =
 const limpiarComparacion =
   document.getElementById("limpiarComparacion");
 
+const botonesModoComparacion =
+  Array.from(
+    document.querySelectorAll(
+      ".activar-modo-comparacion"
+    )
+  );
+
 const seccionComparacion =
   document.getElementById("seccionComparacion");
 
@@ -144,6 +151,7 @@ let productosMostrados = [];
 let carritoCompras = cargarCarritoGuardado();
 let productosSeleccionadosComparacion = [];
 let comparacionAbierta = false;
+let modoSeleccionComparacion = false;
 let productoCompartidoPendiente =
   new URLSearchParams(window.location.search).get("producto");
 const selectoresPersonalizadosPC = new Map();
@@ -3131,33 +3139,35 @@ function crearTarjetaProducto(
           </svg>
         </button>
 
-        <button
-          type="button"
-          class="boton-comparar ${
-            estaSeleccionado ? "seleccionado" : ""
-          }"
-          data-id-producto="${producto.id}"
-          aria-pressed="${estaSeleccionado}"
-          aria-label="${
-            esComparacion ? "Quitar de la comparación" : "Comparar"
-          } ${escaparHTML(producto.nombre)}"
-          title="${
-            esComparacion ? "Quitar de la comparación" : "Comparar producto"
-          }"
-        >
-          <svg
-            class="icono-comparar icono-comparar-svg"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path d="M2.5 7.5h18m0 0-4-4m4 4-4 4M21.5 16.5h-18m0 0 4-4m-4 4 4 4"></path>
-          </svg>
-        </button>
       </div>
     </div>
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+      ${
+        !esComparacion
+          ? `
+            <button
+              type="button"
+              class="selector-comparacion ${
+                estaSeleccionado ? "seleccionado" : ""
+              }"
+              data-id-producto="${producto.id}"
+              aria-pressed="${estaSeleccionado}"
+              aria-label="${
+                estaSeleccionado ? "Quitar" : "Elegir"
+              } ${escaparHTML(producto.nombre)} para comparar"
+            >
+              <span class="casilla-comparacion" aria-hidden="true">${
+                estaSeleccionado ? "✓" : ""
+              }</span>
+              <span class="texto-selector-comparacion">${
+                estaSeleccionado ? "Elegido" : "Elegir"
+              }</span>
+            </button>
+          `
+          : ""
+      }
+
       <img
         src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
@@ -3841,47 +3851,79 @@ function alternarProductoComparacion(idProducto) {
 
 
 function sincronizarBotonesComparacion() {
-  [contenedorProductos, productosComparados]
-    .filter(Boolean)
-    .forEach((contenedor) => {
-      contenedor
-        .querySelectorAll(".boton-comparar")
-        .forEach((boton) => {
-          const seleccionado =
-            productosSeleccionadosComparacion.includes(
-              boton.dataset.idProducto
-            );
+  if (!contenedorProductos) {
+    return;
+  }
 
-          const esTarjetaComparacion =
-            Boolean(
-              boton.closest(
-                ".tarjeta-en-comparacion"
-              )
-            );
+  contenedorProductos
+    .querySelectorAll(".tarjeta-producto")
+    .forEach((tarjeta) => {
+      const seleccionado =
+        productosSeleccionadosComparacion.includes(
+          tarjeta.dataset.idProducto
+        );
 
-          boton.classList.toggle(
-            "seleccionado",
-            seleccionado
-          );
-          boton.setAttribute(
-            "aria-pressed",
-            String(seleccionado)
-          );
+      tarjeta.classList.toggle(
+        "seleccionado-comparacion",
+        seleccionado
+      );
+      tarjeta.tabIndex =
+        modoSeleccionComparacion ? 0 : -1;
 
-          const texto =
-            boton.querySelector(
-              ".texto-comparar"
-            );
-
-          if (texto) {
-            texto.textContent =
-              esTarjetaComparacion
-                ? "Quitar"
-                : seleccionado
-                  ? "Elegido"
-                  : "Comparar";
+      tarjeta
+        .querySelectorAll(
+          "button, input, select, a"
+        )
+        .forEach((control) => {
+          if (modoSeleccionComparacion) {
+            control.tabIndex = -1;
+          } else {
+            control.removeAttribute("tabindex");
           }
         });
+
+      const selector =
+        tarjeta.querySelector(
+          ".selector-comparacion"
+        );
+
+      if (!selector) {
+        return;
+      }
+
+      selector.classList.toggle(
+        "seleccionado",
+        seleccionado
+      );
+      selector.setAttribute(
+        "aria-pressed",
+        String(seleccionado)
+      );
+      selector.tabIndex = -1;
+      selector.setAttribute(
+        "aria-label",
+        `${seleccionado ? "Quitar" : "Elegir"} ${tarjeta.dataset.nombre || "producto"} para comparar`
+      );
+
+      const casilla =
+        selector.querySelector(
+          ".casilla-comparacion"
+        );
+
+      if (casilla) {
+        casilla.textContent =
+          seleccionado ? "✓" : "";
+      }
+
+      const texto =
+        selector.querySelector(
+          ".texto-selector-comparacion"
+        );
+
+      if (texto) {
+        texto.textContent =
+          seleccionado ? "Elegido" : "Elegir";
+      }
     });
 }
 
@@ -3892,22 +3934,78 @@ function actualizarEstadoComparacion() {
 
   if (barraComparacion) {
     barraComparacion.hidden =
-      cantidad === 0 ||
+      !modoSeleccionComparacion ||
       comparacionAbierta ||
       Boolean(productoCompartidoPendiente);
   }
 
   if (resumenComparacion) {
     resumenComparacion.textContent =
-      `${cantidad} de 4 productos seleccionados`;
+      cantidad === 0
+        ? "0 elegidos · seleccioná de 2 a 4"
+        : cantidad === 1
+          ? "1 elegido · falta 1"
+          : `${cantidad} productos elegidos`;
   }
 
   if (abrirComparacion) {
     abrirComparacion.disabled = cantidad < 2;
   }
 
+  botonesModoComparacion.forEach((boton) => {
+    boton.textContent =
+      modoSeleccionComparacion
+        ? "Cancelar"
+        : "Comparar productos";
+    boton.setAttribute(
+      "aria-pressed",
+      String(modoSeleccionComparacion)
+    );
+  });
+
+  document.body.classList.toggle(
+    "modo-comparacion",
+    modoSeleccionComparacion
+  );
+
 
   sincronizarBotonesComparacion();
+}
+
+
+function activarModoComparacion() {
+  if (
+    comparacionAbierta ||
+    productoCompartidoPendiente
+  ) {
+    return;
+  }
+
+  modoSeleccionComparacion = true;
+  productosSeleccionadosComparacion = [];
+  actualizarEstadoComparacion();
+}
+
+
+function cancelarModoComparacion() {
+  modoSeleccionComparacion = false;
+  productosSeleccionadosComparacion = [];
+
+  if (productosComparados) {
+    productosComparados.innerHTML = "";
+    productosComparados.dataset.cantidad = "0";
+  }
+
+  actualizarEstadoComparacion();
+}
+
+
+function alternarModoComparacion() {
+  if (modoSeleccionComparacion) {
+    cancelarModoComparacion();
+  } else {
+    activarModoComparacion();
+  }
 }
 
 
@@ -3957,6 +4055,7 @@ function abrirVistaComparacion() {
   }
 
   comparacionAbierta = true;
+  modoSeleccionComparacion = false;
   seccionComparacion.hidden = false;
   contenedorProductos.hidden = true;
 
@@ -4002,6 +4101,7 @@ function cerrarVistaComparacion() {
 
 function vaciarSeleccionComparacion() {
   productosSeleccionadosComparacion = [];
+  modoSeleccionComparacion = false;
 
   if (comparacionAbierta) {
     cerrarVistaComparacion();
@@ -6283,18 +6383,19 @@ function escaparHTML(valor) {
 ========================================= */
 
 function manejarClickTarjetaProducto(evento) {
-    const botonComparar =
+    const tarjetaComparacion =
       evento.target.closest(
-        ".boton-comparar"
+        "#productos .tarjeta-producto"
       );
 
-    if (botonComparar) {
+    if (
+      modoSeleccionComparacion &&
+      tarjetaComparacion
+    ) {
+      evento.preventDefault();
       alternarProductoComparacion(
-        botonComparar.dataset.idProducto
+        tarjetaComparacion.dataset.idProducto
       );
-
-      botonComparar.blur();
-
       return;
     }
 
@@ -6407,6 +6508,32 @@ function manejarClickTarjetaProducto(evento) {
 contenedorProductos.addEventListener(
   "click",
   manejarClickTarjetaProducto
+);
+
+contenedorProductos.addEventListener(
+  "keydown",
+  (evento) => {
+    if (
+      !modoSeleccionComparacion ||
+      (evento.key !== "Enter" && evento.key !== " ")
+    ) {
+      return;
+    }
+
+    const tarjeta =
+      evento.target.closest(
+        "#productos .tarjeta-producto"
+      );
+
+    if (!tarjeta) {
+      return;
+    }
+
+    evento.preventDefault();
+    alternarProductoComparacion(
+      tarjeta.dataset.idProducto
+    );
+  }
 );
 
 
@@ -6683,10 +6810,18 @@ if (abrirComparacion) {
 }
 
 
+botonesModoComparacion.forEach((boton) => {
+  boton.addEventListener(
+    "click",
+    alternarModoComparacion
+  );
+});
+
+
 if (limpiarComparacion) {
   limpiarComparacion.addEventListener(
     "click",
-    vaciarSeleccionComparacion
+    cancelarModoComparacion
   );
 }
 
