@@ -13885,6 +13885,54 @@
     }
   </style>
 
+  <style id="ajustes-movil-comparacion-v211">
+    @media (max-width:650px){
+      /* El botón superior de comparar iguala la altura de los otros controles. */
+      html body .activar-modo-comparacion-movil{
+        min-height:44px !important;
+        height:44px !important;
+        max-height:44px !important;
+        padding:0 13px !important;
+        border-radius:11px !important;
+        align-items:center !important;
+      }
+
+      /* En móvil, compartir y elegir quedan en columna con aire suficiente. */
+      html body #productos .encabezado-producto .acciones-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        width:auto !important;
+        min-width:0 !important;
+        gap:10px !important;
+        align-items:flex-end !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto .compartir-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto .compartir-producto{
+        flex:0 0 32px !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto .selector-comparacion,
+      html body #productosComparados .encabezado-producto .acciones-producto .selector-comparacion{
+        position:static !important;
+        top:auto !important;
+        right:auto !important;
+        left:auto !important;
+        display:none;
+        min-height:32px !important;
+        margin:0 !important;
+        padding:3px 10px 3px 4px !important;
+        font-size:.72rem !important;
+        box-shadow:0 3px 10px rgba(47,25,18,.18) !important;
+      }
+
+      html body.modo-comparacion #productos .encabezado-producto .acciones-producto .selector-comparacion{
+        display:flex !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -13908,5 +13956,74 @@
   </script>
 
   <script src="script.js?v=207"></script>
+
+  <script id="reubicar-selector-comparacion-movil-v211">
+    (() => {
+      const consultaMovil = window.matchMedia("(max-width:650px)");
+      let enActualizacion = false;
+
+      function reubicarSelector(tarjeta, esMovil){
+        const acciones = tarjeta.querySelector('.encabezado-producto .acciones-producto');
+        const contenedorFoto = tarjeta.querySelector('.contenedor-foto-producto');
+        const selector = tarjeta.querySelector('.selector-comparacion');
+        if (!acciones || !contenedorFoto || !selector) return;
+
+        if (esMovil) {
+          if (selector.parentElement !== acciones) {
+            acciones.appendChild(selector);
+          }
+        } else {
+          if (selector.parentElement !== contenedorFoto) {
+            contenedorFoto.insertBefore(selector, contenedorFoto.firstChild);
+          }
+        }
+      }
+
+      function actualizarUbicacion(){
+        if (enActualizacion) return;
+        enActualizacion = true;
+        const esMovil = consultaMovil.matches;
+        document
+          .querySelectorAll('#productos .tarjeta-producto, #productosComparados .tarjeta-producto')
+          .forEach((tarjeta) => reubicarSelector(tarjeta, esMovil));
+        enActualizacion = false;
+      }
+
+      function programarActualizacion(){
+        window.requestAnimationFrame(actualizarUbicacion);
+      }
+
+      function iniciar(){
+        const productos = document.getElementById('productos');
+        const comparados = document.getElementById('productosComparados');
+        const observador = new MutationObserver(programarActualizacion);
+
+        if (productos) {
+          observador.observe(productos, { childList:true, subtree:true });
+        }
+
+        if (comparados) {
+          observador.observe(comparados, { childList:true, subtree:true });
+        }
+
+        programarActualizacion();
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', iniciar, { once:true });
+      } else {
+        iniciar();
+      }
+
+      if (typeof consultaMovil.addEventListener === 'function') {
+        consultaMovil.addEventListener('change', programarActualizacion);
+      } else if (typeof consultaMovil.addListener === 'function') {
+        consultaMovil.addListener(programarActualizacion);
+      }
+
+      window.addEventListener('resize', programarActualizacion, { passive:true });
+    })();
+  </script>
+
 </body>
 </html>
