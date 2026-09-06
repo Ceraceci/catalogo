@@ -14403,20 +14403,25 @@
   </style>
 
 
-  <style id="elegir-centro-foto-pc-v222">
+  
+
+  
+  <style id="elegir-centro-foto-pc-v223">
     @media (min-width:651px){
-      /* PC: Elegir queda a media altura de la foto, alineado a la misma
-         distancia del borde derecho que el botón Compartir. */
-      html body #productos .contenedor-foto-producto > .selector-comparacion{
-        top:50% !important;
-        right:0 !important;
+      html body #productos .tarjeta-producto{
+        position:relative !important;
+      }
+
+      html body #productos .tarjeta-producto > .selector-comparacion{
+        position:absolute !important;
         left:auto !important;
-        transform:translateY(-50%) !important;
+        transform:none !important;
+        z-index:8 !important;
       }
     }
   </style>
 
-  <script id="barra-busqueda-estatica-v147">
+<script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
 
@@ -14440,56 +14445,93 @@
 
   <script src="script.js?v=218"></script>
 
-  <script id="reubicar-selector-comparacion-movil-v211">
+  <script id="reubicar-selector-comparacion-v223">
     (() => {
       const consultaMovil = window.matchMedia("(max-width:650px)");
-      let enActualizacion = false;
+      let framePendiente = 0;
 
-      function reubicarSelector(tarjeta, esMovil){
+      function posicionarSelector(tarjeta){
         const acciones = tarjeta.querySelector('.encabezado-producto .acciones-producto');
-        const contenedorFoto = tarjeta.querySelector('.contenedor-foto-producto');
+        const foto = tarjeta.querySelector('.contenedor-foto-producto');
+        const compartir = tarjeta.querySelector('.compartir-producto');
         const selector = tarjeta.querySelector('.selector-comparacion');
-        if (!acciones || !contenedorFoto || !selector) return;
 
-        if (esMovil) {
+        if (!acciones || !foto || !compartir || !selector) return;
+
+        if (consultaMovil.matches) {
           if (selector.parentElement !== acciones) {
             acciones.appendChild(selector);
           }
-        } else {
-          if (selector.parentElement !== contenedorFoto) {
-            contenedorFoto.insertBefore(selector, contenedorFoto.firstChild);
-          }
+
+          selector.style.removeProperty('position');
+          selector.style.removeProperty('top');
+          selector.style.removeProperty('right');
+          selector.style.removeProperty('left');
+          selector.style.removeProperty('transform');
+          return;
         }
+
+        /* PC: Elegir pasa a depender de la tarjeta completa. */
+        if (selector.parentElement !== tarjeta) {
+          tarjeta.appendChild(selector);
+        }
+
+        const rectTarjeta = tarjeta.getBoundingClientRect();
+        const rectFoto = foto.getBoundingClientRect();
+        const rectCompartir = compartir.getBoundingClientRect();
+        const rectSelector = selector.getBoundingClientRect();
+
+        if (!rectTarjeta.width || !rectFoto.height) return;
+
+        const altoSelector = rectSelector.height || 34;
+        const top = rectFoto.top - rectTarjeta.top + (rectFoto.height - altoSelector) / 2;
+        const right = Math.max(0, rectTarjeta.right - rectCompartir.right);
+
+        selector.style.setProperty('position', 'absolute', 'important');
+        selector.style.setProperty('top', `${Math.round(top * 10) / 10}px`, 'important');
+        selector.style.setProperty('right', `${Math.round(right * 10) / 10}px`, 'important');
+        selector.style.setProperty('left', 'auto', 'important');
+        selector.style.setProperty('transform', 'none', 'important');
+        selector.style.setProperty('z-index', '8', 'important');
       }
 
-      function actualizarUbicacion(){
-        if (enActualizacion) return;
-        enActualizacion = true;
-        const esMovil = consultaMovil.matches;
-        document
-          .querySelectorAll('#productos .tarjeta-producto, #productosComparados .tarjeta-producto')
-          .forEach((tarjeta) => reubicarSelector(tarjeta, esMovil));
-        enActualizacion = false;
+      function actualizar(){
+        framePendiente = 0;
+        document.querySelectorAll('#productos .tarjeta-producto').forEach(posicionarSelector);
       }
 
-      function programarActualizacion(){
-        window.requestAnimationFrame(actualizarUbicacion);
+      function programar(){
+        if (framePendiente) cancelAnimationFrame(framePendiente);
+        framePendiente = requestAnimationFrame(() => {
+          framePendiente = requestAnimationFrame(actualizar);
+        });
       }
 
       function iniciar(){
         const productos = document.getElementById('productos');
-        const comparados = document.getElementById('productosComparados');
-        const observador = new MutationObserver(programarActualizacion);
 
         if (productos) {
-          observador.observe(productos, { childList:true, subtree:true });
+          new MutationObserver(programar).observe(productos, {
+            childList:true,
+            subtree:true
+          });
         }
 
-        if (comparados) {
-          observador.observe(comparados, { childList:true, subtree:true });
+        new MutationObserver(programar).observe(document.body, {
+          attributes:true,
+          attributeFilter:['class']
+        });
+
+        document.addEventListener('load', programar, true);
+        window.addEventListener('resize', programar, { passive:true });
+
+        if (typeof consultaMovil.addEventListener === 'function') {
+          consultaMovil.addEventListener('change', programar);
+        } else if (typeof consultaMovil.addListener === 'function') {
+          consultaMovil.addListener(programar);
         }
 
-        programarActualizacion();
+        programar();
       }
 
       if (document.readyState === 'loading') {
@@ -14497,14 +14539,6 @@
       } else {
         iniciar();
       }
-
-      if (typeof consultaMovil.addEventListener === 'function') {
-        consultaMovil.addEventListener('change', programarActualizacion);
-      } else if (typeof consultaMovil.addListener === 'function') {
-        consultaMovil.addListener(programarActualizacion);
-      }
-
-      window.addEventListener('resize', programarActualizacion, { passive:true });
     })();
   </script>
 
