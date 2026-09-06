@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=207">
+  <link rel="stylesheet" href="style.css?v=225">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7440,7 +7440,7 @@
           aria-label="Ordenar productos"
           title="Ordenar productos"
         >
-          <span class="icono-orden" aria-hidden="true">↕</span>
+          <span class="icono-orden" aria-hidden="true">Ordenar por</span>
 
           <select id="ordenarProductos" aria-label="Ordenar productos">
             <option value="inicial">
@@ -14421,6 +14421,111 @@
     }
   </style>
 
+
+  <style id="tanda-cambios-v225">
+    /* Aviso de presentación faltante: todos los controles parpadean juntos. */
+    html body #productos .tarjeta-producto.aviso-presentacion-faltante .boton-presentacion,
+    html body #productosComparados .tarjeta-producto.aviso-presentacion-faltante .boton-presentacion,
+    html body #productos .tarjeta-producto.aviso-presentacion-faltante .selector-presentacion,
+    html body #productosComparados .tarjeta-producto.aviso-presentacion-faltante .selector-presentacion,
+    html body #productos .tarjeta-producto.aviso-presentacion-faltante .select-personalizado-presentacion-pc .select-personalizado-boton-pc,
+    html body #productosComparados .tarjeta-producto.aviso-presentacion-faltante .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+      animation:parpadeo-presentacion-v225 .82s ease-in-out !important;
+    }
+
+    @keyframes parpadeo-presentacion-v225{
+      0%,100%{ box-shadow:none; }
+      18%,54%,88%{
+        box-shadow:
+          inset 0 0 0 1.5px var(--color-rojo-terracota,#98371e),
+          0 0 0 1px var(--color-rojo-terracota,#98371e);
+      }
+      36%,72%{ box-shadow:none; }
+    }
+
+    html body #productos .informacion-precio .precio,
+    html body #productosComparados .informacion-precio .precio{
+      white-space:nowrap !important;
+    }
+
+    @media (max-width:650px){
+      /* Buscar ocupa todo lo restante y Ordenar por solo lo imprescindible. */
+      html body .busqueda .fila-busqueda-orden{
+        grid-template-columns:minmax(0,1fr) max-content !important;
+        column-gap:7px !important;
+      }
+
+      html body .busqueda .control-orden{
+        box-sizing:border-box !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:max-content !important;
+        min-width:0 !important;
+        max-width:none !important;
+        height:44px !important;
+        padding:0 8px 0 9px !important;
+        overflow:hidden !important;
+      }
+
+      html body .busqueda .control-orden .icono-orden{
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        gap:5px !important;
+        width:auto !important;
+        height:100% !important;
+        padding:0 !important;
+        font-size:.72rem !important;
+        font-weight:400 !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+        pointer-events:none !important;
+      }
+
+      html body .busqueda .control-orden .icono-orden::after{
+        content:"" !important;
+        display:block !important;
+        width:6px !important;
+        height:6px !important;
+        flex:0 0 6px !important;
+        margin-top:-3px !important;
+        border-right:1.4px solid currentColor !important;
+        border-bottom:1.4px solid currentColor !important;
+        transform:rotate(45deg) !important;
+      }
+
+      html body .busqueda .control-orden select{
+        position:absolute !important;
+        inset:0 !important;
+        width:100% !important;
+        height:44px !important;
+        min-height:0 !important;
+        padding:0 !important;
+        opacity:0 !important;
+        cursor:pointer !important;
+      }
+
+      html body #productos .informacion-precio .precio,
+      html body #productosComparados .informacion-precio .precio{
+        max-width:100% !important;
+        font-size:1.02rem !important;
+        letter-spacing:-.01em !important;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body .tarjeta-producto.aviso-presentacion-faltante .boton-presentacion,
+      html body .tarjeta-producto.aviso-presentacion-faltante .selector-presentacion,
+      html body .tarjeta-producto.aviso-presentacion-faltante .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+        animation:none !important;
+        box-shadow:
+          inset 0 0 0 1.5px var(--color-rojo-terracota,#98371e),
+          0 0 0 1px var(--color-rojo-terracota,#98371e) !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14443,6 +14548,6 @@
     })();
   </script>
 
-  <script src="script.js?v=224"></script>
+  <script src="script.js?v=225"></script>
 </body>
 </html>

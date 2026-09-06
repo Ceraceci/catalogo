@@ -3243,7 +3243,11 @@ function crearTarjetaProducto(
           class="precio"
           data-precio="${presentacionInicial.precio}"
         >
-          ${formatearPrecio(presentacionInicial.precio)}
+          ${escaparHTML(
+            formatearEtiquetaPresentacion(
+              presentacionInicial.nombre
+            )
+          )} · ${formatearPrecio(presentacionInicial.precio)}
         </p>
       </div>
 
@@ -4373,12 +4377,17 @@ function actualizarControlPresentacionIntegrado(
       formatearPrecio(
         Number(presentacion.precio) || 0
       );
+    const etiquetaPrecio =
+      `${formatearEtiquetaPresentacion(
+        presentacion.nombre
+      )} · ${precioVisible}`;
     const precioCambio =
-      elementoPrecio.textContent !== precioVisible;
+      elementoPrecio.textContent.trim() !==
+      etiquetaPrecio;
 
     elementoPrecio.dataset.precio =
       String(presentacion.precio);
-    elementoPrecio.textContent = precioVisible;
+    elementoPrecio.textContent = etiquetaPrecio;
 
     if (animarPrecio && precioCambio) {
       animarPrecioActualizado(
@@ -4487,6 +4496,45 @@ function establecerSeleccionCantidadTarjeta(
 }
 
 
+function avisarPresentacionFaltante(tarjeta) {
+  if (!tarjeta) {
+    return;
+  }
+
+  const producto =
+    obtenerProductoDeTarjeta(tarjeta);
+
+  if (
+    !producto ||
+    producto.presentaciones.length <= 1
+  ) {
+    return;
+  }
+
+  tarjeta.classList.remove(
+    "aviso-presentacion-faltante"
+  );
+
+  /* Reinicia la animación aunque el usuario pulse otra vez enseguida. */
+  void tarjeta.offsetWidth;
+
+  tarjeta.classList.add(
+    "aviso-presentacion-faltante"
+  );
+
+  window.clearTimeout(
+    tarjeta._temporizadorPresentacionFaltante
+  );
+
+  tarjeta._temporizadorPresentacionFaltante =
+    window.setTimeout(() => {
+      tarjeta.classList.remove(
+        "aviso-presentacion-faltante"
+      );
+    }, 900);
+}
+
+
 function cambiarCantidadTarjeta(
   boton,
   variacion
@@ -4494,16 +4542,15 @@ function cambiarCantidadTarjeta(
   const tarjeta =
     boton.closest(".tarjeta-producto");
 
+  const producto =
+    obtenerProductoDeTarjeta(tarjeta);
+
   if (
-    tarjeta.querySelector(
-      ".selector-presentacion-alambre"
-    ) &&
+    producto?.presentaciones?.length > 1 &&
     tarjeta.dataset.presentacionSeleccionada !==
       "true"
   ) {
-    mostrarAvisoCopiado(
-      "Elegí un diámetro"
-    );
+    avisarPresentacionFaltante(tarjeta);
     boton.blur?.();
     return;
   }
@@ -4730,9 +4777,11 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
               precio.dataset.precio =
                 String(presentacionInicial.precio);
               precio.textContent =
-                formatearPrecio(
+                `${formatearEtiquetaPresentacion(
+                  presentacionInicial.nombre
+                )} · ${formatearPrecio(
                   presentacionInicial.precio
-                );
+                )}`;
               precio.classList.remove(
                 "precio-actualizado"
               );
