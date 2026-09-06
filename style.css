@@ -1105,3 +1105,68 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     border-color:var(--color-rojo-terracota,#98371e) !important;
   }
 }
+
+
+/* =========================================
+   V226 — corrección aviso y precio/presentación
+========================================= */
+.informacion-precio .precio{
+  display:flex !important;
+  align-items:baseline !important;
+  justify-content:center !important;
+  gap:0 !important;
+  white-space:nowrap !important;
+}
+
+.informacion-precio .precio-presentacion,
+.informacion-precio .precio-separador,
+.informacion-precio .precio-valor{
+  display:inline !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+.informacion-precio .precio-presentacion{
+  font-weight:600 !important;
+}
+
+.tarjeta-producto.aviso-presentacion-faltante .boton-presentacion,
+.tarjeta-producto.aviso-presentacion-faltante .selector-presentacion,
+.tarjeta-producto.aviso-presentacion-faltante .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+  animation:aviso-presentacion-faltante-v226 .82s ease-in-out !important;
+}
+
+@keyframes aviso-presentacion-faltante-v226{
+  0%,40%,80%{
+    border-color:#98371e !important;
+    box-shadow:inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e !important;
+  }
+  20%,60%,100%{
+    box-shadow:none !important;
+  }
+}
+
+
+/* =========================================
+   V228 — vínculo visual presentación / precio
+========================================= */
+.informacion-precio.producto-multipresentacion .precio{
+  width:fit-content !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding:5px 9px !important;
+  border:1px solid transparent !important;
+  border-radius:7px !important;
+  transition:border-color .16s ease, box-shadow .16s ease !important;
+}
+
+.informacion-precio.producto-multipresentacion.precio-vinculado-presentacion .precio{
+  border-color:var(--color-principal,#98371e) !important;
+  box-shadow:inset 0 0 0 .5px var(--color-principal,#98371e) !important;
+}
+
+/* Ya no se muestra la presentación junto al precio. */
+.informacion-precio .precio-presentacion,
+.informacion-precio .precio-separador{
+  display:none !important;
+}

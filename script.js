@@ -3238,16 +3238,14 @@ function crearTarjetaProducto(
     </div>
 
     <div class="fila-compra">
-      <div class="informacion-precio">
+      <div class="informacion-precio ${producto.presentaciones.length > 1 ? "producto-multipresentacion" : ""}">
         <p
           class="precio"
           data-precio="${presentacionInicial.precio}"
         >
-          ${escaparHTML(
-            formatearEtiquetaPresentacion(
-              presentacionInicial.nombre
-            )
-          )} · ${formatearPrecio(presentacionInicial.precio)}
+          <span class="precio-valor">${escaparHTML(
+            formatearPrecio(presentacionInicial.precio)
+          )}</span>
         </p>
       </div>
 
@@ -4199,6 +4197,43 @@ function obtenerProductoDeTarjeta(tarjeta) {
 }
 
 
+function construirPrecioPresentacionVisible(presentacion) {
+  if (!presentacion) {
+    return "";
+  }
+
+  return formatearPrecio(
+    Number(presentacion.precio) || 0
+  );
+}
+
+
+function escribirPrecioPresentacion(
+  elementoPrecio,
+  presentacion
+) {
+  if (!elementoPrecio || !presentacion) {
+    return "";
+  }
+
+  const precio =
+    formatearPrecio(
+      Number(presentacion.precio) || 0
+    );
+
+  elementoPrecio.dataset.precio =
+    String(presentacion.precio);
+  elementoPrecio.setAttribute(
+    "aria-label",
+    `Precio: ${precio}`
+  );
+  elementoPrecio.innerHTML =
+    `<span class="precio-valor">${escaparHTML(precio)}</span>`;
+
+  return precio;
+}
+
+
 function animarPrecioActualizado(elementoPrecio) {
   if (!elementoPrecio) {
     return;
@@ -4366,6 +4401,16 @@ function actualizarControlPresentacionIntegrado(
     );
   const elementoPrecio =
     tarjeta.querySelector(".precio");
+  const informacionPrecio =
+    tarjeta.querySelector(".informacion-precio");
+
+  if (informacionPrecio) {
+    informacionPrecio.classList.toggle(
+      "precio-vinculado-presentacion",
+      producto.presentaciones.length > 1 &&
+        seleccionada
+    );
+  }
 
   tarjeta.dataset.precioTotal =
     String(precioTotal);
@@ -4373,21 +4418,18 @@ function actualizarControlPresentacionIntegrado(
     etiquetaTotal;
 
   if (elementoPrecio) {
-    const precioVisible =
-      formatearPrecio(
-        Number(presentacion.precio) || 0
-      );
     const etiquetaPrecio =
-      `${formatearEtiquetaPresentacion(
-        presentacion.nombre
-      )} · ${precioVisible}`;
+      construirPrecioPresentacionVisible(
+        presentacion
+      );
     const precioCambio =
       elementoPrecio.textContent.trim() !==
       etiquetaPrecio;
 
-    elementoPrecio.dataset.precio =
-      String(presentacion.precio);
-    elementoPrecio.textContent = etiquetaPrecio;
+    escribirPrecioPresentacion(
+      elementoPrecio,
+      presentacion
+    );
 
     if (animarPrecio && precioCambio) {
       animarPrecioActualizado(
@@ -4496,6 +4538,39 @@ function establecerSeleccionCantidadTarjeta(
 }
 
 
+function tarjetaTienePresentacionElegida(tarjeta) {
+  if (!tarjeta) {
+    return false;
+  }
+
+  const producto =
+    obtenerProductoDeTarjeta(tarjeta);
+
+  if (!producto) {
+    return false;
+  }
+
+  if (producto.presentaciones.length <= 1) {
+    return true;
+  }
+
+  const selector =
+    tarjeta.querySelector(
+      ".selector-presentacion"
+    );
+
+  if (selector) {
+    return String(selector.value || "") !== "";
+  }
+
+  return Boolean(
+    tarjeta.querySelector(
+      '.boton-presentacion.seleccionada, .boton-presentacion[aria-pressed="true"]'
+    )
+  );
+}
+
+
 function avisarPresentacionFaltante(tarjeta) {
   if (!tarjeta) {
     return;
@@ -4511,13 +4586,90 @@ function avisarPresentacionFaltante(tarjeta) {
     return;
   }
 
+  const controles = [
+    ...tarjeta.querySelectorAll(
+      ".boton-presentacion"
+    )
+  ];
+
+  const selectorNativo =
+    tarjeta.querySelector(
+      ".selector-presentacion"
+    );
+
+  const selectorPersonalizado =
+    tarjeta.querySelector(
+      ".select-personalizado-presentacion-pc .select-personalizado-boton-pc"
+    );
+
+  if (selectorPersonalizado) {
+    controles.push(selectorPersonalizado);
+  } else if (selectorNativo) {
+    controles.push(selectorNativo);
+  }
+
+  const controlesUnicos =
+    [...new Set(controles)];
+
+  controlesUnicos.forEach((control) => {
+    if (!control) {
+      return;
+    }
+
+    control
+      .getAnimations?.()
+      .forEach((animacion) => {
+        if (
+          animacion.id ===
+          "aviso-presentacion-faltante"
+        ) {
+          animacion.cancel();
+        }
+      });
+
+    if (typeof control.animate === "function") {
+      const animacion = control.animate(
+        [
+          {
+            borderColor: "#98371e",
+            boxShadow:
+              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
+          },
+          {
+            borderColor: "transparent",
+            boxShadow: "none"
+          },
+          {
+            borderColor: "#98371e",
+            boxShadow:
+              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
+          },
+          {
+            borderColor: "transparent",
+            boxShadow: "none"
+          },
+          {
+            borderColor: "#98371e",
+            boxShadow:
+              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
+          }
+        ],
+        {
+          duration: 820,
+          easing: "ease-in-out"
+        }
+      );
+
+      animacion.id =
+        "aviso-presentacion-faltante";
+    }
+  });
+
+  /* Fallback visual para navegadores sin Web Animations API. */
   tarjeta.classList.remove(
     "aviso-presentacion-faltante"
   );
-
-  /* Reinicia la animación aunque el usuario pulse otra vez enseguida. */
   void tarjeta.offsetWidth;
-
   tarjeta.classList.add(
     "aviso-presentacion-faltante"
   );
@@ -4547,8 +4699,7 @@ function cambiarCantidadTarjeta(
 
   if (
     producto?.presentaciones?.length > 1 &&
-    tarjeta.dataset.presentacionSeleccionada !==
-      "true"
+    !tarjetaTienePresentacionElegida(tarjeta)
   ) {
     avisarPresentacionFaltante(tarjeta);
     boton.blur?.();
@@ -4774,14 +4925,10 @@ function restablecerSeleccionesTarjetasDespuesDeVaciar() {
             const precio =
               tarjeta.querySelector(".precio");
             if (precio) {
-              precio.dataset.precio =
-                String(presentacionInicial.precio);
-              precio.textContent =
-                `${formatearEtiquetaPresentacion(
-                  presentacionInicial.nombre
-                )} · ${formatearPrecio(
-                  presentacionInicial.precio
-                )}`;
+              escribirPrecioPresentacion(
+                precio,
+                presentacionInicial
+              );
               precio.classList.remove(
                 "precio-actualizado"
               );
