@@ -20,12 +20,17 @@
 /*.css
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
 
-/img/*
-  Cache-Control: public, max-age=3600
 
 /
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
 
 
-/img/logo.png
+
+/img/*
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+/*.png
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+/
+  Clear-Site-Data: "cache"
