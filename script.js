@@ -6,7 +6,7 @@
  */
 
 const URL_CSV = "/api/catalogo";
-const LOGO_CERACECI_SRC = 'img/logo.png?v=244';
+const LOGO_CERACECI_SRC = 'img/logo-tarjetas.png?v=245';
 
 /*
  * Caché local del catálogo.

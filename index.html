@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=244">
+  <link rel="stylesheet" href="style.css?v=245">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7383,7 +7383,7 @@
 
         <img
           class="logo"
-          src="img/logo.png?v=244"
+          src="img/logo-header.png?v=245"
           alt="Ceraceci"
         >
 
@@ -7620,7 +7620,7 @@
     >
       <strong id="cantidadCarrito">
         <img
-          src="img/logo.png?v=244"
+          src="img/logo-header.png?v=245"
           alt=""
           class="logo-carrito"
           aria-hidden="true"
@@ -7786,7 +7786,7 @@
         >
         <img
           class="marca-agua-zoom-unica"
-          src="img/logo.png?v=244"
+          src="img/logo-header.png?v=245"
           alt=""
           aria-hidden="true"
           draggable="false"
@@ -14984,6 +14984,69 @@
     }
   </style>
 
+
+  <style id="logos-separados-v245">
+    /* Encabezado: logo horizontal (símbolo + Ceraceci) más grande. */
+    html body .logo-contenedor{
+      display:flex !important;
+      flex-direction:row !important;
+      flex-wrap:nowrap !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:18px !important;
+      width:max-content !important;
+      max-width:100% !important;
+      margin:0 auto !important;
+    }
+
+    html body .logo-contenedor > img.logo{
+      display:block !important;
+      flex:0 0 auto !important;
+      width:260px !important;
+      height:auto !important;
+      max-width:260px !important;
+      margin:0 !important;
+      object-fit:contain !important;
+      object-position:center !important;
+    }
+
+    html body .logo-contenedor > .subtitulo-principal{
+      flex:0 0 auto !important;
+      width:auto !important;
+      max-width:none !important;
+      margin:0 !important;
+      white-space:nowrap !important;
+      line-height:1 !important;
+    }
+
+    /* Tarjetas: usan exclusivamente el segundo logo. */
+    html body #productos .logo-mini-tarjeta,
+    html body #productosComparados .logo-mini-tarjeta{
+      width:32px !important;
+      height:32px !important;
+      object-fit:contain !important;
+      object-position:center !important;
+    }
+
+    @media (max-width:650px){
+      html body .logo-contenedor{
+        gap:7px !important;
+        padding:0 4px !important;
+      }
+
+      html body .logo-contenedor > img.logo{
+        width:122px !important;
+        height:auto !important;
+        max-width:122px !important;
+      }
+
+      html body .logo-contenedor > .subtitulo-principal{
+        font-size:clamp(11px,3.15vw,13.5px) !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15006,6 +15069,6 @@
     })();
   </script>
 
-  <script src="script.js?v=244"></script>
+  <script src="script.js?v=245"></script>
 </body>
 </html>
