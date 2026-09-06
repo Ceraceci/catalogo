@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="236">
+  <meta name="ceraceci-version" content="238">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=236">
+  <link rel="stylesheet" href="style.css?v=238">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7383,7 +7383,7 @@
 
         <img
           class="logo"
-          src="img/logo.png"
+          src="img/logo-v237.png"
           alt="Ceraceci"
         >
 
@@ -7620,7 +7620,7 @@
     >
       <strong id="cantidadCarrito">
         <img
-          src="img/logo.png"
+          src="img/logo-v237.png"
           alt=""
           class="logo-carrito"
           aria-hidden="true"
@@ -7786,7 +7786,7 @@
         >
         <img
           class="marca-agua-zoom-unica"
-          src="img/logo.png"
+          src="img/logo-v237.png"
           alt=""
           aria-hidden="true"
           draggable="false"
@@ -8205,7 +8205,7 @@
       left:0;
       z-index:3;
       display:block;
-      background-image:url("img/logo.png");
+      background-image:url("img/logo-v237.png");
       background-repeat:no-repeat;
       background-position:center;
       background-size:132% 132%;
@@ -9149,7 +9149,7 @@
     /* El nuevo símbolo reemplaza el logo con texto en todas las tarjetas. */
     html body #productos .encabezado-producto::before,
     html body #productosComparados .encabezado-producto::before{
-      background-image:url("img/logo.png") !important;
+      background-image:url("img/logo-v237.png") !important;
       background-repeat:no-repeat !important;
       background-position:center !important;
       background-size:contain !important;
@@ -14883,6 +14883,65 @@
     }
   </style>
 
+
+  <style id="encabezado-logo-frase-v238">
+    /* Logo + frase: una sola línea, centrados como conjunto y alineados verticalmente. */
+    html body .cabecera{
+      display:flex !important;
+      align-items:center !important;
+      justify-content:center !important;
+    }
+
+    html body .logo-contenedor{
+      display:flex !important;
+      flex-direction:row !important;
+      flex-wrap:nowrap !important;
+      align-items:center !important;
+      justify-content:center !important;
+      width:max-content !important;
+      max-width:100% !important;
+      margin:0 auto !important;
+      gap:14px !important;
+    }
+
+    html body .logo-contenedor > img.logo{
+      flex:0 0 auto !important;
+      margin:0 !important;
+    }
+
+    html body .logo-contenedor > .subtitulo-principal{
+      display:block !important;
+      flex:0 0 auto !important;
+      width:auto !important;
+      max-width:none !important;
+      margin:0 !important;
+      padding:0 !important;
+      white-space:nowrap !important;
+      line-height:1 !important;
+      text-align:left !important;
+    }
+
+    @media (max-width:650px){
+      html body .logo-contenedor{
+        width:max-content !important;
+        max-width:100% !important;
+        gap:9px !important;
+        padding:0 10px !important;
+      }
+
+      html body .logo-contenedor > img.logo{
+        width:56px !important;
+        height:50px !important;
+        max-width:56px !important;
+      }
+
+      html body .logo-contenedor > .subtitulo-principal{
+        font-size:clamp(13.5px, 3.7vw, 16px) !important;
+        line-height:1 !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14905,6 +14964,6 @@
     })();
   </script>
 
-  <script src="script.js?v=236"></script>
+  <script src="script.js?v=238"></script>
 </body>
 </html>
