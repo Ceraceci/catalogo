@@ -3171,7 +3171,7 @@ function crearTarjetaProducto(
       </p>
 
       <img
-        src="img/logo-v237.png"
+        src="img/logo.png?v=239"
         alt=""
         class="logo-mini-tarjeta"
         aria-hidden="true"
@@ -3223,7 +3223,7 @@ function crearTarjetaProducto(
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
 
       <img
-        src="${foto ? escaparHTML(foto) : "img/logo-v237.png"}"
+        src="${foto ? escaparHTML(foto) : "img/logo.png?v=239"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
         loading="lazy"
@@ -3448,7 +3448,7 @@ function crearTarjetaProducto(
 
       imagenProducto.dataset.imagenAlternativa =
         "true";
-      imagenProducto.src = "img/logo-v237.png";
+      imagenProducto.src = "img/logo.png?v=239";
       imagenProducto.alt = "";
       imagenProducto.classList.add(
         "foto-placeholder"
@@ -5808,7 +5808,7 @@ function mostrarCarrito() {
       const fotoCarrito =
         normalizarURLImagen(
           productoCatalogo?.foto || producto.foto || ""
-        ) || "img/logo-v237.png";
+        ) || "img/logo.png?v=239";
 
       const escalaMiniaturaCarrito =
         obtenerEscalasRecorteProducto(
@@ -5924,7 +5924,7 @@ function mostrarCarrito() {
             "--ceraceci-escala-miniatura"
           );
           imagenMiniatura.src =
-            "img/logo-v237.png";
+            "img/logo.png?v=239";
         },
         { once: true }
       );
