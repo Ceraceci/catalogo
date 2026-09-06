@@ -14389,6 +14389,19 @@
     }
   </style>
 
+
+  <style id="correccion-duplicado-movil-v221">
+    @media (max-width:650px){
+      /* Los controles exclusivos de PC nunca deben aparecer en móvil. */
+      html body .zona-comparacion-pc,
+      html body .acciones-comparacion-pc,
+      html body .cancelar-comparacion-pc,
+      html body .abrir-comparacion-pc{
+        display:none !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
