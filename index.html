@@ -7458,13 +7458,34 @@
         </label>
       </form>
 
-      <button
-        type="button"
-        class="activar-modo-comparacion activar-modo-comparacion-pc"
-        aria-pressed="false"
-      >
-        Comparar productos
-      </button>
+      <div class="zona-comparacion-pc">
+        <button
+          type="button"
+          class="activar-modo-comparacion activar-modo-comparacion-pc"
+          aria-pressed="false"
+        >
+          Comparar productos
+        </button>
+
+        <div class="acciones-comparacion-pc" hidden>
+          <button
+            type="button"
+            id="cancelarComparacionPc"
+            class="cancelar-comparacion-pc"
+          >
+            Cancelar
+          </button>
+
+          <button
+            type="button"
+            id="abrirComparacionPc"
+            class="abrir-comparacion-pc"
+            disabled
+          >
+            Comparar 0/4
+          </button>
+        </div>
+      </div>
 
       <div class="fila-categoria-comparacion">
         <select id="filtroCategoria" aria-label="Filtrar por categoría">
@@ -14232,6 +14253,113 @@
     }
   </style>
 
+
+  <style id="comparacion-superior-pc-v218">
+    /* PC: el mismo espacio de “Comparar productos” se divide en Cancelar + Comparar n/4. */
+    @media (min-width:651px){
+      html body .zona-comparacion-pc{
+        grid-area:comparar !important;
+        box-sizing:border-box !important;
+        display:block !important;
+        min-width:0 !important;
+        width:100% !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+      }
+
+      html body .zona-comparacion-pc > .activar-modo-comparacion-pc{
+        grid-area:auto !important;
+        box-sizing:border-box !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+      }
+
+      html body .zona-comparacion-pc > .activar-modo-comparacion-pc[hidden],
+      html body .acciones-comparacion-pc[hidden]{
+        display:none !important;
+      }
+
+      html body .acciones-comparacion-pc{
+        box-sizing:border-box !important;
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:5px !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+      }
+
+      html body .cancelar-comparacion-pc,
+      html body .abrir-comparacion-pc{
+        box-sizing:border-box !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:44px !important;
+        min-height:44px !important;
+        max-height:44px !important;
+        margin:0 !important;
+        padding:0 5px !important;
+        overflow:hidden !important;
+        font-size:13px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+        border-radius:10px !important;
+        cursor:pointer;
+      }
+
+      html body .cancelar-comparacion-pc{
+        color:var(--color-rojo-terracota,#98371e) !important;
+        -webkit-text-fill-color:var(--color-rojo-terracota,#98371e) !important;
+        background:#eee8e6 !important;
+        border:1px solid var(--color-rojo-terracota,#98371e) !important;
+      }
+
+      html body .abrir-comparacion-pc,
+      html body .abrir-comparacion-pc:disabled{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-rojo-terracota,#98371e) !important;
+        border:1px solid var(--color-rojo-terracota,#98371e) !important;
+        opacity:1 !important;
+      }
+
+      html body .abrir-comparacion-pc:disabled{
+        cursor:default !important;
+      }
+    }
+
+    /* En móvil, Comparar 0/4 conserva también terracota + blanco. */
+    @media (max-width:650px){
+      html body .abrir-comparacion-movil,
+      html body .abrir-comparacion-movil:disabled{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-rojo-terracota,#98371e) !important;
+        border-color:var(--color-rojo-terracota,#98371e) !important;
+        opacity:1 !important;
+      }
+
+      html body .abrir-comparacion-movil:disabled{
+        cursor:default !important;
+      }
+    }
+
+    /* La vieja barra de selección ya no se usa: las acciones están arriba en ambos tamaños. */
+    html body .barra-comparacion{
+      display:none !important;
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14254,7 +14382,7 @@
     })();
   </script>
 
-  <script src="script.js?v=216"></script>
+  <script src="script.js?v=218"></script>
 
   <script id="reubicar-selector-comparacion-movil-v211">
     (() => {

@@ -124,6 +124,15 @@ const abrirComparacion =
 const limpiarComparacion =
   document.getElementById("limpiarComparacion");
 
+const cancelarComparacionPc =
+  document.getElementById("cancelarComparacionPc");
+
+const abrirComparacionPc =
+  document.getElementById("abrirComparacionPc");
+
+const accionesComparacionPc =
+  document.querySelector(".acciones-comparacion-pc");
+
 const cancelarComparacionMovil =
   document.getElementById("cancelarComparacionMovil");
 
@@ -3982,13 +3991,21 @@ function actualizarEstadoComparacion() {
   }
 
   if (abrirComparacion) {
-    /* En escritorio se conserva el mínimo anterior de 2 productos. */
-    abrirComparacion.disabled = cantidad < 2;
+    abrirComparacion.disabled = false;
+  }
+
+  if (abrirComparacionPc) {
+    abrirComparacionPc.textContent = `Comparar ${cantidad}/4`;
+    abrirComparacionPc.disabled = false;
   }
 
   if (abrirComparacionMovil) {
     abrirComparacionMovil.textContent = `Comparar ${cantidad}/4`;
-    abrirComparacionMovil.disabled = cantidad < 1;
+    abrirComparacionMovil.disabled = false;
+  }
+
+  if (accionesComparacionPc) {
+    accionesComparacionPc.hidden = !modoSeleccionComparacion;
   }
 
   if (accionesComparacionMovil) {
@@ -4003,7 +4020,10 @@ function actualizarEstadoComparacion() {
     );
     boton.disabled = modoSeleccionComparacion;
 
-    if (boton.classList.contains("activar-modo-comparacion-movil")) {
+    if (
+      boton.classList.contains("activar-modo-comparacion-movil") ||
+      boton.classList.contains("activar-modo-comparacion-pc")
+    ) {
       boton.hidden = modoSeleccionComparacion;
     }
   });
@@ -4091,7 +4111,6 @@ function mostrarProductosComparados() {
 
 function abrirVistaComparacion() {
   if (
-    productosSeleccionadosComparacion.length < 1 ||
     !seccionComparacion
   ) {
     return;
@@ -6849,6 +6868,22 @@ if (abrirComparacion) {
   abrirComparacion.addEventListener(
     "click",
     abrirVistaComparacion
+  );
+}
+
+
+if (abrirComparacionPc) {
+  abrirComparacionPc.addEventListener(
+    "click",
+    abrirVistaComparacion
+  );
+}
+
+
+if (cancelarComparacionPc) {
+  cancelarComparacionPc.addEventListener(
+    "click",
+    cancelarModoComparacion
   );
 }
 
