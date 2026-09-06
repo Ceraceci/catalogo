@@ -25,3 +25,7 @@
 
 /
   Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+
+
+/img/logo.png
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
