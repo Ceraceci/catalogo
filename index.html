@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="0">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="206">
+  <meta name="ceraceci-version" content="207">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=206">
+  <link rel="stylesheet" href="style.css?v=207">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -13569,7 +13569,7 @@
     }
   </style>
 
-  <style id="comparar-productos-v206">
+  <style id="comparar-productos-v207">
     /* Acceso explícito al nuevo modo de selección. */
     html body .busqueda .activar-modo-comparacion{
       box-sizing:border-box;
@@ -13598,6 +13598,11 @@
       border-color:var(--color-rojo-terracota,#98371e) !important;
     }
 
+    html body .busqueda .activar-modo-comparacion:disabled{
+      cursor:default;
+      opacity:1;
+    }
+
     html body .fila-categoria-comparacion{
       min-width:0;
     }
@@ -13605,7 +13610,8 @@
     html body .selector-comparacion{
       position:absolute;
       top:8px;
-      left:8px;
+      right:8px;
+      left:auto;
       z-index:8;
       display:none;
       align-items:center;
@@ -13703,8 +13709,8 @@
 
     @media (min-width:651px){
       html body .busqueda{
-        grid-template-areas:"buscar categoria ordenar comparar" !important;
-        grid-template-columns:minmax(0,1fr) minmax(190px,240px) minmax(180px,220px) auto !important;
+        column-gap:11px !important;
+        row-gap:11px !important;
       }
 
       html body .fila-categoria-comparacion{
@@ -13728,6 +13734,29 @@
       html body .barra-comparacion{
         position:sticky !important;
         top:72px !important;
+      }
+    }
+
+    @media (min-width:1101px){
+      html body .busqueda{
+        grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+        grid-template-areas:"buscar buscar categoria ordenar comparar" !important;
+      }
+    }
+
+    @media (min-width:801px) and (max-width:1100px){
+      html body .busqueda{
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+        grid-template-areas:"buscar categoria ordenar comparar" !important;
+      }
+    }
+
+    @media (min-width:651px) and (max-width:800px){
+      html body .busqueda{
+        grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+        grid-template-areas:
+          "buscar buscar buscar"
+          "categoria ordenar comparar" !important;
       }
     }
 
@@ -13770,7 +13799,8 @@
 
       html body .selector-comparacion{
         top:6px;
-        left:6px;
+        right:6px;
+        left:auto;
         min-height:30px;
         gap:4px;
         padding:3px 7px 3px 4px;
@@ -13860,6 +13890,6 @@
     })();
   </script>
 
-  <script src="script.js?v=206"></script>
+  <script src="script.js?v=207"></script>
 </body>
 </html>

@@ -3953,14 +3953,12 @@ function actualizarEstadoComparacion() {
   }
 
   botonesModoComparacion.forEach((boton) => {
-    boton.textContent =
-      modoSeleccionComparacion
-        ? "Cancelar"
-        : "Comparar productos";
+    boton.textContent = "Comparar productos";
     boton.setAttribute(
       "aria-pressed",
       String(modoSeleccionComparacion)
     );
+    boton.disabled = modoSeleccionComparacion;
   });
 
   document.body.classList.toggle(
@@ -4001,9 +3999,7 @@ function cancelarModoComparacion() {
 
 
 function alternarModoComparacion() {
-  if (modoSeleccionComparacion) {
-    cancelarModoComparacion();
-  } else {
+  if (!modoSeleccionComparacion) {
     activarModoComparacion();
   }
 }
