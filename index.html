@@ -14,7 +14,7 @@
   -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="242">
+  <meta http-equiv="Expires" content="243">
 
   <title>Ceraceci - Catálogo</title>
   <meta name="ceraceci-version" content="238">
@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=242">
+  <link rel="stylesheet" href="style.css?v=244">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7383,7 +7383,7 @@
 
         <img
           class="logo"
-          src="img/logo-ceraceci-nuevo-v242.png?v=242"
+          src="img/logo.png?v=244"
           alt="Ceraceci"
         >
 
@@ -7620,7 +7620,7 @@
     >
       <strong id="cantidadCarrito">
         <img
-          src="img/logo-ceraceci-nuevo-v242.png?v=242"
+          src="img/logo.png?v=244"
           alt=""
           class="logo-carrito"
           aria-hidden="true"
@@ -7786,7 +7786,7 @@
         >
         <img
           class="marca-agua-zoom-unica"
-          src="img/logo-ceraceci-nuevo-v242.png?v=242"
+          src="img/logo.png?v=244"
           alt=""
           aria-hidden="true"
           draggable="false"
@@ -8205,7 +8205,7 @@
       left:0;
       z-index:3;
       display:block;
-      background-image:url("img/logo-ceraceci-nuevo-v242.png?v=242");
+      background-image:none;
       background-repeat:no-repeat;
       background-position:center;
       background-size:132% 132%;
@@ -9149,7 +9149,7 @@
     /* El nuevo símbolo reemplaza el logo con texto en todas las tarjetas. */
     html body #productos .encabezado-producto::before,
     html body #productosComparados .encabezado-producto::before{
-      background-image:url("img/logo-ceraceci-nuevo-v242.png?v=242") !important;
+      background-image:none !important;
       background-repeat:no-repeat !important;
       background-position:center !important;
       background-size:contain !important;
@@ -10096,7 +10096,7 @@
       inset:0;
       z-index:2;
       pointer-events:none;
-      background-image:url("img/logo-ceraceci-nuevo-v242.png?v=242");
+      background-image:none;
       background-repeat:repeat;
       background-position:center;
       background-size:220px 152px;
@@ -14967,6 +14967,23 @@
     }
   </style>
 
+
+  <style id="logo-embebido-v243">
+    html body #productos .encabezado-producto::before,
+    html body #productosComparados .encabezado-producto::before{
+      content:none !important;
+      display:none !important;
+      background-image:none !important;
+    }
+
+    html body .logo-contenedor > img.logo,
+    html body .logo-mini-tarjeta,
+    html body .marca-agua-zoom-unica{
+      object-fit:contain !important;
+      object-position:center !important;
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14989,6 +15006,6 @@
     })();
   </script>
 
-  <script src="script.js?v=242"></script>
+  <script src="script.js?v=244"></script>
 </body>
 </html>

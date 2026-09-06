@@ -6,6 +6,7 @@
  */
 
 const URL_CSV = "/api/catalogo";
+const LOGO_CERACECI_SRC = 'img/logo.png?v=244';
 
 /*
  * Caché local del catálogo.
@@ -3171,7 +3172,7 @@ function crearTarjetaProducto(
       </p>
 
       <img
-        src="img/logo-ceraceci-nuevo-v242.png?v=242"
+        src="${LOGO_CERACECI_SRC}"
         alt=""
         class="logo-mini-tarjeta"
         aria-hidden="true"
@@ -3223,7 +3224,7 @@ function crearTarjetaProducto(
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
 
       <img
-        src="${foto ? escaparHTML(foto) : "img/logo-ceraceci-nuevo-v242.png?v=242"}"
+        src="${foto ? escaparHTML(foto) : LOGO_CERACECI_SRC}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
         loading="lazy"
@@ -3448,7 +3449,7 @@ function crearTarjetaProducto(
 
       imagenProducto.dataset.imagenAlternativa =
         "true";
-      imagenProducto.src = "img/logo-ceraceci-nuevo-v242.png?v=242";
+      imagenProducto.src = LOGO_CERACECI_SRC;
       imagenProducto.alt = "";
       imagenProducto.classList.add(
         "foto-placeholder"
@@ -5808,7 +5809,7 @@ function mostrarCarrito() {
       const fotoCarrito =
         normalizarURLImagen(
           productoCatalogo?.foto || producto.foto || ""
-        ) || "img/logo-ceraceci-nuevo-v242.png?v=242";
+        ) || LOGO_CERACECI_SRC;
 
       const escalaMiniaturaCarrito =
         obtenerEscalasRecorteProducto(
@@ -5924,7 +5925,7 @@ function mostrarCarrito() {
             "--ceraceci-escala-miniatura"
           );
           imagenMiniatura.src =
-            "img/logo-ceraceci-nuevo-v242.png?v=242";
+            LOGO_CERACECI_SRC;
         },
         { once: true }
       );
