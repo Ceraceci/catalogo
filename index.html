@@ -14633,6 +14633,30 @@
     }
   </style>
 
+
+  <style id="parpadeo-predeterminada-v233">
+    /*
+      La presentación predeterminada también debe entrar en el mismo parpadeo.
+      Este selector es deliberadamente más específico que el estilo base de V231.
+    */
+    html body #productos#productos .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada),
+    html body #productosComparados#productosComparados .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada){
+      background:var(--color-principal,#98371e) !important;
+      background-color:var(--color-principal,#98371e) !important;
+      border-color:var(--color-principal,#98371e) !important;
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      box-shadow:none !important;
+    }
+
+    html body #productos#productos .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada) *,
+    html body #productosComparados#productosComparados .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada) *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
