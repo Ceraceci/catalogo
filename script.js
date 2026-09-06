@@ -3139,34 +3139,34 @@ function crearTarjetaProducto(
           </svg>
         </button>
 
+        ${
+          !esComparacion
+            ? `
+              <button
+                type="button"
+                class="selector-comparacion ${
+                  estaSeleccionado ? "seleccionado" : ""
+                }"
+                data-id-producto="${producto.id}"
+                aria-pressed="${estaSeleccionado}"
+                aria-label="${
+                  estaSeleccionado ? "Quitar" : "Elegir"
+                } ${escaparHTML(producto.nombre)} para comparar"
+              >
+                <span class="casilla-comparacion" aria-hidden="true">${
+                  estaSeleccionado ? "✓" : ""
+                }</span>
+                <span class="texto-selector-comparacion">${
+                  estaSeleccionado ? "Elegido" : "Elegir"
+                }</span>
+              </button>
+            `
+            : ""
+        }
       </div>
     </div>
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
-      ${
-        !esComparacion
-          ? `
-            <button
-              type="button"
-              class="selector-comparacion ${
-                estaSeleccionado ? "seleccionado" : ""
-              }"
-              data-id-producto="${producto.id}"
-              aria-pressed="${estaSeleccionado}"
-              aria-label="${
-                estaSeleccionado ? "Quitar" : "Elegir"
-              } ${escaparHTML(producto.nombre)} para comparar"
-            >
-              <span class="casilla-comparacion" aria-hidden="true">${
-                estaSeleccionado ? "✓" : ""
-              }</span>
-              <span class="texto-selector-comparacion">${
-                estaSeleccionado ? "Elegido" : "Elegir"
-              }</span>
-            </button>
-          `
-          : ""
-      }
 
       <img
         src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"

@@ -13933,6 +13933,64 @@
     }
   </style>
 
+
+  <style id="ajustes-movil-comparacion-v212">
+    @media (max-width:650px){
+      /* El botón superior iguala exactamente la altura visible del control vecino. */
+      html body .fila-categoria-comparacion{
+        align-items:stretch !important;
+      }
+
+      html body .fila-categoria-comparacion > #filtroCategoria,
+      html body .fila-categoria-comparacion > .activar-modo-comparacion-movil{
+        height:40px !important;
+        min-height:40px !important;
+        max-height:40px !important;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        padding:0 13px !important;
+        line-height:1 !important;
+      }
+
+      /* En móvil, Elegir queda debajo de Compartir con aire para evitar toques errados. */
+      html body #productos .encabezado-producto .acciones-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto,
+      html body #productos .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto,
+      html body #productosComparados .tarjeta-producto.titulo-tres-lineas .encabezado-producto .acciones-producto{
+        top:104px !important;
+        right:6px !important;
+        width:auto !important;
+        min-width:0 !important;
+        gap:10px !important;
+        align-items:flex-end !important;
+        justify-content:flex-start !important;
+        transform:none !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto .compartir-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto .compartir-producto,
+      html body #productos .encabezado-producto .acciones-producto .selector-comparacion,
+      html body #productosComparados .encabezado-producto .acciones-producto .selector-comparacion{
+        position:static !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto .selector-comparacion,
+      html body #productosComparados .encabezado-producto .acciones-producto .selector-comparacion{
+        display:none;
+        min-height:32px !important;
+        margin:0 !important;
+        padding:3px 10px 3px 4px !important;
+        font-size:.72rem !important;
+        box-shadow:0 3px 10px rgba(47,25,18,.18) !important;
+      }
+
+      html body.modo-comparacion #productos .encabezado-producto .acciones-producto .selector-comparacion{
+        display:flex !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
