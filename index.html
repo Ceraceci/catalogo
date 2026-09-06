@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=229">
+  <link rel="stylesheet" href="style.css?v=230">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -14526,6 +14526,69 @@
     }
   </style>
 
+
+
+  <style id="estado-presentaciones-v230">
+    /*
+      V230: este bloque queda deliberadamente al final de todos los estilos.
+      Los parches históricos de index.html usan selectores muy específicos + !important,
+      por eso la presentación predeterminada de V229 estaba siendo anulada.
+    */
+
+    /* Productos con varias presentaciones: la que determina el precio mostrado
+       sin haber sido elegida explícitamente queda delineada en terracota. */
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada),
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada){
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+      background:#eee8e6 !important;
+      background-color:#eee8e6 !important;
+      border-color:var(--color-arcilla,#ad3c22) !important;
+      box-shadow:inset 0 0 0 .75px var(--color-arcilla,#ad3c22) !important;
+    }
+
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada) *,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-predeterminada:not(.seleccionada):not(.presentacion-agregada) *{
+      color:#171717 !important;
+      -webkit-text-fill-color:#171717 !important;
+      font-weight:400 !important;
+    }
+
+    /* Si el usuario elige esa presentación u otra: fondo + borde terracota y texto blanco. */
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:hover,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:focus,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:active,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion[aria-pressed="true"],
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-agregada,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:hover,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:focus,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada:active,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion[aria-pressed="true"],
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-agregada{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+      background:var(--color-arcilla,#ad3c22) !important;
+      background-color:var(--color-arcilla,#ad3c22) !important;
+      border-color:var(--color-arcilla,#ad3c22) !important;
+      box-shadow:none !important;
+    }
+
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada *,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion[aria-pressed="true"] *,
+    html body #productos#productos .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-agregada *,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.seleccionada *,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion[aria-pressed="true"] *,
+    html body #productosComparados#productosComparados .tarjeta-producto:not(.tarjeta-presentacion-unica) .boton-presentacion.presentacion-agregada *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14548,6 +14611,6 @@
     })();
   </script>
 
-  <script src="script.js?v=229"></script>
+  <script src="script.js?v=230"></script>
 </body>
 </html>
