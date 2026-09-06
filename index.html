@@ -14046,6 +14046,45 @@
     }
   </style>
 
+
+  <style id="estado-elegido-texto-blanco-v214">
+    /* PC + móvil: al seleccionar, 'Elegido' queda blanco sobre terracota. */
+    html body .selector-comparacion.seleccionado,
+    html body .selector-comparacion[aria-pressed="true"]{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      background:var(--color-rojo-terracota,#98371e) !important;
+      border-color:var(--color-rojo-terracota,#98371e) !important;
+    }
+
+    html body .selector-comparacion.seleccionado .texto-selector-comparacion,
+    html body .selector-comparacion[aria-pressed="true"] .texto-selector-comparacion{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+    }
+  </style>
+
+
+  <style id="texto-controles-movil-v215">
+    @media (max-width:650px){
+      /* Más chico solo en móvil para que entren completos ambos textos. */
+      html body #filtroCategoria,
+      html body .activar-modo-comparacion-movil{
+        font-size:14px !important;
+      }
+
+      html body #filtroCategoria{
+        padding-left:13px !important;
+        padding-right:34px !important;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        padding-left:9px !important;
+        padding-right:9px !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
