@@ -17,14 +17,14 @@
   <meta http-equiv="Expires" content="243">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="238">
+  <meta name="ceraceci-version" content="249">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=248">
+  <link rel="stylesheet" href="style.css?v=249">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15061,6 +15061,24 @@
     }
   </style>
 
+
+  <style id="centrado-vertical-encabezado-v249">
+    /*
+      Centra verticalmente logo + frase entre el borde superior
+      de la página y el borde superior del bloque de barras.
+      El espacio superior replica el espacio inferior de la cabecera.
+    */
+    html body .cabecera{
+      padding-top:18px !important;
+    }
+
+    @media (max-width:650px){
+      html body .cabecera{
+        padding-top:7px !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15083,6 +15101,6 @@
     })();
   </script>
 
-  <script src="script.js?v=248"></script>
+  <script src="script.js?v=249"></script>
 </body>
 </html>
