@@ -7473,13 +7473,34 @@
           </option>
         </select>
 
-        <button
-          type="button"
-          class="activar-modo-comparacion activar-modo-comparacion-movil"
-          aria-pressed="false"
-        >
-          Comparar productos
-        </button>
+        <div class="zona-comparacion-movil">
+          <button
+            type="button"
+            class="activar-modo-comparacion activar-modo-comparacion-movil"
+            aria-pressed="false"
+          >
+            Comparar productos
+          </button>
+
+          <div class="acciones-comparacion-movil" hidden>
+            <button
+              type="button"
+              id="cancelarComparacionMovil"
+              class="cancelar-comparacion-movil"
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="button"
+              id="abrirComparacionMovil"
+              class="abrir-comparacion-movil"
+              disabled
+            >
+              Comparar 0/4
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -8347,7 +8368,7 @@
 
       /* En móvil, al abrir Comparar se encuadra la vista instantáneamente. */
       document.addEventListener("click", (event) => {
-        const abrir = event.target.closest?.("#abrirComparacion");
+        const abrir = event.target.closest?.("#abrirComparacion, #abrirComparacionMovil");
         if (!abrir || !window.matchMedia("(max-width:650px)").matches) return;
 
         window.setTimeout(() => {
@@ -14085,6 +14106,122 @@
     }
   </style>
 
+
+  <style id="comparacion-movil-superior-v216">
+    @media (max-width:650px){
+      /* La fila superior replica exactamente las dos columnas de las tarjetas. */
+      html body .fila-categoria-comparacion{
+        display:grid !important;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:7px !important;
+        align-items:stretch !important;
+        width:100% !important;
+      }
+
+      html body .fila-categoria-comparacion > #filtroCategoria,
+      html body .fila-categoria-comparacion > .zona-comparacion-movil{
+        box-sizing:border-box !important;
+        min-width:0 !important;
+        width:100% !important;
+      }
+
+      html body .fila-categoria-comparacion > #filtroCategoria,
+      html body .zona-comparacion-movil,
+      html body .activar-modo-comparacion-movil,
+      html body .acciones-comparacion-movil{
+        height:40px !important;
+        min-height:40px !important;
+        max-height:40px !important;
+      }
+
+      html body .zona-comparacion-movil{
+        display:block !important;
+        min-width:0 !important;
+      }
+
+      html body .activar-modo-comparacion-movil[hidden]{
+        display:none !important;
+      }
+
+      html body .activar-modo-comparacion-movil{
+        box-sizing:border-box !important;
+        width:100% !important;
+        min-width:0 !important;
+        padding:0 8px !important;
+        font-size:14px !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+      }
+
+      /* Cuando se activa comparar, el mismo espacio se divide en dos botones. */
+      html body .acciones-comparacion-movil{
+        box-sizing:border-box !important;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+        gap:4px !important;
+        width:100% !important;
+      }
+
+      html body .acciones-comparacion-movil[hidden]{
+        display:none !important;
+      }
+
+      html body .cancelar-comparacion-movil,
+      html body .abrir-comparacion-movil{
+        box-sizing:border-box !important;
+        display:flex !important;
+        align-items:center !important;
+        justify-content:center !important;
+        width:100% !important;
+        min-width:0 !important;
+        height:40px !important;
+        min-height:40px !important;
+        max-height:40px !important;
+        margin:0 !important;
+        padding:0 3px !important;
+        overflow:hidden !important;
+        font-size:11.5px !important;
+        font-weight:700 !important;
+        line-height:1 !important;
+        white-space:nowrap !important;
+        border-radius:10px !important;
+        cursor:pointer;
+      }
+
+      html body .cancelar-comparacion-movil{
+        color:var(--color-rojo-terracota,#98371e) !important;
+        -webkit-text-fill-color:var(--color-rojo-terracota,#98371e) !important;
+        background:#eee8e6 !important;
+        border:1px solid var(--color-rojo-terracota,#98371e) !important;
+      }
+
+      html body .abrir-comparacion-movil{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:var(--color-rojo-terracota,#98371e) !important;
+        border:1px solid var(--color-rojo-terracota,#98371e) !important;
+      }
+
+      html body .abrir-comparacion-movil:disabled{
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+        background:#c89486 !important;
+        border-color:#c89486 !important;
+        cursor:not-allowed !important;
+      }
+
+      /* La antigua barra inferior de selección desaparece en móvil. */
+      html body .barra-comparacion{
+        display:none !important;
+      }
+
+      /* Ya no hace falta reservar el espacio de aquella barra inferior. */
+      html body.modo-comparacion{
+        padding-bottom:calc(126px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+  </style>
+
   <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14107,7 +14244,7 @@
     })();
   </script>
 
-  <script src="script.js?v=207"></script>
+  <script src="script.js?v=216"></script>
 
   <script id="reubicar-selector-comparacion-movil-v211">
     (() => {

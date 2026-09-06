@@ -124,6 +124,15 @@ const abrirComparacion =
 const limpiarComparacion =
   document.getElementById("limpiarComparacion");
 
+const cancelarComparacionMovil =
+  document.getElementById("cancelarComparacionMovil");
+
+const abrirComparacionMovil =
+  document.getElementById("abrirComparacionMovil");
+
+const accionesComparacionMovil =
+  document.querySelector(".acciones-comparacion-movil");
+
 const botonesModoComparacion =
   Array.from(
     document.querySelectorAll(
@@ -3965,7 +3974,17 @@ function actualizarEstadoComparacion() {
   }
 
   if (abrirComparacion) {
+    /* En escritorio se conserva el mínimo anterior de 2 productos. */
     abrirComparacion.disabled = cantidad < 2;
+  }
+
+  if (abrirComparacionMovil) {
+    abrirComparacionMovil.textContent = `Comparar ${cantidad}/4`;
+    abrirComparacionMovil.disabled = cantidad < 1;
+  }
+
+  if (accionesComparacionMovil) {
+    accionesComparacionMovil.hidden = !modoSeleccionComparacion;
   }
 
   botonesModoComparacion.forEach((boton) => {
@@ -3975,6 +3994,10 @@ function actualizarEstadoComparacion() {
       String(modoSeleccionComparacion)
     );
     boton.disabled = modoSeleccionComparacion;
+
+    if (boton.classList.contains("activar-modo-comparacion-movil")) {
+      boton.hidden = modoSeleccionComparacion;
+    }
   });
 
   document.body.classList.toggle(
@@ -4060,7 +4083,7 @@ function mostrarProductosComparados() {
 
 function abrirVistaComparacion() {
   if (
-    productosSeleccionadosComparacion.length < 2 ||
+    productosSeleccionadosComparacion.length < 1 ||
     !seccionComparacion
   ) {
     return;
@@ -6818,6 +6841,22 @@ if (abrirComparacion) {
   abrirComparacion.addEventListener(
     "click",
     abrirVistaComparacion
+  );
+}
+
+
+if (abrirComparacionMovil) {
+  abrirComparacionMovil.addEventListener(
+    "click",
+    abrirVistaComparacion
+  );
+}
+
+
+if (cancelarComparacionMovil) {
+  cancelarComparacionMovil.addEventListener(
+    "click",
+    cancelarModoComparacion
   );
 }
 
