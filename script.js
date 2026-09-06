@@ -3948,6 +3948,14 @@ function sincronizarBotonesComparacion() {
       if (texto) {
         texto.textContent =
           seleccionado ? "Elegido" : "Elegir";
+
+        if (seleccionado) {
+          texto.style.setProperty("color", "#fff", "important");
+          texto.style.setProperty("-webkit-text-fill-color", "#fff", "important");
+        } else {
+          texto.style.removeProperty("color");
+          texto.style.removeProperty("-webkit-text-fill-color");
+        }
       }
     });
 }
