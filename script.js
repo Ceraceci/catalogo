@@ -4111,6 +4111,7 @@ function mostrarProductosComparados() {
 
 function abrirVistaComparacion() {
   if (
+    productosSeleccionadosComparacion.length < 2 ||
     !seccionComparacion
   ) {
     return;
@@ -7125,4 +7126,191 @@ try {
     estado.textContent =
       "No se pudo iniciar el catálogo. Recargá la página.";
   }
+}
+
+
+/* =========================================
+   POSICIÓN DEL SELECTOR DE COMPARACIÓN
+   PC: centrado verticalmente respecto de la foto y alineado al borde derecho
+   con la misma separación que el botón Compartir.
+   Móvil: vuelve a la columna de acciones, debajo de Compartir.
+========================================= */
+
+const consultaMovilSelectorComparacion =
+  window.matchMedia("(max-width:650px)");
+
+let frameSelectorComparacion = 0;
+
+
+function posicionarSelectorComparacionTarjeta(tarjeta) {
+  const acciones = tarjeta.querySelector(
+    ".encabezado-producto .acciones-producto"
+  );
+  const foto = tarjeta.querySelector(
+    ".contenedor-foto-producto"
+  );
+  const compartir = tarjeta.querySelector(
+    ".compartir-producto"
+  );
+  const selector = tarjeta.querySelector(
+    ".selector-comparacion"
+  );
+
+  if (!acciones || !foto || !compartir || !selector) {
+    return;
+  }
+
+  if (consultaMovilSelectorComparacion.matches) {
+    if (selector.parentElement !== acciones) {
+      acciones.appendChild(selector);
+    }
+
+    selector.style.removeProperty("position");
+    selector.style.removeProperty("top");
+    selector.style.removeProperty("right");
+    selector.style.removeProperty("left");
+    selector.style.removeProperty("transform");
+    selector.style.removeProperty("z-index");
+    return;
+  }
+
+  /* En PC el selector depende de toda la tarjeta, no del encabezado. */
+  if (selector.parentElement !== tarjeta) {
+    tarjeta.appendChild(selector);
+  }
+
+  const rectTarjeta = tarjeta.getBoundingClientRect();
+  const rectFoto = foto.getBoundingClientRect();
+  const rectCompartir = compartir.getBoundingClientRect();
+  const rectSelector = selector.getBoundingClientRect();
+
+  if (!rectTarjeta.width || !rectFoto.height) {
+    return;
+  }
+
+  const altoSelector = rectSelector.height || 34;
+  const top =
+    rectFoto.top - rectTarjeta.top +
+    (rectFoto.height - altoSelector) / 2;
+
+  const right = Math.max(
+    0,
+    rectTarjeta.right - rectCompartir.right
+  );
+
+  selector.style.setProperty(
+    "position",
+    "absolute",
+    "important"
+  );
+  selector.style.setProperty(
+    "top",
+    `${Math.round(top * 10) / 10}px`,
+    "important"
+  );
+  selector.style.setProperty(
+    "right",
+    `${Math.round(right * 10) / 10}px`,
+    "important"
+  );
+  selector.style.setProperty(
+    "left",
+    "auto",
+    "important"
+  );
+  selector.style.setProperty(
+    "transform",
+    "none",
+    "important"
+  );
+  selector.style.setProperty(
+    "z-index",
+    "8",
+    "important"
+  );
+}
+
+
+function actualizarPosicionSelectoresComparacion() {
+  frameSelectorComparacion = 0;
+
+  document
+    .querySelectorAll("#productos .tarjeta-producto")
+    .forEach(posicionarSelectorComparacionTarjeta);
+}
+
+
+function programarPosicionSelectoresComparacion() {
+  if (frameSelectorComparacion) {
+    cancelAnimationFrame(frameSelectorComparacion);
+  }
+
+  frameSelectorComparacion = requestAnimationFrame(() => {
+    frameSelectorComparacion = requestAnimationFrame(
+      actualizarPosicionSelectoresComparacion
+    );
+  });
+}
+
+
+function iniciarPosicionSelectoresComparacion() {
+  const productos = document.getElementById("productos");
+
+  if (productos) {
+    new MutationObserver(
+      programarPosicionSelectoresComparacion
+    ).observe(productos, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  new MutationObserver(
+    programarPosicionSelectoresComparacion
+  ).observe(document.body, {
+    attributes: true,
+    attributeFilter: ["class"]
+  });
+
+  document.addEventListener(
+    "load",
+    programarPosicionSelectoresComparacion,
+    true
+  );
+
+  window.addEventListener(
+    "resize",
+    programarPosicionSelectoresComparacion,
+    { passive: true }
+  );
+
+  if (
+    typeof consultaMovilSelectorComparacion.addEventListener ===
+    "function"
+  ) {
+    consultaMovilSelectorComparacion.addEventListener(
+      "change",
+      programarPosicionSelectoresComparacion
+    );
+  } else if (
+    typeof consultaMovilSelectorComparacion.addListener ===
+    "function"
+  ) {
+    consultaMovilSelectorComparacion.addListener(
+      programarPosicionSelectoresComparacion
+    );
+  }
+
+  programarPosicionSelectoresComparacion();
+}
+
+
+if (document.readyState === "loading") {
+  document.addEventListener(
+    "DOMContentLoaded",
+    iniciarPosicionSelectoresComparacion,
+    { once: true }
+  );
+} else {
+  iniciarPosicionSelectoresComparacion();
 }
