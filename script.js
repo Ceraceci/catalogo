@@ -1337,14 +1337,14 @@ function agregarPresentacionesBarbotinas(filasProductos) {
     // La fila 9 KG de WEB representa la barbotina SIN bidón.
     salida.push({
       ...fila,
-      presentacion: "9 KG S/ BIDÓN"
+      presentacion: "SIN BIDÓN"
     });
 
     // Igual que el Apps Script del catálogo PDF: CON BIDÓN = barbotina + BIDÓN BOCA ANCHA / 1 U.
     if (Number(precioBidon) > 0) {
       salida.push({
         ...fila,
-        presentacion: "9 KG C/ BIDÓN",
+        presentacion: "CON BIDÓN",
         precio: Number(fila.precio) + Number(precioBidon)
       });
     }
@@ -2672,6 +2672,7 @@ function centrarAccionesFotoTarjetaMovil(tarjeta) {
   const acciones = tarjeta.querySelector(".acciones-producto");
   const compartir = acciones?.querySelector(".compartir-producto");
   const selector = acciones?.querySelector(".selector-comparacion");
+  const logoMini = tarjeta.querySelector(".logo-mini-tarjeta");
 
   if (!encabezado || !foto || !acciones) {
     return;
@@ -2709,6 +2710,15 @@ function centrarAccionesFotoTarjetaMovil(tarjeta) {
     `${Math.round(top * 10) / 10}px`,
     "important"
   );
+
+  if (logoMini) {
+    logoMini.style.setProperty(
+      "top",
+      `${Math.round(top * 10) / 10}px`,
+      "important"
+    );
+    logoMini.style.setProperty("left", "6px", "important");
+  }
 }
 
 
@@ -3160,6 +3170,13 @@ function crearTarjetaProducto(
         }
       </p>
 
+      <img
+        src="img/logo.png"
+        alt=""
+        class="logo-mini-tarjeta"
+        aria-hidden="true"
+      >
+
       <div class="acciones-producto">
         <button
           type="button"
@@ -3206,7 +3223,7 @@ function crearTarjetaProducto(
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
 
       <img
-        src="${foto ? escaparHTML(foto) : "img/logo-minimal.svg"}"
+        src="${foto ? escaparHTML(foto) : "img/logo.png"}"
         alt="${foto ? escaparHTML(producto.nombre) : ""}"
         class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
         loading="lazy"
@@ -3431,7 +3448,7 @@ function crearTarjetaProducto(
 
       imagenProducto.dataset.imagenAlternativa =
         "true";
-      imagenProducto.src = "img/logo-minimal.svg";
+      imagenProducto.src = "img/logo.png";
       imagenProducto.alt = "";
       imagenProducto.classList.add(
         "foto-placeholder"
@@ -3578,6 +3595,28 @@ function obtenerProductoPorId(idProducto) {
 function obtenerTextoInformacionProducto(producto) {
   if (!producto) {
     return "";
+  }
+
+  const nombreNormalizado = normalizarTexto(producto.nombre);
+
+  if (
+    nombreNormalizado === "barbotina baja temperatura" ||
+    nombreNormalizado === "barbotina"
+  ) {
+    return [
+      "Color disponible: Blanco",
+      "Temperatura de cocción: 1020–1040 °C"
+    ].join("\n");
+  }
+
+  if (
+    nombreNormalizado === "barbotina gres" ||
+    nombreNormalizado === "barbotina de gres"
+  ) {
+    return [
+      "Color disponible: Tostado oscuro",
+      "Temperatura de cocción: 1225–1230 °C"
+    ].join("\n");
   }
 
   if (producto.masInformacion) {
@@ -4580,8 +4619,12 @@ function detenerAvisoPresentacionFaltante(tarjeta) {
   window.clearInterval(
     tarjeta._intervaloPresentacionFaltante
   );
+  window.clearTimeout(
+    tarjeta._temporizadorPresentacionFaltante
+  );
 
   tarjeta._intervaloPresentacionFaltante = null;
+  tarjeta._temporizadorPresentacionFaltante = null;
 
   tarjeta.classList.remove(
     "aviso-presentacion-faltante",
@@ -4607,10 +4650,11 @@ function avisarPresentacionFaltante(tarjeta) {
     return;
   }
 
-  /* Si ya está parpadeando, no crea otro intervalo. */
-  if (tarjeta._intervaloPresentacionFaltante) {
-    return;
-  }
+  /*
+    Cada nuevo intento reinicia el aviso completo:
+    parpadea durante 5 segundos y luego se detiene.
+  */
+  detenerAvisoPresentacionFaltante(tarjeta);
 
   tarjeta.classList.add(
     "aviso-presentacion-faltante",
@@ -4621,7 +4665,6 @@ function avisarPresentacionFaltante(tarjeta) {
 
   tarjeta._intervaloPresentacionFaltante =
     window.setInterval(() => {
-      /* Se detiene automáticamente en cuanto el cliente elige una. */
       if (tarjetaTienePresentacionElegida(tarjeta)) {
         detenerAvisoPresentacionFaltante(tarjeta);
         return;
@@ -4633,6 +4676,11 @@ function avisarPresentacionFaltante(tarjeta) {
         encendido
       );
     }, 460);
+
+  tarjeta._temporizadorPresentacionFaltante =
+    window.setTimeout(() => {
+      detenerAvisoPresentacionFaltante(tarjeta);
+    }, 5000);
 }
 
 
@@ -5760,7 +5808,7 @@ function mostrarCarrito() {
       const fotoCarrito =
         normalizarURLImagen(
           productoCatalogo?.foto || producto.foto || ""
-        ) || "img/logo-minimal.svg";
+        ) || "img/logo.png";
 
       const escalaMiniaturaCarrito =
         obtenerEscalasRecorteProducto(
@@ -5876,7 +5924,7 @@ function mostrarCarrito() {
             "--ceraceci-escala-miniatura"
           );
           imagenMiniatura.src =
-            "img/logo-minimal.svg";
+            "img/logo.png";
         },
         { once: true }
       );
