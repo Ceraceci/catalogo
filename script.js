@@ -2979,7 +2979,10 @@ function crearTarjetaProducto(
             presentacionInicialSeleccionada &&
             indicePresentacion === indicePresentacionInicial
               ? "seleccionada"
-              : ""
+              : !presentacionInicialSeleccionada &&
+                  indicePresentacion === indicePresentacionInicial
+                ? "presentacion-predeterminada"
+                : ""
           }"
           data-id-producto="${producto.id}"
           data-indice-presentacion="${indicePresentacion}"
@@ -4332,6 +4335,11 @@ function actualizarControlPresentacionIntegrado(
         "seleccionada",
         esActual
       );
+      botonPresentacion.classList.toggle(
+        "presentacion-predeterminada",
+        !seleccionada &&
+          indiceOpcion === indicePresentacion
+      );
       botonPresentacion.setAttribute(
         "aria-pressed",
         esActual ? "true" : "false"
@@ -4401,17 +4409,6 @@ function actualizarControlPresentacionIntegrado(
     );
   const elementoPrecio =
     tarjeta.querySelector(".precio");
-  const informacionPrecio =
-    tarjeta.querySelector(".informacion-precio");
-
-  if (informacionPrecio) {
-    informacionPrecio.classList.toggle(
-      "precio-vinculado-presentacion",
-      producto.presentaciones.length > 1 &&
-        seleccionada
-    );
-  }
-
   tarjeta.dataset.precioTotal =
     String(precioTotal);
   tarjeta.dataset.presentacionTotal =
