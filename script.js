@@ -2652,23 +2652,39 @@ function centrarAccionesFotoTarjetaMovil(tarjeta) {
   const encabezado = tarjeta.querySelector(".encabezado-producto");
   const foto = tarjeta.querySelector(".contenedor-foto-producto");
   const acciones = tarjeta.querySelector(".acciones-producto");
+  const compartir = acciones?.querySelector(".compartir-producto");
+  const selector = acciones?.querySelector(".selector-comparacion");
 
   if (!encabezado || !foto || !acciones) {
     return;
   }
 
+  acciones.style.setProperty("display", "flex", "important");
+  acciones.style.setProperty("flex-direction", "column", "important");
+  acciones.style.setProperty("align-items", "flex-end", "important");
+  acciones.style.setProperty("justify-content", "flex-start", "important");
+  acciones.style.setProperty("gap", "12px", "important");
+  acciones.style.setProperty("right", "6px", "important");
+
+  if (compartir) {
+    compartir.style.setProperty("order", "1", "important");
+  }
+
+  if (selector) {
+    selector.style.setProperty("order", "2", "important");
+  }
+
   const rectEncabezado = encabezado.getBoundingClientRect();
   const rectFoto = foto.getBoundingClientRect();
-  const rectAcciones = acciones.getBoundingClientRect();
 
-  if (!rectFoto.height || !rectAcciones.height) {
+  if (!rectFoto.height) {
     return;
   }
 
-  const centroFoto =
-    rectFoto.top - rectEncabezado.top + rectFoto.height / 2;
+  const parteSuperiorFoto =
+    rectFoto.top - rectEncabezado.top;
 
-  const top = centroFoto - rectAcciones.height / 2;
+  const top = parteSuperiorFoto + 22;
 
   acciones.style.setProperty(
     "top",
