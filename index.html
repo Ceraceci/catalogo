@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=231">
+  <link rel="stylesheet" href="style.css?v=232">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -14589,6 +14589,50 @@
     }
   </style>
 
+
+
+  <style id="aviso-presentacion-persistente-v232">
+    /*
+      Al intentar Agregar o cambiar cantidad sin elegir una presentación,
+      todas las presentaciones parpadean con el MISMO estado visual de selección.
+      El parpadeo continúa hasta que el cliente elige una.
+    */
+    html body #productos#productos .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion,
+    html body #productosComparados#productosComparados .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion{
+      background:var(--color-principal,#98371e) !important;
+      background-color:var(--color-principal,#98371e) !important;
+      border-color:var(--color-principal,#98371e) !important;
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      box-shadow:none !important;
+    }
+
+    html body #productos#productos .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion *,
+    html body #productosComparados#productosComparados .tarjeta-producto.aviso-presentacion-faltante.aviso-presentacion-encendido:not(.tarjeta-presentacion-unica) .boton-presentacion *{
+      color:#fff !important;
+      -webkit-text-fill-color:#fff !important;
+      font-weight:400 !important;
+    }
+
+    /* Anula la animación corta antigua: V232 controla el parpadeo desde JS. */
+    html body .tarjeta-producto.aviso-presentacion-faltante .boton-presentacion,
+    html body .tarjeta-producto.aviso-presentacion-faltante .selector-presentacion,
+    html body .tarjeta-producto.aviso-presentacion-faltante .select-personalizado-presentacion-pc .select-personalizado-boton-pc{
+      animation:none !important;
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      html body #productos#productos .tarjeta-producto.aviso-presentacion-faltante:not(.tarjeta-presentacion-unica) .boton-presentacion,
+      html body #productosComparados#productosComparados .tarjeta-producto.aviso-presentacion-faltante:not(.tarjeta-presentacion-unica) .boton-presentacion{
+        background:var(--color-principal,#98371e) !important;
+        background-color:var(--color-principal,#98371e) !important;
+        border-color:var(--color-principal,#98371e) !important;
+        color:#fff !important;
+        -webkit-text-fill-color:#fff !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -14611,6 +14655,6 @@
     })();
   </script>
 
-  <script src="script.js?v=231"></script>
+  <script src="script.js?v=232"></script>
 </body>
 </html>

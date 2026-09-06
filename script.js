@@ -4497,6 +4497,10 @@ function seleccionarPresentacion(control) {
     String(!seDeselecciona);
   tarjeta.querySelector(".cantidad").value = "1";
 
+  if (!seDeselecciona) {
+    detenerAvisoPresentacionFaltante(tarjeta);
+  }
+
   sincronizarCantidadTarjetaConCarrito(tarjeta);
   actualizarControlPresentacionIntegrado(
     tarjeta,
@@ -4568,6 +4572,24 @@ function tarjetaTienePresentacionElegida(tarjeta) {
 }
 
 
+function detenerAvisoPresentacionFaltante(tarjeta) {
+  if (!tarjeta) {
+    return;
+  }
+
+  window.clearInterval(
+    tarjeta._intervaloPresentacionFaltante
+  );
+
+  tarjeta._intervaloPresentacionFaltante = null;
+
+  tarjeta.classList.remove(
+    "aviso-presentacion-faltante",
+    "aviso-presentacion-encendido"
+  );
+}
+
+
 function avisarPresentacionFaltante(tarjeta) {
   if (!tarjeta) {
     return;
@@ -4578,109 +4600,39 @@ function avisarPresentacionFaltante(tarjeta) {
 
   if (
     !producto ||
-    producto.presentaciones.length <= 1
+    producto.presentaciones.length <= 1 ||
+    tarjetaTienePresentacionElegida(tarjeta)
   ) {
+    detenerAvisoPresentacionFaltante(tarjeta);
     return;
   }
 
-  const controles = [
-    ...tarjeta.querySelectorAll(
-      ".boton-presentacion"
-    )
-  ];
-
-  const selectorNativo =
-    tarjeta.querySelector(
-      ".selector-presentacion"
-    );
-
-  const selectorPersonalizado =
-    tarjeta.querySelector(
-      ".select-personalizado-presentacion-pc .select-personalizado-boton-pc"
-    );
-
-  if (selectorPersonalizado) {
-    controles.push(selectorPersonalizado);
-  } else if (selectorNativo) {
-    controles.push(selectorNativo);
+  /* Si ya está parpadeando, no crea otro intervalo. */
+  if (tarjeta._intervaloPresentacionFaltante) {
+    return;
   }
 
-  const controlesUnicos =
-    [...new Set(controles)];
-
-  controlesUnicos.forEach((control) => {
-    if (!control) {
-      return;
-    }
-
-    control
-      .getAnimations?.()
-      .forEach((animacion) => {
-        if (
-          animacion.id ===
-          "aviso-presentacion-faltante"
-        ) {
-          animacion.cancel();
-        }
-      });
-
-    if (typeof control.animate === "function") {
-      const animacion = control.animate(
-        [
-          {
-            borderColor: "#98371e",
-            boxShadow:
-              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
-          },
-          {
-            borderColor: "transparent",
-            boxShadow: "none"
-          },
-          {
-            borderColor: "#98371e",
-            boxShadow:
-              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
-          },
-          {
-            borderColor: "transparent",
-            boxShadow: "none"
-          },
-          {
-            borderColor: "#98371e",
-            boxShadow:
-              "inset 0 0 0 1.5px #98371e, 0 0 0 1px #98371e"
-          }
-        ],
-        {
-          duration: 820,
-          easing: "ease-in-out"
-        }
-      );
-
-      animacion.id =
-        "aviso-presentacion-faltante";
-    }
-  });
-
-  /* Fallback visual para navegadores sin Web Animations API. */
-  tarjeta.classList.remove(
-    "aviso-presentacion-faltante"
-  );
-  void tarjeta.offsetWidth;
   tarjeta.classList.add(
-    "aviso-presentacion-faltante"
+    "aviso-presentacion-faltante",
+    "aviso-presentacion-encendido"
   );
 
-  window.clearTimeout(
-    tarjeta._temporizadorPresentacionFaltante
-  );
+  let encendido = true;
 
-  tarjeta._temporizadorPresentacionFaltante =
-    window.setTimeout(() => {
-      tarjeta.classList.remove(
-        "aviso-presentacion-faltante"
+  tarjeta._intervaloPresentacionFaltante =
+    window.setInterval(() => {
+      /* Se detiene automáticamente en cuanto el cliente elige una. */
+      if (tarjetaTienePresentacionElegida(tarjeta)) {
+        detenerAvisoPresentacionFaltante(tarjeta);
+        return;
+      }
+
+      encendido = !encendido;
+      tarjeta.classList.toggle(
+        "aviso-presentacion-encendido",
+        encendido
       );
-    }, 900);
+    }, 460);
 }
 
 
@@ -5321,6 +5273,8 @@ function agregarProductoAlCarrito(boton) {
     tarjeta.dataset.presentacionSeleccionada !==
     "true"
   ) {
+    avisarPresentacionFaltante(tarjeta);
+
     mostrarAvisoCopiado(
       tarjeta.querySelector(
         ".selector-presentacion-alambre"
