@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=254">
+  <link rel="stylesheet" href="style.css?v=255">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15310,6 +15310,53 @@
     }
   </style>
 
+
+  <style id="ajuste-final-alineacion-v255">
+    /* =========================
+       PC
+       ========================= */
+    @media (min-width:651px){
+      /* La frase superior pasa al mismo tamaño visual que "Ceraceci"
+         contenido dentro del logo. */
+      html body .logo-contenedor > .subtitulo-principal{
+        font-family:Arial, Helvetica, sans-serif !important;
+        font-size:28px !important;
+        font-weight:700 !important;
+        color:#171717 !important;
+        -webkit-text-fill-color:#171717 !important;
+        line-height:1 !important;
+
+        /* Al aumentar el tamaño, el centro visual coincide con "Ceraceci";
+           anulamos los desplazamientos verticales anteriores. */
+        position:relative !important;
+        top:0 !important;
+      }
+
+      /* En el pie, "Ceraceci" estaba apenas más bajo que la frase. */
+      html body .marca-inferior-linea > strong{
+        position:relative !important;
+        top:-2px !important;
+      }
+    }
+
+    /* =========================
+       MÓVIL
+       ========================= */
+    @media (max-width:650px){
+      /* La frase superior estaba apenas por debajo de "Ceraceci". */
+      html body .logo-contenedor > .subtitulo-principal{
+        position:relative !important;
+        top:0 !important;
+      }
+
+      /* En el pie también subimos apenas "Ceraceci". */
+      html body .marca-inferior-linea > strong{
+        position:relative !important;
+        top:-2px !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15332,6 +15379,6 @@
     })();
   </script>
 
-  <script src="script.js?v=254"></script>
+  <script src="script.js?v=255"></script>
 </body>
 </html>
