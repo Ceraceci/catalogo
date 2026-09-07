@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=253">
+  <link rel="stylesheet" href="style.css?v=254">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15261,6 +15261,55 @@
     }
   </style>
 
+
+  <style id="alineacion-header-footer-v254">
+    /* Encabezado:
+       baja SOLO la frase para alinear su línea visual con "Ceraceci". */
+    @media (min-width:651px){
+      html body .logo-contenedor > .subtitulo-principal{
+        position:relative !important;
+        top:7px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .logo-contenedor > .subtitulo-principal{
+        position:relative !important;
+        top:3px !important;
+      }
+    }
+
+    /* Pie:
+       "Ceraceci" conserva exactamente el aspecto del logo superior,
+       pero reducido al tamaño visual del texto "Insumos..." del encabezado. */
+    html body .marca-inferior-linea > strong{
+      flex:0 0 82px !important;
+      width:82px !important;
+      min-width:82px !important;
+      max-width:82px !important;
+      height:16px !important;
+      background-size:148px auto !important;
+      background-position:-64.7px -13.9px !important;
+    }
+
+    html body .marca-inferior-linea{
+      align-items:center !important;
+      gap:8px !important;
+    }
+
+    @media (max-width:650px){
+      html body .marca-inferior-linea > strong{
+        flex-basis:81px !important;
+        width:81px !important;
+        min-width:81px !important;
+        max-width:81px !important;
+        height:15.8px !important;
+        background-size:146px auto !important;
+        background-position:-63.8px -13.7px !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15283,6 +15332,6 @@
     })();
   </script>
 
-  <script src="script.js?v=253"></script>
+  <script src="script.js?v=254"></script>
 </body>
 </html>
