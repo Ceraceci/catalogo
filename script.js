@@ -6297,6 +6297,8 @@ function construirDetalleCarritoCompartido() {
     );
 
   return [
+    "Hola, te envío el detalle del pedido:",
+    "",
     detalleProductos,
     "",
     `Total - ${formatearPrecio(precioTotal)}`

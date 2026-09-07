@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=267">
+  <link rel="stylesheet" href="style.css?v=270">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15599,6 +15599,40 @@
     }
   </style>
 
+
+  <style id="pie-pc-mas-bajo-compacto-v270">
+    @media (min-width:651px){
+      html body .marca-inferior-movil{
+        height:52px !important;
+        min-height:52px !important;
+        max-height:52px !important;
+        padding-top:0 !important;
+        padding-bottom:0 !important;
+        gap:0 !important;
+        overflow:visible !important;
+        justify-content:flex-end !important;
+      }
+
+      html body .marca-inferior-linea{
+        position:relative !important;
+        top:4px !important;
+        margin-top:-4px !important;
+        margin-bottom:-1px !important;
+      }
+
+      html body .marca-inferior-movil .firma-catalogo{
+        position:relative !important;
+        top:1px !important;
+        margin:0 !important;
+      }
+
+      /* La barra ahora mide 52 px; mantenemos 6 px de aire con el carrito. */
+      html body .acciones-flotantes{
+        bottom:58px !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15621,6 +15655,6 @@
     })();
   </script>
 
-  <script src="script.js?v=267"></script>
+  <script src="script.js?v=270"></script>
 </body>
 </html>
