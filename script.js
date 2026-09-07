@@ -1480,6 +1480,29 @@ function agruparProductos(filasProductos) {
         );
       }
     );
+
+    /*
+      v268:
+      La búsqueda ya no vuelve a normalizar todos los campos de todos
+      los productos en cada tecla. Ese texto se calcula una sola vez
+      al cargar/sincronizar el catálogo.
+    */
+    producto._textoBusqueda = normalizarTexto(
+      [
+        producto.nombre,
+        producto.categoria,
+        producto.descripcion,
+        producto.indicaciones,
+        ...producto.presentaciones.map(
+          (presentacion) => {
+            return [
+              presentacion.nombre,
+              presentacion.codigo
+            ].join(" ");
+          }
+        )
+      ].join(" ")
+    );
   });
 
   lista.sort((a, b) => {
@@ -2346,22 +2369,8 @@ function filtrarProductos() {
     productosAgrupados.filter(
       (producto) => {
         const contenido =
-          normalizarTexto(
-            [
-              producto.nombre,
-              producto.categoria,
-              producto.descripcion,
-              producto.indicaciones,
-              ...producto.presentaciones.map(
-                (presentacion) => {
-                  return [
-                    presentacion.nombre,
-                    presentacion.codigo
-                  ].join(" ");
-                }
-              )
-            ].join(" ")
-          );
+          producto._textoBusqueda ||
+          normalizarTexto(producto.nombre);
 
         const coincideBusqueda =
           palabrasBuscadas.every(
@@ -2796,8 +2805,6 @@ window.addEventListener(
 );
 
 function mostrarProductos(lista) {
-  contenedorProductos.innerHTML = "";
-
   if (lista.length === 0) {
     contenedorProductos.innerHTML = `
       <div class="sin-resultados">
@@ -2811,11 +2818,24 @@ function mostrarProductos(lista) {
     return;
   }
 
+  /*
+    v268:
+    Armamos todas las tarjetas fuera del DOM y las insertamos juntas.
+    En móvil esto evita cientos de actualizaciones de layout durante
+    cada búsqueda y reduce mucho los tirones del teclado.
+  */
+  const fragmento =
+    document.createDocumentFragment();
+
   lista.forEach((producto) => {
-    contenedorProductos.appendChild(
+    fragmento.appendChild(
       crearTarjetaProducto(producto)
     );
   });
+
+  contenedorProductos.replaceChildren(
+    fragmento
+  );
 
   estado.textContent =
     `${lista.length} productos encontrados`;
@@ -7028,9 +7048,45 @@ productosCarrito.addEventListener(
 );
 
 
+/*
+  v268 - búsqueda más fluida:
+  El texto del input se pinta inmediatamente, pero el trabajo pesado
+  de reconstruir las tarjetas se agrupa cuando el usuario hace una
+  pausa mínima al escribir/borrar.
+
+  Móvil: 70 ms
+  PC:    35 ms
+
+  Esto evita que el teclado espere a que se reconstruyan 200+ tarjetas
+  después de cada carácter.
+*/
+let temporizadorBusqueda = 0;
+
+function programarFiltradoBusqueda() {
+  window.clearTimeout(
+    temporizadorBusqueda
+  );
+
+  const demora =
+    window.matchMedia(
+      "(max-width: 650px)"
+    ).matches
+      ? 70
+      : 35;
+
+  temporizadorBusqueda =
+    window.setTimeout(
+      () => {
+        temporizadorBusqueda = 0;
+        filtrarProductos();
+      },
+      demora
+    );
+}
+
 buscador.addEventListener(
   "input",
-  filtrarProductos
+  programarFiltradoBusqueda
 );
 
 
