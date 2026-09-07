@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=266">
+  <link rel="stylesheet" href="style.css?v=267">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15562,6 +15562,43 @@
     }
   </style>
 
+
+  <style id="logo-pie-tamano-texto-v267">
+    /* PC: letras de "Ceraceci" del logo ≈ 16 px, como "Insumos..." */
+    @media (min-width:651px){
+      html body .marca-inferior-linea .logo-pie-ceraceci{
+        height:43px !important;
+      }
+
+      html body .marca-inferior-movil{
+        min-height:58px !important;
+      }
+
+      html body .acciones-flotantes{
+        bottom:64px !important;
+      }
+    }
+
+    /* Móvil: equivalente visual al texto de 15,8 px */
+    @media (max-width:650px){
+      html body .marca-inferior-linea .logo-pie-ceraceci{
+        height:42.5px !important;
+      }
+
+      html body .marca-inferior-movil{
+        min-height:57px !important;
+      }
+
+      html body .marca-inferior-linea{
+        gap:4px !important;
+      }
+
+      html body .acciones-flotantes{
+        bottom:calc(57px + env(safe-area-inset-bottom)) !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15584,6 +15621,6 @@
     })();
   </script>
 
-  <script src="script.js?v=266"></script>
+  <script src="script.js?v=267"></script>
 </body>
 </html>
