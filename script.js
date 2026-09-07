@@ -951,6 +951,26 @@ async function descargarCSVAppsScript() {
 }
 
 
+
+function finalizarCargaVisualCeraceci() {
+  /*
+    Esperamos dos frames para que:
+    - termine de insertarse el HTML de las tarjetas;
+    - se apliquen los estilos definitivos;
+    - se ejecuten los ajustes de layout dependientes del DOM.
+
+    Después quitamos el bloqueo visual de una sola vez.
+  */
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove(
+        "ceraceci-inicializando"
+      );
+    });
+  });
+}
+
+
 function procesarCSVProductos(textoCSV) {
   const filas =
     convertirCSV(textoCSV);
@@ -1192,6 +1212,8 @@ function procesarCSVProductos(textoCSV) {
   } else {
     actualizarEstadoComparacion();
   }
+
+  finalizarCargaVisualCeraceci();
 }
 
 
@@ -1212,6 +1234,8 @@ function mostrarErrorCatalogo(error) {
       </p>
     </div>
   `;
+
+  finalizarCargaVisualCeraceci();
 }
 
 

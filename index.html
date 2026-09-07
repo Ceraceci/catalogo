@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="ceraceci-inicializando">
 <head>
   <meta charset="UTF-8">
 
@@ -7,6 +7,40 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
+
+
+  <style id="ceraceci-antiflash-v265">
+    /*
+      Evita el estado intermedio que aparecía durante una fracción de segundo
+      al recargar:
+      - botones con estilo nativo;
+      - controles duplicados en móvil;
+      - barra superior incompleta en PC;
+      - carrito/pie antes de terminar el armado.
+
+      Mientras el catálogo se inicializa solo se ve el fondo cerámico.
+      visibility:hidden conserva las medidas, por lo que no altera el layout
+      final ni provoca un salto adicional al mostrar la página.
+    */
+    html.ceraceci-inicializando,
+    html.ceraceci-inicializando body{
+      background:#CF927D !important;
+    }
+
+    html.ceraceci-inicializando body > *{
+      visibility:hidden !important;
+    }
+  </style>
+
+  <script id="ceraceci-antiflash-seguro-v265">
+    /*
+      Seguro de emergencia: si por un error inesperado JavaScript no logra
+      completar la inicialización, nunca dejamos la página oculta para siempre.
+    */
+    window.setTimeout(function(){
+      document.documentElement.classList.remove("ceraceci-inicializando");
+    }, 8000);
+  </script>
 
   <!--
     CERACECI: evita que navegadores móviles reutilicen una
@@ -24,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=264">
+  <link rel="stylesheet" href="style.css?v=265">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15502,6 +15536,6 @@
     })();
   </script>
 
-  <script src="script.js?v=264"></script>
+  <script src="script.js?v=265"></script>
 </body>
 </html>
