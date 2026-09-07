@@ -24,7 +24,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=255">
+  <link rel="stylesheet" href="style.css?v=256">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15357,6 +15357,23 @@
     }
   </style>
 
+
+  <style id="alineacion-superior-v256">
+    @media (min-width:651px){
+      html body .logo-contenedor > .subtitulo-principal{
+        position:relative !important;
+        top:-3px !important;
+      }
+    }
+
+    @media (max-width:650px){
+      html body .logo-contenedor > .subtitulo-principal{
+        position:relative !important;
+        top:-2px !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15379,6 +15396,6 @@
     })();
   </script>
 
-  <script src="script.js?v=255"></script>
+  <script src="script.js?v=256"></script>
 </body>
 </html>
