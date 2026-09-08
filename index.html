@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=272">
+  <link rel="stylesheet" href="style.css?v=273">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15674,6 +15674,62 @@
     }
   </style>
 
+
+  <style id="tarjetas-pc-y-pie-movil-v273">
+    @media (min-width:651px){
+      /*
+        El título usa prácticamente todo el ancho de la tarjeta.
+        Logo y Compartir ya no ocupan la zona lateral del título:
+        quedan en la línea del código.
+      */
+      html body #productos .encabezado-producto,
+      html body #productosComparados .encabezado-producto{
+        padding-left:0 !important;
+        padding-right:0 !important;
+      }
+
+      html body #productos .fila-titulo-producto,
+      html body #productosComparados .fila-titulo-producto{
+        box-sizing:border-box !important;
+        width:100% !important;
+        padding-left:4px !important;
+        padding-right:4px !important;
+      }
+
+      /*
+        El código conserva el centro visual aun con el logo a la izquierda
+        y Compartir a la derecha.
+      */
+      html body #productos .codigo-producto,
+      html body #productosComparados .codigo-producto{
+        box-sizing:border-box !important;
+        width:100% !important;
+        padding-left:40px !important;
+        padding-right:40px !important;
+      }
+
+      html body #productos .logo-mini-tarjeta,
+      html body #productosComparados .logo-mini-tarjeta{
+        left:0 !important;
+      }
+
+      html body #productos .encabezado-producto .acciones-producto,
+      html body #productosComparados .encabezado-producto .acciones-producto{
+        right:0 !important;
+      }
+    }
+
+    @media (max-width:650px){
+      /*
+        Pie móvil: bajar juntos 3 px el logo, el punto y la frase.
+        "By Nacho Peralta" no se modifica.
+      */
+      html body .marca-inferior-linea{
+        transform:translateY(3px) !important;
+      }
+    }
+  </style>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15696,6 +15752,6 @@
     })();
   </script>
 
-  <script src="script.js?v=272"></script>
+  <script src="script.js?v=273"></script>
 </body>
 </html>

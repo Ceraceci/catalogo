@@ -2757,9 +2757,92 @@ function centrarAccionesFotoTarjetaMovil(tarjeta) {
 }
 
 
+function alinearLogoYCompartirConCodigoPC(tarjeta) {
+  if (consultaMovilTarjetas.matches) {
+    return;
+  }
+
+  const encabezado =
+    tarjeta.querySelector(".encabezado-producto");
+  const codigo =
+    tarjeta.querySelector(".codigo-producto");
+  const acciones =
+    tarjeta.querySelector(".acciones-producto");
+  const compartir =
+    acciones?.querySelector(".compartir-producto");
+  const logoMini =
+    tarjeta.querySelector(".logo-mini-tarjeta");
+
+  if (
+    !encabezado ||
+    !codigo ||
+    !acciones ||
+    !compartir ||
+    !logoMini
+  ) {
+    return;
+  }
+
+  const rectEncabezado =
+    encabezado.getBoundingClientRect();
+  const rectCodigo =
+    codigo.getBoundingClientRect();
+
+  if (!rectCodigo.height) {
+    return;
+  }
+
+  const altoLogo =
+    logoMini.getBoundingClientRect().height || 32;
+  const altoCompartir =
+    compartir.getBoundingClientRect().height || 34;
+
+  const centroCodigo =
+    rectCodigo.top -
+    rectEncabezado.top +
+    rectCodigo.height / 2;
+
+  const topLogo =
+    centroCodigo - altoLogo / 2;
+  const topCompartir =
+    centroCodigo - altoCompartir / 2;
+
+  logoMini.style.setProperty(
+    "top",
+    `${Math.round(topLogo * 10) / 10}px`,
+    "important"
+  );
+  logoMini.style.setProperty(
+    "left",
+    "0px",
+    "important"
+  );
+
+  acciones.style.setProperty(
+    "top",
+    `${Math.round(topCompartir * 10) / 10}px`,
+    "important"
+  );
+  acciones.style.setProperty(
+    "right",
+    "0px",
+    "important"
+  );
+}
+
+
 function ajustarTarjetasMoviles() {
   if (!consultaMovilTarjetas.matches) {
     limpiarAjustesMovilesTarjetas();
+
+    document
+      .querySelectorAll(".tarjeta-producto")
+      .forEach((tarjeta) => {
+        alinearLogoYCompartirConCodigoPC(
+          tarjeta
+        );
+      });
+
     return;
   }
 
