@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=274">
+  <link rel="stylesheet" href="style.css?v=275">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15849,6 +15849,158 @@
     })();
   </script>
 
+
+  <style id="limites-header-footer-movil-v275">
+    @media (max-width:650px){
+      /* Los contenedores ocupan el ancho útil de las tarjetas. */
+      html body .cabecera,
+      html body .marca-inferior-movil{
+        box-sizing:border-box !important;
+        padding-left:16px !important;
+        padding-right:16px !important;
+      }
+
+      /*
+        Encabezado:
+        se conserva exactamente la composición actual, pero si logo + frase
+        superan el ancho disponible se reducen juntos y proporcionalmente.
+      */
+      html body .logo-contenedor{
+        width:max-content !important;
+        max-width:none !important;
+        transform:
+          scale(var(--ceraceci-header-escala, 1)) !important;
+        transform-origin:center center !important;
+      }
+
+      /*
+        Pie:
+        misma lógica y mismos límites que las tarjetas.
+        Conserva el descenso vertical de 3 px de la versión anterior.
+      */
+      html body .marca-inferior-linea{
+        width:max-content !important;
+        max-width:none !important;
+        transform:
+          translateY(3px)
+          scale(var(--ceraceci-pie-escala-v275, 1)) !important;
+        transform-origin:center center !important;
+      }
+    }
+  </style>
+
+  <script id="limites-header-footer-movil-js-v275">
+    (() => {
+      function calcularEscala(elemento, anchoDisponible) {
+        if (!elemento) return 1;
+
+        const anchoNatural =
+          Math.max(
+            elemento.scrollWidth || 0,
+            elemento.offsetWidth || 0
+          );
+
+        if (!anchoNatural) return 1;
+
+        return Math.min(
+          1,
+          anchoDisponible / anchoNatural
+        );
+      }
+
+      function ajustarLimitesMovilCeraceci() {
+        const header =
+          document.querySelector(".logo-contenedor");
+        const pie =
+          document.querySelector(".marca-inferior-linea");
+
+        if (window.innerWidth > 650) {
+          header?.style.removeProperty(
+            "--ceraceci-header-escala"
+          );
+          pie?.style.removeProperty(
+            "--ceraceci-pie-escala-v275"
+          );
+          return;
+        }
+
+        /*
+          Las tarjetas dejan aproximadamente 16 px a cada lado.
+          Usamos exactamente ese mismo ancho útil para encabezado y pie.
+        */
+        const anchoDisponible =
+          Math.max(
+            0,
+            document.documentElement.clientWidth - 32
+          );
+
+        const escalaHeader =
+          calcularEscala(
+            header,
+            anchoDisponible
+          );
+
+        const escalaPie =
+          calcularEscala(
+            pie,
+            anchoDisponible
+          );
+
+        header?.style.setProperty(
+          "--ceraceci-header-escala",
+          String(
+            Math.floor(escalaHeader * 10000) / 10000
+          )
+        );
+
+        pie?.style.setProperty(
+          "--ceraceci-pie-escala-v275",
+          String(
+            Math.floor(escalaPie * 10000) / 10000
+          )
+        );
+      }
+
+      function programarAjusteLimites() {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(
+            ajustarLimitesMovilCeraceci
+          );
+        });
+      }
+
+      window.addEventListener(
+        "resize",
+        programarAjusteLimites,
+        { passive:true }
+      );
+
+      window.addEventListener(
+        "orientationchange",
+        programarAjusteLimites,
+        { passive:true }
+      );
+
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(
+          programarAjusteLimites
+        );
+      }
+
+      if (
+        document.readyState === "loading"
+      ) {
+        document.addEventListener(
+          "DOMContentLoaded",
+          programarAjusteLimites,
+          { once:true }
+        );
+      } else {
+        programarAjusteLimites();
+      }
+    })();
+  </script>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15871,6 +16023,6 @@
     })();
   </script>
 
-  <script src="script.js?v=274"></script>
+  <script src="script.js?v=275"></script>
 </body>
 </html>
