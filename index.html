@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=273">
+  <link rel="stylesheet" href="style.css?v=274">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -15730,6 +15730,125 @@
     }
   </style>
 
+
+  <style id="pie-movil-ajuste-ancho-v274">
+    @media (max-width:650px){
+      html body .marca-inferior-movil{
+        box-sizing:border-box !important;
+        padding-left:10px !important;
+        padding-right:10px !important;
+      }
+
+      /*
+        La línea completa se escala SOLO si hace falta.
+        Así el extremo izquierdo del logo Ceraceci y el extremo derecho
+        de "Insumos..." nunca sobrepasan el ancho visible.
+      */
+      html body .marca-inferior-linea{
+        max-width:none !important;
+        transform:
+          translateY(3px)
+          scale(var(--ceraceci-pie-escala, 1)) !important;
+        transform-origin:center center !important;
+      }
+
+      /* 2 px más arriba que en v273 */
+      html body .marca-inferior-movil .firma-catalogo,
+      html body .marca-inferior-movil .autor-marca{
+        position:relative !important;
+        transform:translateY(-2px) !important;
+      }
+    }
+  </style>
+
+  <script id="pie-movil-ajuste-ancho-js-v274">
+    (() => {
+      function ajustarAnchoPieMovil() {
+        const linea =
+          document.querySelector(".marca-inferior-linea");
+
+        if (!linea) return;
+
+        if (window.innerWidth > 650) {
+          linea.style.removeProperty(
+            "--ceraceci-pie-escala"
+          );
+          return;
+        }
+
+        /*
+          scrollWidth no cambia con transform:scale(), por eso nos da
+          siempre el ancho natural real de logo + punto + frase.
+          Dejamos 10 px libres a cada lado.
+        */
+        const anchoNatural =
+          Math.max(
+            linea.scrollWidth,
+            linea.offsetWidth
+          );
+
+        const anchoDisponible =
+          Math.max(
+            0,
+            document.documentElement.clientWidth - 20
+          );
+
+        const escala =
+          anchoNatural > 0
+            ? Math.min(
+                1,
+                anchoDisponible / anchoNatural
+              )
+            : 1;
+
+        linea.style.setProperty(
+          "--ceraceci-pie-escala",
+          String(
+            Math.floor(escala * 10000) / 10000
+          )
+        );
+      }
+
+      function programarAjustePieMovil() {
+        requestAnimationFrame(() => {
+          requestAnimationFrame(
+            ajustarAnchoPieMovil
+          );
+        });
+      }
+
+      window.addEventListener(
+        "resize",
+        programarAjustePieMovil,
+        { passive:true }
+      );
+
+      window.addEventListener(
+        "orientationchange",
+        programarAjustePieMovil,
+        { passive:true }
+      );
+
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(
+          programarAjustePieMovil
+        );
+      }
+
+      if (
+        document.readyState === "loading"
+      ) {
+        document.addEventListener(
+          "DOMContentLoaded",
+          programarAjustePieMovil,
+          { once:true }
+        );
+      } else {
+        programarAjustePieMovil();
+      }
+    })();
+  </script>
+
 <script id="barra-busqueda-estatica-v147">
     document.body.classList.remove("busqueda-movil-replegada");
   </script>
@@ -15752,6 +15871,6 @@
     })();
   </script>
 
-  <script src="script.js?v=273"></script>
+  <script src="script.js?v=274"></script>
 </body>
 </html>
