@@ -1641,3 +1641,84 @@ html body .marca-inferior-movil .marca-inferior-linea::before{
     top:-2px !important;
   }
 }
+
+
+/* =========================================================
+   v290 - RESTAURAR LOGO REAL DEL PIE
+   El logo nuevo se muestra desde el <img> embebido.
+   Se anula el pseudo-elemento de v287/v289.
+========================================================= */
+
+html body .marca-inferior-movil .marca-inferior-linea::before{
+  content:none !important;
+  display:none !important;
+  visibility:hidden !important;
+  width:0 !important;
+  min-width:0 !important;
+  max-width:0 !important;
+  height:0 !important;
+  flex:0 0 0 !important;
+  background:none !important;
+  background-image:none !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+  display:flex !important;
+  visibility:visible !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:visible !important;
+  background:none !important;
+  background-image:none !important;
+
+  opacity:1 !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286 > .logo-pie-v286{
+  display:block !important;
+  visibility:visible !important;
+
+  width:100% !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  object-fit:contain !important;
+  object-position:left center !important;
+
+  opacity:1 !important;
+  content:normal !important;
+  background:none !important;
+  border:0 !important;
+}
+
+@media (min-width:651px){
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+    flex:0 0 138px !important;
+    width:138px !important;
+    min-width:138px !important;
+    max-width:138px !important;
+
+    position:relative !important;
+    top:3.3px !important;
+  }
+}
+
+@media (max-width:650px){
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+    flex:0 0 124px !important;
+    width:124px !important;
+    min-width:124px !important;
+    max-width:124px !important;
+
+    position:relative !important;
+    top:-2px !important;
+  }
+}
