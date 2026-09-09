@@ -1685,3 +1685,36 @@ html body div.marca-inferior-movil.marca-inferior-movil
     transform:none !important;
   }
 }
+
+
+/* =========================================================
+   v300 - AJUSTES MÓVILES DE BARRAS Y BUSCADOR
+   Base: v298
+========================================================= */
+
+@media (max-width:650px){
+
+  /* La distancia entre las barras y la primera fila de tarjetas
+     queda igual al gap vertical entre tarjetas: 8 px. */
+  html body .contenedor > .busqueda{
+    margin-bottom:8px !important;
+  }
+
+  /* Reducir únicamente el texto guía del buscador. */
+  html body #buscador::placeholder{
+    font-size:16px !important;
+    line-height:1 !important;
+  }
+
+  html body #buscador::-webkit-input-placeholder{
+    font-size:16px !important;
+    line-height:1 !important;
+  }
+}
+
+/* En pantallas <=390 px las tarjetas usan gap de 6 px. */
+@media (max-width:390px){
+  html body .contenedor > .busqueda{
+    margin-bottom:6px !important;
+  }
+}
