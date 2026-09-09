@@ -1622,3 +1622,31 @@ html body div.marca-inferior-movil.marca-inferior-movil
     bottom:calc(33px + env(safe-area-inset-bottom)) !important;
   }
 }
+
+
+/* =========================================================
+   v293 - AJUSTES FINOS DEL PIE (BASE v292)
+   - sin punto;
+   - +1 px entre Insumos y By Nacho Peralta;
+   - logo 1 px más arriba.
+========================================================= */
+
+/* El logo visible del pie en v292 es el ::before. */
+html body div.marca-inferior-movil.marca-inferior-movil
+> div.marca-inferior-linea.marca-inferior-linea::before{
+  transform:translateY(-1px) !important;
+}
+
+/* En v292 estaba en -1px; llevarlo a 0 agrega exactamente 1 px
+   de separación vertical respecto de la línea de arriba. */
+html body div.marca-inferior-movil.marca-inferior-movil
+> span.firma-catalogo.firma-catalogo{
+  margin-top:0 !important;
+}
+
+/* Al quitar el punto, mantenemos una separación pequeña y limpia
+   entre el logo y la frase. */
+html body div.marca-inferior-movil.marca-inferior-movil
+> div.marca-inferior-linea.marca-inferior-linea{
+  gap:2px !important;
+}
