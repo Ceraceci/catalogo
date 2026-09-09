@@ -1754,3 +1754,15 @@ html body div.marca-inferior-movil.marca-inferior-movil
     row-gap:6px !important;
   }
 }
+
+
+/* =========================================================
+   v303 - FONDO ARCILLA EN EL PIE
+   Base: v302
+   Mismo color que los espacios entre tarjetas.
+========================================================= */
+
+html body .marca-inferior-movil{
+  background:#CF927D !important;
+  background-color:#CF927D !important;
+}
