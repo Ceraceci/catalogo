@@ -1575,3 +1575,69 @@ html body .marca-inferior-movil .autor-marca{
     bottom:calc(50px + env(safe-area-inset-bottom)) !important;
   }
 }
+
+
+/* =========================================================
+   v289 - LOGO NUEVO DEL PIE, RECURSO EXTERNO REAL
+========================================================= */
+
+/* Desactivar cualquier logo viejo que todavía exista en el HTML. */
+html body .marca-inferior-movil .marca-inferior-linea > strong:first-child,
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo,
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286,
+html body .marca-inferior-movil .marca-inferior-linea > img:first-child{
+  display:none !important;
+  visibility:hidden !important;
+  width:0 !important;
+  min-width:0 !important;
+  max-width:0 !important;
+  flex:0 0 0 !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* El pseudo-elemento anterior se conserva como posición,
+   pero ahora usa un archivo PNG NUEVO y externo. */
+html body .marca-inferior-movil .marca-inferior-linea::before{
+  content:"" !important;
+  display:block !important;
+  visibility:visible !important;
+  flex-shrink:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  background-image:url("./img/logo-footer-v289.png?v=289") !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  background-size:contain !important;
+
+  border:0 !important;
+  box-shadow:none !important;
+}
+
+@media (min-width:651px){
+  html body .marca-inferior-movil .marca-inferior-linea::before{
+    flex:0 0 138px !important;
+    width:138px !important;
+    min-width:138px !important;
+    max-width:138px !important;
+    height:24px !important;
+
+    position:relative !important;
+    top:3.3px !important;
+  }
+}
+
+@media (max-width:650px){
+  html body .marca-inferior-movil .marca-inferior-linea::before{
+    flex:0 0 124px !important;
+    width:124px !important;
+    min-width:124px !important;
+    max-width:124px !important;
+    height:22px !important;
+
+    position:relative !important;
+    top:-2px !important;
+  }
+}
