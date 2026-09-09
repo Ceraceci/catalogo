@@ -1724,3 +1724,33 @@ html body div.marca-inferior-movil.marca-inferior-movil
     margin-bottom:6px !important;
   }
 }
+
+
+/* =========================================================
+   v302 - DISTANCIA REAL BARRAS -> TARJETAS
+   Base: v301
+========================================================= */
+
+@media (max-width:650px){
+  html body .busqueda,
+  html body .busqueda.busqueda-en-scroll{
+    margin-bottom:0 !important;
+    padding-bottom:8px !important;
+  }
+
+  html body #productos.productos{
+    row-gap:8px !important;
+  }
+}
+
+@media (max-width:390px){
+  html body .busqueda,
+  html body .busqueda.busqueda-en-scroll{
+    margin-bottom:0 !important;
+    padding-bottom:6px !important;
+  }
+
+  html body #productos.productos{
+    row-gap:6px !important;
+  }
+}
