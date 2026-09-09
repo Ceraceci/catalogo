@@ -1650,3 +1650,38 @@ html body div.marca-inferior-movil.marca-inferior-movil
 > div.marca-inferior-linea.marca-inferior-linea{
   gap:2px !important;
 }
+
+
+/* =========================================================
+   v294 - AJUSTES DEL PIE Y BARRA MÓVIL
+========================================================= */
+
+/* PC: subir únicamente "Insumos para la industria cerámica" 2 px. */
+@media (min-width:651px){
+  html body div.marca-inferior-movil.marca-inferior-movil
+  > div.marca-inferior-linea.marca-inferior-linea
+  > span:last-child{
+    transform:translateY(-2px) !important;
+  }
+}
+
+/* Móvil */
+@media (max-width:650px){
+
+  /* Logo Ceraceci: 0,5 px más arriba respecto de v293. */
+  html body div.marca-inferior-movil.marca-inferior-movil
+  > div.marca-inferior-linea.marca-inferior-linea::before{
+    transform:translateY(-1.5px) !important;
+  }
+
+  /*
+    La barra del carrito + Instagram + WhatsApp queda exactamente
+    pegada al borde superior del pie.
+    La variable se calcula con la altura REAL de .marca-inferior-movil.
+  */
+  html body .acciones-flotantes{
+    bottom:var(--ceraceci-pie-altura-v294, 33px) !important;
+    margin-bottom:0 !important;
+    transform:none !important;
+  }
+}

@@ -7961,3 +7961,51 @@ if (contenedorProductosLimites) {
 
 programarAjusteHeaderPieMovil();
 
+
+
+/* =========================================================
+   v294 - mantener barra móvil pegada al pie real
+========================================================= */
+(() => {
+  const actualizarPieV294 = () => {
+    if (!window.matchMedia("(max-width:650px)").matches) return;
+
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (!pie) return;
+
+    const alto = pie.getBoundingClientRect().height;
+    if (!Number.isFinite(alto) || alto <= 0) return;
+
+    document.documentElement.style.setProperty(
+      "--ceraceci-pie-altura-v294",
+      `${alto}px`
+    );
+  };
+
+  const programarV294 = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(actualizarPieV294);
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", programarV294, { once:true });
+  } else {
+    programarV294();
+  }
+
+  window.addEventListener("load", programarV294, { once:true });
+  window.addEventListener("resize", programarV294, { passive:true });
+  window.addEventListener("orientationchange", programarV294, { passive:true });
+
+  if ("ResizeObserver" in window) {
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (pie) {
+      new ResizeObserver(programarV294).observe(pie);
+    }
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(programarV294);
+  }
+})();
