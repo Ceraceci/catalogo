@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=300">
+  <link rel="stylesheet" href="style.css?v=306">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7444,7 +7444,7 @@
 
 </head>
 
-<body data-catalog-build="300">
+<body data-catalog-build="306">
   <main class="contenedor">
 
     <header class="cabecera">
@@ -16040,6 +16040,90 @@
   }
 </style>
 
-<script src="script.js?v=300"></script>
+<script src="script.js?v=306"></script>
+
+<style id="ajuste-movil-final-v301">
+  @media (max-width:650px){
+    html body #productos.productos{
+      row-gap:8px !important;
+    }
+
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      margin-bottom:8px !important;
+    }
+
+    html body #buscador::placeholder{
+      font-size:16px !important;
+      line-height:1 !important;
+    }
+
+    html body #buscador::-webkit-input-placeholder{
+      font-size:16px !important;
+      line-height:1 !important;
+    }
+  }
+
+  @media (max-width:390px){
+    html body #productos.productos{
+      row-gap:6px !important;
+    }
+
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      margin-bottom:6px !important;
+    }
+  }
+</style>
+
+
+<style id="ajuste-distancia-real-v302">
+  @media (max-width:650px){
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      margin-bottom:0 !important;
+      padding-bottom:8px !important;
+    }
+
+    html body #productos.productos{
+      row-gap:8px !important;
+    }
+  }
+
+  @media (max-width:390px){
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      margin-bottom:0 !important;
+      padding-bottom:6px !important;
+    }
+
+    html body #productos.productos{
+      row-gap:6px !important;
+    }
+  }
+</style>
+
+
+<style id="pie-arcilla-final-v305">
+  html body .marca-inferior-movil,
+  html body div.marca-inferior-movil.marca-inferior-movil{
+    background:#CF927D !important;
+    background-color:#CF927D !important;
+    border-top-color:#CF927D !important;
+  }
+
+  html body .marca-inferior-movil::after,
+  html body div.marca-inferior-movil.marca-inferior-movil::after{
+    background:#CF927D !important;
+    background-color:#CF927D !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea,
+  html body .marca-inferior-movil .firma-catalogo{
+    background:transparent !important;
+    background-color:transparent !important;
+  }
+</style>
+
 </body>
 </html>

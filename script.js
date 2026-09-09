@@ -2924,6 +2924,24 @@ function mostrarProductos(lista) {
     `${lista.length} productos encontrados`;
 
   sincronizarBotonesComparacion();
+
+  /*
+    v306:
+    Al filtrar por teclado las tarjetas se reconstruyen en cada búsqueda.
+    Antes, logo y Compartir quedaban durante 1-2 frames en su posición CSS
+    inicial y luego JS los movía, generando el salto visible.
+
+    Se ajustan AHORA, en la misma ejecución que insertó las tarjetas.
+    Como el navegador no pinta entre estas instrucciones, logo y Compartir
+    aparecen directamente en su posición final.
+  */
+  ajustarTarjetasMoviles();
+
+  /*
+    Se conserva una segunda pasada programada para responder a cambios
+    posteriores de métricas (fuentes/layout), pero ya no produce el salto
+    inicial porque la primera posición fue aplicada sincrónicamente.
+  */
   programarAjusteTarjetasMoviles();
 }
 
