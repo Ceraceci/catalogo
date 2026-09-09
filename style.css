@@ -1220,3 +1220,99 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
   color:#fff !important;
   -webkit-text-fill-color:#fff !important;
 }
+
+
+/* =========================================================
+   v281 - AJUSTE MÓVIL DEFINITIVO DE ANCHO
+   Encabezado y pie deben quedar DENTRO de los bordes de las tarjetas.
+   Estos selectores son deliberadamente más específicos que los
+   estilos históricos embebidos en index.html.
+========================================================= */
+@media (max-width:650px){
+
+  /* ---------- ENCABEZADO ---------- */
+  html body .cabecera .logo-contenedor{
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    width:calc(100vw - 32px) !important;
+    max-width:calc(100vw - 32px) !important;
+
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding:0 !important;
+
+    gap:7px !important;
+    column-gap:7px !important;
+
+    transform:none !important;
+  }
+
+  html body .cabecera .logo-contenedor > img.logo{
+    flex:0 0 106px !important;
+    width:106px !important;
+    max-width:106px !important;
+    height:auto !important;
+    margin:0 !important;
+  }
+
+  html body .cabecera .logo-contenedor > .subtitulo-principal{
+    flex:0 1 auto !important;
+    min-width:0 !important;
+    max-width:none !important;
+
+    font-size:14.5px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+
+  /* ---------- PIE ---------- */
+  html body .marca-inferior-movil .marca-inferior-linea{
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:row !important;
+    align-items:center !important;
+    justify-content:center !important;
+
+    width:calc(100vw - 32px) !important;
+    max-width:calc(100vw - 32px) !important;
+
+    margin-left:auto !important;
+    margin-right:auto !important;
+    padding:0 !important;
+
+    gap:2px !important;
+
+    transform:translateY(3px) !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
+    flex:0 0 auto !important;
+    width:auto !important;
+    height:36px !important;
+    max-width:none !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea > span:nth-child(2),
+  html body .marca-inferior-movil .marca-inferior-linea > span:last-child{
+    flex:0 1 auto !important;
+    min-width:0 !important;
+
+    font-size:14.5px !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+
+  /* Firma: mantiene el pedido anterior */
+  html body .marca-inferior-movil .firma-catalogo,
+  html body .marca-inferior-movil .autor-marca{
+    transform:translateY(-2px) !important;
+  }
+}
