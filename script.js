@@ -8009,3 +8009,73 @@ programarAjusteHeaderPieMovil();
     document.fonts.ready.then(programarV294);
   }
 })();
+
+
+/* =========================================================
+   v295 - unir físicamente barra móvil y pie
+========================================================= */
+(() => {
+  const ajustarBarraAlPieV295 = () => {
+    const movil = window.matchMedia("(max-width:650px)").matches;
+    const barra = document.querySelector(".acciones-flotantes");
+    const pie = document.querySelector(".marca-inferior-movil");
+
+    if (!barra || !pie) return;
+
+    if (!movil) {
+      barra.style.removeProperty("padding-bottom");
+      return;
+    }
+
+    const altoPie = pie.getBoundingClientRect().height;
+    if (!Number.isFinite(altoPie) || altoPie <= 0) return;
+
+    /* Estilo inline !important: gana a todos los CSS históricos. */
+    barra.style.setProperty(
+      "bottom",
+      `${Math.max(0, altoPie - 1)}px`,
+      "important"
+    );
+    barra.style.setProperty(
+      "padding-bottom",
+      "0px",
+      "important"
+    );
+    barra.style.setProperty(
+      "margin-bottom",
+      "0px",
+      "important"
+    );
+  };
+
+  const programarAjusteV295 = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(ajustarBarraAlPieV295);
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      programarAjusteV295,
+      { once:true }
+    );
+  } else {
+    programarAjusteV295();
+  }
+
+  window.addEventListener("load", programarAjusteV295, { once:true });
+  window.addEventListener("resize", programarAjusteV295, { passive:true });
+  window.addEventListener("orientationchange", programarAjusteV295, { passive:true });
+
+  if ("ResizeObserver" in window) {
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (pie) {
+      new ResizeObserver(programarAjusteV295).observe(pie);
+    }
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(programarAjusteV295);
+  }
+})();

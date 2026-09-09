@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=294">
+  <link rel="stylesheet" href="style.css?v=295">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7407,9 +7407,44 @@
       }
     }
   </style>
+
+<style id="ajustes-finales-v295">
+  /* =========================================================
+     v295 - AJUSTES FINALES DESPUÉS DE TODOS LOS ESTILOS HISTÓRICOS
+  ========================================================= */
+
+  /* PC: "Insumos..." 2 px más arriba. */
+  @media (min-width:651px){
+    html body div.marca-inferior-movil.marca-inferior-movil
+    > div.marca-inferior-linea.marca-inferior-linea
+    > span:last-child{
+      transform:translateY(-2px) !important;
+    }
+  }
+
+  @media (max-width:650px){
+    /* Logo del pie: 0,5 px más arriba respecto de v293. */
+    html body div.marca-inferior-movil.marca-inferior-movil
+    > div.marca-inferior-linea.marca-inferior-linea::before{
+      transform:translateY(-1.5px) !important;
+    }
+
+    /*
+      La barra de carrito + redes no agrega espacio inferior propio.
+      Su borde inferior queda exactamente contra el borde superior
+      del pie.
+    */
+    html body .acciones-flotantes{
+      padding-bottom:0 !important;
+      margin-bottom:0 !important;
+      transform:none !important;
+    }
+  }
+</style>
+
 </head>
 
-<body data-catalog-build="294">
+<body data-catalog-build="295">
   <main class="contenedor">
 
     <header class="cabecera">
@@ -15965,6 +16000,6 @@
     })();
   </script>
 
-  <script src="script.js?v=294"></script>
+  <script src="script.js?v=295"></script>
 </body>
 </html>
