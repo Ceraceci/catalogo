@@ -8100,7 +8100,7 @@ programarAjusteHeaderPieMovil();
     /* Exactamente encima del pie: 0 px de hueco y 0 px de solapamiento. */
     barra.style.setProperty(
       "bottom",
-      `${altoPie + 1}px`,
+      `${altoPie}px`,
       "important"
     );
   };
@@ -8156,7 +8156,7 @@ programarAjusteHeaderPieMovil();
     /* 1 px de separación de seguridad: no hay superposición. */
     barra.style.setProperty(
       "bottom",
-      `${altoPie + 1}px`,
+      `${altoPie}px`,
       "important"
     );
   };
@@ -8190,5 +8190,53 @@ programarAjusteHeaderPieMovil();
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(programarV297);
+  }
+})();
+
+
+/* =========================================================
+   v298 - contenedor de carrito al ras del pie
+========================================================= */
+(() => {
+  const ajustarV298 = () => {
+    if (!window.matchMedia("(max-width:650px)").matches) return;
+
+    const barra = document.querySelector(".acciones-flotantes");
+    const pie = document.querySelector(".marca-inferior-movil");
+
+    if (!barra || !pie) return;
+
+    const altoPie = pie.getBoundingClientRect().height;
+    if (!Number.isFinite(altoPie) || altoPie <= 0) return;
+
+    barra.style.setProperty("bottom", `${altoPie}px`, "important");
+    barra.style.setProperty("padding-top", "6px", "important");
+    barra.style.setProperty("padding-bottom", "6px", "important");
+    barra.style.setProperty("margin-bottom", "0px", "important");
+  };
+
+  const programarV298 = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(ajustarV298);
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", programarV298, { once:true });
+  } else {
+    programarV298();
+  }
+
+  window.addEventListener("load", programarV298, { once:true });
+  window.addEventListener("resize", programarV298, { passive:true });
+  window.addEventListener("orientationchange", programarV298, { passive:true });
+
+  if ("ResizeObserver" in window) {
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (pie) new ResizeObserver(programarV298).observe(pie);
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(programarV298);
   }
 })();
