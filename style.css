@@ -1328,17 +1328,25 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
 }
 
 
+
+
 /* =========================================================
-   v284 - reemplazo forzado del logo del pie
-   El recurso se fuerza desde style.css externo para evitar que
-   un src antiguo embebido en HTML siga viéndose por caché.
+   v285 - logo del pie estable en PC y móvil
+   Usa el src embebido en index.html; no depende de rutas externas.
 ========================================================= */
-html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
-  content:url("img/logo-pie-v284.png?v=284") !important;
+html body .marca-inferior-movil .marca-inferior-linea > strong.marca-inferior-logo{
+  background:none !important;
+  background-image:none !important;
+  overflow:visible !important;
 }
 
-/* Conservamos la huella horizontal que tenía el logo anterior,
-   para no mover el punto ni la frase del pie. */
+html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
+  content:normal !important;
+  display:block !important;
+  object-fit:contain !important;
+  object-position:left center !important;
+}
+
 @media (min-width:651px){
   html body .marca-inferior-movil .marca-inferior-linea > strong.marca-inferior-logo{
     flex:0 0 138px !important;
@@ -1348,10 +1356,9 @@ html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
   }
 
   html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
-    width:100% !important;
+    width:auto !important;
     height:40px !important;
-    object-fit:contain !important;
-    object-position:left center !important;
+    max-width:138px !important;
   }
 }
 
@@ -1364,9 +1371,8 @@ html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
   }
 
   html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
-    width:100% !important;
+    width:auto !important;
     height:36px !important;
-    object-fit:contain !important;
-    object-position:left center !important;
+    max-width:124px !important;
   }
 }
