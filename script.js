@@ -7676,3 +7676,288 @@ if (document.readyState === "loading") {
 } else {
   iniciarPosicionSelectoresComparacion();
 }
+
+
+/* =========================================================
+   v277 - límites móviles reales para encabezado y pie
+
+   Motivo:
+   las versiones v274-v276 hacían este cálculo mediante scripts
+   inline. La Content-Security-Policy del sitio bloquea scripts inline
+   que no estén autorizados por hash, así que esos cálculos no llegaban
+   a ejecutarse en producción.
+
+   Ahora todo se ejecuta desde script.js.
+========================================================= */
+
+function obtenerLimitesHorizontalesTarjetasMovil() {
+  const tarjetas = Array.from(
+    document.querySelectorAll(
+      "#productos .tarjeta-producto"
+    )
+  ).filter((tarjeta) => {
+    const rect = tarjeta.getBoundingClientRect();
+
+    return (
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  });
+
+  if (tarjetas.length) {
+    let izquierda = Infinity;
+    let derecha = -Infinity;
+
+    tarjetas.forEach((tarjeta) => {
+      const rect =
+        tarjeta.getBoundingClientRect();
+
+      izquierda =
+        Math.min(
+          izquierda,
+          rect.left
+        );
+
+      derecha =
+        Math.max(
+          derecha,
+          rect.right
+        );
+    });
+
+    if (
+      Number.isFinite(izquierda) &&
+      Number.isFinite(derecha) &&
+      derecha > izquierda
+    ) {
+      return {
+        izquierda,
+        derecha
+      };
+    }
+  }
+
+  const contenedor =
+    document.querySelector("#productos");
+
+  if (contenedor) {
+    const rect =
+      contenedor.getBoundingClientRect();
+
+    if (rect.width > 0) {
+      return {
+        izquierda:rect.left,
+        derecha:rect.right
+      };
+    }
+  }
+
+  /*
+    Respaldo antes de que aparezcan las tarjetas:
+    coincide con el margen habitual del catálogo móvil.
+  */
+  return {
+    izquierda:16,
+    derecha:
+      document.documentElement.clientWidth - 16
+  };
+}
+
+
+function ajustarElementoAlAnchoTarjetasMovil(
+  elemento,
+  propiedadEscala,
+  propiedadX,
+  limites
+) {
+  if (!elemento || !limites) {
+    return;
+  }
+
+  /*
+    Quitamos temporalmente la escala anterior para medir
+    siempre el ancho natural del contenido.
+  */
+  elemento.style.setProperty(
+    propiedadEscala,
+    "1"
+  );
+
+  elemento.style.setProperty(
+    propiedadX,
+    "0px"
+  );
+
+  const anchoNatural =
+    Math.max(
+      elemento.scrollWidth || 0,
+      elemento.offsetWidth || 0
+    );
+
+  const anchoTarjetas =
+    Math.max(
+      0,
+      limites.derecha -
+      limites.izquierda
+    );
+
+  if (
+    !anchoNatural ||
+    !anchoTarjetas
+  ) {
+    return;
+  }
+
+  /*
+    6 px de seguridad total:
+    3 px por dentro de cada extremo de las tarjetas.
+  */
+  const anchoSeguro =
+    Math.max(
+      0,
+      anchoTarjetas - 6
+    );
+
+  const escala =
+    Math.min(
+      1,
+      anchoSeguro /
+      anchoNatural
+    );
+
+  const centroTarjetas =
+    (
+      limites.izquierda +
+      limites.derecha
+    ) / 2;
+
+  const centroViewport =
+    document.documentElement.clientWidth / 2;
+
+  const desplazamiento =
+    centroTarjetas -
+    centroViewport;
+
+  elemento.style.setProperty(
+    propiedadEscala,
+    String(
+      Math.floor(
+        escala * 10000
+      ) / 10000
+    )
+  );
+
+  elemento.style.setProperty(
+    propiedadX,
+    `${
+      Math.round(
+        desplazamiento * 10
+      ) / 10
+    }px`
+  );
+}
+
+
+let ajusteHeaderPieMovilPendiente = false;
+
+function ajustarHeaderYPieALasTarjetasMovil() {
+  const header =
+    document.querySelector(
+      ".logo-contenedor"
+    );
+
+  const pie =
+    document.querySelector(
+      ".marca-inferior-linea"
+    );
+
+  if (window.innerWidth > 650) {
+    header?.style.removeProperty(
+      "--ceraceci-header-escala-v277"
+    );
+
+    header?.style.removeProperty(
+      "--ceraceci-header-x-v277"
+    );
+
+    pie?.style.removeProperty(
+      "--ceraceci-pie-escala-v277"
+    );
+
+    pie?.style.removeProperty(
+      "--ceraceci-pie-x-v277"
+    );
+
+    return;
+  }
+
+  const limites =
+    obtenerLimitesHorizontalesTarjetasMovil();
+
+  ajustarElementoAlAnchoTarjetasMovil(
+    header,
+    "--ceraceci-header-escala-v277",
+    "--ceraceci-header-x-v277",
+    limites
+  );
+
+  ajustarElementoAlAnchoTarjetasMovil(
+    pie,
+    "--ceraceci-pie-escala-v277",
+    "--ceraceci-pie-x-v277",
+    limites
+  );
+}
+
+
+function programarAjusteHeaderPieMovil() {
+  if (ajusteHeaderPieMovilPendiente) {
+    return;
+  }
+
+  ajusteHeaderPieMovilPendiente = true;
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      ajusteHeaderPieMovilPendiente = false;
+      ajustarHeaderYPieALasTarjetasMovil();
+    });
+  });
+}
+
+
+window.addEventListener(
+  "resize",
+  programarAjusteHeaderPieMovil,
+  { passive:true }
+);
+
+window.addEventListener(
+  "orientationchange",
+  programarAjusteHeaderPieMovil,
+  { passive:true }
+);
+
+if (document.fonts?.ready) {
+  document.fonts.ready.then(
+    programarAjusteHeaderPieMovil
+  );
+}
+
+const contenedorProductosLimites =
+  document.querySelector("#productos");
+
+if (contenedorProductosLimites) {
+  new MutationObserver(
+    programarAjusteHeaderPieMovil
+  ).observe(
+    contenedorProductosLimites,
+    {
+      childList:true,
+      subtree:false
+    }
+  );
+}
+
+programarAjusteHeaderPieMovil();
+
