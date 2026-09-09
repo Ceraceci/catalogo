@@ -1341,7 +1341,6 @@ html body .marca-inferior-movil .marca-inferior-linea > strong.marca-inferior-lo
 }
 
 html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
-  content:normal !important;
   display:block !important;
   object-fit:contain !important;
   object-position:left center !important;
@@ -1694,7 +1693,6 @@ html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v28
   object-position:left center !important;
 
   opacity:1 !important;
-  content:normal !important;
   background:none !important;
   border:0 !important;
 }
@@ -1720,5 +1718,148 @@ html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v28
 
     position:relative !important;
     top:-2px !important;
+  }
+}
+
+
+/* =========================================================
+   v291 - CORRECCIÓN DEL PIE
+   - restaura el logo real;
+   - elimina el solapamiento con "By Nacho Peralta";
+   - recorta el fondo a la altura real de los elementos.
+========================================================= */
+
+html body .marca-inferior-movil .marca-inferior-linea::before{
+  content:none !important;
+  display:none !important;
+}
+
+html body .marca-inferior-movil{
+  box-sizing:border-box !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+
+  height:auto !important;
+  min-height:0 !important;
+  max-height:none !important;
+
+  padding-top:1px !important;
+  padding-left:8px !important;
+  padding-right:8px !important;
+  padding-bottom:1px !important;
+
+  gap:0 !important;
+  overflow:visible !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea{
+  box-sizing:border-box !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  width:auto !important;
+  max-width:calc(100vw - 32px) !important;
+  min-height:0 !important;
+  height:auto !important;
+
+  margin:0 !important;
+  padding:0 !important;
+  gap:2px !important;
+
+  transform:none !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+  display:flex !important;
+  visibility:visible !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+
+  flex:0 0 auto !important;
+  width:auto !important;
+  min-width:0 !important;
+  max-width:none !important;
+  height:auto !important;
+
+  position:static !important;
+  top:auto !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  opacity:1 !important;
+  overflow:visible !important;
+  background:none !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286 > .logo-pie-v286{
+  display:block !important;
+  visibility:visible !important;
+
+  width:auto !important;
+  max-width:none !important;
+  max-height:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  opacity:1 !important;
+  object-fit:contain !important;
+  object-position:left center !important;
+
+  background:none !important;
+  border:0 !important;
+}
+
+html body .marca-inferior-movil .firma-catalogo,
+html body .marca-inferior-movil .autor-marca{
+  display:block !important;
+  position:static !important;
+  transform:translateY(-1px) !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  line-height:1 !important;
+  white-space:nowrap !important;
+}
+
+/* PC */
+@media (min-width:651px){
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286 > .logo-pie-v286{
+    height:24px !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea > span:nth-child(2),
+  html body .marca-inferior-movil .marca-inferior-linea > span:last-child{
+    line-height:24px !important;
+  }
+
+  html body .acciones-flotantes{
+    bottom:43px !important;
+  }
+}
+
+/* MÓVIL */
+@media (max-width:650px){
+  html body .marca-inferior-movil{
+    padding-bottom:calc(1px + env(safe-area-inset-bottom)) !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286 > .logo-pie-v286{
+    height:22px !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea > span:nth-child(2),
+  html body .marca-inferior-movil .marca-inferior-linea > span:last-child{
+    line-height:22px !important;
+  }
+
+  html body .acciones-flotantes{
+    bottom:calc(40px + env(safe-area-inset-bottom)) !important;
   }
 }
