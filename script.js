@@ -8030,10 +8030,11 @@ programarAjusteHeaderPieMovil();
     const altoPie = pie.getBoundingClientRect().height;
     if (!Number.isFinite(altoPie) || altoPie <= 0) return;
 
-    /* Estilo inline !important: gana a todos los CSS históricos. */
+    /* Estilo inline !important: gana a todos los CSS históricos.
+       En v296 queda exactamente al ras del pie, sin superposición. */
     barra.style.setProperty(
       "bottom",
-      `${Math.max(0, altoPie - 1)}px`,
+      `${Math.max(0, altoPie)}px`,
       "important"
     );
     barra.style.setProperty(
@@ -8077,5 +8078,61 @@ programarAjusteHeaderPieMovil();
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(programarAjusteV295);
+  }
+})();
+
+
+/* =========================================================
+   v296 - barra móvil al ras del pie, SIN superposición
+========================================================= */
+(() => {
+  const ajustarBarraAlRasV296 = () => {
+    if (!window.matchMedia("(max-width:650px)").matches) return;
+
+    const barra = document.querySelector(".acciones-flotantes");
+    const pie = document.querySelector(".marca-inferior-movil");
+
+    if (!barra || !pie) return;
+
+    const altoPie = pie.getBoundingClientRect().height;
+    if (!Number.isFinite(altoPie) || altoPie <= 0) return;
+
+    /* Exactamente encima del pie: 0 px de hueco y 0 px de solapamiento. */
+    barra.style.setProperty(
+      "bottom",
+      `${altoPie}px`,
+      "important"
+    );
+  };
+
+  const programarV296 = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(ajustarBarraAlRasV296);
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      programarV296,
+      { once:true }
+    );
+  } else {
+    programarV296();
+  }
+
+  window.addEventListener("load", programarV296, { once:true });
+  window.addEventListener("resize", programarV296, { passive:true });
+  window.addEventListener("orientationchange", programarV296, { passive:true });
+
+  if ("ResizeObserver" in window) {
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (pie) {
+      new ResizeObserver(programarV296).observe(pie);
+    }
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(programarV296);
   }
 })();
