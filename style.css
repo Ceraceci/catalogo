@@ -1326,3 +1326,47 @@ body.modo-producto-compartido .productos { grid-template-columns: minmax(280px, 
     transform:translateY(5px) !important;
   }
 }
+
+
+/* =========================================================
+   v284 - reemplazo forzado del logo del pie
+   El recurso se fuerza desde style.css externo para evitar que
+   un src antiguo embebido en HTML siga viéndose por caché.
+========================================================= */
+html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
+  content:url("img/logo-pie-v284.png?v=284") !important;
+}
+
+/* Conservamos la huella horizontal que tenía el logo anterior,
+   para no mover el punto ni la frase del pie. */
+@media (min-width:651px){
+  html body .marca-inferior-movil .marca-inferior-linea > strong.marca-inferior-logo{
+    flex:0 0 138px !important;
+    width:138px !important;
+    min-width:138px !important;
+    max-width:138px !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
+    width:100% !important;
+    height:40px !important;
+    object-fit:contain !important;
+    object-position:left center !important;
+  }
+}
+
+@media (max-width:650px){
+  html body .marca-inferior-movil .marca-inferior-linea > strong.marca-inferior-logo{
+    flex:0 0 124px !important;
+    width:124px !important;
+    min-width:124px !important;
+    max-width:124px !important;
+  }
+
+  html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
+    width:100% !important;
+    height:36px !important;
+    object-fit:contain !important;
+    object-position:left center !important;
+  }
+}
