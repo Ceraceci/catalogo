@@ -1376,3 +1376,64 @@ html body .marca-inferior-movil .marca-inferior-linea .logo-pie-ceraceci{
     max-width:124px !important;
   }
 }
+
+
+/* =========================================================
+   v286 - logo nuevo del pie, aislado de estilos históricos
+========================================================= */
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+
+  flex-shrink:0 !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  overflow:visible !important;
+  background:none !important;
+  background-image:none !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286 > .logo-pie-v286{
+  display:block !important;
+  width:100% !important;
+  height:auto !important;
+  max-width:none !important;
+  max-height:none !important;
+
+  margin:0 !important;
+  padding:0 !important;
+
+  object-fit:contain !important;
+  object-position:left center !important;
+
+  background:none !important;
+  border:0 !important;
+}
+
+@media (min-width:651px){
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+    flex:0 0 138px !important;
+    width:138px !important;
+    min-width:138px !important;
+    max-width:138px !important;
+
+    position:relative !important;
+    top:3.3px !important;
+  }
+}
+
+@media (max-width:650px){
+  html body .marca-inferior-movil .marca-inferior-linea > .marca-inferior-logo-v286{
+    flex:0 0 124px !important;
+    width:124px !important;
+    min-width:124px !important;
+    max-width:124px !important;
+
+    position:relative !important;
+    top:-2px !important;
+  }
+}
