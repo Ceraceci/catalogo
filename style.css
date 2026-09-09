@@ -1757,12 +1757,12 @@ html body div.marca-inferior-movil.marca-inferior-movil
 
 
 /* =========================================================
-   v303 - FONDO ARCILLA EN EL PIE
+   v304 - PIE DEL MISMO COLOR QUE EL BORDE DE "VER CARRITO"
    Base: v302
-   Mismo color que los espacios entre tarjetas.
+   Color exacto: #98371e
 ========================================================= */
 
 html body .marca-inferior-movil{
-  background:#CF927D !important;
-  background-color:#CF927D !important;
+  background:#98371e !important;
+  background-color:#98371e !important;
 }
