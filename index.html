@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=295">
+  <link rel="stylesheet" href="style.css?v=300">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7444,7 +7444,7 @@
 
 </head>
 
-<body data-catalog-build="295">
+<body data-catalog-build="300">
   <main class="contenedor">
 
     <header class="cabecera">
@@ -16000,6 +16000,46 @@
     })();
   </script>
 
-  <script src="script.js?v=295"></script>
+  
+<style id="ajuste-superposicion-pie-v297">
+  @media (max-width:650px){
+    /*
+      Las sombras anteriores se proyectaban hacia abajo y hacían
+      parecer que la barra invadía el pie aunque su posición fuera correcta.
+      Ahora la sombra queda únicamente hacia arriba.
+    */
+    html body .abrir-carrito,
+    html body .instagram-flotante,
+    html body .whatsapp-flotante{
+      box-shadow:0 -2px 8px rgba(70,40,25,.14) !important;
+    }
+
+    html body .acciones-flotantes{
+      margin-bottom:0 !important;
+      padding-bottom:0 !important;
+    }
+  }
+</style>
+
+
+<style id="simetria-barra-carrito-v298">
+  @media (max-width:650px){
+    /*
+      Fondo arcilla simétrico:
+      6 px por arriba y 6 px por debajo del botón/redes.
+      El borde inferior del CONTENEDOR queda pegado al pie.
+    */
+    html body .acciones-flotantes{
+      box-sizing:border-box !important;
+      padding-top:6px !important;
+      padding-bottom:6px !important;
+      margin-bottom:0 !important;
+      background:var(--color-arcilla) !important;
+      background-color:var(--color-arcilla) !important;
+    }
+  }
+</style>
+
+<script src="script.js?v=300"></script>
 </body>
 </html>
