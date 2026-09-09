@@ -8100,7 +8100,7 @@ programarAjusteHeaderPieMovil();
     /* Exactamente encima del pie: 0 px de hueco y 0 px de solapamiento. */
     barra.style.setProperty(
       "bottom",
-      `${altoPie}px`,
+      `${altoPie + 1}px`,
       "important"
     );
   };
@@ -8134,5 +8134,61 @@ programarAjusteHeaderPieMovil();
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(programarV296);
+  }
+})();
+
+
+/* =========================================================
+   v297 - barra móvil sin superposición visual con el pie
+========================================================= */
+(() => {
+  const ajustarV297 = () => {
+    if (!window.matchMedia("(max-width:650px)").matches) return;
+
+    const barra = document.querySelector(".acciones-flotantes");
+    const pie = document.querySelector(".marca-inferior-movil");
+
+    if (!barra || !pie) return;
+
+    const altoPie = pie.getBoundingClientRect().height;
+    if (!Number.isFinite(altoPie) || altoPie <= 0) return;
+
+    /* 1 px de separación de seguridad: no hay superposición. */
+    barra.style.setProperty(
+      "bottom",
+      `${altoPie + 1}px`,
+      "important"
+    );
+  };
+
+  const programarV297 = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(ajustarV297);
+    });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      programarV297,
+      { once:true }
+    );
+  } else {
+    programarV297();
+  }
+
+  window.addEventListener("load", programarV297, { once:true });
+  window.addEventListener("resize", programarV297, { passive:true });
+  window.addEventListener("orientationchange", programarV297, { passive:true });
+
+  if ("ResizeObserver" in window) {
+    const pie = document.querySelector(".marca-inferior-movil");
+    if (pie) {
+      new ResizeObserver(programarV297).observe(pie);
+    }
+  }
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(programarV297);
   }
 })();
