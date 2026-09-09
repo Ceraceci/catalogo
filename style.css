@@ -1757,12 +1757,26 @@ html body div.marca-inferior-movil.marca-inferior-movil
 
 
 /* =========================================================
-   v304 - PIE DEL MISMO COLOR QUE EL BORDE DE "VER CARRITO"
+   v305 - PIE COMPLETO COLOR ARCILLA
    Base: v302
-   Color exacto: #98371e
+   Mismo color que el encabezado: #CF927D
 ========================================================= */
 
-html body .marca-inferior-movil{
-  background:#98371e !important;
-  background-color:#98371e !important;
+html body .marca-inferior-movil,
+html body div.marca-inferior-movil.marca-inferior-movil{
+  background:#CF927D !important;
+  background-color:#CF927D !important;
+  border-top-color:#CF927D !important;
+}
+
+html body .marca-inferior-movil::after,
+html body div.marca-inferior-movil.marca-inferior-movil::after{
+  background:#CF927D !important;
+  background-color:#CF927D !important;
+}
+
+html body .marca-inferior-movil .marca-inferior-linea,
+html body .marca-inferior-movil .firma-catalogo{
+  background:transparent !important;
+  background-color:transparent !important;
 }
