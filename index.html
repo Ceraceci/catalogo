@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es" class="ceraceci-v311-cargando">
+<html lang="es" class="ceraceci-v312-cargando">
 <head>
   <meta charset="UTF-8">
 
@@ -8,26 +8,26 @@
     content="width=device-width, initial-scale=1.0"
   >
 
-  <style id="ceraceci-loader-v311-style">
+  <style id="ceraceci-loader-v312-style">
     /*
-      V311: loader autocontenido en index.html.
+      V312: loader autocontenido en index.html.
       El catálogo se oculta con opacity en los hijos directos del body.
-      Así ningún visibility:visible !important interno puede filtrarse.
+      Loader nuevo: logo en contorno con recorrido progresivo + porcentaje.
     */
-    html.ceraceci-v311-cargando,
-    html.ceraceci-v311-cargando body{
+    html.ceraceci-v312-cargando,
+    html.ceraceci-v312-cargando body{
       margin:0;
       min-height:100%;
       overflow:hidden !important;
       background:#CF927D !important;
     }
 
-    html.ceraceci-v311-cargando body > *:not(#ceraceciLoaderV311):not(script):not(style){
+    html.ceraceci-v312-cargando body > *:not(#ceraceciLoaderV312):not(script):not(style){
       opacity:0 !important;
       pointer-events:none !important;
     }
 
-    #ceraceciLoaderV311{
+    #ceraceciLoaderV312{
       position:fixed;
       inset:0;
       z-index:2147483000;
@@ -43,176 +43,120 @@
       transition:opacity .34s ease, visibility .34s ease;
     }
 
-    #ceraceciLoaderV311.ceraceci-loader-saliendo{
+    #ceraceciLoaderV312.ceraceci-loader-saliendo{
       opacity:0;
       visibility:hidden;
       pointer-events:none;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-panel{
-      width:min(92vw,430px);
+    #ceraceciLoaderV312 .ceraceci-loader-panel{
+      width:min(92vw,520px);
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      gap:17px;
+      gap:18px;
       text-align:center;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-marca{
+    #ceraceciLoaderV312 .ceraceci-loader-brandlock{
+      --progress:0;
       display:flex;
-      flex-direction:column;
       align-items:center;
-      gap:3px;
-      color:#111;
-      font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-logo-texto{
-      font-size:clamp(28px,4.2vw,40px);
-      font-weight:700;
-      line-height:1;
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-subtitulo{
-      font-size:clamp(12px,2.2vw,15px);
-      font-weight:600;
-      line-height:1.15;
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-escena{
-      --p:0;
-      position:relative;
-      width:min(82vw,300px);
-      height:min(78vw,250px);
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-torno-base{
-      position:absolute;
-      left:50%;
-      bottom:10px;
-      width:155px;
-      height:22px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:rgba(85,44,26,.34);
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-torno-columna{
-      position:absolute;
-      left:50%;
-      bottom:24px;
-      width:36px;
-      height:34px;
-      transform:translateX(-50%);
-      border-radius:14px 14px 10px 10px;
-      background:rgba(111,57,34,.64);
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-plato{
-      position:absolute;
-      left:50%;
-      bottom:52px;
-      width:132px;
-      height:20px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:#B9745D;
-      box-shadow:0 2px 0 rgba(90,48,28,.12) inset;
-      animation:ceraceciV311Giro 1.65s linear infinite;
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-pieza{
-      position:absolute;
-      left:50%;
-      bottom:66px;
-      width:90px;
-      height:88px;
-      background:#98371E;
-      border-radius:40% 40% 48% 48% / 28% 28% 72% 72%;
-      box-shadow:0 10px 12px rgba(64,25,11,.14);
-      transform:
-        translateX(-50%)
-        translateY(calc(22px - (var(--p) * 16px)))
-        scaleX(calc(.78 + (var(--p) * .22)))
-        scaleY(calc(.58 + (var(--p) * .42)));
-      transition:transform .10s linear;
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-pieza::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:-2px;
-      width:calc(62px + (var(--p) * 10px));
-      height:calc(18px * var(--p));
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:#CF927D;
-      opacity:calc(.08 + (var(--p) * .92));
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-pieza::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:-6px;
-      width:calc(48px + (var(--p) * 18px));
-      height:12px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:rgba(84,33,16,.15);
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-cavidad{
-      position:absolute;
-      left:50%;
-      top:6px;
-      width:calc(44px + (var(--p) * 16px));
-      height:calc(2px + (var(--p) * 15px));
-      transform:translateX(-50%);
-      border-radius:999px 999px 18px 18px;
-      background:rgba(255,255,255,.12);
-      opacity:calc(var(--p) * .95);
-    }
-
-    #ceraceciLoaderV311 .ceraceci-loader-mano{
-      position:absolute;
-      bottom:64px;
-      width:68px;
-      height:98px;
-      box-sizing:border-box;
-      display:flex;
-      align-items:flex-start;
       justify-content:center;
-      gap:5px;
-      padding-top:11px;
-      background:#EEE8E6;
-      border:2px solid rgba(39,27,19,.25);
-      box-shadow:0 6px 14px rgba(55,35,23,.08);
+      gap:16px;
+      max-width:min(92vw,500px);
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-mano span{
+    #ceraceciLoaderV312 .ceraceci-loader-logo-wrap{
+      flex:0 0 auto;
+      width:clamp(86px,19vw,114px);
+      aspect-ratio:1 / 1;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-logo{
       display:block;
-      width:9px;
-      height:34px;
-      border-radius:999px;
-      background:rgba(255,255,255,.30);
+      width:100%;
+      height:100%;
+      overflow:visible;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-mano-izq{
-      left:calc(50% - 122px + (var(--p) * 28px));
-      border-radius:34px 26px 28px 22px;
-      animation:ceraceciV311ManoIzq 1.55s ease-in-out infinite;
+    #ceraceciLoaderV312 .trace-base,
+    #ceraceciLoaderV312 .trace-progress{
+      fill:none;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+      vector-effect:non-scaling-stroke;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-mano-der{
-      right:calc(50% - 122px + (var(--p) * 28px));
-      border-radius:26px 34px 22px 28px;
-      animation:ceraceciV311ManoDer 1.55s ease-in-out infinite;
+    #ceraceciLoaderV312 .trace-base{
+      opacity:.23;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-mensaje{
+    #ceraceciLoaderV312 .trace-base.hand{
+      stroke:#111;
+      stroke-width:7;
+    }
+
+    #ceraceciLoaderV312 .trace-base.bowl{
+      stroke:#98371E;
+      stroke-width:7;
+    }
+
+    #ceraceciLoaderV312 .trace-progress.hand{
+      stroke:#111;
+      stroke-width:7;
+      stroke-dasharray:1;
+      stroke-dashoffset:1;
+    }
+
+    #ceraceciLoaderV312 .trace-progress.bowl{
+      stroke:#98371E;
+      stroke-width:7;
+      stroke-dasharray:1;
+      stroke-dashoffset:1;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-word{
+      position:relative;
+      display:grid;
+      justify-items:start;
+      align-items:center;
+      white-space:nowrap;
+      line-height:1;
+      max-width:min(58vw,310px);
+      min-width:0;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-word-base,
+    #ceraceciLoaderV312 .ceraceci-loader-word-progress{
+      font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-size:clamp(31px,5vw,44px);
+      font-weight:700;
+      letter-spacing:.01em;
+      line-height:1;
+      color:transparent;
+      -webkit-text-stroke-width:1.8px;
+      text-rendering:geometricPrecision;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-word-base{
+      grid-area:1 / 1;
+      -webkit-text-stroke-color:rgba(17,17,17,.23);
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-word-progress-clip{
+      grid-area:1 / 1;
+      width:calc(var(--progress) * 1%);
+      max-width:100%;
+      overflow:hidden;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-word-progress{
+      -webkit-text-stroke-color:#111;
+    }
+
+    #ceraceciLoaderV312 .ceraceci-loader-mensaje{
       min-height:20px;
       color:#111;
       font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -221,23 +165,23 @@
       line-height:1.2;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-progreso{
-      width:min(82vw,280px);
+    #ceraceciLoaderV312 .ceraceci-loader-progreso{
+      width:min(84vw,300px);
       display:flex;
       align-items:center;
       gap:10px;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-progreso-linea{
+    #ceraceciLoaderV312 .ceraceci-loader-progreso-linea{
       flex:1 1 auto;
       height:10px;
       overflow:hidden;
       border-radius:999px;
-      background:rgba(255,255,255,.30);
+      background:rgba(255,255,255,.32);
       box-shadow:0 1px 0 rgba(0,0,0,.08) inset;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-progreso-relleno{
+    #ceraceciLoaderV312 .ceraceci-loader-progreso-relleno{
       width:0%;
       height:100%;
       border-radius:999px;
@@ -245,45 +189,32 @@
       transition:width .10s linear;
     }
 
-    #ceraceciLoaderV311 .ceraceci-loader-progreso-texto{
+    #ceraceciLoaderV312 .ceraceci-loader-progreso-texto{
       flex:0 0 42px;
       text-align:right;
       color:#111;
       font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       font-size:13px;
-      font-weight:700;
-    }
-
-    @keyframes ceraceciV311Giro{
-      from{transform:translateX(-50%) rotate(0deg)}
-      to{transform:translateX(-50%) rotate(360deg)}
-    }
-
-    @keyframes ceraceciV311ManoIzq{
-      0%,100%{transform:rotate(-13deg) translateY(0)}
-      50%{transform:rotate(-16deg) translateY(3px)}
-    }
-
-    @keyframes ceraceciV311ManoDer{
-      0%,100%{transform:rotate(13deg) translateY(0)}
-      50%{transform:rotate(16deg) translateY(3px)}
+      font-weight:800;
     }
 
     @media (max-width:650px){
-      #ceraceciLoaderV311 .ceraceci-loader-panel{gap:16px}
-      #ceraceciLoaderV311 .ceraceci-loader-escena{
-        width:min(86vw,286px);
-        height:min(80vw,240px);
+      #ceraceciLoaderV312 .ceraceci-loader-panel{gap:16px}
+      #ceraceciLoaderV312 .ceraceci-loader-brandlock{
+        gap:12px;
       }
-      #ceraceciLoaderV311 .ceraceci-loader-mano{
-        width:60px;
-        height:90px;
+      #ceraceciLoaderV312 .ceraceci-loader-logo-wrap{
+        width:clamp(78px,24vw,96px);
       }
-      #ceraceciLoaderV311 .ceraceci-loader-mano span{
-        width:8px;
-        height:30px;
+      #ceraceciLoaderV312 .ceraceci-loader-word{
+        max-width:min(56vw,240px);
       }
-      #ceraceciLoaderV311 .ceraceci-loader-progreso{
+      #ceraceciLoaderV312 .ceraceci-loader-word-base,
+      #ceraceciLoaderV312 .ceraceci-loader-word-progress{
+        font-size:clamp(25px,7vw,34px);
+        -webkit-text-stroke-width:1.5px;
+      }
+      #ceraceciLoaderV312 .ceraceci-loader-progreso{
         width:min(86vw,270px);
       }
     }
@@ -297,15 +228,15 @@
   <meta http-equiv="Expires" content="243">
 
   <title>Ceraceci - Catálogo</title>
-  <meta name="ceraceci-version" content="311">
-  <meta name="ceraceci-loader-version" content="311">
+  <meta name="ceraceci-version" content="312">
+  <meta name="ceraceci-loader-version" content="312">
 
   <!--
     La hoja se carga de forma bloqueante para impedir que el navegador
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=311">
+  <link rel="stylesheet" href="style.css?v=312">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7691,60 +7622,77 @@
 
 </head>
 
-<body data-catalog-build="311">
-  <div id="ceraceciLoaderV311" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
+<body data-catalog-build="312">
+  <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
-      <div class="ceraceci-loader-marca">
-        <div class="ceraceci-loader-logo-texto">Ceraceci</div>
-        <div class="ceraceci-loader-subtitulo">Insumos para la industria cerámica</div>
-      </div>
-
-      <div class="ceraceci-loader-escena" id="ceraceciLoaderEscenaV311" style="--p:0" aria-hidden="true">
-        <div class="ceraceci-loader-torno-base"></div>
-        <div class="ceraceci-loader-torno-columna"></div>
-        <div class="ceraceci-loader-plato"></div>
-        <div class="ceraceci-loader-pieza">
-          <div class="ceraceci-loader-cavidad"></div>
+      <div class="ceraceci-loader-brandlock" id="ceraceciLoaderBrandV312" style="--progress:0" aria-hidden="true">
+        <div class="ceraceci-loader-logo-wrap">
+          <svg class="ceraceci-loader-logo" viewBox="0 0 120 120" aria-hidden="true">
+            <path class="trace-base bowl" d="M34 34c6 12 15 19 26 23 11-4 20-11 26-23"></path>
+            <path class="trace-progress bowl" d="M34 34c6 12 15 19 26 23 11-4 20-11 26-23"></path>
+            <path class="trace-base bowl" d="M43 40c0 8 1 16 3 24 2 9 7 18 14 25"></path>
+            <path class="trace-progress bowl" d="M43 40c0 8 1 16 3 24 2 9 7 18 14 25"></path>
+            <path class="trace-base bowl" d="M77 40c0 8-1 16-3 24-2 9-7 18-14 25"></path>
+            <path class="trace-progress bowl" d="M77 40c0 8-1 16-3 24-2 9-7 18-14 25"></path>
+            <path class="trace-base hand" d="M23 84c3 9 11 15 21 17 12 2 24-3 33-12"></path>
+            <path class="trace-progress hand" d="M23 84c3 9 11 15 21 17 12 2 24-3 33-12"></path>
+            <path class="trace-base hand" d="M97 84c-3 9-11 15-21 17-12 2-24-3-33-12"></path>
+            <path class="trace-progress hand" d="M97 84c-3 9-11 15-21 17-12 2-24-3-33-12"></path>
+            <path class="trace-base hand" d="M28 74c4 6 10 10 17 11"></path>
+            <path class="trace-progress hand" d="M28 74c4 6 10 10 17 11"></path>
+            <path class="trace-base hand" d="M92 74c-4 6-10 10-17 11"></path>
+            <path class="trace-progress hand" d="M92 74c-4 6-10 10-17 11"></path>
+          </svg>
         </div>
-        <div class="ceraceci-loader-mano ceraceci-loader-mano-izq"><span></span><span></span><span></span></div>
-        <div class="ceraceci-loader-mano ceraceci-loader-mano-der"><span></span><span></span><span></span></div>
+        <div class="ceraceci-loader-word">
+          <div class="ceraceci-loader-word-base">Ceraceci</div>
+          <div class="ceraceci-loader-word-progress-clip">
+            <div class="ceraceci-loader-word-progress">Ceraceci</div>
+          </div>
+        </div>
       </div>
-
-      <div class="ceraceci-loader-mensaje" id="ceraceciLoaderMensajeV311">Preparando barro...</div>
-
+      <div class="ceraceci-loader-mensaje" id="ceraceciLoaderMensajeV312">Trazando logo...</div>
       <div class="ceraceci-loader-progreso">
         <div class="ceraceci-loader-progreso-linea">
-          <div class="ceraceci-loader-progreso-relleno" id="ceraceciLoaderRellenoV311"></div>
+          <div class="ceraceci-loader-progreso-relleno" id="ceraceciLoaderRellenoV312"></div>
         </div>
-        <div class="ceraceci-loader-progreso-texto" id="ceraceciLoaderPorcentajeV311">0%</div>
+        <div class="ceraceci-loader-progreso-texto" id="ceraceciLoaderPorcentajeV312">0%</div>
       </div>
     </div>
   </div>
-  <script id="ceraceci-loader-v311-script">
+  <script id="ceraceci-loader-v312-script">
 (() => {
-  const VERSION = 311;
+  const VERSION = 312;
   const root = document.documentElement;
-  const loader = document.getElementById("ceraceciLoaderV311");
-  const scene = document.getElementById("ceraceciLoaderEscenaV311");
-  const fill = document.getElementById("ceraceciLoaderRellenoV311");
-  const percent = document.getElementById("ceraceciLoaderPorcentajeV311");
-  const message = document.getElementById("ceraceciLoaderMensajeV311");
+  const loader = document.getElementById("ceraceciLoaderV312");
+  const brand = document.getElementById("ceraceciLoaderBrandV312");
+  const fill = document.getElementById("ceraceciLoaderRellenoV312");
+  const percent = document.getElementById("ceraceciLoaderPorcentajeV312");
+  const message = document.getElementById("ceraceciLoaderMensajeV312");
+  const traces = Array.from(document.querySelectorAll("#ceraceciLoaderV312 .trace-progress"));
 
-  if (!loader || !scene || !fill || !percent || !message) {
-    root.classList.remove("ceraceci-v311-cargando");
+  if (!loader || !brand || !fill || !percent || !message || !traces.length) {
+    root.classList.remove("ceraceci-v312-cargando");
     return;
   }
 
   const steps = [
-    [18, "Preparando barro..."],
-    [42, "Modelando base..."],
-    [70, "Levantando paredes..."],
-    [94, "Definiendo cuenco..."],
+    [18, "Trazando logo..."],
+    [45, "Cargando productos..."],
+    [72, "Acomodando catálogo..."],
+    [95, "Últimos detalles..."],
     [101, "Abriendo catálogo..."]
   ];
 
-  let shown = 1;
-  let target = 8;
+  traces.forEach((path) => {
+    const len = path.getTotalLength();
+    path.dataset.len = String(len);
+    path.style.strokeDasharray = `${len}`;
+    path.style.strokeDashoffset = `${len}`;
+  });
+
+  let shown = 0;
+  let target = 7;
   let finalizing = false;
   let finished = false;
   let catalogReady = false;
@@ -7752,7 +7700,7 @@
   let fontsReady = !document.fonts || document.fonts.status === "loaded";
   let resourcesReady = false;
   const start = performance.now();
-  const minimum = 900;
+  const minimum = 850;
 
   const textFor = (value) => {
     for (const [limit, text] of steps) {
@@ -7766,7 +7714,11 @@
     fill.style.width = `${v}%`;
     percent.textContent = `${Math.round(v)}%`;
     message.textContent = textFor(v);
-    scene.style.setProperty("--p", (v / 100).toFixed(3));
+    brand.style.setProperty("--progress", v.toFixed(2));
+    traces.forEach((path) => {
+      const len = Number(path.dataset.len || 1);
+      path.style.strokeDashoffset = `${len * (1 - (v / 100))}`;
+    });
   };
 
   const twoFrames = () => new Promise((resolve) => {
@@ -7828,7 +7780,6 @@
   const maybeFinish = () => {
     if (finished || finalizing) return;
     if (!catalogReady || !windowReady || !fontsReady || !resourcesReady) return;
-
     finalizing = true;
     target = 100;
   };
@@ -7837,10 +7788,7 @@
     if (finished) return;
     finished = true;
     draw(100);
-
-    /* Catalog is made visible while the fully opaque loader is still on top. */
-    root.classList.remove("ceraceci-v311-cargando");
-
+    root.classList.remove("ceraceci-v312-cargando");
     requestAnimationFrame(() => {
       loader.classList.add("ceraceci-loader-saliendo");
       setTimeout(() => loader.remove(), 380);
@@ -7849,16 +7797,13 @@
 
   const animate = () => {
     if (finished) return;
-
     shown += (target - shown) * (finalizing ? 0.20 : 0.085);
     if (finalizing && shown > 99.45) shown = 100;
     draw(shown);
-
     if (finalizing && shown >= 100 && performance.now() - start >= minimum) {
       reveal();
       return;
     }
-
     requestAnimationFrame(animate);
   };
 
@@ -7894,7 +7839,6 @@
   requestAnimationFrame(animate);
   checkCatalog();
 
-  /* Never trap the user forever if an external resource fails. */
   setTimeout(async () => {
     if (finished) return;
     catalogReady = true;
