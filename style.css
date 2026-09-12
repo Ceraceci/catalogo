@@ -1781,8 +1781,10 @@ html body .marca-inferior-movil .firma-catalogo{
   background-color:transparent !important;
 }
 
+
 /* =========================================================
-   v309 - LOADER CERÁMICO ÚNICO
+   v310 - LOADER CERÁMICO LIMPIO
+   Base: v306
 ========================================================= */
 
 .ceraceci-loader-overlay{
@@ -1798,13 +1800,13 @@ html body .marca-inferior-movil .firma-catalogo{
   opacity:1;
   visibility:visible;
   pointer-events:auto;
-  transition:opacity .32s ease, visibility .32s ease;
+  transition:opacity .34s ease, visibility .34s ease;
 }
 
 .ceraceci-loader-overlay.is-hiding{
-  opacity:0;
-  visibility:hidden;
-  pointer-events:none;
+  opacity:0 !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
 }
 
 .ceraceci-loader-panel{
@@ -1821,6 +1823,7 @@ html body .marca-inferior-movil .firma-catalogo{
   display:flex;
   flex-direction:column;
   align-items:center;
+  justify-content:center;
   gap:3px;
 }
 
@@ -1842,8 +1845,6 @@ html body .marca-inferior-movil .firma-catalogo{
 
 .ceraceci-loader-escena{
   --loader-progress:0;
-  --loader-piece-color:#98371E;
-  --loader-hand-color:#EEE8E6;
   position:relative;
   width:min(82vw,300px);
   height:min(78vw,250px);
@@ -1880,7 +1881,8 @@ html body .marca-inferior-movil .firma-catalogo{
   height:20px;
   border-radius:999px;
   background:#B9745D;
-  animation:ceraceciGiroTornoV309 2.2s linear infinite;
+  box-shadow:0 2px 0 rgba(90,48,28,.12) inset;
+  animation:ceraceciGiroTornoV310 1.8s linear infinite;
 }
 
 .ceraceci-loader-pieza{
@@ -1889,15 +1891,17 @@ html body .marca-inferior-movil .firma-catalogo{
   bottom:66px;
   width:90px;
   height:88px;
-  background:var(--loader-piece-color);
+  background:#98371E;
   border-radius:40% 40% 48% 48% / 28% 28% 72% 72%;
   box-shadow:0 10px 12px rgba(64,25,11,.14);
+
   transform:
     translateX(-50%)
     translateY(calc(22px - (var(--loader-progress) * 16px)))
     scaleX(calc(.78 + (var(--loader-progress) * .22)))
     scaleY(calc(.58 + (var(--loader-progress) * .42)));
-  transition:transform .14s linear;
+
+  transition:transform .12s linear;
 }
 
 .ceraceci-loader-pieza::before{
@@ -1921,8 +1925,8 @@ html body .marca-inferior-movil .firma-catalogo{
   transform:translateX(-50%);
   width:calc(48px + (var(--loader-progress) * 18px));
   height:12px;
-  background:rgba(84,33,16,.15);
   border-radius:999px;
+  background:rgba(84,33,16,.15);
 }
 
 .ceraceci-loader-pieza-cavidad{
@@ -1948,28 +1952,29 @@ html body .marca-inferior-movil .firma-catalogo{
   justify-content:center;
   gap:5px;
   padding-top:11px;
-  background:var(--loader-hand-color);
+  background:#EEE8E6;
   border:2px solid rgba(39,27,19,.25);
   box-shadow:0 6px 14px rgba(55,35,23,.08);
 }
 
 .ceraceci-loader-mano span{
+  display:block;
   width:9px;
   height:34px;
   border-radius:999px;
-  background:rgba(255,255,255,.28);
+  background:rgba(255,255,255,.30);
 }
 
 .ceraceci-loader-mano-izq{
   left:calc(50% - 122px + (var(--loader-progress) * 28px));
   border-radius:34px 26px 28px 22px;
-  animation:ceraceciManoIzqV309 1.85s ease-in-out infinite;
+  animation:ceraceciManoIzqV310 1.7s ease-in-out infinite;
 }
 
 .ceraceci-loader-mano-der{
   right:calc(50% - 122px + (var(--loader-progress) * 28px));
   border-radius:26px 34px 22px 28px;
-  animation:ceraceciManoDerV309 1.85s ease-in-out infinite;
+  animation:ceraceciManoDerV310 1.7s ease-in-out infinite;
 }
 
 .ceraceci-loader-mensaje{
@@ -1977,6 +1982,7 @@ html body .marca-inferior-movil .firma-catalogo{
   font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-weight:700;
   font-size:15px;
+  line-height:1.2;
   color:#111;
 }
 
@@ -1993,6 +1999,7 @@ html body .marca-inferior-movil .firma-catalogo{
   overflow:hidden;
   border-radius:999px;
   background:rgba(255,255,255,.30);
+  box-shadow:0 1px 0 rgba(0,0,0,.08) inset;
 }
 
 .ceraceci-loader-progreso-relleno{
@@ -2012,35 +2019,41 @@ html body .marca-inferior-movil .firma-catalogo{
   color:#111;
 }
 
-@keyframes ceraceciGiroTornoV309{
+@keyframes ceraceciGiroTornoV310{
   from{ transform:translateX(-50%) rotate(0deg); }
   to{ transform:translateX(-50%) rotate(360deg); }
 }
 
-@keyframes ceraceciManoIzqV309{
+@keyframes ceraceciManoIzqV310{
   0%,100%{ transform:rotate(-13deg) translateY(0); }
   50%{ transform:rotate(-16deg) translateY(3px); }
 }
 
-@keyframes ceraceciManoDerV309{
+@keyframes ceraceciManoDerV310{
   0%,100%{ transform:rotate(13deg) translateY(0); }
   50%{ transform:rotate(16deg) translateY(3px); }
 }
 
 @media (max-width:650px){
-  .ceraceci-loader-panel{ gap:16px; }
+  .ceraceci-loader-panel{
+    gap:16px;
+  }
+
   .ceraceci-loader-escena{
     width:min(86vw,286px);
     height:min(80vw,240px);
   }
+
   .ceraceci-loader-mano{
     width:60px;
     height:90px;
   }
+
   .ceraceci-loader-mano span{
     width:8px;
     height:30px;
   }
+
   .ceraceci-loader-progreso{
     width:min(86vw,270px);
   }
