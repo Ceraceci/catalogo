@@ -954,17 +954,17 @@ async function descargarCSVAppsScript() {
 
 function finalizarCargaVisualCeraceci() {
   /*
-    Esperamos dos frames para que:
-    - termine de insertarse el HTML de las tarjetas;
-    - se apliquen los estilos definitivos;
-    - se ejecuten los ajustes de layout dependientes del DOM.
-
-    Después quitamos el bloqueo visual de una sola vez.
+    v308:
+    Esta función ya NO hace visible el catálogo por su cuenta.
+    Solo marca que productos + layout principal terminaron de armarse.
+    La pantalla de carga decide cuándo revelar la página completa.
   */
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      document.documentElement.classList.remove(
-        "ceraceci-inicializando"
+      window.__ceraceciCatalogoListo = true;
+
+      window.dispatchEvent(
+        new Event("ceraceci:catalogo-listo")
       );
     });
   });
@@ -8259,12 +8259,12 @@ programarAjusteHeaderPieMovil();
   }
 })();
 
-
 /* =========================================================
-   v307 - loader cerámico del catálogo
+   v308 - loader cerámico coordinado, sin flash inicial
+   Reemplaza íntegramente el loader v307.
 ========================================================= */
 (() => {
-  const html = document.documentElement;
+  const root = document.documentElement;
   const loader = document.getElementById("ceraceciLoader");
   const scene = document.getElementById("ceraceciLoaderScene");
   const fill = document.getElementById("ceraceciLoaderFill");
@@ -8272,93 +8272,187 @@ programarAjusteHeaderPieMovil();
   const message = document.getElementById("ceraceciLoaderMessage");
 
   if (!loader || !scene || !fill || !percent || !message) {
-    html.classList.remove("ceraceci-cargando");
+    root.classList.remove("ceraceci-cargando");
+    root.classList.remove("ceraceci-inicializando");
     return;
   }
 
   const mensajes = [
-    { until: 18, text: "Preparando barro..." },
-    { until: 45, text: "Modelando base..." },
-    { until: 72, text: "Levantando paredes..." },
-    { until: 96, text: "Definiendo cuenco..." },
-    { until: 101, text: "Abriendo catálogo..." }
+    { until:18,  text:"Preparando barro..." },
+    { until:45,  text:"Modelando base..." },
+    { until:72,  text:"Levantando paredes..." },
+    { until:96,  text:"Definiendo cuenco..." },
+    { until:101, text:"Abriendo catálogo..." }
   ];
 
-  let progress = 0;
-  let displayed = 0;
-  let loaded = false;
-  let finished = false;
-  const start = performance.now();
-  const minDuration = 1400;
+  const inicio = performance.now();
+  const duracionMinima = 1200;
 
-  const getMessage = (value) => {
+  let mostrado = 0;
+  let terminado = false;
+  let listoParaMostrar = false;
+
+  let catalogoListo =
+    window.__ceraceciCatalogoListo === true;
+
+  let ventanaLista =
+    document.readyState === "complete";
+
+  let fuentesListas =
+    !document.fonts ||
+    document.fonts.status === "loaded";
+
+  const textoPara = (valor) => {
     for (const item of mensajes) {
-      if (value < item.until) return item.text;
+      if (valor < item.until) return item.text;
     }
+
     return mensajes[mensajes.length - 1].text;
   };
 
-  const render = (value) => {
-    const clamped = Math.max(0, Math.min(100, value));
-    const ratio = clamped / 100;
-    fill.style.width = clamped + "%";
-    percent.textContent = Math.round(clamped) + "%";
-    message.textContent = getMessage(clamped);
-    scene.style.setProperty("--loader-progress", ratio.toFixed(3));
+  const dibujar = (valor) => {
+    const v = Math.max(0, Math.min(100, valor));
+    const proporcion = v / 100;
+
+    fill.style.width = `${v}%`;
+    percent.textContent = `${Math.round(v)}%`;
+    message.textContent = textoPara(v);
+
+    scene.style.setProperty(
+      "--loader-progress",
+      proporcion.toFixed(3)
+    );
   };
 
-  const closeLoader = () => {
-    if (finished) return;
-    finished = true;
+  const comprobarListo = () => {
+    if (
+      listoParaMostrar ||
+      !catalogoListo ||
+      !ventanaLista ||
+      !fuentesListas
+    ) {
+      return;
+    }
 
-    render(100);
+    /*
+      Dos frames finales garantizan que los últimos cálculos de layout,
+      posiciones y estilos ya llegaron al compositor antes de revelar.
+    */
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        listoParaMostrar = true;
+      });
+    });
+  };
+
+  const revelarCatalogo = () => {
+    if (terminado) return;
+    terminado = true;
+
+    dibujar(100);
+
+    /*
+      Primero revelamos el catálogo YA terminado debajo del overlay.
+      Inmediatamente después el overlay se desvanece sobre él.
+    */
+    root.classList.remove("ceraceci-cargando");
+    root.classList.remove("ceraceci-inicializando");
+
     loader.classList.add("is-hiding");
 
     window.setTimeout(() => {
-      html.classList.remove("ceraceci-cargando");
-      if (loader.parentNode) loader.parentNode.removeChild(loader);
-    }, 340);
+      if (loader.parentNode) {
+        loader.parentNode.removeChild(loader);
+      }
+    }, 360);
   };
 
-  const tick = () => {
-    const elapsed = performance.now() - start;
+  const animar = () => {
+    if (terminado) return;
 
-    if (!loaded) {
-      const target = Math.min(92, (elapsed / minDuration) * 88 + 4);
-      displayed += (target - displayed) * 0.12;
-      render(displayed);
-      requestAnimationFrame(tick);
+    const transcurrido =
+      performance.now() - inicio;
+
+    let objetivo;
+
+    if (!listoParaMostrar) {
+      /*
+        El progreso nunca llega a 100 mientras la página no esté lista.
+        Los tres hitos reales hacen avanzar el porcentaje.
+      */
+      let base = 12;
+
+      if (catalogoListo) base += 42;
+      if (ventanaLista) base += 24;
+      if (fuentesListas) base += 12;
+
+      const avanceTiempo =
+        Math.min(8, transcurrido / 250);
+
+      objetivo =
+        Math.min(96, base + avanceTiempo);
+    } else {
+      objetivo = 100;
+    }
+
+    mostrado +=
+      (objetivo - mostrado) *
+      (listoParaMostrar ? 0.18 : 0.10);
+
+    dibujar(mostrado);
+
+    if (
+      listoParaMostrar &&
+      transcurrido >= duracionMinima &&
+      mostrado >= 99.35
+    ) {
+      revelarCatalogo();
       return;
     }
 
-    progress = 100;
-    displayed += (progress - displayed) * 0.16;
-    render(displayed);
-
-    if (elapsed >= minDuration && displayed >= 99.4) {
-      closeLoader();
-      return;
-    }
-
-    requestAnimationFrame(tick);
+    requestAnimationFrame(animar);
   };
 
-  const marcarListo = () => {
-    loaded = true;
-  };
+  window.addEventListener(
+    "ceraceci:catalogo-listo",
+    () => {
+      catalogoListo = true;
+      comprobarListo();
+    },
+    { once:true }
+  );
 
-  if (document.readyState === "complete") {
-    marcarListo();
-  } else {
-    window.addEventListener("load", marcarListo, { once: true });
+  if (!ventanaLista) {
+    window.addEventListener(
+      "load",
+      () => {
+        ventanaLista = true;
+        comprobarListo();
+      },
+      { once:true }
+    );
   }
 
-  requestAnimationFrame(tick);
+  if (!fuentesListas && document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      fuentesListas = true;
+      comprobarListo();
+    });
+  }
 
+  comprobarListo();
+  requestAnimationFrame(animar);
+
+  /*
+    Seguro: ante un recurso remoto que nunca responda,
+    no dejamos bloqueado el catálogo indefinidamente.
+  */
   window.setTimeout(() => {
-    if (!finished) {
-      marcarListo();
-      window.setTimeout(closeLoader, 250);
-    }
-  }, 6000);
+    if (terminado) return;
+
+    catalogoListo = true;
+    ventanaLista = true;
+    fuentesListas = true;
+    listoParaMostrar = true;
+  }, 8000);
 })();

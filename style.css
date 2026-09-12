@@ -1781,11 +1781,9 @@ html body .marca-inferior-movil .firma-catalogo{
   background-color:transparent !important;
 }
 
-
 /* =========================================================
-   v307 - PANTALLA DE CARGA CERÁMICA
-   Base: v306
-   Oculta el catálogo hasta que todo termine de cargar.
+   v308 - PANTALLA DE CARGA CERÁMICA SIN PARPADEO
+   Reemplaza íntegramente el loader v307.
 ========================================================= */
 
 .ceraceci-loader-overlay{
@@ -1798,6 +1796,8 @@ html body .marca-inferior-movil .firma-catalogo{
   padding:24px;
   background:#CF927D;
   opacity:1;
+  visibility:visible;
+  pointer-events:auto;
   transition:opacity .34s ease, visibility .34s ease;
 }
 
@@ -1969,14 +1969,14 @@ html body .marca-inferior-movil .firma-catalogo{
 .ceraceci-loader-mano-izq{
   left:calc(50% - 122px + (var(--loader-progress) * 28px));
   border-radius:34px 26px 28px 22px;
-  transform:rotate(-13deg) translateY(calc(2px - (var(--loader-progress) * 2px)));
+  transform:rotate(-13deg);
   animation:ceraceciManoIzq 1.85s ease-in-out infinite;
 }
 
 .ceraceci-loader-mano-der{
   right:calc(50% - 122px + (var(--loader-progress) * 28px));
   border-radius:26px 34px 22px 28px;
-  transform:rotate(13deg) translateY(calc(2px - (var(--loader-progress) * 2px)));
+  transform:rotate(13deg);
   animation:ceraceciManoDer 1.85s ease-in-out infinite;
 }
 
