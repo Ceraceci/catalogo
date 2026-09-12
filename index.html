@@ -58,7 +58,7 @@
     muestre el logo y el resto de la página antes de aplicar sus tamaños.
     El número de versión actualiza el archivo sin anular la caché en cada carga.
   -->
-  <link rel="stylesheet" href="style.css?v=306">
+  <link rel="stylesheet" href="style.css?v=307">
 
   <style id="ajustes-v49">
     /* Presentaciones alineadas a la izquierda */
@@ -7442,9 +7442,64 @@
   }
 </style>
 
+
+<script id="ceraceci-loader-boot">
+  document.documentElement.classList.add("ceraceci-cargando");
+</script>
+<style id="ceraceci-loader-boot-style">
+  html.ceraceci-cargando{
+    overflow:hidden;
+  }
+  html.ceraceci-cargando body{
+    overflow:hidden !important;
+  }
+  html.ceraceci-cargando body > *:not(.ceraceci-loader-overlay){
+    visibility:hidden !important;
+  }
+  html.ceraceci-cargando body > .ceraceci-loader-overlay{
+    visibility:visible !important;
+  }
+</style>
+
 </head>
 
-<body data-catalog-build="306">
+<body data-catalog-build="307">
+
+<div class="ceraceci-loader-overlay" id="ceraceciLoader" aria-hidden="false" role="status" aria-live="polite">
+  <div class="ceraceci-loader-panel">
+    <div class="ceraceci-loader-marca">
+      <div class="ceraceci-loader-logo-texto">Ceraceci</div>
+      <div class="ceraceci-loader-subtitulo">Insumos para la industria cerámica</div>
+    </div>
+
+    <div class="ceraceci-loader-escena" id="ceraceciLoaderScene" style="--loader-progress:0;">
+      <div class="ceraceci-loader-torno-base"></div>
+      <div class="ceraceci-loader-torno-columna"></div>
+      <div class="ceraceci-loader-plato"></div>
+
+      <div class="ceraceci-loader-pieza">
+        <div class="ceraceci-loader-pieza-cavidad"></div>
+      </div>
+
+      <div class="ceraceci-loader-mano ceraceci-loader-mano-izq">
+        <span></span><span></span><span></span>
+      </div>
+      <div class="ceraceci-loader-mano ceraceci-loader-mano-der">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+
+    <div class="ceraceci-loader-mensaje" id="ceraceciLoaderMessage">Modelando pieza...</div>
+
+    <div class="ceraceci-loader-progreso">
+      <div class="ceraceci-loader-progreso-linea">
+        <div class="ceraceci-loader-progreso-relleno" id="ceraceciLoaderFill"></div>
+      </div>
+      <div class="ceraceci-loader-progreso-texto" id="ceraceciLoaderPercent">0%</div>
+    </div>
+  </div>
+</div>
+
   <main class="contenedor">
 
     <header class="cabecera">
@@ -16040,7 +16095,7 @@
   }
 </style>
 
-<script src="script.js?v=306"></script>
+<script src="script.js?v=307"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){

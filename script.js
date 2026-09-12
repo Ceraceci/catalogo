@@ -8258,3 +8258,107 @@ programarAjusteHeaderPieMovil();
     document.fonts.ready.then(programarV298);
   }
 })();
+
+
+/* =========================================================
+   v307 - loader cerámico del catálogo
+========================================================= */
+(() => {
+  const html = document.documentElement;
+  const loader = document.getElementById("ceraceciLoader");
+  const scene = document.getElementById("ceraceciLoaderScene");
+  const fill = document.getElementById("ceraceciLoaderFill");
+  const percent = document.getElementById("ceraceciLoaderPercent");
+  const message = document.getElementById("ceraceciLoaderMessage");
+
+  if (!loader || !scene || !fill || !percent || !message) {
+    html.classList.remove("ceraceci-cargando");
+    return;
+  }
+
+  const mensajes = [
+    { until: 18, text: "Preparando barro..." },
+    { until: 45, text: "Modelando base..." },
+    { until: 72, text: "Levantando paredes..." },
+    { until: 96, text: "Definiendo cuenco..." },
+    { until: 101, text: "Abriendo catálogo..." }
+  ];
+
+  let progress = 0;
+  let displayed = 0;
+  let loaded = false;
+  let finished = false;
+  const start = performance.now();
+  const minDuration = 1400;
+
+  const getMessage = (value) => {
+    for (const item of mensajes) {
+      if (value < item.until) return item.text;
+    }
+    return mensajes[mensajes.length - 1].text;
+  };
+
+  const render = (value) => {
+    const clamped = Math.max(0, Math.min(100, value));
+    const ratio = clamped / 100;
+    fill.style.width = clamped + "%";
+    percent.textContent = Math.round(clamped) + "%";
+    message.textContent = getMessage(clamped);
+    scene.style.setProperty("--loader-progress", ratio.toFixed(3));
+  };
+
+  const closeLoader = () => {
+    if (finished) return;
+    finished = true;
+
+    render(100);
+    loader.classList.add("is-hiding");
+
+    window.setTimeout(() => {
+      html.classList.remove("ceraceci-cargando");
+      if (loader.parentNode) loader.parentNode.removeChild(loader);
+    }, 340);
+  };
+
+  const tick = () => {
+    const elapsed = performance.now() - start;
+
+    if (!loaded) {
+      const target = Math.min(92, (elapsed / minDuration) * 88 + 4);
+      displayed += (target - displayed) * 0.12;
+      render(displayed);
+      requestAnimationFrame(tick);
+      return;
+    }
+
+    progress = 100;
+    displayed += (progress - displayed) * 0.16;
+    render(displayed);
+
+    if (elapsed >= minDuration && displayed >= 99.4) {
+      closeLoader();
+      return;
+    }
+
+    requestAnimationFrame(tick);
+  };
+
+  const marcarListo = () => {
+    loaded = true;
+  };
+
+  if (document.readyState === "complete") {
+    marcarListo();
+  } else {
+    window.addEventListener("load", marcarListo, { once: true });
+  }
+
+  requestAnimationFrame(tick);
+
+  window.setTimeout(() => {
+    if (!finished) {
+      marcarListo();
+      window.setTimeout(closeLoader, 250);
+    }
+  }, 6000);
+})();
