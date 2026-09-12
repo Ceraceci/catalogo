@@ -1,3 +1,114 @@
+/* =========================================================
+   v309 - CONTROLADOR ÚNICO DEL LOADER
+========================================================= */
+(() => {
+  const root = document.documentElement;
+  const loader = document.getElementById("ceraceciLoader");
+  const scene = document.getElementById("ceraceciLoaderScene");
+  const fill = document.getElementById("ceraceciLoaderFill");
+  const percent = document.getElementById("ceraceciLoaderPercent");
+  const message = document.getElementById("ceraceciLoaderMessage");
+
+  const mensajes = [
+    { hasta:18, texto:"Preparando barro..." },
+    { hasta:42, texto:"Modelando base..." },
+    { hasta:70, texto:"Levantando paredes..." },
+    { hasta:94, texto:"Definiendo cuenco..." },
+    { hasta:101, texto:"Abriendo catálogo..." }
+  ];
+
+  let actual = 1;
+  let objetivo = 8;
+  let cerrarSolicitado = false;
+  let cerrado = false;
+  const inicio = performance.now();
+  const duracionMinima = 900;
+
+  const textoPara = (valor) => {
+    for (const item of mensajes) {
+      if (valor < item.hasta) return item.texto;
+    }
+    return mensajes[mensajes.length - 1].texto;
+  };
+
+  const pintar = (valor) => {
+    if (!loader || !scene || !fill || !percent || !message) return;
+    const v = Math.max(0, Math.min(100, valor));
+    fill.style.width = `${v}%`;
+    percent.textContent = `${Math.round(v)}%`;
+    message.textContent = textoPara(v);
+    scene.style.setProperty("--loader-progress", (v / 100).toFixed(3));
+  };
+
+  const revelar = () => {
+    if (cerrado) return;
+    cerrado = true;
+    pintar(100);
+
+    /* El catálogo se revela detrás del overlay ya terminado. */
+    root.classList.remove("ceraceci-cargando");
+
+    if (!loader) return;
+    loader.classList.add("is-hiding");
+
+    window.setTimeout(() => {
+      loader.remove();
+    }, 340);
+  };
+
+  const animar = () => {
+    if (cerrado) return;
+
+    actual +=
+      (objetivo - actual) *
+      (cerrarSolicitado ? 0.22 : 0.085);
+
+    if (cerrarSolicitado && actual > 99.45) {
+      actual = 100;
+    }
+
+    pintar(actual);
+
+    if (
+      cerrarSolicitado &&
+      actual >= 100 &&
+      performance.now() - inicio >= duracionMinima
+    ) {
+      revelar();
+      return;
+    }
+
+    requestAnimationFrame(animar);
+  };
+
+  window.CeraceciLoaderV309 = {
+    progreso(valor) {
+      if (cerrarSolicitado || cerrado) return;
+      objetivo = Math.max(objetivo, Math.min(96, Number(valor) || 0));
+    },
+
+    finalizar() {
+      if (cerrado) return;
+      cerrarSolicitado = true;
+      objetivo = 100;
+    },
+
+    emergencia() {
+      cerrarSolicitado = true;
+      objetivo = 100;
+    }
+  };
+
+  pintar(actual);
+  requestAnimationFrame(animar);
+
+  window.setTimeout(() => {
+    if (!cerrado) {
+      window.CeraceciLoaderV309?.emergencia();
+    }
+  }, 10000);
+})();
+
 /*
  * CERACECI - script.js para Cloudflare Pages
  *
@@ -953,21 +1064,7 @@ async function descargarCSVAppsScript() {
 
 
 function finalizarCargaVisualCeraceci() {
-  /*
-    v308:
-    Esta función ya NO hace visible el catálogo por su cuenta.
-    Solo marca que productos + layout principal terminaron de armarse.
-    La pantalla de carga decide cuándo revelar la página completa.
-  */
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      window.__ceraceciCatalogoListo = true;
-
-      window.dispatchEvent(
-        new Event("ceraceci:catalogo-listo")
-      );
-    });
-  });
+  window.CeraceciLoaderV309?.finalizar();
 }
 
 
@@ -1213,7 +1310,6 @@ function procesarCSVProductos(textoCSV) {
     actualizarEstadoComparacion();
   }
 
-  finalizarCargaVisualCeraceci();
 }
 
 
@@ -1235,7 +1331,6 @@ function mostrarErrorCatalogo(error) {
     </div>
   `;
 
-  finalizarCargaVisualCeraceci();
 }
 
 
@@ -7486,27 +7581,128 @@ function inicializarSeparacionBarraSuperior() {
 }
 
 
+
+/* =========================================================
+   v309 - ESPERA DE RECURSOS VISUALES
+========================================================= */
+
+function esperarDosFramesV309() {
+  return new Promise((resolve) => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(resolve);
+    });
+  });
+}
+
+function esperarConLimiteV309(promesa, milisegundos) {
+  return Promise.race([
+    promesa,
+    new Promise((resolve) => {
+      window.setTimeout(resolve, milisegundos);
+    })
+  ]);
+}
+
+async function esperarRecursosVisualesV309() {
+  window.CeraceciLoaderV309?.progreso(82);
+
+  if (document.fonts?.ready) {
+    await esperarConLimiteV309(document.fonts.ready, 1800);
+  }
+
+  window.CeraceciLoaderV309?.progreso(88);
+
+  const limiteVertical = window.innerHeight * 1.35;
+
+  const imagenesVisibles = Array.from(document.images).filter((imagen) => {
+    if (imagen.complete) return false;
+
+    const rect = imagen.getBoundingClientRect();
+
+    const prioritaria =
+      imagen.classList.contains("logo") ||
+      imagen.classList.contains("logo-mini-tarjeta") ||
+      imagen.classList.contains("logo-pie-v286");
+
+    return prioritaria || (
+      rect.bottom >= 0 &&
+      rect.top <= limiteVertical
+    );
+  });
+
+  if (imagenesVisibles.length) {
+    const esperas = imagenesVisibles.map((imagen) => {
+      return new Promise((resolve) => {
+        const terminar = () => {
+          imagen.removeEventListener("load", terminar);
+          imagen.removeEventListener("error", terminar);
+          resolve();
+        };
+
+        imagen.addEventListener("load", terminar, { once:true });
+        imagen.addEventListener("error", terminar, { once:true });
+
+        if (imagen.complete) terminar();
+      });
+    });
+
+    await esperarConLimiteV309(
+      Promise.all(esperas),
+      2200
+    );
+  }
+
+  window.CeraceciLoaderV309?.progreso(94);
+  await esperarDosFramesV309();
+}
+
+
 /* =========================================
-   INICIO
+   INICIO v309
 ========================================= */
 
-try {
-  inicializarSeparacionBarraSuperior();
-  mostrarCarrito();
-  actualizarEstadoComparacion();
-  inicializarSelectoresPersonalizadosPC();
-  cargarProductos();
-} catch (error) {
-  console.error(
-    "Error al iniciar el catálogo:",
-    error
-  );
+async function iniciarCatalogoCeraceciV309() {
+  try {
+    /*
+      Primero dejamos dos frames completos para que la escena de carga
+      aparezca antes de construir absolutamente nada del catálogo.
+    */
+    await esperarDosFramesV309();
 
-  if (estado) {
-    estado.textContent =
-      "No se pudo iniciar el catálogo. Recargá la página.";
+    window.CeraceciLoaderV309?.progreso(16);
+
+    inicializarSeparacionBarraSuperior();
+    mostrarCarrito();
+    actualizarEstadoComparacion();
+    inicializarSelectoresPersonalizadosPC();
+
+    window.CeraceciLoaderV309?.progreso(28);
+
+    await cargarProductos();
+
+    window.CeraceciLoaderV309?.progreso(76);
+
+    await esperarRecursosVisualesV309();
+
+    window.CeraceciLoaderV309?.progreso(97);
+
+    await esperarDosFramesV309();
+
+    finalizarCargaVisualCeraceci();
+  } catch (error) {
+    console.error("Error al iniciar el catálogo:", error);
+
+    if (estado) {
+      estado.textContent =
+        "No se pudo iniciar el catálogo. Recargá la página.";
+    }
+
+    await esperarDosFramesV309();
+    finalizarCargaVisualCeraceci();
   }
 }
+
+iniciarCatalogoCeraceciV309();
 
 
 /* =========================================
@@ -8257,202 +8453,4 @@ programarAjusteHeaderPieMovil();
   if (document.fonts?.ready) {
     document.fonts.ready.then(programarV298);
   }
-})();
-
-/* =========================================================
-   v308 - loader cerámico coordinado, sin flash inicial
-   Reemplaza íntegramente el loader v307.
-========================================================= */
-(() => {
-  const root = document.documentElement;
-  const loader = document.getElementById("ceraceciLoader");
-  const scene = document.getElementById("ceraceciLoaderScene");
-  const fill = document.getElementById("ceraceciLoaderFill");
-  const percent = document.getElementById("ceraceciLoaderPercent");
-  const message = document.getElementById("ceraceciLoaderMessage");
-
-  if (!loader || !scene || !fill || !percent || !message) {
-    root.classList.remove("ceraceci-cargando");
-    root.classList.remove("ceraceci-inicializando");
-    return;
-  }
-
-  const mensajes = [
-    { until:18,  text:"Preparando barro..." },
-    { until:45,  text:"Modelando base..." },
-    { until:72,  text:"Levantando paredes..." },
-    { until:96,  text:"Definiendo cuenco..." },
-    { until:101, text:"Abriendo catálogo..." }
-  ];
-
-  const inicio = performance.now();
-  const duracionMinima = 1200;
-
-  let mostrado = 0;
-  let terminado = false;
-  let listoParaMostrar = false;
-
-  let catalogoListo =
-    window.__ceraceciCatalogoListo === true;
-
-  let ventanaLista =
-    document.readyState === "complete";
-
-  let fuentesListas =
-    !document.fonts ||
-    document.fonts.status === "loaded";
-
-  const textoPara = (valor) => {
-    for (const item of mensajes) {
-      if (valor < item.until) return item.text;
-    }
-
-    return mensajes[mensajes.length - 1].text;
-  };
-
-  const dibujar = (valor) => {
-    const v = Math.max(0, Math.min(100, valor));
-    const proporcion = v / 100;
-
-    fill.style.width = `${v}%`;
-    percent.textContent = `${Math.round(v)}%`;
-    message.textContent = textoPara(v);
-
-    scene.style.setProperty(
-      "--loader-progress",
-      proporcion.toFixed(3)
-    );
-  };
-
-  const comprobarListo = () => {
-    if (
-      listoParaMostrar ||
-      !catalogoListo ||
-      !ventanaLista ||
-      !fuentesListas
-    ) {
-      return;
-    }
-
-    /*
-      Dos frames finales garantizan que los últimos cálculos de layout,
-      posiciones y estilos ya llegaron al compositor antes de revelar.
-    */
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        listoParaMostrar = true;
-      });
-    });
-  };
-
-  const revelarCatalogo = () => {
-    if (terminado) return;
-    terminado = true;
-
-    dibujar(100);
-
-    /*
-      Primero revelamos el catálogo YA terminado debajo del overlay.
-      Inmediatamente después el overlay se desvanece sobre él.
-    */
-    root.classList.remove("ceraceci-cargando");
-    root.classList.remove("ceraceci-inicializando");
-
-    loader.classList.add("is-hiding");
-
-    window.setTimeout(() => {
-      if (loader.parentNode) {
-        loader.parentNode.removeChild(loader);
-      }
-    }, 360);
-  };
-
-  const animar = () => {
-    if (terminado) return;
-
-    const transcurrido =
-      performance.now() - inicio;
-
-    let objetivo;
-
-    if (!listoParaMostrar) {
-      /*
-        El progreso nunca llega a 100 mientras la página no esté lista.
-        Los tres hitos reales hacen avanzar el porcentaje.
-      */
-      let base = 12;
-
-      if (catalogoListo) base += 42;
-      if (ventanaLista) base += 24;
-      if (fuentesListas) base += 12;
-
-      const avanceTiempo =
-        Math.min(8, transcurrido / 250);
-
-      objetivo =
-        Math.min(96, base + avanceTiempo);
-    } else {
-      objetivo = 100;
-    }
-
-    mostrado +=
-      (objetivo - mostrado) *
-      (listoParaMostrar ? 0.18 : 0.10);
-
-    dibujar(mostrado);
-
-    if (
-      listoParaMostrar &&
-      transcurrido >= duracionMinima &&
-      mostrado >= 99.35
-    ) {
-      revelarCatalogo();
-      return;
-    }
-
-    requestAnimationFrame(animar);
-  };
-
-  window.addEventListener(
-    "ceraceci:catalogo-listo",
-    () => {
-      catalogoListo = true;
-      comprobarListo();
-    },
-    { once:true }
-  );
-
-  if (!ventanaLista) {
-    window.addEventListener(
-      "load",
-      () => {
-        ventanaLista = true;
-        comprobarListo();
-      },
-      { once:true }
-    );
-  }
-
-  if (!fuentesListas && document.fonts?.ready) {
-    document.fonts.ready.then(() => {
-      fuentesListas = true;
-      comprobarListo();
-    });
-  }
-
-  comprobarListo();
-  requestAnimationFrame(animar);
-
-  /*
-    Seguro: ante un recurso remoto que nunca responda,
-    no dejamos bloqueado el catálogo indefinidamente.
-  */
-  window.setTimeout(() => {
-    if (terminado) return;
-
-    catalogoListo = true;
-    ventanaLista = true;
-    fuentesListas = true;
-    listoParaMostrar = true;
-  }, 8000);
 })();
