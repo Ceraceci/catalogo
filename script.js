@@ -87,6 +87,36 @@ const fondoCarrito =
 const carritoElemento =
   document.getElementById("carrito");
 
+const ID_RESERVA_FOOTER_CARRITO_V367 =
+  "reservaFooterCarritoV367";
+
+function asegurarReservaFooterCarritoV367() {
+  if (!carritoElemento) {
+    return null;
+  }
+
+  let reserva = document.getElementById(
+    ID_RESERVA_FOOTER_CARRITO_V367
+  );
+
+  if (!reserva) {
+    reserva = document.createElement("div");
+    reserva.id = ID_RESERVA_FOOTER_CARRITO_V367;
+    reserva.className =
+      "reserva-footer-carrito-v367";
+    reserva.setAttribute("aria-hidden", "true");
+    carritoElemento.appendChild(reserva);
+  } else if (reserva.parentElement !== carritoElemento) {
+    carritoElemento.appendChild(reserva);
+  }
+
+  carritoElemento.classList.add(
+    "carrito-con-reserva-footer-v367"
+  );
+
+  return reserva;
+}
+
 const productosCarrito =
   document.getElementById("productosCarrito");
 
@@ -6295,6 +6325,7 @@ function cargarCarritoGuardado() {
 
 
 function abrirPanelCarrito() {
+  asegurarReservaFooterCarritoV367();
   mostrarCarrito();
 
   carritoElemento.classList.add(
@@ -7436,6 +7467,8 @@ if (modalInformacionProducto) {
   );
 }
 
+
+asegurarReservaFooterCarritoV367();
 
 if (abrirCarrito) {
   abrirCarrito.addEventListener(
