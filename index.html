@@ -7,6 +7,17 @@
     name="viewport"
     content="width=device-width, initial-scale=1.0"
   >
+  <!-- CERACECI V318: favicon, acceso directo y registro PWA -->
+  <meta name="theme-color" content="#CF927D">
+  <meta name="apple-mobile-web-app-title" content="Ceraceci">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="icon" type="image/x-icon" href="favicon.ico?v=318">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png?v=318">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png?v=318">
+  <link rel="icon" type="image/png" sizes="48x48" href="favicon-48x48.png?v=318">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=318">
+  <link rel="manifest" href="manifest.webmanifest?v=318">
+
 
   <style id="ceraceci-loader-v312-style">
     /*
@@ -7554,7 +7565,7 @@
 
 </head>
 
-<body data-catalog-build="314">
+<body data-catalog-build="312">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -16263,93 +16274,7 @@
   }
 </style>
 
-<script src="script.js?v=315"></script>
-
-<script id="busqueda-inteligente-v315">
-(() => {
-  /*
-    V315 — búsqueda inteligente por prioridad.
-
-    - Mientras el texto tenga coincidencias dentro de la categoría elegida,
-      la categoría se conserva.
-      Ej.: Engobes DP + "azul" => sólo engobes azules.
-
-    - Si no hay coincidencias dentro de esa categoría, se prueba la misma
-      búsqueda en todo el catálogo. Si allí sí hay resultados, la categoría
-      cambia automáticamente a "Todos los productos".
-      Ej.: Engobes DP + "bentonita" => Todos los productos + bentonita.
-
-    - Si tampoco existe el texto en todo el catálogo, se conserva la categoría
-      original y se muestra "No se encontraron productos".
-
-    Esta versión trabaja sobre el DOM ya filtrado para no depender del alcance
-    interno de las funciones de script.js.
-  */
-
-  const buscadorV315 = document.getElementById("buscador");
-  const categoriaV315 = document.getElementById("filtroCategoria");
-  const productosV315 = document.getElementById("productos");
-
-  if (!buscadorV315 || !categoriaV315 || !productosV315) return;
-
-  let temporizadorV315 = 0;
-
-  const sincronizarCategoriaV315 = () => {
-    try {
-      if (typeof actualizarEstadoFiltroCategoria === "function") {
-        actualizarEstadoFiltroCategoria();
-      }
-      if (typeof sincronizarSelectorPersonalizadoPC === "function") {
-        sincronizarSelectorPersonalizadoPC(categoriaV315);
-      }
-    } catch (_) {}
-  };
-
-  const aplicarCambioCategoriaV315 = (valor) => {
-    categoriaV315.value = valor;
-    categoriaV315.dispatchEvent(
-      new Event("change", { bubbles: true })
-    );
-    sincronizarCategoriaV315();
-  };
-
-  const sinResultadosV315 = () =>
-    Boolean(productosV315.querySelector(".sin-resultados"));
-
-  const revisarBusquedaV315 = () => {
-    const texto = buscadorV315.value.trim();
-    const categoriaOriginal = categoriaV315.value;
-
-    if (!texto || !categoriaOriginal) return;
-
-    // El buscador normal ya filtró dentro de la categoría. Si encontró algo,
-    // no tocamos absolutamente nada.
-    if (!sinResultadosV315()) return;
-
-    // No hubo coincidencias en la categoría: probamos globalmente.
-    aplicarCambioCategoriaV315("");
-
-    // El evento change filtra de forma sincrónica en el script original.
-    // Si tampoco hay resultados globales, restauramos la categoría original
-    // antes del siguiente repintado visible.
-    if (sinResultadosV315()) {
-      aplicarCambioCategoriaV315(categoriaOriginal);
-    }
-  };
-
-  buscadorV315.addEventListener("input", () => {
-    window.clearTimeout(temporizadorV315);
-
-    // El filtro original espera 35 ms en PC y 70 ms en móvil.
-    // Dejamos margen para que termine y después evaluamos el resultado.
-    temporizadorV315 = window.setTimeout(() => {
-      temporizadorV315 = 0;
-      revisarBusquedaV315();
-    }, 130);
-  });
-})();
-</script>
-
+<script src="script.js?v=316"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){
@@ -16433,6 +16358,25 @@
     background-color:transparent !important;
   }
 </style>
+
+
+
+<!-- CERACECI V318: registra la web como PWA sin cachear el catálogo -->
+<script id="ceraceci-service-worker-v318">
+  (() => {
+    if (!("serviceWorker" in navigator)) return;
+
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("./service-worker.js?v=318", {
+          scope: "./",
+          updateViaCache: "none"
+        })
+        .then((registration) => registration.update())
+        .catch((error) => console.warn("CERACECI: no se pudo registrar el service worker", error));
+    });
+  })();
+</script>
 
 </body>
 </html>
