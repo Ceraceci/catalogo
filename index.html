@@ -7811,6 +7811,8 @@
           alt="Ceraceci"
         >
 
+        <span class="separador-encabezado-v339" aria-hidden="true"></span>
+
         <p class="subtitulo-principal">
           Insumos para la industria cerámica
         </p>
@@ -17361,6 +17363,35 @@
       width:100% !important;
       margin-left:0 !important;
       margin-right:0 !important;
+    }
+  }
+</style>
+
+
+<style id="ceraceci-v339-movil-separador-encabezado">
+  @media (max-width:650px){
+    /* Separador fino entre CERACECI y la bajada, siguiendo la lógica del pie. */
+    html body .logo-contenedor > .separador-encabezado-v339{
+      display:block !important;
+      flex:0 0 1px !important;
+      width:1px !important;
+      height:18px !important;
+      margin:0 !important;
+      padding:0 !important;
+      background:rgba(23,23,23,.38) !important;
+      border-radius:1px !important;
+      align-self:center !important;
+    }
+
+    /* Solo la frase baja medio píxel; logo y separador no se mueven. */
+    html body .logo-contenedor > .subtitulo-principal{
+      transform:translateY(.5px) !important;
+    }
+  }
+
+  @media (min-width:651px){
+    html body .logo-contenedor > .separador-encabezado-v339{
+      display:none !important;
     }
   }
 </style>
