@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="350">
+<body data-catalog-build="351">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -16387,7 +16387,7 @@
   }
 </style>
 
-<script src="script.js?v=316"></script>
+<script src="script.js?v=351"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){
@@ -17656,39 +17656,6 @@
     text-align:center !important;
   }
 </style>
-
-
-<style id="ceraceci-v347-logo-mini-simetrico">
-  /* V347 — el mini logo de la tarjeta se alinea simétricamente al botón Compartir. */
-  @media (max-width:650px){
-    html body #productos .tarjeta-producto,
-    html body #productosComparados .tarjeta-producto{
-      overflow:visible !important;
-    }
-
-    /* Compartir se mantiene como referencia visual del lado derecho. */
-    html body #productos .encabezado-producto .acciones-producto,
-    html body #productosComparados .encabezado-producto .acciones-producto{
-      top:101px !important;
-      right:0 !important;
-      width:32px !important;
-    }
-
-    /* El mini logo queda centrado sobre el borde izquierdo del recuadro de la foto,
-       replicando la misma lógica del botón Compartir pero en espejo. */
-    html body #productos .logo-mini-tarjeta,
-    html body #productosComparados .logo-mini-tarjeta{
-      top:101px !important;
-      left:-2px !important;
-      width:32px !important;
-      height:32px !important;
-      margin:0 !important;
-      transform:none !important;
-    }
-  }
-</style>
-
-
 <style id="ceraceci-v348-logo-espejo-y-flecha-orden">
   @media (max-width:650px){
     /* La flecha de Ordenar por usa exactamente el mismo dibujo y tamaño
@@ -17727,227 +17694,47 @@
   }
 </style>
 
-
-
-<style id="ceraceci-v349-logo-estable">
+<style id="ceraceci-v351-logo-y-resultados-movil">
   @media (max-width:650px){
-    /* El logo queda oculto sólo durante el microinstante en que nace una tarjeta.
-       Así nunca se ve en la posición vieja antes de anclarse a la foto. */
-    html body #productos .logo-mini-tarjeta,
-    html body #productosComparados .logo-mini-tarjeta{
-      visibility:hidden !important;
-    }
-
+    /* El propio recuadro de la foto pasa a ser el ancla estable del logo. */
     html body #productos .contenedor-foto-producto,
     html body #productosComparados .contenedor-foto-producto{
       position:relative !important;
       overflow:visible !important;
     }
 
-    /* Una vez insertado dentro del recuadro de la foto, el logo queda fijado
-       sobre el borde izquierdo y no depende del texto que se escriba arriba. */
+    /* El logo queda centrado exactamente sobre el borde izquierdo de la foto. */
     html body #productos .contenedor-foto-producto > .logo-mini-tarjeta,
     html body #productosComparados .contenedor-foto-producto > .logo-mini-tarjeta{
       position:absolute !important;
       left:0 !important;
       right:auto !important;
-      bottom:auto !important;
       width:32px !important;
       height:32px !important;
       margin:0 !important;
       transform:translateX(-50%) !important;
-      z-index:20 !important;
-      visibility:visible !important;
-      pointer-events:none !important;
-    }
-  }
-</style>
-
-<script id="ceraceci-v349-anclar-logo-a-foto">
-(() => {
-  const selectorTarjetas = '#productos .tarjeta-producto, #productosComparados .tarjeta-producto';
-
-  function esMovil(){
-    return window.matchMedia('(max-width:650px)').matches;
-  }
-
-  function anclarLogo(tarjeta, forzar = false){
-    if (!esMovil() || !tarjeta) return;
-
-    const foto = tarjeta.querySelector('.contenedor-foto-producto');
-    const compartir = tarjeta.querySelector('.compartir-producto');
-    const logo = tarjeta.querySelector('.logo-mini-tarjeta');
-    if (!foto || !compartir || !logo) return;
-
-    if (!forzar && logo.parentElement === foto && logo.dataset.v349Anclado === '1') return;
-
-    /* El logo pasa a depender físicamente de la foto, no del encabezado.
-       Por eso escribir en Buscar no puede desplazarlo. */
-    if (logo.parentElement !== foto) foto.appendChild(logo);
-
-    const rf = foto.getBoundingClientRect();
-    const rc = compartir.getBoundingClientRect();
-
-    /* Misma altura superior que Compartir, pero medida dentro de la foto. */
-    const top = rc.top - rf.top;
-    logo.style.setProperty('top', `${top}px`, 'important');
-    logo.dataset.v349Anclado = '1';
-  }
-
-  function procesarRaiz(raiz, forzar = false){
-    if (!esMovil()) return;
-
-    if (raiz?.matches?.(selectorTarjetas)) anclarLogo(raiz, forzar);
-    raiz?.querySelectorAll?.(selectorTarjetas).forEach((tarjeta) => anclarLogo(tarjeta, forzar));
-  }
-
-  /* Sólo actúa cuando aparecen/reaparecen tarjetas nuevas.
-     No recalcula por cada cambio de texto ni por mutaciones ajenas. */
-  const observer = new MutationObserver((mutaciones) => {
-    if (!esMovil()) return;
-    for (const mutacion of mutaciones){
-      for (const nodo of mutacion.addedNodes){
-        if (nodo.nodeType === 1) procesarRaiz(nodo, false);
-      }
-    }
-  });
-
-  observer.observe(document.body, { childList:true, subtree:true });
-
-  function inicial(){
-    document.querySelectorAll(selectorTarjetas).forEach((tarjeta) => anclarLogo(tarjeta, true));
-  }
-
-  document.addEventListener('DOMContentLoaded', inicial, { once:true });
-  window.addEventListener('load', inicial, { once:true });
-
-  /* Sólo se recalcula si realmente cambia el tamaño de la ventana. */
-  let resizeTimer = 0;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(inicial, 120);
-  }, { passive:true });
-
-  inicial();
-})();
-</script>
-
-
-<style id="ceraceci-v350-logo-tarjeta-restaurado">
-  @media (max-width:650px){
-    /* V350: el logo visible de la tarjeta pasa a ser una copia estable dentro
-       del recuadro de la foto. Así no desaparece ni se mueve al escribir. */
-    html body #productos .contenedor-foto-producto,
-    html body #productosComparados .contenedor-foto-producto{
-      position:relative !important;
-      overflow:visible !important;
-    }
-
-    html body #productos .contenedor-foto-producto > .logo-mini-tarjeta.logo-mini-tarjeta-v350,
-    html body #productosComparados .contenedor-foto-producto > .logo-mini-tarjeta.logo-mini-tarjeta-v350{
-      position:absolute !important;
-      left:0 !important;
-      top:0 !important;
-      width:32px !important;
-      height:32px !important;
-      margin:0 !important;
-      transform:translateX(-50%) !important;
-      z-index:26 !important;
+      z-index:24 !important;
       display:block !important;
       visibility:visible !important;
       opacity:1 !important;
       pointer-events:none !important;
       object-fit:contain !important;
       object-position:center !important;
+      box-sizing:border-box !important;
       background:#EEE8E6 !important;
       border:1px solid rgba(111,103,97,.38) !important;
       border-radius:10px !important;
       box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
-      box-sizing:border-box !important;
     }
 
-    /* Oculta solo las instancias viejas cuando existe la nueva copia. */
-    html body #productos .tarjeta-producto[data-v350-logo-listo="1"] .logo-mini-tarjeta:not(.logo-mini-tarjeta-v350),
-    html body #productosComparados .tarjeta-producto[data-v350-logo-listo="1"] .logo-mini-tarjeta:not(.logo-mini-tarjeta-v350){
-      display:none !important;
-      visibility:hidden !important;
-      opacity:0 !important;
+    /* Evita que reglas históricas de posición de tarjeta interfieran. */
+    html body #productos .tarjeta-producto > .logo-mini-tarjeta,
+    html body #productosComparados .tarjeta-producto > .logo-mini-tarjeta{
+      visibility:visible !important;
+      opacity:1 !important;
     }
   }
 </style>
-<script id="ceraceci-v350-logo-tarjeta-restaurado-script">
-(() => {
-  const selectorTarjetas = '#productos .tarjeta-producto, #productosComparados .tarjeta-producto';
-  const media = () => window.matchMedia('(max-width:650px)').matches;
-
-  function aplicarEnTarjeta(tarjeta){
-    if (!media() || !tarjeta) return;
-
-    const foto = tarjeta.querySelector('.contenedor-foto-producto');
-    const compartir = tarjeta.querySelector('.compartir-producto');
-    if (!foto || !compartir) return;
-
-    let fuente = tarjeta.querySelector('.logo-mini-tarjeta.logo-mini-tarjeta-v350');
-    if (!fuente) {
-      fuente = [...tarjeta.querySelectorAll('.logo-mini-tarjeta')].find(el => !el.classList.contains('logo-mini-tarjeta-v350')) || null;
-    }
-    const src = fuente?.currentSrc || fuente?.getAttribute('src') || '';
-    if (!src) return;
-
-    let logo = foto.querySelector('.logo-mini-tarjeta.logo-mini-tarjeta-v350');
-    if (!logo) {
-      logo = document.createElement('img');
-      logo.className = 'logo-mini-tarjeta logo-mini-tarjeta-v350';
-      logo.alt = 'Ceraceci';
-      logo.decoding = 'async';
-      logo.draggable = false;
-      foto.appendChild(logo);
-    }
-    if (logo.getAttribute('src') !== src) logo.setAttribute('src', src);
-
-    const rf = foto.getBoundingClientRect();
-    const rc = compartir.getBoundingClientRect();
-    const top = Math.round((rc.top - rf.top) * 10) / 10;
-    logo.style.setProperty('top', `${top}px`, 'important');
-
-    tarjeta.dataset.v350LogoListo = '1';
-  }
-
-  function aplicarEnRaiz(raiz){
-    if (!media()) return;
-    if (raiz?.matches?.(selectorTarjetas)) aplicarEnTarjeta(raiz);
-    raiz?.querySelectorAll?.(selectorTarjetas).forEach(aplicarEnTarjeta);
-  }
-
-  function aplicarTodo(){
-    if (!media()) return;
-    document.querySelectorAll(selectorTarjetas).forEach(aplicarEnTarjeta);
-  }
-
-  const observer = new MutationObserver((mutaciones) => {
-    if (!media()) return;
-    for (const mutacion of mutaciones){
-      for (const nodo of mutacion.addedNodes){
-        if (nodo.nodeType === 1) aplicarEnRaiz(nodo);
-      }
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-    aplicarTodo();
-    observer.observe(document.body, { childList:true, subtree:true });
-  }, { once:true });
-
-  window.addEventListener('load', aplicarTodo, { once:true });
-  let resizeTimer = 0;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(aplicarTodo, 120);
-  }, { passive:true });
-
-  aplicarTodo();
-})();
-</script>
 
 </body>
 </html>
