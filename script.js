@@ -4391,6 +4391,11 @@ function mostrarProductosComparados() {
     );
   });
 
+  /* V354: la vista Comparar también recibe el mismo ajuste móvil que
+     el catálogo normal. El logo se ancla a la foto antes del primer pintado. */
+  ajustarTarjetasMoviles();
+  programarAjusteTarjetasMoviles();
+
   actualizarEstadoComparacion();
 }
 
