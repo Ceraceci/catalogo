@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="355">
+<body data-catalog-build="356">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -16387,7 +16387,7 @@
   }
 </style>
 
-<script src="script.js?v=355"></script>
+<script src="script.js?v=356"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){
@@ -17737,89 +17737,40 @@
 </style>
 
 
-
-<style id="ceraceci-v355-pie-original-fijo">
-  /* V355: se restaura el pie original y se fija directamente al viewport. */
-  #ceraceciFooterPermanenteV354{
-    display:none !important;
-    visibility:hidden !important;
-  }
-
-  html body #ceraceciFooterV328{
-    position:fixed !important;
-    left:0 !important;
-    right:0 !important;
-    top:auto !important;
-    bottom:calc(4px + env(safe-area-inset-bottom)) !important;
-    z-index:2147483600 !important;
-    box-sizing:border-box !important;
-    display:flex !important;
-    flex-direction:row !important;
-    align-items:center !important;
-    justify-content:center !important;
-    gap:6px !important;
-    width:100% !important;
-    min-height:18px !important;
-    height:auto !important;
-    margin:0 !important;
-    padding:0 8px !important;
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
+<style id="ceraceci-v356-fotos-y-pie">
+  /* La caja exterior puede dejar sobresalir el logo CERACECI. */
+  html body #productos .contenedor-foto-producto,
+  html body #productosComparados .contenedor-foto-producto{
+    position:relative !important;
     overflow:visible !important;
-    opacity:1 !important;
-    visibility:visible !important;
-    transform:none !important;
-    pointer-events:none !important;
   }
 
-  html body #ceraceciFooterLogoV328{
+  /* Solo este marco interior recorta la fotografía escalada. */
+  html body #productos .contenedor-foto-producto > .recorte-foto-v356,
+  html body #productosComparados .contenedor-foto-producto > .recorte-foto-v356{
+    position:absolute !important;
+    inset:0 !important;
+    z-index:1 !important;
     display:block !important;
-    flex:0 0 auto !important;
-    width:72px !important;
-    max-width:72px !important;
+    width:auto !important;
     height:auto !important;
-    max-height:none !important;
     margin:0 !important;
     padding:0 !important;
-    object-fit:contain !important;
-    object-position:center !important;
-    opacity:1 !important;
-    visibility:visible !important;
+    overflow:hidden !important;
+    background:inherit !important;
+    border-radius:inherit !important;
   }
 
-  html body #ceraceciFooterFirmaV328{
-    display:inline-flex !important;
-    align-items:center !important;
-    flex:0 0 auto !important;
-    margin:0 !important;
-    padding:0 !important;
-    color:#171717 !important;
-    -webkit-text-fill-color:#171717 !important;
-    font-family:Arial,Helvetica,sans-serif !important;
-    font-size:8.8px !important;
-    font-weight:400 !important;
-    line-height:1 !important;
-    white-space:nowrap !important;
-    opacity:1 !important;
-    visibility:visible !important;
-    transform:translateY(2px) !important;
+  /* El logo sigue afuera del marco de recorte. */
+  html body #productos .contenedor-foto-producto > .logo-mini-tarjeta,
+  html body #productosComparados .contenedor-foto-producto > .logo-mini-tarjeta{
+    z-index:24 !important;
   }
 
+  /* Separador real de V356: evita duplicarlo con pseudos históricos. */
   html body #ceraceciFooterFirmaV328::before{
-    content:"" !important;
-    display:inline-block !important;
-    width:1px !important;
-    height:10px !important;
-    margin-right:6px !important;
-    background:rgba(23,23,23,.38) !important;
-    border-radius:1px !important;
-  }
-
-  @media (min-width:651px){
-    html body #ceraceciFooterV328{
-      bottom:6px !important;
-    }
+    content:none !important;
+    display:none !important;
   }
 </style>
 

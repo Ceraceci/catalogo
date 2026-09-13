@@ -3463,40 +3463,41 @@ function crearTarjetaProducto(
     </div>
 
     <div class="contenedor-foto-producto ${foto ? "" : "sin-foto"}">
+      <div class="recorte-foto-v356">
+        <img
+          src="${foto ? escaparHTML(foto) : LOGO_TARJETAS_SRC}"
+          alt="${foto ? escaparHTML(producto.nombre) : ""}"
+          class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
+          loading="lazy"
+          referrerpolicy="no-referrer"
+        >
 
-      <img
-        src="${foto ? escaparHTML(foto) : LOGO_TARJETAS_SRC}"
-        alt="${foto ? escaparHTML(producto.nombre) : ""}"
-        class="foto-producto ${foto ? (recortarMargenBlanco ? "foto-recorte-margen-blanco" : "") : "foto-placeholder"}"
-        loading="lazy"
-        referrerpolicy="no-referrer"
-      >
+        ${
+          fotos.length > 1
+            ? `
+              <button
+                type="button"
+                class="foto-navegacion foto-anterior"
+                aria-label="Foto anterior de ${escaparHTML(producto.nombre)}"
+              >‹</button>
 
-      ${
-        fotos.length > 1
-          ? `
-            <button
-              type="button"
-              class="foto-navegacion foto-anterior"
-              aria-label="Foto anterior de ${escaparHTML(producto.nombre)}"
-            >‹</button>
+              <button
+                type="button"
+                class="foto-navegacion foto-siguiente"
+                aria-label="Foto siguiente de ${escaparHTML(producto.nombre)}"
+              >›</button>
 
-            <button
-              type="button"
-              class="foto-navegacion foto-siguiente"
-              aria-label="Foto siguiente de ${escaparHTML(producto.nombre)}"
-            >›</button>
-
-            <div class="foto-indicadores" aria-hidden="true">
-              ${fotos.map((_, indiceFoto) => `
-                <span
-                  class="foto-indicador ${indiceFoto === 0 ? "activo" : ""}"
-                ></span>
-              `).join("")}
-            </div>
-          `
-          : ""
-      }
+              <div class="foto-indicadores" aria-hidden="true">
+                ${fotos.map((_, indiceFoto) => `
+                  <span
+                    class="foto-indicador ${indiceFoto === 0 ? "activo" : ""}"
+                  ></span>
+                `).join("")}
+              </div>
+            `
+            : ""
+        }
+      </div>
     </div>
 
     <div class="fila-compra">
@@ -4391,8 +4392,7 @@ function mostrarProductosComparados() {
     );
   });
 
-  /* V354: la vista Comparar también recibe el mismo ajuste móvil que
-     el catálogo normal. El logo se ancla a la foto antes del primer pintado. */
+  /* V356: Comparar usa exactamente el mismo anclaje móvil del catálogo. */
   ajustarTarjetasMoviles();
   programarAjusteTarjetasMoviles();
 
@@ -8357,4 +8357,104 @@ programarAjusteHeaderPieMovil();
   if (document.fonts?.ready) {
     document.fonts.ready.then(programarV298);
   }
+})();
+
+
+/* =========================================================
+   V356 - pie original fijo permanente
+   Se fuerza desde JS porque las reglas históricas del pie se pisan entre sí.
+========================================================= */
+(() => {
+  function fijarPieOriginalV356(){
+    const pie = document.getElementById('ceraceciFooterV328');
+    const logo = document.getElementById('ceraceciFooterLogoV328');
+    const firma = document.getElementById('ceraceciFooterFirmaV328');
+    if (!pie || !logo || !firma) return;
+
+    /* Directo en body: no depende del catálogo, comparación ni otros contenedores. */
+    if (pie.parentElement !== document.body) {
+      document.body.appendChild(pie);
+    }
+
+    let separador = document.getElementById('ceraceciFooterSeparadorV356');
+    if (!separador) {
+      separador = document.createElement('span');
+      separador.id = 'ceraceciFooterSeparadorV356';
+      separador.setAttribute('aria-hidden', 'true');
+      pie.insertBefore(separador, firma);
+    }
+
+    const poner = (el, propiedad, valor) => {
+      el.style.setProperty(propiedad, valor, 'important');
+    };
+
+    poner(pie, 'position', 'fixed');
+    poner(pie, 'left', '0');
+    poner(pie, 'right', '0');
+    poner(pie, 'top', 'auto');
+    poner(pie, 'bottom', 'calc(4px + env(safe-area-inset-bottom))');
+    poner(pie, 'z-index', '2147483646');
+    poner(pie, 'display', 'flex');
+    poner(pie, 'flex-direction', 'row');
+    poner(pie, 'align-items', 'center');
+    poner(pie, 'justify-content', 'center');
+    poner(pie, 'gap', '6px');
+    poner(pie, 'width', '100%');
+    poner(pie, 'min-height', '18px');
+    poner(pie, 'height', '18px');
+    poner(pie, 'margin', '0');
+    poner(pie, 'padding', '0 8px');
+    poner(pie, 'background', 'transparent');
+    poner(pie, 'border', '0');
+    poner(pie, 'box-shadow', 'none');
+    poner(pie, 'overflow', 'visible');
+    poner(pie, 'visibility', 'visible');
+    poner(pie, 'opacity', '1');
+    poner(pie, 'transform', 'none');
+    poner(pie, 'pointer-events', 'none');
+
+    poner(logo, 'display', 'block');
+    poner(logo, 'width', '72px');
+    poner(logo, 'max-width', '72px');
+    poner(logo, 'height', 'auto');
+    poner(logo, 'max-height', '18px');
+    poner(logo, 'margin', '0');
+    poner(logo, 'padding', '0');
+    poner(logo, 'object-fit', 'contain');
+    poner(logo, 'visibility', 'visible');
+    poner(logo, 'opacity', '1');
+
+    poner(separador, 'display', 'block');
+    poner(separador, 'flex', '0 0 1px');
+    poner(separador, 'width', '1px');
+    poner(separador, 'height', '10px');
+    poner(separador, 'margin', '0');
+    poner(separador, 'background', 'rgba(23,23,23,.38)');
+    poner(separador, 'border-radius', '1px');
+
+    poner(firma, 'display', 'block');
+    poner(firma, 'margin', '0');
+    poner(firma, 'padding', '0');
+    poner(firma, 'color', '#171717');
+    poner(firma, '-webkit-text-fill-color', '#171717');
+    poner(firma, 'font-family', 'Arial,Helvetica,sans-serif');
+    poner(firma, 'font-size', '8.8px');
+    poner(firma, 'font-weight', '400');
+    poner(firma, 'line-height', '1');
+    poner(firma, 'white-space', 'nowrap');
+    poner(firma, 'visibility', 'visible');
+    poner(firma, 'opacity', '1');
+    poner(firma, 'transform', 'translateY(2px)');
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', fijarPieOriginalV356, { once:true });
+  } else {
+    fijarPieOriginalV356();
+  }
+
+  window.addEventListener('load', fijarPieOriginalV356, { once:true });
+  window.addEventListener('pageshow', fijarPieOriginalV356);
+  window.addEventListener('resize', fijarPieOriginalV356, { passive:true });
+  window.addEventListener('orientationchange', fijarPieOriginalV356, { passive:true });
 })();
