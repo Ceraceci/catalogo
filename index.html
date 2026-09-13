@@ -17277,5 +17277,37 @@
   }
 </style>
 
+
+<style id="ceraceci-v336-ajuste-movil-final">
+  @media (max-width:650px){
+    /* El contenedor externo sigue recto, pero con borde superior e inferior igual de finos. */
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      border-top:1px solid rgba(111,103,97,.18) !important;
+      border-bottom:1px solid rgba(111,103,97,.18) !important;
+      border-left:0 !important;
+      border-right:0 !important;
+      border-radius:0 !important;
+      box-shadow:none !important;
+      overflow:hidden !important;
+    }
+
+    /* Los controles internos vuelven a verse redondeados, como las tarjetas. */
+    html body #buscador,
+    html body .busqueda .control-orden,
+    html body .busqueda .control-orden select,
+    html body #filtroCategoria,
+    html body .activar-modo-comparacion-movil,
+    html body .acciones-comparacion-movil > button{
+      border-radius:18px !important;
+    }
+
+    /* Bloque inferior 2 px más arriba. */
+    html body .acciones-flotantes{
+      bottom:calc(20px + env(safe-area-inset-bottom)) !important;
+    }
+  }
+</style>
+
 </body>
 </html>
