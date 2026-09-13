@@ -17775,13 +17775,20 @@
 </style>
 
 
-<style id="ceraceci-v360-botones-carrito-10px-mas-arriba">
+<style id="ceraceci-v361-pie-carrito-alto-como-ver">
   @media (max-width:650px){
-    /* V360 — 10 px más arriba respecto de V359. */
+    /* V361 — en lugar de micro-mover cada botón, se eleva el bloque inferior
+       del carrito reservando más aire abajo. Así "Vaciar carrito" queda mucho
+       más alto, aproximadamente a la altura visual de "Ver carrito". */
+    html body .pie-carrito{
+      padding-top:10px !important;
+      padding-bottom:calc(43px + env(safe-area-inset-bottom)) !important;
+    }
+
     html body .pie-carrito > .finalizar-pedido,
     html body .pie-carrito > .compartir-carrito,
     html body .pie-carrito > .vaciar-carrito{
-      transform:translateY(-18px) !important;
+      transform:none !important;
     }
   }
 </style>
