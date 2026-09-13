@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="346">
+<body data-catalog-build="348">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17687,6 +17687,95 @@
     }
   }
 </style>
+
+
+<style id="ceraceci-v348-logo-espejo-y-flecha-orden">
+  @media (max-width:650px){
+    /* La flecha de Ordenar por usa exactamente el mismo dibujo y tamaño
+       que la flecha de Todos los productos. */
+    html body .busqueda .control-orden .icono-orden::after{
+      content:"" !important;
+      display:block !important;
+      width:14px !important;
+      height:14px !important;
+      flex:0 0 14px !important;
+      margin:0 !important;
+      border:0 !important;
+      transform:none !important;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23171717' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+      background-repeat:no-repeat !important;
+      background-position:center !important;
+      background-size:14px 14px !important;
+    }
+
+    html body .busqueda .control-orden.orden-activo .icono-orden::after{
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24'%3E%3Cpath d='m7 10 5 5 5-5' fill='none' stroke='%23ffffff' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    }
+
+    /* El script V348 calcula la posición exacta; estas reglas evitan que
+       estilos históricos vuelvan a anclar el logo al encabezado. */
+    html body #productos .tarjeta-producto > .logo-mini-tarjeta,
+    html body #productosComparados .tarjeta-producto > .logo-mini-tarjeta{
+      position:absolute !important;
+      z-index:20 !important;
+      width:32px !important;
+      height:32px !important;
+      margin:0 !important;
+      transform:none !important;
+      pointer-events:none !important;
+    }
+  }
+</style>
+
+<script id="ceraceci-v348-posicionar-logo-espejo">
+(() => {
+  const esMovil = () => window.matchMedia('(max-width:650px)').matches;
+  let frame = 0;
+
+  function posicionar(){
+    frame = 0;
+    if (!esMovil()) return;
+
+    document.querySelectorAll('#productos .tarjeta-producto, #productosComparados .tarjeta-producto').forEach((tarjeta) => {
+      const foto = tarjeta.querySelector('.contenedor-foto-producto');
+      const compartir = tarjeta.querySelector('.compartir-producto');
+      const logo = tarjeta.querySelector('.logo-mini-tarjeta');
+      if (!foto || !compartir || !logo) return;
+
+      /* Se vuelve hijo directo de la tarjeta para que ninguna regla del
+         encabezado pueda impedir el desplazamiento. */
+      if (logo.parentElement !== tarjeta) tarjeta.appendChild(logo);
+
+      const rt = tarjeta.getBoundingClientRect();
+      const rf = foto.getBoundingClientRect();
+      const rc = compartir.getBoundingClientRect();
+      const ancho = logo.getBoundingClientRect().width || 32;
+
+      /* Centro del logo = borde izquierdo de la foto.
+         Su borde superior = borde superior de Compartir. */
+      const left = rf.left - rt.left - (ancho / 2);
+      const top = rc.top - rt.top;
+
+      logo.style.setProperty('left', `${left}px`, 'important');
+      logo.style.setProperty('top', `${top}px`, 'important');
+      logo.style.setProperty('right', 'auto', 'important');
+      logo.style.setProperty('bottom', 'auto', 'important');
+    });
+  }
+
+  function programar(){
+    if (frame) return;
+    frame = requestAnimationFrame(posicionar);
+  }
+
+  const observer = new MutationObserver(programar);
+  observer.observe(document.documentElement, {childList:true, subtree:true});
+  window.addEventListener('resize', programar, {passive:true});
+  window.addEventListener('load', programar, {once:true});
+  document.addEventListener('DOMContentLoaded', programar, {once:true});
+  programar();
+})();
+</script>
 
 </body>
 </html>
