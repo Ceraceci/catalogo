@@ -16880,5 +16880,110 @@
   }
 </style>
 
+
+<style id="ceraceci-v333-movil-ajuste-final">
+  @media (max-width:650px){
+    /* SUPERIOR: sacar la separación restante y conservar un borde superior sutil. */
+    html body .cabecera{
+      padding-top:0 !important;
+      margin-bottom:0 !important;
+    }
+
+    html body .busqueda.busqueda-en-scroll{
+      top:0 !important;
+      margin-top:0 !important;
+      padding-top:2px !important;
+      border-top:1px solid rgba(120,96,82,.20) !important;
+      box-shadow:0 -1px 0 rgba(120,96,82,.14), 0 6px 12px rgba(80,48,30,.10) !important;
+      transform:none !important;
+    }
+
+    /* INFERIOR: un único bloque visual para carrito + redes + pie. */
+    html body::after{
+      height:76px !important;
+      background:#CF927D !important;
+      border-top:1px solid rgba(111,103,97,.18) !important;
+      box-shadow:none !important;
+      z-index:43 !important;
+    }
+
+    html body{
+      padding-bottom:76px !important;
+    }
+
+    html body .acciones-flotantes{
+      left:12px !important;
+      right:12px !important;
+      bottom:calc(24px + env(safe-area-inset-bottom)) !important;
+      z-index:46 !important;
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) 50px 50px !important;
+      align-items:center !important;
+      column-gap:10px !important;
+      row-gap:0 !important;
+      padding:0 !important;
+      margin:0 !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+
+    html body .acciones-flotantes .abrir-carrito{
+      margin:0 !important;
+      border:1px solid rgba(111,103,97,.28) !important;
+      box-shadow:0 1px 2px rgba(80,48,30,.10) !important;
+    }
+
+    /* Logo + firma en una sola línea con separador. */
+    #ceraceciFooterV328{
+      position:fixed !important;
+      left:0 !important;
+      right:0 !important;
+      bottom:0 !important;
+      z-index:45 !important;
+      min-height:18px !important;
+      height:auto !important;
+      display:flex !important;
+      flex-direction:row !important;
+      align-items:center !important;
+      justify-content:center !important;
+      gap:6px !important;
+      padding:2px 8px calc(2px + env(safe-area-inset-bottom)) !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+
+    #ceraceciFooterLogoV328{
+      width:72px !important;
+      max-width:72px !important;
+      height:auto !important;
+      margin:0 !important;
+      flex:0 0 auto !important;
+    }
+
+    #ceraceciFooterFirmaV328{
+      display:inline-flex !important;
+      align-items:center !important;
+      margin:0 !important;
+      padding:0 !important;
+      font-size:8.8px !important;
+      line-height:1 !important;
+      color:#171717 !important;
+      white-space:nowrap !important;
+    }
+
+    #ceraceciFooterFirmaV328::before{
+      content:"" !important;
+      display:inline-block !important;
+      width:1px !important;
+      height:10px !important;
+      background:rgba(23,23,23,.38) !important;
+      margin-right:6px !important;
+      border-radius:1px !important;
+    }
+  }
+</style>
+
 </body>
 </html>
