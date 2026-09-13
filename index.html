@@ -7554,7 +7554,7 @@
 
 </head>
 
-<body data-catalog-build="312">
+<body data-catalog-build="314">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -16263,7 +16263,89 @@
   }
 </style>
 
-<script src="script.js?v=311"></script>
+<script src="script.js?v=314"></script>
+
+<script id="busqueda-inteligente-v314">
+(() => {
+  /*
+    V314 — búsqueda contextual con ampliación automática.
+
+    1) Si hay una categoría elegida, primero se busca DENTRO de esa categoría.
+       Ej.: Engobes + "azul" => sólo engobes azules.
+
+    2) Sólo si esa combinación devuelve 0 resultados y la búsqueda escrita sí
+       existe en otra parte del catálogo, se cambia automáticamente a
+       "Todos los productos" y se muestran esas coincidencias.
+       Ej.: Engobes + "bentonita" => Todos los productos + bentonita.
+
+    3) Si la búsqueda no existe en ningún lugar del catálogo, la categoría no
+       se cambia innecesariamente.
+  */
+
+  if (typeof filtrarProductos !== "function") return;
+
+  const filtrarProductosOriginalV314 = filtrarProductos;
+
+  filtrarProductos = function () {
+    if (productoCompartidoPendiente) {
+      return filtrarProductosOriginalV314();
+    }
+
+    ocultarModoProductoCompartido();
+
+    const palabrasBuscadas =
+      normalizarTexto(buscador.value)
+        .split(/\s+/)
+        .filter(Boolean);
+
+    const categoriaElegida = filtroCategoria.value;
+
+    const coincideConBusqueda = (producto) => {
+      const contenido =
+        producto._textoBusqueda ||
+        normalizarTexto(producto.nombre);
+
+      return palabrasBuscadas.every(
+        (palabra) => contenido.includes(palabra)
+      );
+    };
+
+    let lista = productosAgrupados.filter((producto) => {
+      const coincideBusqueda = coincideConBusqueda(producto);
+      const coincideCategoria =
+        categoriaElegida === "" ||
+        producto.categoria === categoriaElegida;
+
+      return coincideBusqueda && coincideCategoria;
+    });
+
+    /*
+      Si el texto no encuentra nada en la categoría actual, comprobamos si
+      existe en el catálogo completo. Sólo entonces liberamos la categoría.
+    */
+    if (
+      palabrasBuscadas.length > 0 &&
+      categoriaElegida !== "" &&
+      lista.length === 0
+    ) {
+      const coincidenciasGlobales =
+        productosAgrupados.filter(coincideConBusqueda);
+
+      if (coincidenciasGlobales.length > 0) {
+        filtroCategoria.value = "";
+        actualizarEstadoFiltroCategoria();
+        sincronizarSelectorPersonalizadoPC(filtroCategoria);
+        lista = coincidenciasGlobales;
+      }
+    }
+
+    productosMostrados = lista;
+    ordenarListaProductos(productosMostrados);
+    mostrarProductos(productosMostrados);
+  };
+})();
+</script>
+
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){
