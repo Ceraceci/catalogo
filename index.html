@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="354">
+<body data-catalog-build="355">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -16387,7 +16387,7 @@
   }
 </style>
 
-<script src="script.js?v=354"></script>
+<script src="script.js?v=355"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){
@@ -17737,61 +17737,60 @@
 </style>
 
 
-<style id="ceraceci-v354-pie-permanente">
-  /* Se oculta el pie histórico: el nuevo no depende del flujo del catálogo. */
-  #ceraceciFooterV328{
+
+<style id="ceraceci-v355-pie-original-fijo">
+  /* V355: se restaura el pie original y se fija directamente al viewport. */
+  #ceraceciFooterPermanenteV354{
     display:none !important;
     visibility:hidden !important;
   }
 
-  #ceraceciFooterPermanenteV354{
+  html body #ceraceciFooterV328{
     position:fixed !important;
     left:0 !important;
     right:0 !important;
+    top:auto !important;
     bottom:calc(4px + env(safe-area-inset-bottom)) !important;
     z-index:2147483600 !important;
     box-sizing:border-box !important;
     display:flex !important;
+    flex-direction:row !important;
     align-items:center !important;
     justify-content:center !important;
     gap:6px !important;
-    width:100vw !important;
+    width:100% !important;
     min-height:18px !important;
+    height:auto !important;
     margin:0 !important;
     padding:0 8px !important;
     background:transparent !important;
     border:0 !important;
     box-shadow:none !important;
-    pointer-events:none !important;
-    transform:none !important;
+    overflow:visible !important;
     opacity:1 !important;
     visibility:visible !important;
+    transform:none !important;
+    pointer-events:none !important;
   }
 
-  #ceraceciFooterPermanenteV354 .ceraceci-footer-logo-v354{
+  html body #ceraceciFooterLogoV328{
     display:block !important;
     flex:0 0 auto !important;
     width:72px !important;
     max-width:72px !important;
     height:auto !important;
+    max-height:none !important;
     margin:0 !important;
     padding:0 !important;
     object-fit:contain !important;
     object-position:center !important;
+    opacity:1 !important;
+    visibility:visible !important;
   }
 
-  #ceraceciFooterPermanenteV354 .ceraceci-footer-separador-v354{
-    display:block !important;
-    flex:0 0 1px !important;
-    width:1px !important;
-    height:10px !important;
-    margin:0 !important;
-    background:rgba(23,23,23,.38) !important;
-    border-radius:1px !important;
-  }
-
-  #ceraceciFooterPermanenteV354 .ceraceci-footer-firma-v354{
-    display:block !important;
+  html body #ceraceciFooterFirmaV328{
+    display:inline-flex !important;
+    align-items:center !important;
     flex:0 0 auto !important;
     margin:0 !important;
     padding:0 !important;
@@ -17802,57 +17801,27 @@
     font-weight:400 !important;
     line-height:1 !important;
     white-space:nowrap !important;
+    opacity:1 !important;
+    visibility:visible !important;
     transform:translateY(2px) !important;
   }
 
+  html body #ceraceciFooterFirmaV328::before{
+    content:"" !important;
+    display:inline-block !important;
+    width:1px !important;
+    height:10px !important;
+    margin-right:6px !important;
+    background:rgba(23,23,23,.38) !important;
+    border-radius:1px !important;
+  }
+
   @media (min-width:651px){
-    #ceraceciFooterPermanenteV354{
+    html body #ceraceciFooterV328{
       bottom:6px !important;
     }
   }
 </style>
-
-<script id="ceraceci-v354-pie-permanente-script">
-(() => {
-  const ID = "ceraceciFooterPermanenteV354";
-
-  function crearPiePermanente(){
-    if (document.getElementById(ID)) return;
-
-    const pie = document.createElement("div");
-    pie.id = ID;
-    pie.setAttribute("aria-label", "Ceraceci");
-
-    const logo = document.createElement("img");
-    logo.className = "ceraceci-footer-logo-v354";
-    logo.src = "ceraceci-logo-compacto-v330.png";
-    logo.alt = "Ceraceci";
-    logo.draggable = false;
-
-    const separador = document.createElement("span");
-    separador.className = "ceraceci-footer-separador-v354";
-    separador.setAttribute("aria-hidden", "true");
-
-    const firma = document.createElement("span");
-    firma.className = "ceraceci-footer-firma-v354";
-    firma.textContent = "By Nacho Peralta";
-
-    pie.append(logo, separador, firma);
-
-    /* Se monta directamente en <html>, fuera del flujo y de cualquier
-       contenedor que pueda cambiar con scroll, filtros o comparación. */
-    document.documentElement.appendChild(pie);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", crearPiePermanente, { once:true });
-  } else {
-    crearPiePermanente();
-  }
-
-  window.addEventListener("pageshow", crearPiePermanente);
-})();
-</script>
 
 </body>
 </html>
