@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="351">
+<body data-catalog-build="352">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17732,6 +17732,50 @@
     html body #productosComparados .tarjeta-producto > .logo-mini-tarjeta{
       visibility:visible !important;
       opacity:1 !important;
+    }
+  }
+</style>
+
+
+<style id="ceraceci-v352-pie-fijo-permanente">
+  /* V352 — el pie CERACECI + By Nacho Peralta permanece fijo siempre. */
+  #ceraceciFooterV328{
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    z-index:45 !important;
+    display:flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:none !important;
+    transform:translateZ(0) !important;
+    -webkit-transform:translateZ(0) !important;
+    backface-visibility:hidden !important;
+    -webkit-backface-visibility:hidden !important;
+  }
+
+  #ceraceciFooterLogoV328,
+  #ceraceciFooterFirmaV328{
+    visibility:visible !important;
+    opacity:1 !important;
+  }
+
+  @media (min-width:651px){
+    #ceraceciFooterV328{
+      bottom:0 !important;
+    }
+    html body{
+      padding-bottom:max(50px, env(safe-area-inset-bottom)) !important;
+    }
+  }
+
+  @media (max-width:650px){
+    #ceraceciFooterV328{
+      bottom:calc(4px + env(safe-area-inset-bottom)) !important;
+    }
+    /* Reserva el bloque inferior para que el catálogo nunca quede detrás del pie. */
+    html body{
+      padding-bottom:calc(76px + env(safe-area-inset-bottom)) !important;
     }
   }
 </style>
