@@ -16389,29 +16389,29 @@
 
 
 
-<style id="ceraceci-v368-reserva-real-pie-carrito">
+<style id="ceraceci-v369-reserva-real-pie-carrito">
   /*
-    V368 — solución estructural del carrito móvil.
+    V369 — solución estructural del carrito móvil.
     El carrito deja de terminar inmediatamente después de .pie-carrito:
-    se agrega una cuarta fila real de 25 px para alojar visualmente el pie
+    se agrega una cuarta fila real de 21 px para alojar visualmente el pie
     CERACECI | By Nacho Peralta sin superponer los controles del carrito.
   */
-  .reserva-footer-carrito-v368{
+  .reserva-footer-carrito-v369{
     display:none;
   }
 
   @media (max-width:650px){
-    html body #carrito.carrito-con-reserva-footer-v368{
-      grid-template-rows:auto minmax(0,1fr) auto 25px !important;
+    html body #carrito.carrito-con-reserva-footer-v369{
+      grid-template-rows:auto minmax(0,1fr) auto 21px !important;
     }
 
-    html body #carrito > .reserva-footer-carrito-v368{
+    html body #carrito > .reserva-footer-carrito-v369{
       display:block !important;
       grid-row:4 !important;
       width:100% !important;
       min-width:0 !important;
-      height:25px !important;
-      min-height:25px !important;
+      height:21px !important;
+      min-height:21px !important;
       margin:0 !important;
       padding:0 !important;
       background:var(--color-tarjeta-calido,#fffdfb) !important;
@@ -16422,7 +16422,7 @@
   }
 </style>
 
-<script src="script.js?v=368"></script>
+<script src="script.js?v=369"></script>
 
 <style id="ajuste-movil-final-v301">
   @media (max-width:650px){

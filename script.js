@@ -87,23 +87,23 @@ const fondoCarrito =
 const carritoElemento =
   document.getElementById("carrito");
 
-const ID_RESERVA_FOOTER_CARRITO_V368 =
-  "reservaFooterCarritoV368";
+const ID_RESERVA_FOOTER_CARRITO_V369 =
+  "reservaFooterCarritoV369";
 
-function asegurarReservaFooterCarritoV368() {
+function asegurarReservaFooterCarritoV369() {
   if (!carritoElemento) {
     return null;
   }
 
   let reserva = document.getElementById(
-    ID_RESERVA_FOOTER_CARRITO_V368
+    ID_RESERVA_FOOTER_CARRITO_V369
   );
 
   if (!reserva) {
     reserva = document.createElement("div");
-    reserva.id = ID_RESERVA_FOOTER_CARRITO_V368;
+    reserva.id = ID_RESERVA_FOOTER_CARRITO_V369;
     reserva.className =
-      "reserva-footer-carrito-v368";
+      "reserva-footer-carrito-v369";
     reserva.setAttribute("aria-hidden", "true");
     carritoElemento.appendChild(reserva);
   } else if (reserva.parentElement !== carritoElemento) {
@@ -111,7 +111,7 @@ function asegurarReservaFooterCarritoV368() {
   }
 
   carritoElemento.classList.add(
-    "carrito-con-reserva-footer-v368"
+    "carrito-con-reserva-footer-v369"
   );
 
   return reserva;
@@ -6325,7 +6325,7 @@ function cargarCarritoGuardado() {
 
 
 function abrirPanelCarrito() {
-  asegurarReservaFooterCarritoV368();
+  asegurarReservaFooterCarritoV369();
   mostrarCarrito();
 
   carritoElemento.classList.add(
@@ -7468,7 +7468,7 @@ if (modalInformacionProducto) {
 }
 
 
-asegurarReservaFooterCarritoV368();
+asegurarReservaFooterCarritoV369();
 
 if (abrirCarrito) {
   abrirCarrito.addEventListener(
