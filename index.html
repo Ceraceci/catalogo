@@ -7686,7 +7686,7 @@
 
 </head>
 
-<body data-catalog-build="342">
+<body data-catalog-build="343">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17492,6 +17492,43 @@
     /* Reduce otros 2 px el margen inferior del encabezado. */
     html body .cabecera{
       margin-bottom:0 !important;
+    }
+  }
+</style>
+
+
+<style id="ceraceci-v343-padding-barras-y-ajuste-insumos">
+  @media (max-width:650px){
+    /* “Insumos…” baja 0,1 px más. */
+    html body .logo-contenedor > .subtitulo-principal{
+      transform:translateY(1px) !important;
+    }
+
+    /* Todas las barras toman el mismo padding izquierdo interno del buscador. */
+    html body #buscador,
+    html body #filtroCategoria,
+    html body .activar-modo-comparacion-movil,
+    html body .acciones-comparacion-movil > button{
+      padding-left:13px !important;
+    }
+
+    html body .busqueda .control-orden{
+      padding-left:13px !important;
+      padding-right:13px !important;
+      justify-content:flex-start !important;
+      align-items:center !important;
+    }
+
+    html body .busqueda .control-orden .icono-orden{
+      justify-content:flex-start !important;
+      text-align:left !important;
+      padding-left:0 !important;
+      width:100% !important;
+    }
+
+    html body .busqueda .control-orden select,
+    html body #filtroCategoria{
+      text-indent:13px !important;
     }
   }
 </style>
