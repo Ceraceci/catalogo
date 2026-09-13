@@ -17779,7 +17779,7 @@
 
 
 
-<style id="ceraceci-v365-acciones-carrito-posicion-pantalla">
+<style id="ceraceci-v366-acciones-carrito-50px-arriba">
   @media (max-width:650px){
     html body .acciones-carrito-v365{
       box-sizing:border-box !important;
@@ -17807,7 +17807,7 @@
   }
 </style>
 
-<script id="ceraceci-v365-acciones-carrito-posicion-pantalla-script">
+<script id="ceraceci-v366-acciones-carrito-50px-arriba-script">
 (() => {
   const mq = window.matchMedia('(max-width:650px)');
   let centroVerCarrito = null;
@@ -17903,7 +17903,9 @@
     const rg = g.getBoundingClientRect();
     const rv = vaciar.getBoundingClientRect();
     const centroVaciarDentroGrupo = (rv.top - rg.top) + (rv.height / 2);
-    const topExacto = Math.round(centroVerCarrito - centroVaciarDentroGrupo);
+    const topExacto = Math.round(
+      centroVerCarrito - centroVaciarDentroGrupo - 50
+    );
 
     g.style.setProperty('top', `${topExacto}px`, 'important');
     g.style.setProperty('visibility', 'visible', 'important');
