@@ -16790,5 +16790,95 @@
   }
 </style>
 
+
+<style id="ceraceci-v332-movil-contenedor-unico">
+  @media (max-width:650px){
+    /* Fondo único para carrito + redes + pie */
+    html body::after{
+      content:"" !important;
+      position:fixed !important;
+      left:0 !important;
+      right:0 !important;
+      bottom:0 !important;
+      height:92px !important;
+      background:#CF927D !important;
+      z-index:43 !important;
+      pointer-events:none !important;
+      box-shadow:0 -1px 0 rgba(0,0,0,.08) !important;
+    }
+
+    html body{
+      padding-bottom:92px !important;
+    }
+
+    /* Parte superior: que se vea el borde superior del bloque de barras */
+    html body .busqueda.busqueda-en-scroll{
+      top:4px !important;
+      margin-top:0 !important;
+      padding-top:8px !important;
+      border-top:1px solid rgba(120,96,82,.28) !important;
+      border-top-left-radius:22px !important;
+      border-top-right-radius:22px !important;
+      overflow:visible !important;
+      box-shadow:0 -1px 0 rgba(120,96,82,.18), 0 8px 16px rgba(80,48,30,.14) !important;
+    }
+
+    /* Barra inferior y redes, dentro del mismo bloque visual */
+    html body .acciones-flotantes{
+      left:12px !important;
+      right:12px !important;
+      bottom:calc(34px + env(safe-area-inset-bottom)) !important;
+      z-index:46 !important;
+      display:grid !important;
+      grid-template-columns:minmax(0,1fr) 50px 50px !important;
+      align-items:center !important;
+      column-gap:10px !important;
+      row-gap:0 !important;
+      padding:0 !important;
+      margin:0 !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+
+    html body .acciones-flotantes .abrir-carrito,
+    html body .acciones-flotantes .instagram-flotante,
+    html body .acciones-flotantes .whatsapp-flotante{
+      position:relative !important;
+      z-index:47 !important;
+    }
+
+    /* Pie apoyado en el mismo fondo, sin efecto de pieza aparte */
+    #ceraceciFooterV328{
+      position:fixed !important;
+      left:0 !important;
+      right:0 !important;
+      bottom:0 !important;
+      z-index:45 !important;
+      min-height:34px !important;
+      height:auto !important;
+      gap:0 !important;
+      padding:2px 8px calc(3px + env(safe-area-inset-bottom)) !important;
+      background:transparent !important;
+      border:0 !important;
+      box-shadow:none !important;
+    }
+
+    #ceraceciFooterLogoV328{
+      width:72px !important;
+      max-width:72px !important;
+      height:auto !important;
+      margin:0 !important;
+    }
+
+    #ceraceciFooterFirmaV328{
+      margin:0 !important;
+      padding:0 !important;
+      font-size:8.8px !important;
+      line-height:1 !important;
+    }
+  }
+</style>
+
 </body>
 </html>
