@@ -8147,7 +8147,7 @@
       </button>
 
       <button type="button" id="vaciarCarrito" class="vaciar-carrito">
-        Vaciar carrito V364
+        Vaciar carrito
       </button>
     </div>
   </aside>
@@ -17778,41 +17778,43 @@
 
 
 
-<style id="ceraceci-v363-acciones-carrito-alineadas-con-ver">
-  @media (max-width:650px){
-    html body .pie-carrito{
-      position:relative !important;
-      overflow:visible !important;
-    }
 
-    html body .acciones-carrito-v363{
-      position:relative !important;
-      top:0;
-      left:0 !important;
-      right:auto !important;
-      z-index:30 !important;
+<style id="ceraceci-v365-acciones-carrito-posicion-pantalla">
+  @media (max-width:650px){
+    html body .acciones-carrito-v365{
+      box-sizing:border-box !important;
       display:block !important;
-      width:100% !important;
       margin:0 !important;
       padding:0 !important;
     }
 
-    html body .acciones-carrito-v363 > .finalizar-pedido,
-    html body .acciones-carrito-v363 > .ayuda-finalizar-pedido,
-    html body .acciones-carrito-v363 > .compartir-carrito,
-    html body .acciones-carrito-v363 > .vaciar-carrito{
+    html body .acciones-carrito-v365.acciones-carrito-v365-fijas{
+      position:fixed !important;
+      right:auto !important;
+      bottom:auto !important;
+      z-index:2147483600 !important;
+      margin:0 !important;
+      padding:0 !important;
+      background:var(--color-tarjeta-calido,#fffdfb) !important;
+    }
+
+    html body .acciones-carrito-v365 > .finalizar-pedido,
+    html body .acciones-carrito-v365 > .ayuda-finalizar-pedido,
+    html body .acciones-carrito-v365 > .compartir-carrito,
+    html body .acciones-carrito-v365 > .vaciar-carrito{
       transform:none !important;
     }
   }
 </style>
 
-<script id="ceraceci-v363-acciones-carrito-alineadas-con-ver-script">
+<script id="ceraceci-v365-acciones-carrito-posicion-pantalla-script">
 (() => {
   const mq = window.matchMedia('(max-width:650px)');
   let centroVerCarrito = null;
   let grupo = null;
-  let rafA = 0;
-  let rafB = 0;
+  let placeholder = null;
+  let raf1 = 0;
+  let raf2 = 0;
 
   function refs(){
     return {
@@ -17829,71 +17831,117 @@
   function crearGrupo(){
     const {pie, finalizar, ayuda, compartir, vaciar} = refs();
     if (!pie || !finalizar || !compartir || !vaciar) return null;
-    grupo = pie.querySelector('.acciones-carrito-v363');
-    if (!grupo){
-      grupo = document.createElement('div');
-      grupo.className = 'acciones-carrito-v363';
-      pie.appendChild(grupo);
-      grupo.appendChild(finalizar);
-      if (ayuda) grupo.appendChild(ayuda);
-      grupo.appendChild(compartir);
-      grupo.appendChild(vaciar);
-    }
+
+    if (grupo && grupo.isConnected) return grupo;
+
+    grupo = document.createElement('div');
+    grupo.className = 'acciones-carrito-v365';
+    placeholder = document.createComment('acciones-carrito-v365');
+    pie.appendChild(placeholder);
+    pie.appendChild(grupo);
+
+    grupo.appendChild(finalizar);
+    if (ayuda) grupo.appendChild(ayuda);
+    grupo.appendChild(compartir);
+    grupo.appendChild(vaciar);
     return grupo;
   }
 
-  function guardarCentro(){
+  function guardarCentroVer(){
     if (!mq.matches) return;
     const {abrir} = refs();
     if (!abrir) return;
     const r = abrir.getBoundingClientRect();
     if (r.width > 0 && r.height > 0){
-      centroVerCarrito = r.top + r.height / 2;
+      centroVerCarrito = r.top + (r.height / 2);
     }
   }
 
-  function alinear(){
-    if (!mq.matches) return;
-    const {carrito, vaciar} = refs();
-    const g = crearGrupo();
-    if (!carrito || !vaciar || !g || !carrito.classList.contains('visible')) return;
+  function devolverAlPie(){
+    const {pie} = refs();
+    if (!grupo || !pie) return;
 
-    if (centroVerCarrito == null) guardarCentro();
+    grupo.classList.remove('acciones-carrito-v365-fijas');
+    grupo.style.removeProperty('left');
+    grupo.style.removeProperty('top');
+    grupo.style.removeProperty('width');
+    grupo.style.removeProperty('visibility');
+
+    if (placeholder && placeholder.parentNode === pie){
+      pie.insertBefore(grupo, placeholder.nextSibling);
+    } else {
+      pie.appendChild(grupo);
+    }
+  }
+
+  function fijarEnPantalla(){
+    const {carrito, pie, vaciar} = refs();
+    const g = crearGrupo();
+    if (!mq.matches || !carrito || !pie || !vaciar || !g) return;
+    if (!carrito.classList.contains('visible')) return;
+
+    if (centroVerCarrito == null) guardarCentroVer();
     if (centroVerCarrito == null) return;
 
+    // Medimos el ancho real útil del pie antes de sacar el grupo del carrito.
+    const pieRect = pie.getBoundingClientRect();
+    const estiloPie = getComputedStyle(pie);
+    const padIzq = parseFloat(estiloPie.paddingLeft) || 0;
+    const padDer = parseFloat(estiloPie.paddingRight) || 0;
+    const izquierda = pieRect.left + padIzq;
+    const ancho = Math.max(0, pieRect.width - padIzq - padDer);
+
+    // Lo sacamos del carrito transformado y lo fijamos directamente al viewport.
+    document.body.appendChild(g);
+    g.classList.add('acciones-carrito-v365-fijas');
+    g.style.setProperty('visibility', 'hidden', 'important');
+    g.style.setProperty('left', `${Math.round(izquierda)}px`, 'important');
+    g.style.setProperty('width', `${Math.round(ancho)}px`, 'important');
     g.style.setProperty('top', '0px', 'important');
 
-    // Medimos con el grupo en su posición natural y luego usamos top real,
-    // no transform, para llevar Vaciar carrito al centro de Ver carrito.
+    // Con top=0 calculamos dónde queda el centro de Vaciar dentro del grupo.
+    const rg = g.getBoundingClientRect();
     const rv = vaciar.getBoundingClientRect();
-    const centroVaciar = rv.top + rv.height / 2;
-    let desplazamiento = Math.round(centroVerCarrito - centroVaciar);
+    const centroVaciarDentroGrupo = (rv.top - rg.top) + (rv.height / 2);
+    const topExacto = Math.round(centroVerCarrito - centroVaciarDentroGrupo);
 
-    // Sólo permitimos subir el grupo; nunca bajarlo accidentalmente.
-    if (desplazamiento > 0) desplazamiento = 0;
-    g.style.setProperty('top', `${desplazamiento}px`, 'important');
+    g.style.setProperty('top', `${topExacto}px`, 'important');
+    g.style.setProperty('visibility', 'visible', 'important');
+  }
+
+  function actualizar(){
+    const {carrito} = refs();
+    if (!mq.matches || !carrito || !carrito.classList.contains('visible')){
+      devolverAlPie();
+      return;
+    }
+    fijarEnPantalla();
   }
 
   function programar(){
-    cancelAnimationFrame(rafA);
-    cancelAnimationFrame(rafB);
-    rafA = requestAnimationFrame(() => {
-      alinear();
-      rafB = requestAnimationFrame(alinear);
+    cancelAnimationFrame(raf1);
+    cancelAnimationFrame(raf2);
+    raf1 = requestAnimationFrame(() => {
+      actualizar();
+      raf2 = requestAnimationFrame(actualizar);
     });
   }
 
   function iniciar(){
-    const {abrir, carrito} = refs();
     crearGrupo();
+    const {abrir, carrito} = refs();
 
     if (abrir){
-      abrir.addEventListener('pointerdown', guardarCentro, true);
+      // pointerdown ocurre antes de que el carrito cambie de estado: guardamos
+      // exactamente el eje vertical que tenía "Ver carrito" cerrado.
+      abrir.addEventListener('pointerdown', guardarCentroVer, true);
+      abrir.addEventListener('touchstart', guardarCentroVer, {capture:true, passive:true});
       abrir.addEventListener('click', () => {
-        guardarCentro();
+        if (centroVerCarrito == null) guardarCentroVer();
         setTimeout(programar, 0);
-        setTimeout(programar, 80);
-        setTimeout(programar, 220);
+        setTimeout(programar, 60);
+        setTimeout(programar, 180);
+        setTimeout(programar, 360);
       }, true);
     }
 
