@@ -7807,7 +7807,7 @@
 
         <img
           class="logo"
-          src="ceraceci-logo-horizontal-v323.png"
+          src="ceraceci-logo-compacto-v330.png"
           alt="Ceraceci"
         >
 
@@ -8090,7 +8090,7 @@
   </div>
 
   <footer id="ceraceciFooterV328" aria-label="Ceraceci">
-    <img src="ceraceci-logo-pie-v328.png" alt="Ceraceci" id="ceraceciFooterLogoV328">
+    <img src="ceraceci-logo-compacto-v330.png" alt="Ceraceci" id="ceraceciFooterLogoV328">
     <span id="ceraceciFooterFirmaV328">By Nacho Peralta</span>
   </footer>
 
@@ -16611,6 +16611,117 @@
 
     html body .acciones-flotantes{
       bottom:calc(52px + env(safe-area-inset-bottom)) !important;
+    }
+  }
+</style>
+
+
+<style id="ceraceci-v330-espacios-reales">
+  /* V330: el espacio sobrante estaba DENTRO del PNG del logo.
+     Esta regla usa la versión recortada, sin cambiar el diseño visible. */
+  html body .cabecera{
+    box-sizing:border-box !important;
+    min-height:0 !important;
+    height:auto !important;
+    padding:8px 0 0 !important;
+    margin:0 0 12px !important;
+  }
+
+  html body .logo-contenedor{
+    min-height:0 !important;
+    height:auto !important;
+    margin:0 auto !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+  }
+
+  html body .logo-contenedor > img.logo{
+    width:260px !important;
+    max-width:260px !important;
+    height:auto !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    object-fit:contain !important;
+  }
+
+  html body .logo-contenedor > .subtitulo-principal{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+
+  html body .busqueda,
+  html body .busqueda.busqueda-en-scroll{
+    margin-top:0 !important;
+  }
+
+  #ceraceciFooterV328{
+    box-sizing:border-box !important;
+    min-height:44px !important;
+    height:auto !important;
+    gap:2px !important;
+    padding:3px 10px 4px !important;
+    overflow:visible !important;
+  }
+
+  #ceraceciFooterLogoV328{
+    display:block !important;
+    width:105px !important;
+    max-width:105px !important;
+    height:auto !important;
+    max-height:none !important;
+    margin:0 !important;
+    padding:0 !important;
+    object-fit:contain !important;
+  }
+
+  #ceraceciFooterFirmaV328{
+    margin:0 !important;
+    padding:0 !important;
+    line-height:1 !important;
+  }
+
+  @media (min-width:651px){
+    html body{
+      padding-bottom:50px !important;
+    }
+    html body .acciones-flotantes{
+      bottom:54px !important;
+    }
+  }
+
+  @media (max-width:650px){
+    html body .cabecera{
+      padding-top:4px !important;
+      margin-bottom:7px !important;
+    }
+
+    html body .logo-contenedor > img.logo{
+      width:116px !important;
+      max-width:116px !important;
+      height:auto !important;
+      max-height:none !important;
+    }
+
+    #ceraceciFooterV328{
+      min-height:52px !important;
+      gap:2px !important;
+      padding:3px 8px calc(4px + env(safe-area-inset-bottom)) !important;
+    }
+
+    #ceraceciFooterLogoV328{
+      width:145px !important;
+      max-width:145px !important;
+      height:auto !important;
+      max-height:none !important;
+    }
+
+    html body{
+      padding-bottom:58px !important;
+    }
+
+    html body .acciones-flotantes{
+      bottom:calc(58px + env(safe-area-inset-bottom)) !important;
     }
   }
 </style>
