@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="348">
+<body data-catalog-build="349">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17727,53 +17727,108 @@
   }
 </style>
 
-<script id="ceraceci-v348-posicionar-logo-espejo">
-(() => {
-  const esMovil = () => window.matchMedia('(max-width:650px)').matches;
-  let frame = 0;
 
-  function posicionar(){
-    frame = 0;
+
+<style id="ceraceci-v349-logo-estable">
+  @media (max-width:650px){
+    /* El logo queda oculto sólo durante el microinstante en que nace una tarjeta.
+       Así nunca se ve en la posición vieja antes de anclarse a la foto. */
+    html body #productos .logo-mini-tarjeta,
+    html body #productosComparados .logo-mini-tarjeta{
+      visibility:hidden !important;
+    }
+
+    html body #productos .contenedor-foto-producto,
+    html body #productosComparados .contenedor-foto-producto{
+      position:relative !important;
+      overflow:visible !important;
+    }
+
+    /* Una vez insertado dentro del recuadro de la foto, el logo queda fijado
+       sobre el borde izquierdo y no depende del texto que se escriba arriba. */
+    html body #productos .contenedor-foto-producto > .logo-mini-tarjeta,
+    html body #productosComparados .contenedor-foto-producto > .logo-mini-tarjeta{
+      position:absolute !important;
+      left:0 !important;
+      right:auto !important;
+      bottom:auto !important;
+      width:32px !important;
+      height:32px !important;
+      margin:0 !important;
+      transform:translateX(-50%) !important;
+      z-index:20 !important;
+      visibility:visible !important;
+      pointer-events:none !important;
+    }
+  }
+</style>
+
+<script id="ceraceci-v349-anclar-logo-a-foto">
+(() => {
+  const selectorTarjetas = '#productos .tarjeta-producto, #productosComparados .tarjeta-producto';
+
+  function esMovil(){
+    return window.matchMedia('(max-width:650px)').matches;
+  }
+
+  function anclarLogo(tarjeta, forzar = false){
+    if (!esMovil() || !tarjeta) return;
+
+    const foto = tarjeta.querySelector('.contenedor-foto-producto');
+    const compartir = tarjeta.querySelector('.compartir-producto');
+    const logo = tarjeta.querySelector('.logo-mini-tarjeta');
+    if (!foto || !compartir || !logo) return;
+
+    if (!forzar && logo.parentElement === foto && logo.dataset.v349Anclado === '1') return;
+
+    /* El logo pasa a depender físicamente de la foto, no del encabezado.
+       Por eso escribir en Buscar no puede desplazarlo. */
+    if (logo.parentElement !== foto) foto.appendChild(logo);
+
+    const rf = foto.getBoundingClientRect();
+    const rc = compartir.getBoundingClientRect();
+
+    /* Misma altura superior que Compartir, pero medida dentro de la foto. */
+    const top = rc.top - rf.top;
+    logo.style.setProperty('top', `${top}px`, 'important');
+    logo.dataset.v349Anclado = '1';
+  }
+
+  function procesarRaiz(raiz, forzar = false){
     if (!esMovil()) return;
 
-    document.querySelectorAll('#productos .tarjeta-producto, #productosComparados .tarjeta-producto').forEach((tarjeta) => {
-      const foto = tarjeta.querySelector('.contenedor-foto-producto');
-      const compartir = tarjeta.querySelector('.compartir-producto');
-      const logo = tarjeta.querySelector('.logo-mini-tarjeta');
-      if (!foto || !compartir || !logo) return;
-
-      /* Se vuelve hijo directo de la tarjeta para que ninguna regla del
-         encabezado pueda impedir el desplazamiento. */
-      if (logo.parentElement !== tarjeta) tarjeta.appendChild(logo);
-
-      const rt = tarjeta.getBoundingClientRect();
-      const rf = foto.getBoundingClientRect();
-      const rc = compartir.getBoundingClientRect();
-      const ancho = logo.getBoundingClientRect().width || 32;
-
-      /* Centro del logo = borde izquierdo de la foto.
-         Su borde superior = borde superior de Compartir. */
-      const left = rf.left - rt.left - (ancho / 2);
-      const top = rc.top - rt.top;
-
-      logo.style.setProperty('left', `${left}px`, 'important');
-      logo.style.setProperty('top', `${top}px`, 'important');
-      logo.style.setProperty('right', 'auto', 'important');
-      logo.style.setProperty('bottom', 'auto', 'important');
-    });
+    if (raiz?.matches?.(selectorTarjetas)) anclarLogo(raiz, forzar);
+    raiz?.querySelectorAll?.(selectorTarjetas).forEach((tarjeta) => anclarLogo(tarjeta, forzar));
   }
 
-  function programar(){
-    if (frame) return;
-    frame = requestAnimationFrame(posicionar);
+  /* Sólo actúa cuando aparecen/reaparecen tarjetas nuevas.
+     No recalcula por cada cambio de texto ni por mutaciones ajenas. */
+  const observer = new MutationObserver((mutaciones) => {
+    if (!esMovil()) return;
+    for (const mutacion of mutaciones){
+      for (const nodo of mutacion.addedNodes){
+        if (nodo.nodeType === 1) procesarRaiz(nodo, false);
+      }
+    }
+  });
+
+  observer.observe(document.body, { childList:true, subtree:true });
+
+  function inicial(){
+    document.querySelectorAll(selectorTarjetas).forEach((tarjeta) => anclarLogo(tarjeta, true));
   }
 
-  const observer = new MutationObserver(programar);
-  observer.observe(document.documentElement, {childList:true, subtree:true});
-  window.addEventListener('resize', programar, {passive:true});
-  window.addEventListener('load', programar, {once:true});
-  document.addEventListener('DOMContentLoaded', programar, {once:true});
-  programar();
+  document.addEventListener('DOMContentLoaded', inicial, { once:true });
+  window.addEventListener('load', inicial, { once:true });
+
+  /* Sólo se recalcula si realmente cambia el tamaño de la ventana. */
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(inicial, 120);
+  }, { passive:true });
+
+  inicial();
 })();
 </script>
 
