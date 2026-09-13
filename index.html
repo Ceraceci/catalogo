@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="349">
+<body data-catalog-build="350">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17829,6 +17829,123 @@
   }, { passive:true });
 
   inicial();
+})();
+</script>
+
+
+<style id="ceraceci-v350-logo-tarjeta-restaurado">
+  @media (max-width:650px){
+    /* V350: el logo visible de la tarjeta pasa a ser una copia estable dentro
+       del recuadro de la foto. Así no desaparece ni se mueve al escribir. */
+    html body #productos .contenedor-foto-producto,
+    html body #productosComparados .contenedor-foto-producto{
+      position:relative !important;
+      overflow:visible !important;
+    }
+
+    html body #productos .contenedor-foto-producto > .logo-mini-tarjeta.logo-mini-tarjeta-v350,
+    html body #productosComparados .contenedor-foto-producto > .logo-mini-tarjeta.logo-mini-tarjeta-v350{
+      position:absolute !important;
+      left:0 !important;
+      top:0 !important;
+      width:32px !important;
+      height:32px !important;
+      margin:0 !important;
+      transform:translateX(-50%) !important;
+      z-index:26 !important;
+      display:block !important;
+      visibility:visible !important;
+      opacity:1 !important;
+      pointer-events:none !important;
+      object-fit:contain !important;
+      object-position:center !important;
+      background:#EEE8E6 !important;
+      border:1px solid rgba(111,103,97,.38) !important;
+      border-radius:10px !important;
+      box-shadow:0 2px 4px rgba(70,40,25,.12) !important;
+      box-sizing:border-box !important;
+    }
+
+    /* Oculta solo las instancias viejas cuando existe la nueva copia. */
+    html body #productos .tarjeta-producto[data-v350-logo-listo="1"] .logo-mini-tarjeta:not(.logo-mini-tarjeta-v350),
+    html body #productosComparados .tarjeta-producto[data-v350-logo-listo="1"] .logo-mini-tarjeta:not(.logo-mini-tarjeta-v350){
+      display:none !important;
+      visibility:hidden !important;
+      opacity:0 !important;
+    }
+  }
+</style>
+<script id="ceraceci-v350-logo-tarjeta-restaurado-script">
+(() => {
+  const selectorTarjetas = '#productos .tarjeta-producto, #productosComparados .tarjeta-producto';
+  const media = () => window.matchMedia('(max-width:650px)').matches;
+
+  function aplicarEnTarjeta(tarjeta){
+    if (!media() || !tarjeta) return;
+
+    const foto = tarjeta.querySelector('.contenedor-foto-producto');
+    const compartir = tarjeta.querySelector('.compartir-producto');
+    if (!foto || !compartir) return;
+
+    let fuente = tarjeta.querySelector('.logo-mini-tarjeta.logo-mini-tarjeta-v350');
+    if (!fuente) {
+      fuente = [...tarjeta.querySelectorAll('.logo-mini-tarjeta')].find(el => !el.classList.contains('logo-mini-tarjeta-v350')) || null;
+    }
+    const src = fuente?.currentSrc || fuente?.getAttribute('src') || '';
+    if (!src) return;
+
+    let logo = foto.querySelector('.logo-mini-tarjeta.logo-mini-tarjeta-v350');
+    if (!logo) {
+      logo = document.createElement('img');
+      logo.className = 'logo-mini-tarjeta logo-mini-tarjeta-v350';
+      logo.alt = 'Ceraceci';
+      logo.decoding = 'async';
+      logo.draggable = false;
+      foto.appendChild(logo);
+    }
+    if (logo.getAttribute('src') !== src) logo.setAttribute('src', src);
+
+    const rf = foto.getBoundingClientRect();
+    const rc = compartir.getBoundingClientRect();
+    const top = Math.round((rc.top - rf.top) * 10) / 10;
+    logo.style.setProperty('top', `${top}px`, 'important');
+
+    tarjeta.dataset.v350LogoListo = '1';
+  }
+
+  function aplicarEnRaiz(raiz){
+    if (!media()) return;
+    if (raiz?.matches?.(selectorTarjetas)) aplicarEnTarjeta(raiz);
+    raiz?.querySelectorAll?.(selectorTarjetas).forEach(aplicarEnTarjeta);
+  }
+
+  function aplicarTodo(){
+    if (!media()) return;
+    document.querySelectorAll(selectorTarjetas).forEach(aplicarEnTarjeta);
+  }
+
+  const observer = new MutationObserver((mutaciones) => {
+    if (!media()) return;
+    for (const mutacion of mutaciones){
+      for (const nodo of mutacion.addedNodes){
+        if (nodo.nodeType === 1) aplicarEnRaiz(nodo);
+      }
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    aplicarTodo();
+    observer.observe(document.body, { childList:true, subtree:true });
+  }, { once:true });
+
+  window.addEventListener('load', aplicarTodo, { once:true });
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(aplicarTodo, 120);
+  }, { passive:true });
+
+  aplicarTodo();
 })();
 </script>
 
