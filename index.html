@@ -17411,5 +17411,75 @@
   }
 </style>
 
+
+<style id="ceraceci-v341-encabezado-y-proteccion-web">
+  @media (max-width:650px){
+    /* "Insumos..." baja 0,1 px más respecto de V340. */
+    html body .logo-contenedor > .subtitulo-principal{
+      transform:translateY(.8px) !important;
+    }
+
+    /* Reduce otros 2 px el espacio inferior del encabezado. */
+    html body .cabecera{
+      margin-bottom:2px !important;
+    }
+  }
+
+  /* Protección web razonable contra copia/guardado accidental de imágenes. */
+  html body img,
+  html body .foto-producto,
+  html body .zoom-imagen-ampliada{
+    -webkit-touch-callout:none !important;
+    -webkit-user-select:none !important;
+    user-select:none !important;
+    -webkit-user-drag:none !important;
+  }
+</style>
+
+<script id="ceraceci-v341-proteccion-web">
+(() => {
+  const esImagenProtegida = (elemento) =>
+    !!elemento?.closest?.(
+      'img, .foto-producto, .zoom-imagen-ampliada'
+    );
+
+  document.addEventListener('contextmenu', (event) => {
+    if (!esImagenProtegida(event.target)) return;
+    event.preventDefault();
+  }, true);
+
+  document.addEventListener('dragstart', (event) => {
+    if (!esImagenProtegida(event.target)) return;
+    event.preventDefault();
+  }, true);
+
+  document.addEventListener('selectstart', (event) => {
+    if (!esImagenProtegida(event.target)) return;
+    event.preventDefault();
+  }, true);
+
+  document.querySelectorAll('img').forEach((img) => {
+    img.setAttribute('draggable', 'false');
+  });
+
+  const observador = new MutationObserver((cambios) => {
+    for (const cambio of cambios) {
+      for (const nodo of cambio.addedNodes) {
+        if (!(nodo instanceof Element)) continue;
+        if (nodo.matches?.('img')) nodo.setAttribute('draggable', 'false');
+        nodo.querySelectorAll?.('img').forEach((img) => {
+          img.setAttribute('draggable', 'false');
+        });
+      }
+    }
+  });
+
+  observador.observe(document.documentElement, {
+    childList:true,
+    subtree:true
+  });
+})();
+</script>
+
 </body>
 </html>
