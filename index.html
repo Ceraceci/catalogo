@@ -16726,5 +16726,69 @@
   }
 </style>
 
+
+<style id="ceraceci-v331-ajustes-movil">
+  @media (max-width:650px){
+    /* 1) Barra superior móvil más pegada: sin franja vacía arriba. */
+    html body .cabecera{
+      padding-top:0 !important;
+      margin-bottom:2px !important;
+    }
+
+    html body .logo-contenedor{
+      margin-bottom:0 !important;
+    }
+
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      margin-top:0 !important;
+      padding-top:0 !important;
+      border-top-width:0 !important;
+      top:0 !important;
+    }
+
+    /* 2) Pie móvil 50% más chico visualmente. */
+    #ceraceciFooterV328{
+      min-height:34px !important;
+      gap:0 !important;
+      padding:2px 8px calc(2px + env(safe-area-inset-bottom)) !important;
+      justify-content:center !important;
+    }
+
+    #ceraceciFooterLogoV328{
+      width:72px !important;
+      max-width:72px !important;
+      height:auto !important;
+      margin:0 !important;
+    }
+
+    #ceraceciFooterFirmaV328{
+      font-size:8.8px !important;
+      line-height:1 !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    /* 3) Carrito y pie acoplados, sin espacio entre ambos. */
+    html body .acciones-flotantes{
+      bottom:calc(34px + env(safe-area-inset-bottom)) !important;
+      padding-bottom:0 !important;
+      margin-bottom:0 !important;
+      row-gap:0 !important;
+      column-gap:8px !important;
+      align-items:end !important;
+    }
+
+    html body .abrir-carrito{
+      margin:0 !important;
+    }
+
+    /* Reserva justa para que no tape el contenido final. */
+    html body{
+      padding-bottom:74px !important;
+    }
+  }
+</style>
+
 </body>
 </html>
