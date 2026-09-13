@@ -1,4 +1,5 @@
 {
+  "id": "./",
   "name": "Ceraceci - Catálogo",
   "short_name": "Ceraceci",
   "start_url": "./",
@@ -8,19 +9,19 @@
   "theme_color": "#CF927D",
   "icons": [
     {
-      "src": "android-chrome-192x192.png?v=319",
+      "src": "android-chrome-192x192.png?v=321",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "android-chrome-512x512.png?v=319",
+      "src": "android-chrome-512x512.png?v=321",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "maskable-icon-512x512.png?v=319",
+      "src": "maskable-icon-512x512.png?v=321",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
