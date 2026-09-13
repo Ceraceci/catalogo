@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="352">
+<body data-catalog-build="353">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -8088,12 +8088,13 @@
       </strong>
     </button>
 
-  </div>
+    <!-- V353: el pie vive dentro del grupo flotante, que ya está fijado al viewport. -->
+    <footer id="ceraceciFooterV328" aria-label="Ceraceci">
+      <img src="ceraceci-logo-compacto-v330.png" alt="Ceraceci" id="ceraceciFooterLogoV328">
+      <span id="ceraceciFooterFirmaV328">By Nacho Peralta</span>
+    </footer>
 
-  <footer id="ceraceciFooterV328" aria-label="Ceraceci">
-    <img src="ceraceci-logo-compacto-v330.png" alt="Ceraceci" id="ceraceciFooterLogoV328">
-    <span id="ceraceciFooterFirmaV328">By Nacho Peralta</span>
-  </footer>
+  </div>
 
   <div id="fondoCarrito" class="fondo-carrito"></div>
 
@@ -17737,48 +17738,176 @@
 </style>
 
 
-<style id="ceraceci-v352-pie-fijo-permanente">
-  /* V352 — el pie CERACECI + By Nacho Peralta permanece fijo siempre. */
-  #ceraceciFooterV328{
-    position:fixed !important;
-    left:0 !important;
-    right:0 !important;
-    z-index:45 !important;
+<style id="ceraceci-v353-pie-anclado-a-barra-fija">
+  /*
+    V353: el pie deja de depender de su propio position:fixed.
+    Ahora cuelga físicamente de .acciones-flotantes, el grupo que ya permanece
+    fijo durante todo el scroll. Así logo + separador + firma se mueven como
+    una sola capa fija con el carrito/redes.
+  */
+  html body .acciones-flotantes{
+    overflow:visible !important;
+  }
+
+  html body .acciones-flotantes > #ceraceciFooterV328{
+    box-sizing:border-box !important;
+    position:absolute !important;
+    top:auto !important;
+    z-index:60 !important;
     display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    margin:0 !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    overflow:visible !important;
     visibility:visible !important;
     opacity:1 !important;
     pointer-events:none !important;
-    transform:translateZ(0) !important;
-    -webkit-transform:translateZ(0) !important;
-    backface-visibility:hidden !important;
-    -webkit-backface-visibility:hidden !important;
-  }
-
-  #ceraceciFooterLogoV328,
-  #ceraceciFooterFirmaV328{
-    visibility:visible !important;
-    opacity:1 !important;
-  }
-
-  @media (min-width:651px){
-    #ceraceciFooterV328{
-      bottom:0 !important;
-    }
-    html body{
-      padding-bottom:max(50px, env(safe-area-inset-bottom)) !important;
-    }
   }
 
   @media (max-width:650px){
-    #ceraceciFooterV328{
-      bottom:calc(4px + env(safe-area-inset-bottom)) !important;
+    html body .acciones-flotantes > #ceraceciFooterV328{
+      left:50% !important;
+      right:auto !important;
+      bottom:-20px !important;
+      width:100vw !important;
+      min-height:10px !important;
+      height:auto !important;
+      flex-direction:row !important;
+      gap:6px !important;
+      padding:0 8px !important;
+      transform:translateX(-50%) !important;
     }
-    /* Reserva el bloque inferior para que el catálogo nunca quede detrás del pie. */
-    html body{
-      padding-bottom:calc(76px + env(safe-area-inset-bottom)) !important;
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterLogoV328{
+      display:block !important;
+      width:72px !important;
+      max-width:72px !important;
+      height:auto !important;
+      margin:0 !important;
+      flex:0 0 auto !important;
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterFirmaV328{
+      display:inline-flex !important;
+      align-items:center !important;
+      margin:0 !important;
+      padding:0 !important;
+      font-size:8.8px !important;
+      line-height:1 !important;
+      color:#171717 !important;
+      white-space:nowrap !important;
+      transform:translateY(2px) !important;
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterFirmaV328::before{
+      content:"" !important;
+      display:inline-block !important;
+      width:1px !important;
+      height:10px !important;
+      margin-right:6px !important;
+      background:rgba(23,23,23,.38) !important;
+      border-radius:1px !important;
+      transform:translateY(-1px) !important;
+    }
+  }
+
+  @media (min-width:651px){
+    html body .acciones-flotantes > #ceraceciFooterV328{
+      left:auto !important;
+      right:-18px !important;
+      bottom:-50px !important;
+      width:100vw !important;
+      min-height:44px !important;
+      height:auto !important;
+      flex-direction:column !important;
+      gap:2px !important;
+      padding:3px 10px 4px !important;
+      transform:none !important;
+    }
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterLogoV328{
+      display:block !important;
+      width:105px !important;
+      max-width:105px !important;
+      height:auto !important;
+      margin:0 !important;
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterFirmaV328{
+      display:block !important;
+      margin:0 !important;
+      padding:0 !important;
+      font-size:11px !important;
+      line-height:1 !important;
+      color:#171717 !important;
+      white-space:nowrap !important;
+      transform:none !important;
+      visibility:visible !important;
+      opacity:1 !important;
+    }
+
+    html body .acciones-flotantes > #ceraceciFooterV328 #ceraceciFooterFirmaV328::before{
+      content:none !important;
+      display:none !important;
     }
   }
 </style>
+
+<script id="ceraceci-v353-pie-anclado-a-barra-fija-script">
+(() => {
+  function fijarPieConBarra(){
+    const barra = document.querySelector('.acciones-flotantes');
+    const pie = document.getElementById('ceraceciFooterV328');
+    if (!barra || !pie) return;
+
+    /* Si cualquier código histórico lo devolviera al body, lo reancla. */
+    if (pie.parentElement !== barra) barra.appendChild(pie);
+
+    barra.style.setProperty('position', 'fixed', 'important');
+    barra.style.setProperty('overflow', 'visible', 'important');
+
+    pie.style.setProperty('position', 'absolute', 'important');
+    pie.style.setProperty('display', 'flex', 'important');
+    pie.style.setProperty('visibility', 'visible', 'important');
+    pie.style.setProperty('opacity', '1', 'important');
+    pie.style.setProperty('pointer-events', 'none', 'important');
+    pie.style.setProperty('top', 'auto', 'important');
+
+    if (window.matchMedia('(max-width:650px)').matches){
+      pie.style.setProperty('left', '50%', 'important');
+      pie.style.setProperty('right', 'auto', 'important');
+      pie.style.setProperty('bottom', '-20px', 'important');
+      pie.style.setProperty('width', '100vw', 'important');
+      pie.style.setProperty('transform', 'translateX(-50%)', 'important');
+    } else {
+      pie.style.setProperty('left', 'auto', 'important');
+      pie.style.setProperty('right', '-18px', 'important');
+      pie.style.setProperty('bottom', '-50px', 'important');
+      pie.style.setProperty('width', '100vw', 'important');
+      pie.style.setProperty('transform', 'none', 'important');
+    }
+  }
+
+  fijarPieConBarra();
+  document.addEventListener('DOMContentLoaded', fijarPieConBarra, { once:true });
+  window.addEventListener('load', fijarPieConBarra, { once:true });
+
+  let temporizador = 0;
+  window.addEventListener('resize', () => {
+    clearTimeout(temporizador);
+    temporizador = setTimeout(fijarPieConBarra, 100);
+  }, { passive:true });
+})();
+</script>
 
 </body>
 </html>
