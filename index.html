@@ -17329,5 +17329,41 @@
   }
 </style>
 
+
+<style id="ceraceci-v338-movil-carrito-y-alineacion-lateral">
+  @media (max-width:650px){
+    /* Carrito con la misma lógica geométrica que tarjetas y barras internas. */
+    html body .acciones-flotantes .abrir-carrito,
+    html body .acciones-flotantes .abrir-carrito strong#cantidadCarrito{
+      border-radius:10px !important;
+    }
+
+    /* Subir otros 2 px el conjunto completo respecto de V337. */
+    html body .acciones-flotantes{
+      transform:translateY(-4px) !important;
+    }
+
+    /* Barras superiores: mismos extremos laterales que la grilla de tarjetas. */
+    html body .busqueda,
+    html body .busqueda.busqueda-en-scroll{
+      box-sizing:border-box !important;
+      width:100% !important;
+      max-width:none !important;
+      margin-left:0 !important;
+      margin-right:0 !important;
+      padding-left:0 !important;
+      padding-right:0 !important;
+    }
+
+    html body .fila-busqueda-orden,
+    html body .fila-categoria-comparacion{
+      box-sizing:border-box !important;
+      width:100% !important;
+      margin-left:0 !important;
+      margin-right:0 !important;
+    }
+  }
+</style>
+
 </body>
 </html>
