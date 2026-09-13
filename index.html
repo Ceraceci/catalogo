@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="358">
+<body data-catalog-build="362">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17792,6 +17792,122 @@
     }
   }
 </style>
+
+
+<style id="ceraceci-v362-botones-carrito-alineados-con-ver">
+  @media (max-width:650px){
+    /* V362 — el bloque de acciones del carrito se moverá por cálculo exacto.
+       Se neutralizan desplazamientos anteriores para que el script tome control. */
+    html body .pie-carrito > .finalizar-pedido,
+    html body .pie-carrito > .ayuda-finalizar-pedido,
+    html body .pie-carrito > .compartir-carrito,
+    html body .pie-carrito > .vaciar-carrito{
+      will-change:transform !important;
+    }
+  }
+</style>
+<script id="ceraceci-v362-botones-carrito-alineados-con-ver-script">
+(() => {
+  const MEDIA = '(max-width:650px)';
+  let raf1 = 0;
+  let raf2 = 0;
+  let raf3 = 0;
+
+  function esMovil(){
+    return window.matchMedia(MEDIA).matches;
+  }
+
+  function elementos(){
+    return {
+      trigger: document.getElementById('abrirCarrito'),
+      panel: document.getElementById('carrito'),
+      finalizar: document.getElementById('finalizarPedido'),
+      ayuda: document.querySelector('.pie-carrito > .ayuda-finalizar-pedido'),
+      compartir: document.getElementById('compartirCarrito'),
+      vaciar: document.getElementById('vaciarCarrito')
+    };
+  }
+
+  function limpiar(){
+    const {finalizar, ayuda, compartir, vaciar} = elementos();
+    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
+      if (!el) return;
+      el.style.removeProperty('transform');
+    });
+  }
+
+  function aplicar(){
+    const {trigger, panel, finalizar, ayuda, compartir, vaciar} = elementos();
+    if (!esMovil() || !trigger || !panel || !finalizar || !compartir || !vaciar) {
+      limpiar();
+      return;
+    }
+
+    if (!panel.classList.contains('visible')) {
+      limpiar();
+      return;
+    }
+
+    // Limpiar primero para medir la posición real actual.
+    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
+      if (!el) return;
+      el.style.removeProperty('transform');
+    });
+
+    const triggerRect = trigger.getBoundingClientRect();
+    const vaciarRect = vaciar.getBoundingClientRect();
+    const triggerCenter = triggerRect.top + (triggerRect.height / 2);
+    const vaciarCenter = vaciarRect.top + (vaciarRect.height / 2);
+    const diff = Math.round(triggerCenter - vaciarCenter);
+
+    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
+      if (!el) return;
+      el.style.setProperty('transform', `translateY(${diff}px)`, 'important');
+    });
+  }
+
+  function programar(){
+    cancelAnimationFrame(raf1);
+    cancelAnimationFrame(raf2);
+    cancelAnimationFrame(raf3);
+    raf1 = requestAnimationFrame(() => {
+      aplicar();
+      raf2 = requestAnimationFrame(() => {
+        aplicar();
+        raf3 = requestAnimationFrame(aplicar);
+      });
+    });
+  }
+
+  function observar(){
+    const {panel, trigger} = elementos();
+    if (panel) {
+      const mo = new MutationObserver(() => programar());
+      mo.observe(panel, {attributes:true, attributeFilter:['class', 'style']});
+    }
+    if (trigger) {
+      trigger.addEventListener('click', () => programar(), {passive:true});
+    }
+    const cerrar = document.getElementById('cerrarCarrito');
+    if (cerrar) {
+      cerrar.addEventListener('click', () => setTimeout(limpiar, 60), {passive:true});
+    }
+    const fondo = document.getElementById('fondoCarrito');
+    if (fondo) {
+      fondo.addEventListener('click', () => setTimeout(limpiar, 60), {passive:true});
+    }
+    window.addEventListener('resize', programar, {passive:true});
+    window.addEventListener('orientationchange', programar, {passive:true});
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => { observar(); programar(); }, {once:true});
+  } else {
+    observar();
+    programar();
+  }
+})();
+</script>
 
 </body>
 </html>
