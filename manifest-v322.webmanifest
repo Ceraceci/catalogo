@@ -1,0 +1,37 @@
+{
+  "id": "./",
+  "name": "Ceraceci - Catálogo",
+  "short_name": "Ceraceci",
+  "description": "Catálogo de insumos para la industria cerámica",
+  "start_url": "./?pwa=322",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#CF927D",
+  "theme_color": "#CF927D",
+  "lang": "es-AR",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "android-chrome-192x192-v322.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "android-chrome-512x512-v322.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "maskable-icon-512x512-v322.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
