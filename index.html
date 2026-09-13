@@ -17657,5 +17657,36 @@
   }
 </style>
 
+
+<style id="ceraceci-v347-logo-mini-simetrico">
+  /* V347 — el mini logo de la tarjeta se alinea simétricamente al botón Compartir. */
+  @media (max-width:650px){
+    html body #productos .tarjeta-producto,
+    html body #productosComparados .tarjeta-producto{
+      overflow:visible !important;
+    }
+
+    /* Compartir se mantiene como referencia visual del lado derecho. */
+    html body #productos .encabezado-producto .acciones-producto,
+    html body #productosComparados .encabezado-producto .acciones-producto{
+      top:101px !important;
+      right:0 !important;
+      width:32px !important;
+    }
+
+    /* El mini logo queda centrado sobre el borde izquierdo del recuadro de la foto,
+       replicando la misma lógica del botón Compartir pero en espejo. */
+    html body #productos .logo-mini-tarjeta,
+    html body #productosComparados .logo-mini-tarjeta{
+      top:101px !important;
+      left:-2px !important;
+      width:32px !important;
+      height:32px !important;
+      margin:0 !important;
+      transform:none !important;
+    }
+  }
+</style>
+
 </body>
 </html>
