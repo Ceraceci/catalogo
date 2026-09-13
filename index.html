@@ -16532,5 +16532,88 @@
 })();
 </script>
 
+
+<style id="ceraceci-v329-compacta-header-footer">
+  /* V329 — compacta solo los espacios del encabezado y del pie. */
+  html body .cabecera{
+    box-sizing:border-box !important;
+    min-height:auto !important;
+    padding-top:6px !important;
+    padding-bottom:0 !important;
+    margin:0 0 6px !important;
+  }
+
+  html body .logo-contenedor{
+    margin:0 auto !important;
+    padding-top:0 !important;
+    padding-bottom:0 !important;
+  }
+
+  html body .logo-contenedor > img.logo,
+  html body .logo-contenedor > .subtitulo-principal{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+  }
+
+  html body .busqueda,
+  html body .busqueda.busqueda-en-scroll{
+    margin-top:0 !important;
+  }
+
+  #ceraceciFooterV328{
+    gap:2px !important;
+    min-height:56px !important;
+    padding:4px 12px 5px !important;
+  }
+
+  #ceraceciFooterLogoV328{
+    margin:0 !important;
+  }
+
+  #ceraceciFooterFirmaV328{
+    margin:0 !important;
+    line-height:1 !important;
+  }
+
+  @media (min-width:651px){
+    html body{
+      padding-bottom:72px !important;
+    }
+
+    html body .acciones-flotantes{
+      bottom:74px !important;
+    }
+  }
+
+  @media (max-width:650px){
+    html body .cabecera{
+      padding-top:4px !important;
+      margin:0 0 4px !important;
+    }
+
+    #ceraceciFooterV328{
+      min-height:46px !important;
+      gap:1px !important;
+      padding:3px 8px calc(3px + env(safe-area-inset-bottom)) !important;
+    }
+
+    #ceraceciFooterLogoV328{
+      max-height:30px !important;
+    }
+
+    #ceraceciFooterFirmaV328{
+      font-size:10px !important;
+    }
+
+    html body{
+      padding-bottom:58px !important;
+    }
+
+    html body .acciones-flotantes{
+      bottom:calc(52px + env(safe-area-inset-bottom)) !important;
+    }
+  }
+</style>
+
 </body>
 </html>
