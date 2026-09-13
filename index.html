@@ -7686,7 +7686,7 @@
 
 </head>
 
-<body data-catalog-build="344">
+<body data-catalog-build="345">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17584,6 +17584,24 @@
     /* El select invisible de Ordenar no debe sumar indentación visual. */
     html body .busqueda .control-orden select{
       text-indent:0 !important;
+    }
+  }
+</style>
+
+
+<style id="ceraceci-v345-insumos-y-compartir-tarjetas">
+  @media (max-width:650px){
+    /* “Insumos…” baja 0,1 px más. */
+    html body .logo-contenedor > .subtitulo-principal{
+      transform:translateY(1.1px) !important;
+    }
+
+    /* El botón compartir de las tarjetas deja de ser circular. */
+    html body #productos .tarjeta-producto .compartir-producto,
+    html body #productosComparados .tarjeta-producto .compartir-producto,
+    html body #productos .encabezado-producto .compartir-producto,
+    html body #productosComparados .encabezado-producto .compartir-producto{
+      border-radius:10px !important;
     }
   }
 </style>
