@@ -7685,7 +7685,7 @@
 
 </head>
 
-<body data-catalog-build="362">
+<body data-catalog-build="363">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -17775,136 +17775,142 @@
 </style>
 
 
-<style id="ceraceci-v361-pie-carrito-alto-como-ver">
+
+
+
+<style id="ceraceci-v363-acciones-carrito-alineadas-con-ver">
   @media (max-width:650px){
-    /* V361 — en lugar de micro-mover cada botón, se eleva el bloque inferior
-       del carrito reservando más aire abajo. Así "Vaciar carrito" queda mucho
-       más alto, aproximadamente a la altura visual de "Ver carrito". */
     html body .pie-carrito{
-      padding-top:10px !important;
-      padding-bottom:calc(43px + env(safe-area-inset-bottom)) !important;
+      position:relative !important;
+      overflow:visible !important;
     }
 
-    html body .pie-carrito > .finalizar-pedido,
-    html body .pie-carrito > .compartir-carrito,
-    html body .pie-carrito > .vaciar-carrito{
+    html body .acciones-carrito-v363{
+      position:relative !important;
+      top:0;
+      left:0 !important;
+      right:auto !important;
+      z-index:30 !important;
+      display:block !important;
+      width:100% !important;
+      margin:0 !important;
+      padding:0 !important;
+    }
+
+    html body .acciones-carrito-v363 > .finalizar-pedido,
+    html body .acciones-carrito-v363 > .ayuda-finalizar-pedido,
+    html body .acciones-carrito-v363 > .compartir-carrito,
+    html body .acciones-carrito-v363 > .vaciar-carrito{
       transform:none !important;
     }
   }
 </style>
 
-
-<style id="ceraceci-v362-botones-carrito-alineados-con-ver">
-  @media (max-width:650px){
-    /* V362 — el bloque de acciones del carrito se moverá por cálculo exacto.
-       Se neutralizan desplazamientos anteriores para que el script tome control. */
-    html body .pie-carrito > .finalizar-pedido,
-    html body .pie-carrito > .ayuda-finalizar-pedido,
-    html body .pie-carrito > .compartir-carrito,
-    html body .pie-carrito > .vaciar-carrito{
-      will-change:transform !important;
-    }
-  }
-</style>
-<script id="ceraceci-v362-botones-carrito-alineados-con-ver-script">
+<script id="ceraceci-v363-acciones-carrito-alineadas-con-ver-script">
 (() => {
-  const MEDIA = '(max-width:650px)';
-  let raf1 = 0;
-  let raf2 = 0;
-  let raf3 = 0;
+  const mq = window.matchMedia('(max-width:650px)');
+  let centroVerCarrito = null;
+  let grupo = null;
+  let rafA = 0;
+  let rafB = 0;
 
-  function esMovil(){
-    return window.matchMedia(MEDIA).matches;
-  }
-
-  function elementos(){
+  function refs(){
     return {
-      trigger: document.getElementById('abrirCarrito'),
-      panel: document.getElementById('carrito'),
+      abrir: document.getElementById('abrirCarrito'),
+      carrito: document.getElementById('carrito'),
+      pie: document.querySelector('#carrito .pie-carrito'),
       finalizar: document.getElementById('finalizarPedido'),
-      ayuda: document.querySelector('.pie-carrito > .ayuda-finalizar-pedido'),
+      ayuda: document.querySelector('#carrito .ayuda-finalizar-pedido'),
       compartir: document.getElementById('compartirCarrito'),
       vaciar: document.getElementById('vaciarCarrito')
     };
   }
 
-  function limpiar(){
-    const {finalizar, ayuda, compartir, vaciar} = elementos();
-    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
-      if (!el) return;
-      el.style.removeProperty('transform');
-    });
+  function crearGrupo(){
+    const {pie, finalizar, ayuda, compartir, vaciar} = refs();
+    if (!pie || !finalizar || !compartir || !vaciar) return null;
+    grupo = pie.querySelector('.acciones-carrito-v363');
+    if (!grupo){
+      grupo = document.createElement('div');
+      grupo.className = 'acciones-carrito-v363';
+      pie.appendChild(grupo);
+      grupo.appendChild(finalizar);
+      if (ayuda) grupo.appendChild(ayuda);
+      grupo.appendChild(compartir);
+      grupo.appendChild(vaciar);
+    }
+    return grupo;
   }
 
-  function aplicar(){
-    const {trigger, panel, finalizar, ayuda, compartir, vaciar} = elementos();
-    if (!esMovil() || !trigger || !panel || !finalizar || !compartir || !vaciar) {
-      limpiar();
-      return;
+  function guardarCentro(){
+    if (!mq.matches) return;
+    const {abrir} = refs();
+    if (!abrir) return;
+    const r = abrir.getBoundingClientRect();
+    if (r.width > 0 && r.height > 0){
+      centroVerCarrito = r.top + r.height / 2;
     }
+  }
 
-    if (!panel.classList.contains('visible')) {
-      limpiar();
-      return;
-    }
+  function alinear(){
+    if (!mq.matches) return;
+    const {carrito, vaciar} = refs();
+    const g = crearGrupo();
+    if (!carrito || !vaciar || !g || !carrito.classList.contains('visible')) return;
 
-    // Limpiar primero para medir la posición real actual.
-    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
-      if (!el) return;
-      el.style.removeProperty('transform');
-    });
+    if (centroVerCarrito == null) guardarCentro();
+    if (centroVerCarrito == null) return;
 
-    const triggerRect = trigger.getBoundingClientRect();
-    const vaciarRect = vaciar.getBoundingClientRect();
-    const triggerCenter = triggerRect.top + (triggerRect.height / 2);
-    const vaciarCenter = vaciarRect.top + (vaciarRect.height / 2);
-    const diff = Math.round(triggerCenter - vaciarCenter);
+    g.style.setProperty('top', '0px', 'important');
 
-    [finalizar, ayuda, compartir, vaciar].forEach((el) => {
-      if (!el) return;
-      el.style.setProperty('transform', `translateY(${diff}px)`, 'important');
-    });
+    // Medimos con el grupo en su posición natural y luego usamos top real,
+    // no transform, para llevar Vaciar carrito al centro de Ver carrito.
+    const rv = vaciar.getBoundingClientRect();
+    const centroVaciar = rv.top + rv.height / 2;
+    let desplazamiento = Math.round(centroVerCarrito - centroVaciar);
+
+    // Sólo permitimos subir el grupo; nunca bajarlo accidentalmente.
+    if (desplazamiento > 0) desplazamiento = 0;
+    g.style.setProperty('top', `${desplazamiento}px`, 'important');
   }
 
   function programar(){
-    cancelAnimationFrame(raf1);
-    cancelAnimationFrame(raf2);
-    cancelAnimationFrame(raf3);
-    raf1 = requestAnimationFrame(() => {
-      aplicar();
-      raf2 = requestAnimationFrame(() => {
-        aplicar();
-        raf3 = requestAnimationFrame(aplicar);
-      });
+    cancelAnimationFrame(rafA);
+    cancelAnimationFrame(rafB);
+    rafA = requestAnimationFrame(() => {
+      alinear();
+      rafB = requestAnimationFrame(alinear);
     });
   }
 
-  function observar(){
-    const {panel, trigger} = elementos();
-    if (panel) {
-      const mo = new MutationObserver(() => programar());
-      mo.observe(panel, {attributes:true, attributeFilter:['class', 'style']});
+  function iniciar(){
+    const {abrir, carrito} = refs();
+    crearGrupo();
+
+    if (abrir){
+      abrir.addEventListener('pointerdown', guardarCentro, true);
+      abrir.addEventListener('click', () => {
+        guardarCentro();
+        setTimeout(programar, 0);
+        setTimeout(programar, 80);
+        setTimeout(programar, 220);
+      }, true);
     }
-    if (trigger) {
-      trigger.addEventListener('click', () => programar(), {passive:true});
+
+    if (carrito){
+      const obs = new MutationObserver(programar);
+      obs.observe(carrito, {attributes:true, attributeFilter:['class']});
+      carrito.addEventListener('transitionend', programar, {passive:true});
     }
-    const cerrar = document.getElementById('cerrarCarrito');
-    if (cerrar) {
-      cerrar.addEventListener('click', () => setTimeout(limpiar, 60), {passive:true});
-    }
-    const fondo = document.getElementById('fondoCarrito');
-    if (fondo) {
-      fondo.addEventListener('click', () => setTimeout(limpiar, 60), {passive:true});
-    }
+
     window.addEventListener('resize', programar, {passive:true});
     window.addEventListener('orientationchange', programar, {passive:true});
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { observar(); programar(); }, {once:true});
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', iniciar, {once:true});
   } else {
-    observar();
-    programar();
+    iniciar();
   }
 })();
 </script>
