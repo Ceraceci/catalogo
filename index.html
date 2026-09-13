@@ -7563,9 +7563,130 @@
   }
 </style>
 
+
+<style id="ceraceci-v328-footer-cart-final">
+  /* Pie nuevo aislado: no usa ninguna clase histórica del pie. */
+  #ceraceciFooterV328{
+    position:fixed !important;
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    z-index:32 !important;
+    box-sizing:border-box !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:center !important;
+    gap:3px !important;
+    min-height:74px !important;
+    padding:7px 12px 8px !important;
+    background:#CF927D !important;
+    border:0 !important;
+    overflow:hidden !important;
+  }
+
+  #ceraceciFooterLogoV328{
+    display:block !important;
+    width:265px !important;
+    max-width:82vw !important;
+    height:auto !important;
+    max-height:48px !important;
+    object-fit:contain !important;
+    object-position:center !important;
+    margin:0 !important;
+    padding:0 !important;
+    background:transparent !important;
+  }
+
+  #ceraceciFooterFirmaV328{
+    display:block !important;
+    margin:0 !important;
+    padding:0 !important;
+    color:#171717 !important;
+    font-family:Arial,Helvetica,sans-serif !important;
+    font-size:11px !important;
+    font-weight:600 !important;
+    line-height:1 !important;
+    white-space:nowrap !important;
+  }
+
+  /* Restaura explícitamente el grupo flotante y el carrito en PC. */
+  html body .acciones-flotantes{
+    position:fixed !important;
+    right:18px !important;
+    left:auto !important;
+    bottom:92px !important;
+    z-index:40 !important;
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    gap:12px !important;
+    width:auto !important;
+    height:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:visible !important;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
+    opacity:1 !important;
+    visibility:visible !important;
+    pointer-events:auto !important;
+    transform:none !important;
+  }
+
+  html body #abrirCarrito,
+  html body .acciones-flotantes .abrir-carrito{
+    display:flex !important;
+    visibility:visible !important;
+    opacity:1 !important;
+    pointer-events:auto !important;
+  }
+
+  @media (min-width:651px){
+    html body{padding-bottom:92px !important;}
+  }
+
+  @media (max-width:650px){
+    #ceraceciFooterV328{
+      min-height:58px !important;
+      gap:2px !important;
+      padding:5px 8px calc(5px + env(safe-area-inset-bottom)) !important;
+    }
+    #ceraceciFooterLogoV328{
+      width:205px !important;
+      max-width:76vw !important;
+      max-height:34px !important;
+    }
+    #ceraceciFooterFirmaV328{
+      font-size:10.5px !important;
+    }
+    html body .acciones-flotantes{
+      right:8px !important;
+      left:8px !important;
+      bottom:calc(64px + env(safe-area-inset-bottom)) !important;
+      display:grid !important;
+      grid-template-columns:minmax(132px,1fr) 42px 42px !important;
+      align-items:center !important;
+      gap:8px !important;
+      width:auto !important;
+    }
+    html body #abrirCarrito,
+    html body .acciones-flotantes .abrir-carrito{
+      grid-column:1 !important;
+      grid-row:1 !important;
+      width:100% !important;
+    }
+    html body .instagram-flotante{grid-column:2 !important;grid-row:1 !important;}
+    html body .whatsapp-flotante{grid-column:3 !important;grid-row:1 !important;}
+    html body{padding-bottom:118px !important;}
+  }
+</style>
+
 </head>
 
-<body data-catalog-build="327">
+<body data-catalog-build="328">
   <div id="ceraceciLoaderV312" role="status" aria-live="polite" aria-label="Cargando catálogo Ceraceci">
     <div class="ceraceci-loader-panel">
       <img
@@ -7968,18 +8089,10 @@
 
   </div>
 
-  <div class="marca-inferior-movil" aria-hidden="true">
-    <div class="marca-inferior-linea marca-inferior-linea-limpia-v326">
-      <span class="marca-inferior-logo-v326">
-        <img
-          src="ceraceci-logo-pie-v327.png"
-          alt="Ceraceci"
-          class="logo-pie-v326"
-        >
-      </span>
-    </div>
-    <span class="firma-catalogo">By Nacho Peralta</span>
-  </div>
+  <footer id="ceraceciFooterV328" aria-label="Ceraceci">
+    <img src="ceraceci-logo-pie-v328.png" alt="Ceraceci" id="ceraceciFooterLogoV328">
+    <span id="ceraceciFooterFirmaV328">By Nacho Peralta</span>
+  </footer>
 
   <div id="fondoCarrito" class="fondo-carrito"></div>
 
@@ -16396,21 +16509,6 @@
 
 <style id="ceraceci-v322-fondo-y-pie-final">
   /* V322: el gris es exactamente el mismo acordado para las tarjetas. */
-  html body .marca-inferior-logo-v286,
-  html body .marca-inferior-logo-v286::before,
-  html body .marca-inferior-logo-v286::after{
-    background:none !important;
-    background-image:none !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-  html body .marca-inferior-logo-v286 > img.logo-pie-v286{
-    content:url("ceraceci-logo-pie-v325.png") !important;
-    display:block !important;
-    object-fit:contain !important;
-    object-position:center !important;
-    background:transparent !important;
-  }
   /* Mini isotipo de cada tarjeta: deja de ser transparente y usa #EEE8E6. */
   html body #productos .logo-mini-tarjeta,
   html body #productosComparados .logo-mini-tarjeta{
@@ -16420,65 +16518,6 @@
 </style>
 
 
-<style id="pie-limpio-v326">
-  html body .marca-inferior-movil .marca-inferior-linea.marca-inferior-linea-limpia-v326{
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    width:auto !important;
-    max-width:none !important;
-    margin:0 auto !important;
-    gap:0 !important;
-    transform:none !important;
-  }
-  html body .marca-inferior-movil .marca-inferior-linea.marca-inferior-linea-limpia-v326::before,
-  html body .marca-inferior-movil .marca-inferior-linea.marca-inferior-linea-limpia-v326::after{
-    content:none !important;
-    display:none !important;
-    background:none !important;
-  }
-  html body .marca-inferior-movil .marca-inferior-linea.marca-inferior-linea-limpia-v326 > *:not(.marca-inferior-logo-v326){
-    display:none !important;
-  }
-  html body .marca-inferior-movil .marca-inferior-logo-v326{
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    flex:0 0 auto !important;
-    width:auto !important;
-    height:auto !important;
-    min-width:0 !important;
-    max-width:none !important;
-    min-height:0 !important;
-    max-height:none !important;
-    overflow:visible !important;
-    background:none !important;
-    background-image:none !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-  html body .marca-inferior-movil .marca-inferior-logo-v326 > img.logo-pie-v326{
-    display:block !important;
-    width:255px !important;
-    max-width:255px !important;
-    height:auto !important;
-    max-height:none !important;
-    object-fit:contain !important;
-    object-position:center !important;
-    margin:0 !important;
-    background:transparent !important;
-  }
-  @media (max-width:650px){
-    html body .marca-inferior-movil .marca-inferior-linea.marca-inferior-linea-limpia-v326{
-      transform:none !important;
-      gap:0 !important;
-    }
-    html body .marca-inferior-movil .marca-inferior-logo-v326 > img.logo-pie-v326{
-      width:205px !important;
-      max-width:205px !important;
-    }
-  }
-</style>
 
 <!-- CERACECI V322: mantiene/restaura la instalación PWA -->
 <script id="ceraceci-service-worker-v322">
@@ -16491,196 +16530,6 @@
       .catch((error) => console.warn("CERACECI: no se pudo registrar el service worker", error));
   }, { once:true });
 })();
-</script>
-
-
-
-<style id="ceraceci-footer-cart-fix-v327">
-  /* V327 — pie limpio con un solo logo nuevo y carrito visible otra vez. */
-  html body .marca-inferior-movil{
-    position:fixed !important;
-    right:0 !important;
-    bottom:0 !important;
-    left:0 !important;
-    z-index:32 !important;
-    box-sizing:border-box !important;
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:center !important;
-    justify-content:center !important;
-    background:#EEE8E6 !important;
-    border-top:1px solid rgba(111,103,97,.16) !important;
-    white-space:nowrap !important;
-  }
-
-  html body .marca-inferior-movil::before,
-  html body .marca-inferior-movil::after,
-  html body .marca-inferior-linea.marca-inferior-linea-v327::before,
-  html body .marca-inferior-linea.marca-inferior-linea-v327::after,
-  html body .marca-inferior-linea.marca-inferior-linea-limpia-v326::before,
-  html body .marca-inferior-linea.marca-inferior-linea-limpia-v326::after{
-    content:none !important;
-    display:none !important;
-  }
-
-  html body .marca-inferior-linea.marca-inferior-linea-v327,
-  html body .marca-inferior-linea.marca-inferior-linea-limpia-v326{
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    width:100% !important;
-    gap:0 !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-
-  html body .marca-inferior-linea.marca-inferior-linea-v327 > *:not(.marca-inferior-logo-v327),
-  html body .marca-inferior-linea.marca-inferior-linea-limpia-v326 > *:not(.marca-inferior-logo-v326){
-    display:none !important;
-  }
-
-  html body .marca-inferior-logo-v327,
-  html body .marca-inferior-logo-v326{
-    display:flex !important;
-    align-items:center !important;
-    justify-content:center !important;
-    margin:0 !important;
-    padding:0 !important;
-  }
-
-  html body .marca-inferior-logo-v327 > img.logo-pie-v327,
-  html body .marca-inferior-logo-v326 > img.logo-pie-v326{
-    display:block !important;
-    width:auto !important;
-    max-width:min(92vw, 520px) !important;
-    object-fit:contain !important;
-    object-position:center !important;
-    background:transparent !important;
-  }
-
-  html body .marca-inferior-movil .firma-catalogo{
-    display:block !important;
-    margin:0 !important;
-    padding:0 !important;
-    color:#171717 !important;
-    font-weight:500 !important;
-    line-height:1 !important;
-  }
-
-  html body .acciones-flotantes,
-  html body .acciones-flotantes.acciones-flotantes-v327{
-    position:fixed !important;
-    z-index:40 !important;
-    overflow:visible !important;
-    margin:0 !important;
-    background:transparent !important;
-    background-color:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-  }
-
-  html body .acciones-flotantes .abrir-carrito{
-    display:flex !important;
-    visibility:visible !important;
-    opacity:1 !important;
-  }
-
-  @media (min-width:651px){
-    html body{
-      padding-bottom:118px !important;
-    }
-
-    html body .marca-inferior-movil{
-      min-height:78px !important;
-      gap:6px !important;
-      padding:8px 12px 10px !important;
-    }
-
-    html body .marca-inferior-linea.marca-inferior-linea-v327,
-    html body .marca-inferior-linea.marca-inferior-linea-limpia-v326{
-      min-height:42px !important;
-    }
-
-    html body .marca-inferior-logo-v327 > img.logo-pie-v327,
-    html body .marca-inferior-logo-v326 > img.logo-pie-v326{
-      height:42px !important;
-    }
-
-    html body .marca-inferior-movil .firma-catalogo{
-      font-size:11.5px !important;
-    }
-
-    html body .acciones-flotantes,
-    html body .acciones-flotantes.acciones-flotantes-v327{
-      right:16px !important;
-      left:auto !important;
-      bottom:94px !important;
-      display:flex !important;
-      flex-direction:column !important;
-      align-items:flex-end !important;
-      gap:12px !important;
-      padding:0 !important;
-    }
-  }
-
-  @media (max-width:650px){
-    html body{
-      padding-bottom:126px !important;
-    }
-
-    html body .marca-inferior-movil{
-      min-height:58px !important;
-      gap:4px !important;
-      padding:6px 10px calc(6px + env(safe-area-inset-bottom)) !important;
-    }
-
-    html body .marca-inferior-linea.marca-inferior-linea-v327,
-    html body .marca-inferior-linea.marca-inferior-linea-limpia-v326{
-      min-height:30px !important;
-    }
-
-    html body .marca-inferior-logo-v327 > img.logo-pie-v327,
-    html body .marca-inferior-logo-v326 > img.logo-pie-v326{
-      height:31px !important;
-    }
-
-    html body .marca-inferior-movil .firma-catalogo{
-      font-size:10.8px !important;
-    }
-
-    html body .acciones-flotantes,
-    html body .acciones-flotantes.acciones-flotantes-v327{
-      right:10px !important;
-      left:10px !important;
-      bottom:calc(66px + env(safe-area-inset-bottom)) !important;
-      display:grid !important;
-      grid-template-columns:minmax(132px,1fr) 42px 42px !important;
-      align-items:center !important;
-      gap:8px !important;
-      padding:0 !important;
-    }
-  }
-</style>
-
-<script id="ceraceci-footer-cart-fix-v327-script">
-  document.addEventListener('DOMContentLoaded', function(){
-    const pie = document.querySelector('.marca-inferior-movil');
-    if (pie) {
-      pie.innerHTML = `
-        <div class="marca-inferior-linea marca-inferior-linea-v327">
-          <span class="marca-inferior-logo-v327">
-            <img src="ceraceci-logo-pie-v327.png" alt="Ceraceci" class="logo-pie-v327">
-          </span>
-        </div>
-        <span class="firma-catalogo">By Nacho Peralta</span>
-      `;
-    }
-
-    const acciones = document.querySelector('.acciones-flotantes');
-    if (acciones) {
-      acciones.classList.add('acciones-flotantes-v327');
-    }
-  });
 </script>
 
 </body>
