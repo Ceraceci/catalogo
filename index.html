@@ -16263,86 +16263,90 @@
   }
 </style>
 
-<script src="script.js?v=314"></script>
+<script src="script.js?v=315"></script>
 
-<script id="busqueda-inteligente-v314">
+<script id="busqueda-inteligente-v315">
 (() => {
   /*
-    V314 — búsqueda contextual con ampliación automática.
+    V315 — búsqueda inteligente por prioridad.
 
-    1) Si hay una categoría elegida, primero se busca DENTRO de esa categoría.
-       Ej.: Engobes + "azul" => sólo engobes azules.
+    - Mientras el texto tenga coincidencias dentro de la categoría elegida,
+      la categoría se conserva.
+      Ej.: Engobes DP + "azul" => sólo engobes azules.
 
-    2) Sólo si esa combinación devuelve 0 resultados y la búsqueda escrita sí
-       existe en otra parte del catálogo, se cambia automáticamente a
-       "Todos los productos" y se muestran esas coincidencias.
-       Ej.: Engobes + "bentonita" => Todos los productos + bentonita.
+    - Si no hay coincidencias dentro de esa categoría, se prueba la misma
+      búsqueda en todo el catálogo. Si allí sí hay resultados, la categoría
+      cambia automáticamente a "Todos los productos".
+      Ej.: Engobes DP + "bentonita" => Todos los productos + bentonita.
 
-    3) Si la búsqueda no existe en ningún lugar del catálogo, la categoría no
-       se cambia innecesariamente.
+    - Si tampoco existe el texto en todo el catálogo, se conserva la categoría
+      original y se muestra "No se encontraron productos".
+
+    Esta versión trabaja sobre el DOM ya filtrado para no depender del alcance
+    interno de las funciones de script.js.
   */
 
-  if (typeof filtrarProductos !== "function") return;
+  const buscadorV315 = document.getElementById("buscador");
+  const categoriaV315 = document.getElementById("filtroCategoria");
+  const productosV315 = document.getElementById("productos");
 
-  const filtrarProductosOriginalV314 = filtrarProductos;
+  if (!buscadorV315 || !categoriaV315 || !productosV315) return;
 
-  filtrarProductos = function () {
-    if (productoCompartidoPendiente) {
-      return filtrarProductosOriginalV314();
-    }
+  let temporizadorV315 = 0;
 
-    ocultarModoProductoCompartido();
-
-    const palabrasBuscadas =
-      normalizarTexto(buscador.value)
-        .split(/\s+/)
-        .filter(Boolean);
-
-    const categoriaElegida = filtroCategoria.value;
-
-    const coincideConBusqueda = (producto) => {
-      const contenido =
-        producto._textoBusqueda ||
-        normalizarTexto(producto.nombre);
-
-      return palabrasBuscadas.every(
-        (palabra) => contenido.includes(palabra)
-      );
-    };
-
-    let lista = productosAgrupados.filter((producto) => {
-      const coincideBusqueda = coincideConBusqueda(producto);
-      const coincideCategoria =
-        categoriaElegida === "" ||
-        producto.categoria === categoriaElegida;
-
-      return coincideBusqueda && coincideCategoria;
-    });
-
-    /*
-      Si el texto no encuentra nada en la categoría actual, comprobamos si
-      existe en el catálogo completo. Sólo entonces liberamos la categoría.
-    */
-    if (
-      palabrasBuscadas.length > 0 &&
-      categoriaElegida !== "" &&
-      lista.length === 0
-    ) {
-      const coincidenciasGlobales =
-        productosAgrupados.filter(coincideConBusqueda);
-
-      if (coincidenciasGlobales.length > 0) {
-        filtroCategoria.value = "";
+  const sincronizarCategoriaV315 = () => {
+    try {
+      if (typeof actualizarEstadoFiltroCategoria === "function") {
         actualizarEstadoFiltroCategoria();
-        sincronizarSelectorPersonalizadoPC(filtroCategoria);
-        lista = coincidenciasGlobales;
       }
-    }
-
-    productosMostrados = lista;
-    ordenarListaProductos(productosMostrados);
-    mostrarProductos(productosMostrados);
+      if (typeof sincronizarSelectorPersonalizadoPC === "function") {
+        sincronizarSelectorPersonalizadoPC(categoriaV315);
+      }
+    } catch (_) {}
   };
+
+  const aplicarCambioCategoriaV315 = (valor) => {
+    categoriaV315.value = valor;
+    categoriaV315.dispatchEvent(
+      new Event("change", { bubbles: true })
+    );
+    sincronizarCategoriaV315();
+  };
+
+  const sinResultadosV315 = () =>
+    Boolean(productosV315.querySelector(".sin-resultados"));
+
+  const revisarBusquedaV315 = () => {
+    const texto = buscadorV315.value.trim();
+    const categoriaOriginal = categoriaV315.value;
+
+    if (!texto || !categoriaOriginal) return;
+
+    // El buscador normal ya filtró dentro de la categoría. Si encontró algo,
+    // no tocamos absolutamente nada.
+    if (!sinResultadosV315()) return;
+
+    // No hubo coincidencias en la categoría: probamos globalmente.
+    aplicarCambioCategoriaV315("");
+
+    // El evento change filtra de forma sincrónica en el script original.
+    // Si tampoco hay resultados globales, restauramos la categoría original
+    // antes del siguiente repintado visible.
+    if (sinResultadosV315()) {
+      aplicarCambioCategoriaV315(categoriaOriginal);
+    }
+  };
+
+  buscadorV315.addEventListener("input", () => {
+    window.clearTimeout(temporizadorV315);
+
+    // El filtro original espera 35 ms en PC y 70 ms en móvil.
+    // Dejamos margen para que termine y después evaluamos el resultado.
+    temporizadorV315 = window.setTimeout(() => {
+      temporizadorV315 = 0;
+      revisarBusquedaV315();
+    }, 130);
+  });
 })();
 </script>
 
