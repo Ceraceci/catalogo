@@ -3138,17 +3138,17 @@ function obtenerEscalasRecorteProducto(nombreProducto, categoriaProducto = "") {
   }
 
   /*
-    V373: recorte exclusivo para la categoria exacta "Crayones DP".
-    La foto se amplia uniformemente dentro de su marco para retirar casi todo
-    el margen blanco, manteniendo siempre su proporcion original.
+    V372: solo la categoria Crayones recibe un recorte uniforme adicional para
+    retirar casi todo el margen blanco de sus fotos, sin deformarlas.
+    Se agrandan dentro del marco manteniendo siempre la proporcion.
   */
   const categoriaNormalizada = normalizarTexto(categoriaProducto);
 
-  if (categoriaNormalizada === "crayones dp") {
-    escritorio = Math.max(escritorio, 2.00);
-    movil = Math.max(movil, 2.10);
-    zoomEscritorio = Math.max(zoomEscritorio, 2.10);
-    zoomMovil = Math.max(zoomMovil, 2.20);
+  if (categoriaNormalizada === "crayones") {
+    escritorio = Math.max(escritorio, 1.72);
+    movil = Math.max(movil, 1.82);
+    zoomEscritorio = Math.max(zoomEscritorio, 1.82);
+    zoomMovil = Math.max(zoomMovil, 1.92);
   }
 
   return {
