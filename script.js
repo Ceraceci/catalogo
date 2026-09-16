@@ -4044,21 +4044,11 @@ function convertirFichaTecnicaAHTML(texto, nombreProducto = "") {
       return;
     }
 
-    const indiceDosPuntos = linea.indexOf(":");
-
-    if (
-      indiceDosPuntos > 0 &&
-      indiceDosPuntos <= 42
-    ) {
-      const etiqueta = linea.slice(0, indiceDosPuntos + 1);
-      const valor = linea.slice(indiceDosPuntos + 1).trim();
-
-      partes.push(
-        `<p class="ficha-linea-clave"><strong>${escaparHTML(etiqueta)}</strong>${valor ? ` ${escaparHTML(valor)}` : ""}</p>`
-      );
-      return;
-    }
-
+    /*
+      V374: dentro de "Más info" solo los títulos de sección se muestran
+      destacados. Las líneas internas que contienen ":" se mantienen
+      completamente en texto normal.
+    */
     partes.push(
       `<p>${escaparHTML(linea)}</p>`
     );
