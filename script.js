@@ -3071,7 +3071,7 @@ function mostrarProductos(lista) {
 }
 
 
-function obtenerEscalasRecorteProducto(nombreProducto) {
+function obtenerEscalasRecorteProducto(nombreProducto, categoriaProducto = "") {
   const nombreNormalizado = normalizarTexto(nombreProducto)
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
@@ -3135,6 +3135,20 @@ function obtenerEscalasRecorteProducto(nombreProducto) {
     */
     zoomEscritorio = 1;
     zoomMovil = Math.max(zoomMovil, 2.10);
+  }
+
+  /*
+    V372: solo la categoria Crayones recibe un recorte uniforme adicional para
+    retirar casi todo el margen blanco de sus fotos, sin deformarlas.
+    Se agrandan dentro del marco manteniendo siempre la proporcion.
+  */
+  const categoriaNormalizada = normalizarTexto(categoriaProducto);
+
+  if (categoriaNormalizada === "crayones") {
+    escritorio = Math.max(escritorio, 1.72);
+    movil = Math.max(movil, 1.82);
+    zoomEscritorio = Math.max(zoomEscritorio, 1.82);
+    zoomMovil = Math.max(zoomMovil, 1.92);
   }
 
   return {
@@ -3376,7 +3390,8 @@ function crearTarjetaProducto(
   */
   const escalasRecorte =
     obtenerEscalasRecorteProducto(
-      producto.nombre
+      producto.nombre,
+      producto.categoria
     );
 
   const escalaRecorteMargenBlanco =
@@ -6089,7 +6104,8 @@ function mostrarCarrito() {
 
       const escalaMiniaturaCarrito =
         obtenerEscalasRecorteProducto(
-          productoCatalogo?.nombre || producto.nombre
+          productoCatalogo?.nombre || producto.nombre,
+          productoCatalogo?.categoria || producto.categoria
         ).miniatura;
 
       const recortarMiniaturaCarrito =
