@@ -3950,6 +3950,47 @@ function esEncabezadoFichaTecnica(linea) {
 }
 
 
+function formatearEncabezadoFichaTecnica(linea) {
+  const texto = limpiarTexto(linea);
+
+  if (!texto) {
+    return "";
+  }
+
+  /*
+    V375: si un título de sección es una pregunta, conserva los signos
+    ¿ ? si ya vienen escritos. Si faltan, los agrega automáticamente
+    para encabezados interrogativos habituales.
+  */
+  if (texto.startsWith("¿") || texto.endsWith("?")) {
+    const sinApertura = texto.replace(/^¿\s*/, "");
+    const sinCierre = sinApertura.replace(/\s*\?$/, "");
+    return `¿${sinCierre}?`;
+  }
+
+  const normalizado = normalizarTexto(texto)
+    .replace(/[¿?]/g, "")
+    .trim();
+
+  const comienzaComoPregunta = [
+    "que ",
+    "como ",
+    "cuando ",
+    "donde ",
+    "por que ",
+    "para que ",
+    "cual ",
+    "cuales ",
+    "quien ",
+    "quienes "
+  ].some((inicio) => normalizado.startsWith(inicio));
+
+  return comienzaComoPregunta
+    ? `¿${texto}?`
+    : texto;
+}
+
+
 function convertirFichaTecnicaAHTML(texto, nombreProducto = "") {
   let lineas = String(texto || "")
     .replace(/\r\n?/g, "\n")
@@ -4038,8 +4079,11 @@ function convertirFichaTecnicaAHTML(texto, nombreProducto = "") {
           ? " ficha-datos-clave"
           : "";
 
+      const encabezadoMostrado =
+        formatearEncabezadoFichaTecnica(linea);
+
       partes.push(
-        `<h3 class="ficha-seccion${claseDatosClave}">${escaparHTML(linea)}</h3>`
+        `<h3 class="ficha-seccion${claseDatosClave}">${escaparHTML(encabezadoMostrado)}</h3>`
       );
       return;
     }
